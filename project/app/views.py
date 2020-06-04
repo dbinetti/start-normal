@@ -85,3 +85,9 @@ def letter(request):
         request,
         'app/letter.html',
     )
+
+def transcript(request):
+    return render(
+        request,
+        'app/transcript.html',
+    )

@@ -15,4 +15,5 @@ urlpatterns = [
     path('unrealistic', views.unrealistic, name='unrealistic',),
     path('letter', views.letter, name='letter',),
     path('framework', views.framework, name='framework',),
+    path('transcript', views.transcript, name='transcript',),
 ]
