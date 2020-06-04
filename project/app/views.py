@@ -78,3 +78,10 @@ def harm(request):
         request,
         'app/harm.html',
     )
+
+
+def letter(request):
+    return render(
+        request,
+        'app/letter.html',
+    )

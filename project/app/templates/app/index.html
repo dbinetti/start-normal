@@ -20,17 +20,21 @@
 </div>
   <div class='jumbotron'>
     <div>
-          <p class='lead'>We, the undersigned parents, believe the conditions for reopening schools will deeply harm our children and communities.<br><br>
+          <p class='lead'>We believe the conditions for reopening schools will deeply harm our children and communities.<br><br>
           These restrictions ignore <a href='{% url "data"%}'>key data</a>, promotes <a href='{% url "unsustainable"%}'>unsustainable policies</a>, have <a href='{% url "unrealistic"%}'>unrealistic timetables</a>, and gives away control of schools to county officials.  <br><br>
           {# And in the end, <a href='{% url "morrow"%}'>no one is following these rules</a> anyway, so we'll <a href='{% url "morrow"%}'>losing enrollment</a> and <a href='{% url "morrow"%}'>crashing our property values</a> pointlessly.<br><br> #}
-          You should join other parents and sign this letter now so we can do something about this before it is too late.<br><br>
+          You should join other parents and sign <a href='{%url "letter" %}'>this letter</a> now so we can do something about this before it is too late.<br><br>
 
-          <strong>Start Normal</strong>!
+          <div>
+                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#signModal"> Sign the Letter!
+      </button>
+          </div>
         </p>
     </div>
   </div>
 </section>
 
+{% comment %}
 <section class='col-sm-9'>
   <div class='card my-5'>
     <div class='card-body'>
@@ -49,7 +53,7 @@
     </div>
   </div>
 </section>
-
+{% endcomment %}
 <!-- Modal -->
 <div class="modal fade" id="signModal" tabindex="-1" role="dialog" aria-labelledby="signModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">

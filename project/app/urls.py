@@ -13,5 +13,6 @@ urlpatterns = [
     path('harm', views.about, name='harm',),
     path('unsustainable', views.unsustainable, name='unsustainable',),
     path('unrealistic', views.unrealistic, name='unrealistic',),
+    path('letter', views.letter, name='letter',),
     path('framework', views.framework, name='framework',),
 ]
