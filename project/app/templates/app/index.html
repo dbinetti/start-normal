@@ -1,0 +1,94 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+<section class='mt-2 col-lg-9'>
+  <div class='row align-middle'>
+    <div class='col-sm-9'>
+        <h4>
+            <span class='align-middle'><strong>Start Normal!</strong></span>
+        </h4>
+    </div>
+    <div class='col-sm-3'>
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#signModal"> Sign the Petition!
+      </button>
+    </div>
+  </div>
+</section>
+<section class='py-3 col-lg-9'>
+  <div class='jumbotron'>
+    <div>
+          <p class='lead'>We, the undersigned parents, believe the conditions for reopening schools will deeply harm our children and communities.<br><br>
+          These restrictions ignore <a href='{% url "data"%}'>key data</a>, promotes <a href='{% url "unsustainable"%}'>unsustainable policies</a>, have <a href='{% url "unrealistic"%}'>unrealistic timetables</a>, and gives away control of schools to county officials.  <br><br>
+          {# And in the end, <a href='{% url "morrow"%}'>no one is following these rules</a> anyway, so we'll <a href='{% url "morrow"%}'>losing enrollment</a> and <a href='{% url "morrow"%}'>crashing our property values</a> pointlessly.<br><br> #}
+          You should join other parents and sign this petition now so we can do something about this before it is too late.<br><br>
+
+          <strong>Start Normal</strong>!
+        </p>
+    </div>
+  </div>
+</section>
+
+<section class='col-sm-9'>
+  <div class='card my-5'>
+    <div class='card-body'>
+      <div class='card-title'>
+        Respectfully,
+      </div>
+      <ul class='list-unstyled'>
+      {% for signature in signatures %}
+        <li><strong>{{signature.name}}</strong>, {{signature.city}}</li>
+      {% endfor %}
+      </ul>
+    </div>
+    <div class='card-footer'>
+      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#signModal"> Sign the Petition!
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Modal -->
+<div class="modal fade" id="signModal" tabindex="-1" role="dialog" aria-labelledby="signModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="signModalLabel">Sign the Petition</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method='post' action='{% url "index" %}' class='form-horizontal' role='form'>
+          {% csrf_token %}
+          {% if form.subject.errors %}
+            <ol role="alertdialog">
+                {% for error in form.subject.errors %}
+                <li role="alert"><strong>{{ error|escape }}</strong></li>
+                {% endfor %}
+            </ol>
+          {% endif %}
+          <div class="form-group p-1">
+            {{form.name}}
+          </div>
+          <div class="form-group p-1">
+            {{form.city}}
+          </div>
+          <div class="form-group p-1">
+            {{form.email}}
+          </div>
+          <div class="form-group p-1">
+            {{form.notes}}
+          </div>
+          <div class="form-group p-1">
+            <button type="submit" class="btn btn-primary form-control">Start Normal!</button>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <small class='text-muted'>It will be far more powerful to share your actual name, but feel free to sign anonymously if you wish.   Your email will be kept private; provide it if you wish to be kept updated on developments.</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

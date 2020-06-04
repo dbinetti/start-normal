@@ -1,0 +1,24 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+django-debug-toolbar = "*"
+django-querycount = "*"
+factory-boy = "*"
+faker = "*"
+pytest = "*"
+pytest-django = "*"
+
+[packages]
+django = "*"
+django-environ = "*"
+psycopg2 = "*"
+whitenoise = "*"
+ipython = "*"
+brotli = "*"
+gunicorn = "*"
+
+[requires]
+python_full_version = "3.8.3"
