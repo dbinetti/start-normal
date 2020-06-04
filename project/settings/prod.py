@@ -3,8 +3,7 @@ from .base import *
 
 # Core
 ALLOWED_HOSTS = [
-    '.letdistrictsdecide.com',
-    '.districtsdecide.com',
+    '.startnormal.com',
     '.herokuapp.com',
 ]
 
