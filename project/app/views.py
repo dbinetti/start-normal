@@ -1,11 +1,25 @@
 # Django
+import django_rq
 from django.contrib import messages
 from django.core.mail import EmailMessage
 from django.shortcuts import redirect, render
+from django_rq import job
 
 # Local
 from .forms import SignatureForm
 from .models import Signature
+
+
+@job
+def queue_email(subject, body, to):
+    mail = EmailMessage(
+        subject=subject,
+        body=body,
+        from_email='David Binetti <dbinetti@gmail.com>',
+        to=to,
+        bcc=['dbinetti@gmail.com'],
+    )
+    return mail.send()
 
 
 def index(request):
@@ -23,16 +37,18 @@ def letter(request):
                 request,
                 'Your name has been added to the Letter.',
             )
-            to = form.cleaned_data['email']
-            if to:
-                mail = EmailMessage(
-                    subject='Thank you for supporting our children',
-                    body='Thank you for supporting our kids and wanting to Start Normal.  Apologies for the auto-responding message but response to this has been extraordinary and it\'s the only way I can keep up.  Feel free to reach out to me with questions, comments, or ideas.  You can also call me at 415.713.2126.  Best, Dave',
-                    from_email='David Binetti <dbinetti@gmail.com>',
-                    to=[to],
-                    bcc=['dbinetti@gmail.com'],
+            email = form.cleaned_data['email']
+            if email:
+                subject = 'Thank you for supporting our children'
+                body = 'Thank you for supporting our kids and wanting to Start Normal.  Apologies for the auto-responding message but response to this has been extraordinary and it\'s the only way I can keep up.  Feel free to reach out to me with questions, comments, or ideas.  You can also call me at 415.713.2126.  Best, Dave'
+                from_email = 'David Binetti <dbinetti@gmail.com>'
+                to=[email]
+                bcc=['dbinetti@gmail.com']
+                queue_email.delay(
+                    subject=subject,
+                    body=body,
+                    to=to,
                 )
-                mail.send()
             return redirect('thanks')
     else:
         form = SignatureForm()

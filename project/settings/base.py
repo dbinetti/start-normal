@@ -13,6 +13,7 @@ env = Env(
     DEFAULT_FROM_EMAIL=(str, 'webmaster@localhost'),
     TIME_ZONE=(str, 'US/Pacific'),
     EMAIL_URL=(str, 'smtp://localhost:1025'),
+    REDIS_URL=(str, 'redis://localhost:6379/0'),
 )
 root = Path(__file__) - 2
 
@@ -41,6 +42,14 @@ LOGOUT_REDIRECT_URL = 'admin:login'
 DATABASES = {
     'default': env.db()
 }
+
+# Redis
+RQ_QUEUES = {
+    'default': {
+        'URL': env("REDIS_URL"),
+    },
+}
+RQ_SHOW_ADMIN_LINK = True
 
 # Email
 EMAIL_CONFIG = env.email_url('EMAIL_URL')
@@ -108,5 +117,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_rq',
     'app',
 ]
