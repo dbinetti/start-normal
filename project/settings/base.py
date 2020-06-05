@@ -4,12 +4,8 @@ import os
 
 # Django
 from django.contrib.messages import constants as messages
-
 # First-Party
-from environ import (
-    Env,
-    Path,
-)
+from environ import Env, Path
 
 # Set Environment
 env = Env(
@@ -56,9 +52,9 @@ STATIC_ROOT = root('staticfiles')
 MEDIA_ROOT = root('mediafiles')
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
-# STATICFILES_DIRS = [
-#     root('app/static'),
-# ]
+STATICFILES_DIRS = [
+    root('app/static'),
+]
 
 # Bootstrap
 MESSAGE_TAGS = {

@@ -1,4 +1,5 @@
 {% extends 'app/base.html' %}
+{% load static %}
 
 {% block content %}
 
@@ -22,6 +23,14 @@
         </a>
       {# </div> #}
     </p>
+  </div>
+</section>
+<section>
+  <h4>
+    You can also share directly from the video!
+  </h4>
+  <div>
+    <a href='https://start-normal.wistia.com/medias/i0n0bp99fs'><img src='{% static "app/links.png" %}'></a>
   </div>
 </section>
 {% endblock content %}
