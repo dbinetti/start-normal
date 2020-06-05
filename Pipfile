@@ -10,7 +10,6 @@ factory-boy = "*"
 faker = "*"
 pytest = "*"
 pytest-django = "*"
-django-rq = "*"
 
 [packages]
 django = "*"
@@ -20,6 +19,7 @@ whitenoise = "*"
 ipython = "*"
 brotli = "*"
 gunicorn = "*"
+django-rq = "*"
 
 [requires]
 python_full_version = "3.8.3"
