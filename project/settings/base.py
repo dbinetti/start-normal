@@ -4,8 +4,12 @@ import os
 
 # Django
 from django.contrib.messages import constants as messages
+
 # First-Party
-from environ import Env, Path
+from environ import (
+    Env,
+    Path,
+)
 
 # Set Environment
 env = Env(
@@ -22,6 +26,10 @@ root = Path(__file__) - 2
 SECRET_KEY = env("SECRET_KEY")
 ROOT_URLCONF = 'urls'
 WSGI_APPLICATION = 'wsgi.application'
+ADMINS = [
+    env("DEFAULT_FROM_EMAIL"),
+]
+
 
 # Datetime
 USE_TZ = True
