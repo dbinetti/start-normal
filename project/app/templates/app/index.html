@@ -1,6 +1,7 @@
 {% extends 'app/base.html' %}
 
 {% block content %}
+{% comment %}
 <section class='mt-2 col-lg-9'>
   <div class='row align-middle'>
     <div class='col-sm-9'>
@@ -14,6 +15,7 @@
     </div>
   </div>
 </section>
+{% endcomment %}
 <section class='py-3 col-lg-9'>
   <div>
     <script src="https://fast.wistia.com/embed/medias/i0n0bp99fs.jsonp" async></script><script src="https://fast.wistia.com/assets/external/E-v1.js" async></script><div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;"><div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;"><span class="wistia_embed wistia_async_i0n0bp99fs popover=true popoverAnimateThumbnail=true videoFoam=true" style="display:inline-block;height:100%;position:relative;width:100%">&nbsp;</span></div></div>
@@ -26,11 +28,10 @@
 
           {# These restritctions ignore <a href='{% url "data"%}'>key data</a>, promotes <a href='{% url "unsustainable"%}'>unsustainable policies</a>, have <a href='{% url "unrealistic"%}'>unrealistic timetables</a>, and gives away control of schools to county officials.  <br><br> #}
           {# And in the end, <a href='{% url "morrow"%}'>no one is following these rules</a> anyway, so we'll <a href='{% url "morrow"%}'>losing enrollment</a> and <a href='{% url "morrow"%}'>crashing our property values</a> pointlessly.<br><br> #}
-          You should join other parents and sign <a href='{%url "letter" %}'>this letter</a> now so we can do something about this before it is too late.
+          You should join other parents and sign <a href='{%url "letter" %}'>this letter</a> now so we can do something about this before it is too late.<br><br>
 
           <div>
-                  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#signModal"> Sign the Letter!
-      </button>
+            <a href='{% url "letter" %}' role='button' class='btn btn-primary btn-lg'>Sign the Letter!</a>
           </div>
         </p>
     </div>

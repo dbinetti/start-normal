@@ -1,9 +1,6 @@
 # Django
 from django.contrib import messages
-from django.shortcuts import (
-    redirect,
-    render,
-)
+from django.shortcuts import redirect, render
 
 # Local
 from .forms import SignatureForm
@@ -17,7 +14,7 @@ def index(request):
             signature = form.save()
             messages.success(
                 request,
-                'Your name has been added to the Petition.',
+                'Your name has been added to the letter.',
             )
             return redirect('thanks')
     else:
@@ -30,6 +27,24 @@ def index(request):
         'app/index.html',
         {'form': form,
         'signatures': signatures},
+    )
+
+def letter(request):
+    if request.method == "POST":
+        form = SignatureForm(request.POST)
+        if form.is_valid():
+            signature = form.save()
+            messages.success(
+                request,
+                'Your name has been added to the Letter.',
+            )
+            return redirect('thanks')
+    else:
+        form = SignatureForm()
+    return render(
+        request,
+        'app/letter.html',
+        {'form': form,},
     )
 
 def thanks(request):
@@ -77,13 +92,6 @@ def harm(request):
     return render(
         request,
         'app/harm.html',
-    )
-
-
-def letter(request):
-    return render(
-        request,
-        'app/letter.html',
     )
 
 def transcript(request):

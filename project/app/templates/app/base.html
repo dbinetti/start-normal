@@ -11,21 +11,29 @@
       <title>{% block title %}Start Normal!{% endblock %}</title>
     </head>
     <body>
-        {% comment %}
-      <nav class="navbar navbar-expand-sm navbar-light">
-        <a class="navbar-brand" href="{% url 'index' %}">Home</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a {% if "links" in request.path %}class="nav-link active"{% else %}class='nav-link'{% endif %} href="{% url 'links' %}">Links</a>
-              </li>
-            </ul>
-          </div>
-      </nav>
-        {% endcomment %}
+
+    <nav class="navbar navbar-expand-sm navbar-light">
+      <a class="navbar-brand" href="{% url 'index' %}">Start Normal!</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto">
+            {% comment %}
+            <li class="nav-item">
+              <a {% if "links" in request.path %}class="nav-link active"{% else %}class='nav-link'{% endif %} href="{% url 'letter' %}">Letter</a>
+            </li>
+            {% endcomment %}
+            <li class="nav-item">
+              <a href='{% url "letter" %}' role='button' class='btn btn-primary btn-sm'>Sign the Letter!</a>
+            </li>
+
+
+
+          </ul>
+        </div>
+    </nav>
+
       <div id="content" class='container'>
         <div class='mx-3'>
           {% for message in messages %}
