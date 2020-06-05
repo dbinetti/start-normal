@@ -18,6 +18,7 @@ class SignatureAdmin(admin.ModelAdmin):
         'name',
         'email',
         'city',
+        'timestamp',
         'is_approved',
     ]
     list_filter = [
