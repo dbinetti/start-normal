@@ -24,14 +24,15 @@ def letter(request):
                 'Your name has been added to the Letter.',
             )
             to = form.cleaned_data['email']
-            mail = EmailMessage(
-                subject='Thank you for supporting our children',
-                body='Thank you for supporting our kids and wanting to Start Normal.  Things are moving incredibly quickly but I will do my best to keep you updated as much as I can.  Feel free to reach out to me with questions, comments, or ideas.  You can also call me at 415.713.2126.  Best, Dave',
-                from_email='David Binetti <dbinetti@gmail.com>',
-                to=[to],
-                bcc=['dbinetti@gmail.com'],
-            )
-            mail.send()
+            if to:
+                mail = EmailMessage(
+                    subject='Thank you for supporting our children',
+                    body='Thank you for supporting our kids and wanting to Start Normal.  Things are moving incredibly quickly but I will do my best to keep you updated as much as I can.  Feel free to reach out to me with questions, comments, or ideas.  You can also call me at 415.713.2126.  Best, Dave',
+                    from_email='David Binetti <dbinetti@gmail.com>',
+                    to=[to],
+                    bcc=['dbinetti@gmail.com'],
+                )
+                mail.send()
             return redirect('thanks')
     else:
         form = SignatureForm()

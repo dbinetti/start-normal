@@ -16,7 +16,7 @@
   </p>
 </section>
 <section class='mt-2 col-lg-9'>
-  <form method='post' action='{% url "index" %}' class='form-horizontal' role='form'>
+  <form method='post' action='{% url "letter" %}' class='form-horizontal' role='form'>
     {% csrf_token %}
     {% if form.subject.errors %}
       <ol role="alertdialog">
