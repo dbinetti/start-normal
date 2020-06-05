@@ -1,5 +1,6 @@
 # Django
 from django.contrib import messages
+from django.core.mail import EmailMessage
 from django.shortcuts import redirect, render
 
 # Local
@@ -8,36 +9,29 @@ from .models import Signature
 
 
 def index(request):
-    if request.method == "POST":
-        form = SignatureForm(request.POST)
-        if form.is_valid():
-            signature = form.save()
-            messages.success(
-                request,
-                'Your name has been added to the letter.',
-            )
-            return redirect('thanks')
-    else:
-        form = SignatureForm()
-    signatures = Signature.objects.filter(
-        is_approved=True,
-    ).order_by('timestamp')
     return render(
         request,
         'app/index.html',
-        {'form': form,
-        'signatures': signatures},
     )
 
 def letter(request):
     if request.method == "POST":
         form = SignatureForm(request.POST)
         if form.is_valid():
-            signature = form.save()
+            form.save()
             messages.success(
                 request,
                 'Your name has been added to the Letter.',
             )
+            to = form.cleaned_data['email']
+            mail = EmailMessage(
+                subject='Thank you for supporting our children',
+                body='Thank you for supporting our kids and wanting to Start Normal.  Things are moving incredibly quickly but I will do my best to keep you updated as much as I can.  Feel free to reach out to me with questions, comments, or ideas.  You can also call me at 415.713.2126.  Best, Dave',
+                from_email='David Binetti <dbinetti@gmail.com>',
+                to=[to],
+                bcc=['dbinetti@gmail.com'],
+            )
+            mail.send()
             return redirect('thanks')
     else:
         form = SignatureForm()
