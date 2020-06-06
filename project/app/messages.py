@@ -21,7 +21,7 @@ def send_first():
 
         template = 'emails/initials.txt'
         context = {'signature': signature}
-        subject = "Start Normal - Update #1"
+        subject = "Start Normal - Update #1 UPDATED"
         to = [signature.email]
 
         email = build_email(
