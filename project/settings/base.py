@@ -51,13 +51,34 @@ DATABASES = {
     'default': env.db()
 }
 
-# Redis
-RQ_QUEUES = {
-    'default': {
-        'URL': env("REDIS_URL"),
+# Cache
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": env("REDIS_URL"),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "CONNECTION_POOL_KWARGS": {
+                "max_connections": 20,
+            },
+        }
     },
 }
+
+
+# RQ
+RQ_QUEUES = {
+    'default': {
+        'USE_REDIS_CACHE': 'default',
+        'ASYNC': True,
+    },
+}
+
 RQ_SHOW_ADMIN_LINK = True
+
+# Sessions
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
 
 # Email
 EMAIL_CONFIG = env.email_url('EMAIL_URL')
