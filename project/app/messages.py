@@ -19,7 +19,7 @@ def send_first():
 
     for signature in signatures:
 
-        template = 'emails/first.txt'
+        template = 'emails/initials.txt'
         context = {'signature': signature}
         subject = "Start Normal - Update #1"
         to = [signature.email]
