@@ -14,12 +14,13 @@
     }
   },
   "addons": [
-    "heroku-postgresql:hobby-dev"
+    "heroku-postgresql:hobby-dev",
+    "heroku-redis:hobby-dev"
   ],
   "env": {
     "DJANGO_SETTINGS_MODULE": {
       "description": "Configures which settings to use.  Do not edit.",
-      "value": "settings.dev",
+      "value": "settings.prod",
       "required": true
     },
     "PYTHONPATH": {
@@ -44,17 +45,17 @@
   "environments": {
     "test": {
       "addons": [
-        "heroku-postgresql:hobby-dev",
+        "heroku-postgresql:hobby-dev"
       ],
       "env": {
-        "DJANGO_SETTINGS_MODULE": "settings.test",
+        "DJANGO_SETTINGS_MODULE": "settings.base",
         "PYTHONPATH": "project",
         "SECRET_KEY": {
           "generator": "secret"
         }
       },
       "scripts": {
-        "test": "pytest --no-migrations --reuse-db"
+        "test": "pytest"
       }
     }
   }
