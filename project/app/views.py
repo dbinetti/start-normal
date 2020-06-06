@@ -1,8 +1,13 @@
 # Django
-import django_rq
 from django.contrib import messages
 from django.core.mail import EmailMessage
-from django.shortcuts import redirect, render
+from django.shortcuts import (
+    redirect,
+    render,
+)
+
+# First-Party
+import django_rq
 from django_rq import job
 
 # Local
@@ -43,7 +48,7 @@ def letter(request):
                 body = 'Thank you for supporting our kids and wanting to Start Normal.  Apologies for the auto-responding message but response to this has been extraordinary and it\'s the only way I can keep up.  Feel free to reach out to me with questions, comments, or ideas.  You can also call me at 415.713.2126.  Best, Dave'
                 from_email = 'David Binetti <dbinetti@gmail.com>'
                 to=[email]
-                bcc=['dbinetti@gmail.com']
+                # bcc=['dbinetti@gmail.com']
                 queue_email.delay(
                     subject=subject,
                     body=body,
