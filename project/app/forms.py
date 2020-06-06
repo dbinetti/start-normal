@@ -35,8 +35,9 @@ class SignatureForm(forms.ModelForm):
                 ),
             'notes': forms.Textarea(
                 attrs={
-                    'class': 'form-control',
-                    'placeholder': 'Notes (kept private, only for context)',
+                    'class': 'form-control h-25',
+                    'placeholder': 'Brief Notes (kept private, only for context)',
+                    'rows': 5,
                     }
                 ),
             }
