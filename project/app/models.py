@@ -20,7 +20,7 @@ class Signature(models.Model):
     phone = models.CharField(
         max_length=255,
         null=True,
-        blank=False,
+        blank=True,
     )
     is_volunteer = models.BooleanField(
         default=False,
