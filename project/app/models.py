@@ -17,6 +17,14 @@ class Signature(models.Model):
         null=True,
         blank=False,
     )
+    phone = models.CharField(
+        max_length=255,
+        null=True,
+        blank=False,
+    )
+    is_volunteer = models.BooleanField(
+        default=False,
+    )
     email = models.EmailField(
         null=True,
         blank=True,

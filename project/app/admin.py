@@ -11,6 +11,8 @@ class SignatureAdmin(admin.ModelAdmin):
         'is_approved',
         'name',
         'email',
+        'phone',
+        'is_volunteer',
         'city',
         'notes',
     ]
@@ -20,6 +22,8 @@ class SignatureAdmin(admin.ModelAdmin):
         'city',
         'timestamp',
         'is_approved',
+        'is_volunteer',
+        'notes',
     ]
     list_filter = [
         'is_approved',
