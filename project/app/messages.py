@@ -13,10 +13,17 @@ def send_email(email):
 
 def send_first():
 
-    signatures = Signature.objects.exclude(
-        email='',
-    )
+    # signatures = Signature.objects.exclude(
+    #     email='',
+    # )
 
+    signatures = Signature.objects.filter(
+        email__in=[
+            'dbinetti@gmail.com',
+            'hmmorton@gmail.com',
+            'stephdanders@gmail.com',
+        ]
+    )
     for signature in signatures:
 
         template = 'emails/first.txt'
@@ -31,4 +38,3 @@ def send_first():
             to=to,
         )
         send_email.delay(email)
-        return
