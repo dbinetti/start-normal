@@ -1,13 +1,10 @@
 # Django
-from django.contrib import messages
-from django.core.mail import EmailMessage
-from django.shortcuts import (
-    redirect,
-    render,
-)
-
 # First-Party
 import django_rq
+from django.contrib import messages
+from django.core.mail import EmailMessage
+from django.db.models import Count, Sum
+from django.shortcuts import redirect, render
 from django_rq import job
 
 # Local
@@ -113,4 +110,21 @@ def transcript(request):
     return render(
         request,
         'app/transcript.html',
+    )
+
+def report(request):
+    report = Signature.objects.order_by(
+        'location',
+    ).values(
+        'location',
+    ).annotate(
+        c=Count('id'),
+    )
+    total = Signature.objects.aggregate(
+        c=Count('id'),
+    )['c']
+    return render(
+        request,
+        'app/report.html',
+        {'report': report, 'total': total},
     )

@@ -16,4 +16,5 @@ urlpatterns = [
     path('unrealistic', views.unrealistic, name='unrealistic',),
     path('framework', views.framework, name='framework',),
     path('transcript', views.transcript, name='transcript',),
+    path('report', views.report, name='report',),
 ]
