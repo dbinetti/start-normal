@@ -22,6 +22,7 @@ class Signature(models.Model):
         RC = 'RC', ('Redwood City')
         SB = 'SB', ('San Bruno')
         SC = 'SC', ('San Carlos')
+        SM = 'SM', ('San Mateo')
         SSF = 'SSF', ('South San Francisco')
         WOODSIDE = 'WS', ('Woodside')
         UN = 'UN', ('Unincorporated San Mateo County')
