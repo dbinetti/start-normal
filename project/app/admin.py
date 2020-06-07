@@ -28,6 +28,7 @@ class SignatureAdmin(admin.ModelAdmin):
         'is_subscribed',
     ]
     list_editable = [
+        'name',
         'location',
         'is_public',
         'is_subscribed',
