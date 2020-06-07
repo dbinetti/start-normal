@@ -39,7 +39,7 @@ class IndexView(TestCase):
         form_data = {
             'name': 'foobar',
             'email': 'foo@bar.com',
-            'city': 'city',
+            'location': 'SC',
         }
         form = SignatureForm(data=form_data)
         self.assertTrue(form.is_valid())
