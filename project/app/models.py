@@ -4,11 +4,6 @@ from django.db import models
 
 class Signature(models.Model):
 
-    class Preferences(models.TextChoices):
-        INITIALS = 'INIT', ('Intials Only')
-        PUBLIC = 'PUB', ('Full Name')
-        ANON = 'ANON', ('Anonymous')
-
     class Location(models.TextChoices):
         ATHERTON = 'ATH', ('Atherton')
         BELMONT = 'BEL', ('Belmont')
@@ -29,8 +24,8 @@ class Signature(models.Model):
         SC = 'SC', ('San Carlos')
         SSF = 'SSF', ('South San Francisco')
         WOODSIDE = 'WS', ('Woodside')
-        UN = 'UN', ('Unincorporated SMC')
-        OUT = 'OUT', ('Outside of SMC')
+        UN = 'UN', ('Unincorporated San Mateo County')
+        OUT = 'OUT', ('Outside of San Mateo County')
 
     name = models.CharField(
         max_length=255,
@@ -45,11 +40,11 @@ class Signature(models.Model):
         null=True,
         blank=False,
     )
-    preferences = models.CharField(
-        max_length=255,
-        choices=Preferences.choices,
-        null=True,
-        blank=True,
+    is_public = models.BooleanField(
+        default=False,
+    )
+    is_subscribed = models.BooleanField(
+        default=False,
     )
     location = models.CharField(
         max_length=255,
@@ -67,14 +62,13 @@ class Signature(models.Model):
     )
     email = models.EmailField(
         null=True,
-        blank=True,
+        blank=False,
     )
     notes = models.TextField(
         max_length=255,
         null=True,
         blank=True,
     )
-
 
     timestamp = models.DateTimeField(
         auto_now_add=True,

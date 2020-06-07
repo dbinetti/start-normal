@@ -11,32 +11,16 @@ class SignatureForm(forms.ModelForm):
         fields = [
             'name',
             'email',
-            'city',
+            'is_public',
+            'is_subscribed',
+            'location',
             'notes',
         ]
         widgets = {
-            'name': forms.TextInput(
-                attrs={
-                    'class': 'form-control',
-                    'placeholder': 'Name/Anonymous (public)',
-                    }
-                ),
-            'city': forms.TextInput(
-                attrs={
-                    'class': 'form-control',
-                    'placeholder': 'City (public)',
-                    }
-                ),
-            'email': forms.EmailInput(
-                attrs={
-                    'class': 'form-control',
-                    'placeholder': 'Email (kept private, only for updates)',
-                    }
-                ),
             'notes': forms.Textarea(
                 attrs={
                     'class': 'form-control h-25',
-                    'placeholder': 'Brief Notes (kept private, only for context)',
+                    'placeholder': 'Brief Notes (optional, private)',
                     'rows': 5,
                     }
                 ),

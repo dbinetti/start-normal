@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "a00cea097ad8d529b2fa3ad6aa4c555e0ca2bc7e0b9f50c8daba2aacb3286eae"
+            "sha256": "be38fa8c55ca8e0157f44eeb8915899ac47a4b2e6e9838265d39233bf20da6a0"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -38,6 +38,14 @@
                 "sha256:bbbf4b1e5cd2bdb08f915895b51081c041bac22394fdfcfdfbe9f14b77c08bf2"
             ],
             "version": "==0.1.0"
+        },
+        "beautifulsoup4": {
+            "hashes": [
+                "sha256:73cc4d115b96f79c7d77c1c7f7a0a8d4c57860d1041df407dd1aae7f07a77fd7",
+                "sha256:a6237df3c32ccfaee4fd201c8f5f9d9df619b93121d01353a64a73ce8c6ef9a8",
+                "sha256:e718f2342e2e099b640a34ab782407b7b676f47ee272d6739e60b8ea23829f2c"
+            ],
+            "version": "==4.9.1"
         },
         "brotli": {
             "hashes": [
@@ -100,6 +108,14 @@
             ],
             "index": "pypi",
             "version": "==3.0.7"
+        },
+        "django-bootstrap4": {
+            "hashes": [
+                "sha256:7baf22ab8570b5147b566b3431738c4f3558604ad7a8140f69d784a04c9eb1c8",
+                "sha256:f1fbe0ab1e6357072642b25c0e7473b3bfe31d9f28eaacad237474a94f8df792"
+            ],
+            "index": "pypi",
+            "version": "==2.0.1"
         },
         "django-environ": {
             "hashes": [
@@ -251,6 +267,14 @@
             ],
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3'",
             "version": "==1.15.0"
+        },
+        "soupsieve": {
+            "hashes": [
+                "sha256:1634eea42ab371d3d346309b93df7870a88610f0725d47528be902a0d95ecc55",
+                "sha256:a59dc181727e95d25f781f0eb4fd1825ff45590ec8ff49eadfd7f1a537cc0232"
+            ],
+            "markers": "python_version >= '3.5'",
+            "version": "==2.0.1"
         },
         "sqlparse": {
             "hashes": [

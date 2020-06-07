@@ -13,6 +13,8 @@ class SignatureAdmin(admin.ModelAdmin):
         'email',
         'phone',
         'is_volunteer',
+        'is_public',
+        'is_subscribed',
         'city',
         'notes',
     ]
@@ -23,6 +25,8 @@ class SignatureAdmin(admin.ModelAdmin):
         'timestamp',
         'is_approved',
         'is_volunteer',
+        'is_public',
+        'is_subscribed',
         'notes',
     ]
     list_filter = [

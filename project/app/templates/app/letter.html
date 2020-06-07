@@ -1,7 +1,8 @@
 {% extends 'app/base.html' %}
+{% load bootstrap4 %}
 
 {% block content %}
-<section class='my-5'>
+<section class='my-5 col-lg-9'>
 <h2>
   San Mateo County Board of Supervisors,
 </h2>
@@ -18,6 +19,26 @@
 <section class='mt-2 col-lg-9'>
   <form method='post' action='{% url "letter" %}' class='form-horizontal' role='form'>
     {% csrf_token %}
+    {% bootstrap_form_errors form %}
+    {% bootstrap_field form.name show_label=False placeholder="Name/Anonymous (required, public)"%}
+    {% bootstrap_field form.email show_label=False placeholder="Email (required, private)"%}
+    {% bootstrap_field form.location show_label=False%}
+    {% bootstrap_field form.notes show_label=False size='small' placeholder="Notes (optional, private)"%}
+    <div class="form-group form-check-inline">
+      <input type="checkbox" name='is_public' class="form-check-input" id="id_is_public">
+      <label class="form-check-label" for="id_is_public">You May Show My Name Publicly</label>
+    </div>
+    <div class="form-group form-check-inline">
+      <input type="checkbox" name='is_subscribed' class="form-check-input" id="id_is_subscribed">
+      <label class="form-check-label" for="id_is_subscribed">You May Email Me Updates</label>
+    </div>
+    {% buttons %}
+      <button type="submit" class="btn btn-primary btn-lg btn-block">
+        Add My Name
+      </button>
+    {% endbuttons %}
+
+    {% comment %}
     {% if form.subject.errors %}
       <ol role="alertdialog">
           {% for error in form.subject.errors %}
@@ -35,17 +56,25 @@
       {{form.email}}
     </div>
     <div class="form-group p-1">
+      {{form.is_public}}
+    </div>
+    <div class="form-group p-1">
+      {{form.is_subscribed}}
+    </div>
+    <div class="form-group p-1">
       {{form.notes}}
     </div>
     <div class="form-group p-1">
       <button type="submit" class="btn btn-primary form-control">Add My Name</button>
     </div>
+    {% endcomment %}
   </form>
 </section>
-<section class='mt-2 col-lg-9'>
+<section class='my-5 col-lg-9'>
   <div class="card">
     <div class="card-body">
-      <p class="card-text"><strong>Note:</strong>  Your Name and City will be added to the letter and the website.  It is much more powerful to include your actual name, but otherwise indicate as "Anonymous".  Your email will not be shared; it will simply be used to provide updates.</p>
+      <p class="card-text"><strong>Note:</strong>Your name will be on the physical letter, but you can have it read "Anonymous" (be aware it is much more powerful when your actual name).  On the website names will be shown as Initials-Only, unless you indicate "You May Show My Name Publicly".  Email and Notes are always kept private.  Choose "You May Email Me Updates" to receive periodic updates.
+      </p>
     </div>
   </div>
 </section>
