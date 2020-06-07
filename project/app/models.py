@@ -39,7 +39,7 @@ class Signature(models.Model):
     city = models.CharField(
         max_length=255,
         null=True,
-        blank=False,
+        blank=True,
     )
     is_public = models.BooleanField(
         default=False,
