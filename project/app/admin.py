@@ -20,8 +20,8 @@ class SignatureAdmin(admin.ModelAdmin):
         'notes',
     ]
     list_display = [
-        'name',
         'email',
+        'name',
         'city',
         'location',
         'is_public',
