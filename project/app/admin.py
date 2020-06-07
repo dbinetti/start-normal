@@ -23,11 +23,14 @@ class SignatureAdmin(admin.ModelAdmin):
         'name',
         'email',
         'city',
-        'is_approved',
-        'is_volunteer',
+        'location',
         'is_public',
         'is_subscribed',
+    ]
+    list_editable = [
         'location',
+        'is_public',
+        'is_subscribed',
     ]
     list_filter = [
         'location',
