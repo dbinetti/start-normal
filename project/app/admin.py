@@ -16,20 +16,21 @@ class SignatureAdmin(admin.ModelAdmin):
         'is_public',
         'is_subscribed',
         'city',
+        'location',
         'notes',
     ]
     list_display = [
         'name',
         'email',
         'city',
-        'timestamp',
         'is_approved',
         'is_volunteer',
         'is_public',
         'is_subscribed',
-        'notes',
+        'location',
     ]
     list_filter = [
+        'location',
         'is_approved',
     ]
     search_fields = [
