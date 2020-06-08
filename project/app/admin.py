@@ -10,31 +10,33 @@ class SignatureAdmin(admin.ModelAdmin):
     fields = [
         'is_approved',
         'name',
+        'handle',
         'email',
         'phone',
         'is_volunteer',
         'is_public',
         'is_subscribed',
-        'city',
         'location',
         'notes',
     ]
     list_display = [
         'email',
         'name',
-        'city',
+        'handle',
         'location',
         'is_public',
         'is_subscribed',
     ]
     list_editable = [
         'name',
+        'handle',
         'location',
         'is_public',
         'is_subscribed',
     ]
     list_filter = [
         'location',
+        'is_public',
         'is_approved',
     ]
     search_fields = [

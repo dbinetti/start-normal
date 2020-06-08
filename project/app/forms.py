@@ -10,6 +10,7 @@ class SignatureForm(forms.ModelForm):
         model = Signature
         fields = [
             'name',
+            'handle',
             'email',
             'is_public',
             'is_subscribed',

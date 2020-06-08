@@ -20,18 +20,21 @@
   <form method='post' action='{% url "letter" %}' class='form-horizontal' role='form'>
     {% csrf_token %}
     {% bootstrap_form_errors form %}
-    {% bootstrap_field form.name show_label=False placeholder="Name/Anonymous (required, public)"%}
-    {% bootstrap_field form.email show_label=False placeholder="Email (required, private)"%}
+    {% bootstrap_field form.name show_label=False show_help=True placeholder="Private Name"%}
+    {% bootstrap_field form.handle show_label=False show_help=True placeholder="Public Name"%}
+    <div class='row'>
+      <div class='col-9'>
+        {% bootstrap_field form.email show_label=False show_help=True placeholder="Private Email"%}
+      </div>
+      <div class='col-3'>
+        <div class="form-group form-check-inline">
+          <input type="checkbox" name='is_subscribed' checked=checked class="form-check-input" id="id_is_subscribed">
+          <label class="form-check-label" for="id_is_subscribed">Send Updates</label>
+        </div>
+      </div>
+    </div>
     {% bootstrap_field form.location show_label=False%}
-    {% bootstrap_field form.notes show_label=False size='small' placeholder="Notes (optional, private)"%}
-    <div class="form-group form-check-inline">
-      <input type="checkbox" name='is_public' class="form-check-input" id="id_is_public">
-      <label class="form-check-label" for="id_is_public">You May Show My Name Publicly</label>
-    </div>
-    <div class="form-group form-check-inline">
-      <input type="checkbox" name='is_subscribed' class="form-check-input" id="id_is_subscribed">
-      <label class="form-check-label" for="id_is_subscribed">You May Email Me Updates</label>
-    </div>
+    {% bootstrap_field form.notes show_label=False size='small' placeholder="Private Notes"%}
     {% buttons %}
       <button type="submit" class="btn btn-primary btn-lg btn-block">
         Add My Name
@@ -70,12 +73,15 @@
     {% endcomment %}
   </form>
 </section>
+{% comment %}
 <section class='my-5 col-lg-9'>
   <div class="card">
     <div class="card-body">
-      <p class="card-text"><strong>Note:</strong>Your name will be on the physical letter, but you can have it read "Anonymous" (be aware it is much more powerful when your actual name).  On the website names will be shown as Initials-Only, unless you indicate "You May Show My Name Publicly".  Email and Notes are always kept private.  Choose "You May Email Me Updates" to receive periodic updates.
+      <p class="card-text"><strong>Note:</strong>
+        Your name will serve as a signature on the letter, but otherwise will remain private..  On the website names will be shown as Initials-Only, unless you indicate "You May Show My Name Publicly".  Email and Notes are always kept private.  Choose "You May Email Me Updates" to receive periodic updates.
       </p>
     </div>
   </div>
 </section>
+{% endcomment %}
 {% endblock content %}

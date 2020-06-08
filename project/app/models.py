@@ -32,6 +32,13 @@ class Signature(models.Model):
         max_length=255,
         null=False,
         blank=False,
+        help_text="""Your private name will be included on the letter, but otherwise will remain private.  Ideally this would be your real name, but feel free to use something like 'Concerned Parent' if you wish.""",
+    )
+    handle = models.CharField(
+        max_length=255,
+        null=False,
+        blank=True,
+        help_text="""Your public name is how it will appear on the website.  This could be your real name (which is the most powerful), or first name initial last name, or something like 'Father of Two'.  If blank, defaults to your real name.""",
     )
     is_approved = models.BooleanField(
         default=False,
@@ -45,13 +52,14 @@ class Signature(models.Model):
         default=False,
     )
     is_subscribed = models.BooleanField(
-        default=False,
+        default=True,
     )
     location = models.CharField(
         max_length=255,
         choices=Location.choices,
         null=True,
         blank=False,
+        help_text="""Your location helps us identify the proper Supervisor to whom to direct your concern.  We are focused on San Mateo County, specifically.""",
     )
     phone = models.CharField(
         max_length=255,
@@ -64,11 +72,13 @@ class Signature(models.Model):
     email = models.EmailField(
         null=True,
         blank=False,
+        help_text="""Your email is private and not shared.  We need it to manage preferences and send updates.  If you do not wish updates, unclick the 'Send Updates' checkbox.""",
     )
     notes = models.TextField(
         max_length=255,
         null=True,
         blank=True,
+        help_text="""Feel free to include anything you think we should know.  For instance, many have used this box to indicate they are teachers who are supportive of starting normal -- and we love to hear that!""",
     )
 
     timestamp = models.DateTimeField(
