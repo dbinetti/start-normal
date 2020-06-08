@@ -1,0 +1,58 @@
+
+
+Dear {{signature.name}},
+
+1. Signatures take off - currently at nearly 1200
+2. Meeting with Supervisor Slocam today to share our views
+3. Website will be updated with signatures today
+4. Video #3 Student Spread https://start-normal.wistia.com/medias/fdhyfqu7kz
+5. What’s next? An explainer on why starting normal is best
+
+
+
+First, *thank you*.  It took forever, but I finally did get my
+video on Student Spread finished.  That's at the bottom, but here are some updates:
+
+**Signatures**
+I was so pleased when we exceeded our original goal of 100 signatures and
+stood at 400 signatures in my last update.  I was hoping to double
+that total before Monday morning, but that didn't happen.  Instead, it *TRIPLED*.
+Yes, we currently stand at just under 1,200 signatures -- an amazing jump given
+it was a weekend.  Hitting four-digits is a big, big deal so well done and thank you!
+
+**Meeting with Supervisor Slocum**
+I'll be providing Supervisor Slocum with all our signatures in just a few hours, and
+it's so great to be able to point to *thousands* of concerned parents.  I will
+report on the results, probably in tomorrow's update.
+
+
+**Adding Names/Initials**
+I'll be adding names and initials to the website at some point today, which given your
+preferences will appear as:
+
+{% if signature.is_public %}
+  {{signature.name}}
+{% else %}
+  Initials
+{% endif %}
+
+If you'd like to change this please let me know and I'll do so immediately.
+
+
+**Video #3: Student Spread**
+Here’s the latest video discussing Student Spread.  Please watch
+and SHARE using the buttons on the bottom right of the video. It will take
+some time to have everyone turn around, but we need to help ease the anxiety
+any way we can.
+
+https://start-normal.wistia.com/medias/fdhyfqu7kz
+
+**What's Next**
+Up next is a quick overview of why starting normal is the best chance for our
+school districts to survive.  Not sure I'll get it done today, but I'm going
+to give it my level best.
+
+As always, thank you for standing up for our children,
+
+Dave
+

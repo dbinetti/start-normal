@@ -13,15 +13,16 @@ def send_email(email):
 
 def send_first():
 
-    signatures = Signature.objects.exclude(
-        email=None,
+    signatures = Signature.objects.filter(
+        email__isnull=False,
+        is_subscribed=True,
     )
 
     for signature in signatures:
 
-        template = 'emails/initials.txt'
+        template = 'emails/second.txt'
         context = {'signature': signature}
-        subject = "Start Normal - Update #1 UPDATED"
+        subject = "Start Normal - Update #2"
         to = [signature.email]
 
         email = build_email(
