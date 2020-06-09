@@ -1,5 +1,5 @@
 # Local
-# First-Party
+# Third-Party
 from django_rq import job
 
 from .models import *
@@ -20,9 +20,9 @@ def send_first():
 
     for signature in signatures:
 
-        template = 'emails/second.txt'
+        template = 'emails/third.txt'
         context = {'signature': signature}
-        subject = "Start Normal - Update #2"
+        subject = "Start Normal - Update #3"
         to = [signature.email]
 
         email = build_email(
