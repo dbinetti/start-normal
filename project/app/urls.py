@@ -17,4 +17,5 @@ urlpatterns = [
     path('framework', views.framework, name='framework',),
     path('transcript', views.transcript, name='transcript',),
     path('report', views.report, name='report',),
+    path('notes', views.notes, name='notes',),
 ]

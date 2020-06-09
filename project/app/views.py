@@ -1,11 +1,19 @@
 # Django
-# First-Party
+# Third-Party
 import django_rq
-from django.contrib import messages
-from django.core.mail import EmailMessage
-from django.db.models import Count, Sum
-from django.shortcuts import redirect, render
 from django_rq import job
+
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.core.mail import EmailMessage
+from django.db.models import (
+    Count,
+    Sum,
+)
+from django.shortcuts import (
+    redirect,
+    render,
+)
 
 # Local
 from .forms import SignatureForm
@@ -127,4 +135,15 @@ def report(request):
         request,
         'app/report.html',
         {'report': report, 'total': total},
+    )
+
+@login_required
+def notes(request):
+    signatures = Signature.objects.exclude(
+        notes="",
+    ).order_by('id')
+    return render(
+        request,
+        'app/notes.html',
+        {'signatures': signatures},
     )

@@ -1,0 +1,33 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+
+<section class='mb-5'>
+  <p class='lead'>
+    Notes
+  </p>
+</section>
+<section>
+  <table class='table table-bordered'>
+    <thead class='thead-dark'>
+      <tr>
+        <th scope='col'>
+          ID
+        </th>
+        <th scope='col'>
+          Notes
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for signature in signatures %}
+        <tr>
+          <td>{{signature.id}}</td>
+          <td>{{signature.notes}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+{% endblock content %}
