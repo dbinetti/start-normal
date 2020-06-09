@@ -141,6 +141,8 @@ def report(request):
 def notes(request):
     signatures = Signature.objects.exclude(
         notes="",
+    ).exclude(
+        notes=None,
     ).order_by('id')
     return render(
         request,
