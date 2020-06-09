@@ -7,6 +7,7 @@ from .models import Signature
 
 @admin.register(Signature)
 class SignatureAdmin(admin.ModelAdmin):
+    save_on_top = True
     fields = [
         'is_approved',
         'name',
