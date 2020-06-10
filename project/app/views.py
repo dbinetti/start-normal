@@ -1,8 +1,4 @@
 # Django
-# Third-Party
-import django_rq
-from django_rq import job
-
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.mail import EmailMessage
@@ -14,6 +10,10 @@ from django.shortcuts import (
     redirect,
     render,
 )
+
+# First-Party
+import django_rq
+from django_rq import job
 
 # Local
 from .forms import SignatureForm
@@ -39,6 +39,7 @@ def index(request):
     )
 
 def letter(request):
+    return redirect('index')
     if request.method == "POST":
         form = SignatureForm(request.POST)
         if form.is_valid():
