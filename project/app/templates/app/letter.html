@@ -4,25 +4,30 @@
 {% block content %}
 <section class='my-5 col-lg-9'>
 <h2>
-  Thank You All So Much!
+  Mike Callagy<br>
+  San Mateo County Executive
+<br><br><br>
+  Dear Mr. Callagy,
 </h2>
-  <p>
-    Quick update that I was able to deliver our first letter to the San Mateo
-    County Board of Supervisors!  I received good feedback that
-    we'll be incorporating into our next letter.  I'm working as hard as I can on a
-    draft of that and will update that here as soon as I'm able.
-  </p>
-  <p>
-    Obviously this means everyone will get an opportunity to add or remove their name
-    depending on what the next letter says and for now have disabled new signatures since you plainly need to know what you're signing. :-)
-  </p>
 
-<p>
-   And while Ghandi didn't <em>actually</em> say it, just remember:  "First they ignore you, then they ridicule you, then they fight you.
-</p>
-<h4>
-  Then you win.
-</h4>
+  <p>
+    We are writing to request you direct San Mateo County Public Health Officer, Dr. Scott Morrow, to
+    engage with parents.  We have repeatedly reached out to Dr. Morrow in good faith, including through a
+    personal appeal from Board of Supervisors President Warren Slocum, only to be ignored.  Hence, we
+    are reaching out to you as his superior officer to please direct him to respond.
+  </p>
+  <p>
+    We believe Dr. Morrow should broaden his considerations to include the social-emotional impact his
+    choices will have on our children and provide evidence that his proposed solutions effectively address the problem he seeks to solve.  We are only asking for an opportunity to present our concerns and receive a data-driven response.
+  </p>
+  <p>
+    If Dr. Morrow is unwilling or unable to address these concerns, we respectfully submit he
+  should allow the Districts through their elected School Boards to be able to determined what is in the best interest of their children.  </p>
+
+  <p>
+    Respectfully,
+    Parents of San Mateo County Schoolchildren
+  </p>
 <p>
 
 </p>
@@ -31,8 +36,7 @@
   <form method='post' action='{% url "letter" %}' class='form-horizontal' role='form'>
     {% csrf_token %}
     {% bootstrap_form_errors form %}
-    {% bootstrap_field form.name show_label=False show_help=True placeholder="Private Name"%}
-    {% bootstrap_field form.handle show_label=False show_help=True placeholder="Public Name"%}
+    {% bootstrap_field form.name show_label=False show_help=True placeholder="Name"%}
     <div class='row'>
       <div class='col-9'>
         {% bootstrap_field form.email show_label=False show_help=True placeholder="Private Email"%}

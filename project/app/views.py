@@ -39,7 +39,6 @@ def index(request):
     )
 
 def letter(request):
-    return redirect('index')
     if request.method == "POST":
         form = SignatureForm(request.POST)
         if form.is_valid():

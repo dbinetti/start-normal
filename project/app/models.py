@@ -32,7 +32,7 @@ class Signature(models.Model):
         max_length=255,
         null=False,
         blank=False,
-        help_text="""Your private name will be included on the letter, but otherwise will remain private.  Ideally this would be your real name, but feel free to use something like 'Concerned Parent' if you wish.""",
+        help_text="""Be aware your real name makes a real a difference.  However, we recognize that we're parents not protestors, and so use something like 'Concerned Parent' if you wish.""",
     )
     handle = models.CharField(
         max_length=255,
@@ -59,7 +59,7 @@ class Signature(models.Model):
         choices=Location.choices,
         null=True,
         blank=False,
-        help_text="""Your location helps us identify the proper Supervisor to whom to direct your concern.  We are focused on San Mateo County, specifically.""",
+        help_text="""This helps provide specificity to Mr. Callagy.""",
     )
     phone = models.CharField(
         max_length=255,
