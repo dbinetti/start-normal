@@ -32,7 +32,7 @@ class Signature(models.Model):
         max_length=255,
         null=False,
         blank=False,
-        help_text="""Be aware your real name makes a real a difference.  However, we recognize the need for privacy so use something like 'Concerned Parent' or 'Father of Two' if you feel you must.""",
+        help_text="""Be aware your real name makes a real a difference.  However, we recognize the need for privacy so use something like 'Concerned Parent' or 'Father of Two' if you feel you must.  Your signature will be part of the public record.""",
     )
     handle = models.CharField(
         max_length=255,
