@@ -22,86 +22,33 @@
 </div>
   <div class='jumbotron'>
     <div>
-          <p class='lead'>We believe the conditions for reopening schools will deeply harm our children and communities.<br><br>
-
-          Watch the video or read the <a href='{% url "transcript" %}'>transcript</a> to learn more.
-
-          {# These restritctions ignore <a href='{% url "data"%}'>key data</a>, promotes <a href='{% url "unsustainable"%}'>unsustainable policies</a>, have <a href='{% url "unrealistic"%}'>unrealistic timetables</a>, and gives away control of schools to county officials.  <br><br> #}
-          {# And in the end, <a href='{% url "morrow"%}'>no one is following these rules</a> anyway, so we'll <a href='{% url "morrow"%}'>losing enrollment</a> and <a href='{% url "morrow"%}'>crashing our property values</a> pointlessly.<br><br> #}
-          You should join other parents and sign <a href='{%url "letter" %}'>this letter</a> now so we can do something about this before it is too late.<br><br>
-
-          <div>
-            <a href='{% url "letter" %}' role='button' class='btn btn-primary btn-lg'>Sign the Letter!</a>
-          </div>
+      <h2>
+        Thank You All So Much!
+      </h2>
+        <p>
+          Quick update that I was able to deliver our first letter to the San Mateo
+          County Board of Supervisors!  I received good feedback that
+          we'll be incorporating into our next letter.  I'm working as hard as I can on a
+          draft of that and will update that here as soon as I'm able.
         </p>
-    </div>
-  </div>
-</section>
-<section>
-  <a href='https://fast.wistia.net/embed/channel/uutb20lwv5'>See other videos here.</a>
-</section>
+        <p>
+          Obviously this means everyone will get an opportunity to add or remove their name
+          depending on what the next letter says and for now have disabled new signatures since you plainly need to know what you're signing. :-)
+        </p>
+        <p>
+          More as soon as I can!
+        </p>
+
 {% comment %}
-<section class='col-sm-9'>
-  <div class='card my-5'>
-    <div class='card-body'>
-      <div class='card-title'>
-        Respectfully,
-      </div>
-      <ul class='list-unstyled'>
-      {% for signature in signatures %}
-        <li><strong>{{signature.name}}</strong>, {{signature.city}}</li>
-      {% endfor %}
-      </ul>
-    </div>
-    <div class='card-footer'>
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#signModal"> Sign the Letter!
-      </button>
+      <p>
+         And while Ghandi didn't <em>actually</em> say it, just remember:  "First they ignore you, then they ridicule you, then they fight you.
+      </p>
+      <h4>
+        Then you win.
+      </h4>
+{% endcomment %}
     </div>
   </div>
 </section>
-{% endcomment %}
-<!-- Modal -->
-<div class="modal fade" id="signModal" tabindex="-1" role="dialog" aria-labelledby="signModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="signModalLabel">Sign the Letter!</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form method='post' action='{% url "index" %}' class='form-horizontal' role='form'>
-          {% csrf_token %}
-          {% if form.subject.errors %}
-            <ol role="alertdialog">
-                {% for error in form.subject.errors %}
-                <li role="alert"><strong>{{ error|escape }}</strong></li>
-                {% endfor %}
-            </ol>
-          {% endif %}
-          <div class="form-group p-1">
-            {{form.name}}
-          </div>
-          <div class="form-group p-1">
-            {{form.city}}
-          </div>
-          <div class="form-group p-1">
-            {{form.email}}
-          </div>
-          <div class="form-group p-1">
-            {{form.notes}}
-          </div>
-          <div class="form-group p-1">
-            <button type="submit" class="btn btn-primary form-control">Start Normal!</button>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <small class='text-muted'>It will be far more powerful to share your actual name, but feel free to sign anonymously if you wish.   Your email will be kept private; provide it if you wish to be kept updated on developments.</small>
-      </div>
-    </div>
-  </div>
-</div>
 
 {% endblock content %}
