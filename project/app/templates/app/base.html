@@ -29,9 +29,11 @@
             </li>
 
             <li class="nav-item">
+              <a {% if "links" in request.path %}class="nav-link active"{% else %}class='nav-link'{% endif %} href="https://fast.wistia.net/embed/channel/uutb20lwv5">Videos</a>
+            </li>
+            <li class="nav-item">
               <a {% if "links" in request.path %}class="nav-link active"{% else %}class='nav-link'{% endif %} href="{% url 'letter' %}">Letter</a>
             </li>
-
 
 
           </ul>
