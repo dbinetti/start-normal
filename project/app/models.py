@@ -78,6 +78,7 @@ class Signature(models.Model):
         max_length=255,
         null=True,
         blank=True,
+        default=None,
         help_text="""Feel free to include anything you think we should know.  For instance, many have used this box to indicate they are teachers who are supportive of starting normal -- and we love to hear that!""",
     )
 
