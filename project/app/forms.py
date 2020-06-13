@@ -1,8 +1,15 @@
 # Django
 from django import forms
+from django.contrib.auth.forms import (
+    UserChangeForm,
+    UserCreationForm,
+)
 
 # Local
-from .models import Signature
+from .models import (
+    CustomUser,
+    Signature,
+)
 
 
 class SignatureForm(forms.ModelForm):
@@ -26,3 +33,18 @@ class SignatureForm(forms.ModelForm):
                     }
                 ),
             }
+
+
+
+class CustomUserCreationForm(UserCreationForm):
+
+    class Meta(UserCreationForm):
+        model = CustomUser
+        fields = ('email',)
+
+
+class CustomUserChangeForm(UserChangeForm):
+
+    class Meta:
+        model = CustomUser
+        fields = ('email',)
