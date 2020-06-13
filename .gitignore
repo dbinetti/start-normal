@@ -19,3 +19,4 @@ project/media/*
 project/static/*
 project/mediafiles/*
 project/staticfiles/*
+latest.dump
