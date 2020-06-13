@@ -17,6 +17,9 @@ MIDDLEWARE += [
     'querycount.middleware.QueryCountMiddleware',
 ]
 
+# Async settings
+RQ_QUEUES['default']['ASYNC'] = False
+
 DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.timer.TimerPanel',
     'debug_toolbar.panels.request.RequestPanel',
