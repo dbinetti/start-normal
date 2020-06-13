@@ -1,12 +1,20 @@
 # Django
-# First-Party
+# Third-Party
 import django_rq
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.core.mail import EmailMessage
-from django.db.models import Count, Sum
-from django.shortcuts import redirect, render
 from django_rq import job
+
+from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth import logout
+from django.core.mail import EmailMessage
+from django.db.models import (
+    Count,
+    Sum,
+)
+from django.shortcuts import (
+    redirect,
+    render,
+)
 
 # Local
 from .forms import SignatureForm
@@ -65,6 +73,7 @@ def framework(request):
         request,
         'app/framework.html',
     )
+
 def about(request):
     return render(
         request,
@@ -107,6 +116,27 @@ def transcript(request):
         'app/transcript.html',
     )
 
+
+def process_login(request):
+    email = request.POST['email']
+    password = request.POST['password']
+    user = authenticate(request, email=email, password=password)
+    if user is not None:
+        login(request, user)
+        redirect('index')
+    return render(
+        request,
+        'app/login.html',
+        {'form': form},
+    )
+
+def logout_request(request):
+    logout(request)
+    messages.info(request, "Logged out successfully!")
+    return redirect("index")
+
+
+@staff_member_required
 def report(request):
     report = Signature.objects.order_by(
         'location',
@@ -124,7 +154,7 @@ def report(request):
         {'report': report, 'total': total},
     )
 
-@login_required
+@staff_member_required
 def notes(request):
     signatures = Signature.objects.exclude(
         notes="",
