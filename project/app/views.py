@@ -1,24 +1,36 @@
 # Django
 # Third-Party
 import django_rq
+import shortuuid
 from django_rq import job
 
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth import logout
+from django.contrib.auth import (
+    authenticate,
+    login,
+    logout,
+)
 from django.core.mail import EmailMessage
 from django.db.models import (
     Count,
     Sum,
 )
+from django.dispatch import receiver
 from django.shortcuts import (
     redirect,
     render,
 )
 
 # Local
-from .forms import SignatureForm
-from .models import Signature
+from .forms import (
+    CustomUserCreationForm,
+    SignatureForm,
+)
+from .models import (
+    CustomUser,
+    Signature,
+)
 from .tasks import build_email
 
 
@@ -37,18 +49,32 @@ def letter(request):
     if request.method == "POST":
         form = SignatureForm(request.POST)
         if form.is_valid():
-            form.save()
+            signature = form.save()
+
+
+
+            email = form.cleaned_data.get('email')
+            password = shortuuid.uuid()
+            user = CustomUser(
+                email=email,
+                password=password,
+            )
+            user.save()
+            user.refresh_from_db()
+            signature.user = user
+            signature.save()
+
             messages.success(
                 request,
                 'Your name has been added to the Letter.',
             )
             context = form.cleaned_data
-            if context['email']:
+            if email:
                 email = build_email(
                     subject='Start Normal - Thank You!',
                     template='emails/thank_you.txt',
                     context=context,
-                    to=[context['email']],
+                    to=[email],
                 )
                 if context['notes']:
                     email.bcc = ['dbinetti@gmail.com']

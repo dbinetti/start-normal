@@ -65,41 +65,14 @@ class CustomUserAdmin(UserAdmin):
     model = CustomUser
     list_display = [
         'email',
-        'name',
-        'handle',
-        'location',
-        'is_public',
-        'is_subscribed',
-    ]
-    list_editable = [
-        'name',
-        'handle',
-        'location',
-        'is_public',
-        'is_subscribed',
-    ]
-    list_filter = [
-        'location',
-        'is_public',
-        'is_approved',
     ]
     search_fields = [
-        'name',
         'email',
     ]
     fieldsets = (
         (None, {
             'fields': [
-                'is_approved',
-                'name',
-                'handle',
                 'email',
-                'phone',
-                'is_volunteer',
-                'is_public',
-                'is_subscribed',
-                'location',
-                'notes',
             ]
         }
         ),
@@ -110,8 +83,6 @@ class CustomUserAdmin(UserAdmin):
             'classes': ('wide',),
             'fields': [
                 'email',
-                'name',
-                'location',
                 'password1',
                 'password2',
                 'is_staff',
@@ -120,9 +91,6 @@ class CustomUserAdmin(UserAdmin):
         }
         ),
     )
-    ordering = [
-        'timestamp',
-    ]
-
+    ordering = ['email']
 
 admin.site.register(CustomUser, CustomUserAdmin)
