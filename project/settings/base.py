@@ -2,14 +2,13 @@
 # Standard Libary
 import os
 
-# Django
-from django.contrib.messages import constants as messages
-
-# First-Party
 from environ import (
     Env,
     Path,
 )
+
+# Django
+from django.contrib.messages import constants as messages
 
 # Set Environment
 env = Env(
@@ -38,6 +37,7 @@ TIME_FORMAT = 'H:i:s'
 DATETIME_FORMAT = 'Y-m-d H:i:s'
 
 # Authentication
+AUTH_USER_MODEL = 'app.CustomUser'
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
