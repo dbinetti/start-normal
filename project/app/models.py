@@ -1,4 +1,8 @@
 # Django
+# Third-Party
+import shortuuid
+from shortuuidfield import ShortUUIDField
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -97,6 +101,11 @@ class Signature(models.Model):
 
 
 class CustomUser(AbstractUser):
+    id = ShortUUIDField(
+        primary_key=True,
+        default=shortuuid.uuid()[:8],
+    )
+
     username = None
     email = models.EmailField(
         'email address',
