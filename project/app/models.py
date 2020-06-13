@@ -126,6 +126,10 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.email
 
+    @property
+    def is_superuser(self):
+        return self.is_staff
+
 
 # @receiver(post_save, sender=User)
 # def update_signature_signal(sender, instance, created, **kwargs):

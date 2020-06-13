@@ -66,6 +66,9 @@ class CustomUserAdmin(UserAdmin):
     list_display = [
         'email',
     ]
+    list_filter = [
+        'is_staff',
+    ]
     search_fields = [
         'email',
     ]
