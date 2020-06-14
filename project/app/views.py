@@ -11,6 +11,7 @@ from django.core.mail import EmailMessage
 from django.db.models import Count, Sum
 from django.dispatch import receiver
 from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
 from django_rq import job
 
 # Local
@@ -23,6 +24,8 @@ from .tasks import build_email, send_email, subscribe_email
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     template_name='app/claim.html'
     form_class = CustomSetPasswordForm
+    post_reset_login = True
+    success_url = reverse_lazy('account')
 
 @login_required
 def account(request):
@@ -56,7 +59,7 @@ def delete(request):
             signature.delete()
             user.is_active = False
             user.save()
-            messages.danger(
+            messages.error(
                 request,
                 "Account Deleted!",
             )

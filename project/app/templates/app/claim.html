@@ -4,22 +4,32 @@
 {% block content %}
 
 {% if validlink %}
+<br><br>
+<div class='col-lg-9'>
+  <div class='card'>
+    <div class='card-header'>
+      Create New Password
+    </div>
+    <div class='card-body'>
+      <form method="post" action=".">
+        {% csrf_token %}
+        {% bootstrap_form_errors form %}
+        {% bootstrap_field form.new_password1 show_label=False%}
+        {% bootstrap_field form.new_password2 show_label=False%}
 
-<form method="post" action=".">
-  {% csrf_token %}
-  {% bootstrap_form form %}
-
-  {% buttons %}
-    <button type="submit" class="btn btn-primary btn-lg btn-block">
-      Subb
-    </button>
-  {% endbuttons %}
-</form>
-
+        {% buttons %}
+          <button type="submit" class="btn btn-primary btn-lg btn-block">
+            Save and Continue
+          </button>
+        {% endbuttons %}
+      </form>
+    </div>
+  </div>
+</div>
 {% else %}
 
 <p>Password Reset Failed</p>
-<p>Try again, or call Dave at 415.713.2126 for help.</p>
+<p>Send a message to <a href='mailto:dbinetti@startnormal.com'>dbinetti@startnormal.com</a> or call Dave at 415.713.2126 for help.</p>
 
 {% endif %}
 
