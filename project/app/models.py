@@ -1,7 +1,7 @@
 # Django
 # Third-Party
 import shortuuid
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
 from shortuuidfield import ShortUUIDField
 
@@ -104,7 +104,7 @@ class Signature(models.Model):
 
 
 
-class CustomUser(AbstractUser):
+class CustomUser(AbstractBaseUser):
     id = ShortUUIDField(
         primary_key=True,
     )
@@ -129,20 +129,21 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.email
 
-  # @property
-  # def is_superuser(self):
-  #   return self.is_admin
+    def has_perm(self, perm, obj=None):
+        "Does the user have a specific permission?"
+        # Simplest possible answer: Yes, always
+        return True
 
-  # @property
-  # def is_staff(self):
-  #   return self.is_admin
+    def has_module_perms(self, app_label):
+        "Does the user have permissions to view the app `app_label`?"
+        # Simplest possible answer: Yes, always
+        return True
 
-  # def has_perm(self, perm, obj=None):
-  #   return self.is_admin
-
-  # def has_module_perms(self, app_label):
-  #   return self.is_admin
-
+    @property
+    def is_staff(self):
+        "Is the user a member of staff?"
+        # Simplest possible answer: All admins are staff
+        return self.is_admin
 
 # @receiver(post_save, sender=User)
 # def update_signature_signal(sender, instance, created, **kwargs):

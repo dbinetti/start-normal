@@ -89,5 +89,6 @@ class CustomUserAdmin(UserAdmin):
         ),
     )
     ordering = ['email']
+    filter_horizontal = ()
 
 admin.site.register(CustomUser, CustomUserAdmin)
