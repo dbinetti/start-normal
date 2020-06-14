@@ -57,6 +57,12 @@
         "PYTHONPATH": "project",
         "SECRET_KEY": {
           "generator": "secret"
+        },
+        "MAILCHIMP_API_KEY": {
+          "generator": "secret"
+        },
+        "MAILCHIMP_AUDIENCE_ID": {
+          "generator": "secret"
         }
       },
       "scripts": {
