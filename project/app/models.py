@@ -95,8 +95,11 @@ class Signature(models.Model):
         help_text="""Feel free to include anything you think we should know.  For instance, many have used this box to indicate they are teachers who are supportive of starting normal -- and we love to hear that!""",
     )
 
-    timestamp = models.DateTimeField(
+    created = models.DateTimeField(
         auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
     )
 
     def __str__(self):
@@ -123,8 +126,12 @@ class CustomUser(AbstractBaseUser):
         default=False,
     )
 
-    timestamp = models.DateTimeField(
+    created = models.DateTimeField(
         auto_now_add=True,
+    )
+
+    updated = models.DateTimeField(
+        auto_now=True,
     )
 
     USERNAME_FIELD = 'email'

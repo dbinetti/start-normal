@@ -16,7 +16,7 @@ def send_first():
     signatures = Signature.objects.filter(
         email__isnull=False,
         is_subscribed=True,
-    ).order_by('timestamp')
+    ).order_by('created')
 
     for signature in signatures:
 
