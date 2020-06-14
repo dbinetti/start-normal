@@ -84,6 +84,7 @@ class Signature(models.Model):
     email = models.EmailField(
         null=True,
         blank=False,
+        unique=True,
         help_text="""Your email is private and not shared.  We need it to manage preferences and send updates.  If you do not wish updates, unclick the 'Send Updates' checkbox.""",
     )
     notes = models.TextField(
