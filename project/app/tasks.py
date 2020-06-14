@@ -25,5 +25,5 @@ def build_email(template, context, subject, to=[], cc=[], bcc=[], attachments=[]
     return email
 
 @job
-def queue_email(email):
+def send_email(email):
     return email.send()

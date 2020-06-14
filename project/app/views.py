@@ -14,7 +14,7 @@ from django_rq import job
 # Local
 from .forms import CustomUserCreationForm, SignatureForm
 from .models import CustomUser, Signature
-from .tasks import build_email, queue_email
+from .tasks import build_email, send_email
 
 
 def index(request):
@@ -56,7 +56,7 @@ def letter(request):
                 )
                 if context['notes']:
                     email.bcc = ['dbinetti@gmail.com']
-                queue_email.delay(email)
+                send_mail.delay(email)
             return redirect('thanks')
     else:
         form = SignatureForm()

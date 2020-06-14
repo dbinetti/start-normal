@@ -1,7 +1,4 @@
 
-
-Dear {{signature.name}},
-
 First, *thank you*.  The response has been overwhelming and far exceeded even
 my wildest hopes.  I have a new video that discusses Student Safety you can share,
 but first some updates:
