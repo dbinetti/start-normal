@@ -1,9 +1,20 @@
 {% extends 'app/base.html' %}
+{% load bootstrap4 %}
 
 {% block content %}
 
 <section class='my-5'>
-  Protected
+  <form method='post' action='{% url "account" %}' role='form'>
+    {% csrf_token %}
+    {% bootstrap_form_errors form %}
+    {% bootstrap_form form %}
+    {% buttons %}
+      <button type="submit" class="btn btn-primary btn-lg btn-block">
+        Save
+      </button>
+    {% endbuttons %}
+  </form>
+
 </section>
 
 {% endblock content %}

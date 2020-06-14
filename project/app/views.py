@@ -14,7 +14,7 @@ from django.shortcuts import redirect, render
 from django_rq import job
 
 # Local
-from .forms import (CustomSetPasswordForm, CustomUserCreationForm,
+from .forms import (AccountForm, CustomSetPasswordForm, CustomUserCreationForm,
                     SignatureForm, SubscribeForm)
 from .models import CustomUser, Signature
 from .tasks import build_email, send_email, subscribe_email
@@ -26,9 +26,24 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
 
 @login_required
 def account(request):
+    user = request.user
+    signature = Signature.objects.get(
+        user=user,
+    )
+    if request.method == "POST":
+        form = AccountForm(request.POST, instance=signature)
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                "Saved!",
+            )
+    else:
+        form = AccountForm(instance=signature)
     return render(
         request,
         'app/account.html',
+        {'form': form,},
     )
 
 def index(request):

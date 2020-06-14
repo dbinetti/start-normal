@@ -11,6 +11,26 @@ class CustomSetPasswordForm(SetPasswordForm):
     pass
 
 
+class AccountForm(forms.ModelForm):
+    class Meta:
+        model = Signature
+        fields = [
+            'name',
+            'is_public',
+            'is_subscribed',
+            'location',
+            'notes',
+        ]
+        widgets = {
+            'notes': forms.Textarea(
+                attrs={
+                    'class': 'form-control h-25',
+                    'placeholder': 'Brief Notes (optional, private)',
+                    'rows': 5,
+                    }
+                ),
+            }
+
 class SignatureForm(forms.ModelForm):
     class Meta:
         model = Signature
