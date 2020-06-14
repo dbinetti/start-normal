@@ -5,6 +5,7 @@ import shortuuid
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.core.mail import EmailMessage
 from django.db.models import Count, Sum
@@ -23,6 +24,12 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     template_name='app/claim.html'
     form_class = CustomSetPasswordForm
 
+@login_required
+def account(request):
+    return render(
+        request,
+        'app/account.html',
+    )
 
 def index(request):
     return render(

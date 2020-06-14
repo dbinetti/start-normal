@@ -13,5 +13,6 @@ urlpatterns = [
     path('report', views.report, name='report',),
     path('videos', views.videos, name='videos',),
     path('notes', views.notes, name='notes',),
+    path('account', views.account, name='account',),
     path('account/reset/<uidb64>/<token>/', views.CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
 ]

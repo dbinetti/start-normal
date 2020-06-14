@@ -2,13 +2,9 @@
 # Standard Libary
 import os
 
-from environ import (
-    Env,
-    Path,
-)
-
 # Django
 from django.contrib.messages import constants as messages
+from environ import Env, Path
 
 # Set Environment
 env = Env(
@@ -41,9 +37,9 @@ AUTH_USER_MODEL = 'app.CustomUser'
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
-LOGIN_URL = 'admin:login'
-LOGIN_REDIRECT_URL = 'admin:index'
-LOGOUT_REDIRECT_URL = 'admin:login'
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'account'
+LOGOUT_REDIRECT_URL = 'index'
 
 
 # Database
