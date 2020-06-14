@@ -14,7 +14,7 @@ def build_email(template, context, subject, to=[], cc=[], bcc=[], attachments=[]
     email = EmailMessage(
         subject=subject,
         body=body,
-        from_email='David Binetti <dbinetti@gmail.com>',
+        from_email='David Binetti <dbinetti@startnormal.com>',
         to=to,
         cc=cc,
         bcc=bcc,

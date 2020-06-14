@@ -53,7 +53,7 @@ def letter(request):
                     to=[email],
                 )
                 if context['notes']:
-                    email.bcc = ['dbinetti@gmail.com']
+                    email.bcc = ['dbinetti@startnormal.com']
                 send_email.delay(email)
             return redirect('thanks')
     else:
