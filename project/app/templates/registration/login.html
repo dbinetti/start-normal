@@ -1,0 +1,18 @@
+{% extends "app/base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+<form method="post" action=".">
+  {% csrf_token %}
+  {% bootstrap_form form %}
+
+  {% buttons %}
+    <button type="submit" class="btn btn-primary btn-lg btn-block">
+      Login
+    </button>
+  {% endbuttons %}
+  <input type="hidden" name="next" value="{{ next }}" />
+</form>
+
+<p><a href="{% url 'password_reset' %}">Reset Password</a>!</p>
+{% endblock %}
