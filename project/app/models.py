@@ -123,6 +123,10 @@ class CustomUser(AbstractBaseUser):
         default=False,
     )
 
+    timestamp = models.DateTimeField(
+        auto_now_add=True,
+    )
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = [
     ]
@@ -147,9 +151,3 @@ class CustomUser(AbstractBaseUser):
         "Is the user a member of staff?"
         # Simplest possible answer: All admins are staff
         return self.is_admin
-
-# @receiver(post_save, sender=User)
-# def update_signature_signal(sender, instance, created, **kwargs):
-#     if created:
-#         Signature.objects.create(user=instance)
-#     instance.profile.save()
