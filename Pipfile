@@ -23,6 +23,8 @@ django-redis = "*"
 django-rq = "*"
 django-bootstrap4 = "*"
 django-shortuuidfield = "*"
+mailchimp3 = "*"
+requests = "*"
 
 [requires]
 python_full_version = "3.8.3"
