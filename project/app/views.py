@@ -1,42 +1,27 @@
 # Django
-from django.contrib import messages
-from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth import (
-    authenticate,
-    login,
-    logout,
-)
-from django.core.mail import EmailMessage
-from django.db.models import (
-    Count,
-    Sum,
-)
-from django.dispatch import receiver
-from django.shortcuts import (
-    redirect,
-    render,
-)
-
 # First-Party
 import django_rq
 import shortuuid
+from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.views import PasswordResetConfirmView
+from django.core.mail import EmailMessage
+from django.db.models import Count, Sum
+from django.dispatch import receiver
+from django.shortcuts import redirect, render
 from django_rq import job
 
 # Local
-from .forms import (
-    CustomUserCreationForm,
-    SignatureForm,
-    SubscribeForm,
-)
-from .models import (
-    CustomUser,
-    Signature,
-)
-from .tasks import (
-    build_email,
-    send_email,
-    subscribe_email,
-)
+from .forms import (CustomSetPasswordForm, CustomUserCreationForm,
+                    SignatureForm, SubscribeForm)
+from .models import CustomUser, Signature
+from .tasks import build_email, send_email, subscribe_email
+
+
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    template_name='app/claim.html'
+    form_class = CustomSetPasswordForm
 
 
 def index(request):

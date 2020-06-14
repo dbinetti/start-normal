@@ -1,15 +1,14 @@
 # Django
 from django import forms
-from django.contrib.auth.forms import (
-    UserChangeForm,
-    UserCreationForm,
-)
+from django.contrib.auth.forms import (SetPasswordForm, UserChangeForm,
+                                       UserCreationForm)
 
 # Local
-from .models import (
-    CustomUser,
-    Signature,
-)
+from .models import CustomUser, Signature
+
+
+class CustomSetPasswordForm(SetPasswordForm):
+    pass
 
 
 class SignatureForm(forms.ModelForm):
