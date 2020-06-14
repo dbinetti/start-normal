@@ -29,8 +29,6 @@ def letter(request):
         if form.is_valid():
             signature = form.save()
 
-
-
             email = form.cleaned_data.get('email')
             password = shortuuid.uuid()
             user = CustomUser(
@@ -72,67 +70,12 @@ def thanks(request):
         'app/thanks.html',
     )
 
-def framework(request):
-    return render(
-        request,
-        'app/framework.html',
-    )
-
 def about(request):
     return render(
         request,
         'app/about.html',
     )
 
-def data(request):
-    return render(
-        request,
-        'app/data.html',
-    )
-
-def unsustainable(request):
-    return render(
-        request,
-        'app/unsustainable.html',
-    )
-
-def unrealistic(request):
-    return render(
-        request,
-        'app/unrealistic.html',
-    )
-
-def morrow(request):
-    return render(
-        request,
-        'app/morrow.html',
-    )
-
-def harm(request):
-    return render(
-        request,
-        'app/harm.html',
-    )
-
-def transcript(request):
-    return render(
-        request,
-        'app/transcript.html',
-    )
-
-
-def process_login(request):
-    email = request.POST['email']
-    password = request.POST['password']
-    user = authenticate(request, email=email, password=password)
-    if user is not None:
-        login(request, user)
-        redirect('index')
-    return render(
-        request,
-        'app/login.html',
-        {'form': form},
-    )
 
 def logout_request(request):
     logout(request)
