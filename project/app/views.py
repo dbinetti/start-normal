@@ -86,6 +86,7 @@ def letter(request):
             user = CustomUser(
                 email=email,
                 password=password,
+                is_active=True,
             )
             user.save()
             user.refresh_from_db()
