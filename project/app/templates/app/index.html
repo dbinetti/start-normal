@@ -1,47 +1,30 @@
 {% extends 'app/base.html' %}
 
 {% block content %}
-{% comment %}
-<section class='mt-2 col-lg-9'>
-  <div class='row align-middle'>
-    <div class='col-sm-9'>
-        <h4>
-            <span class='align-middle'><strong>Start Normal!</strong></span>
-        </h4>
-    </div>
-    <div class='col-sm-3'>
-      <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#signModal"> Sign the Letter!
-      </button>
-    </div>
-  </div>
-</section>
-{% endcomment %}
-<section class='py-3 col-lg-9'>
-  <div>
 
 
-<script src="https://fast.wistia.com/embed/medias/i0n0bp99fs.jsonp" async></script><script src="https://fast.wistia.com/assets/external/E-v1.js" async></script><div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;"><div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;"><div class="wistia_embed wistia_async_i0n0bp99fs videoFoam=true" style="height:100%;position:relative;width:100%"><div class="wistia_swatch" style="height:100%;left:0;opacity:0;overflow:hidden;position:absolute;top:0;transition:opacity 200ms;width:100%;"><img src="https://fast.wistia.com/embed/medias/i0n0bp99fs/swatch" style="filter:blur(5px);height:100%;object-fit:contain;width:100%;" alt="" aria-hidden="true" onload="this.parentNode.style.opacity=1;" /></div></div></div></div>
+<section class='py-3'>
+  <div id='id_wistia'>
+    <script src="https://fast.wistia.com/embed/medias/i0n0bp99fs.jsonp" async></script><script src="https://fast.wistia.com/assets/external/E-v1.js" async></script><div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;"><div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;"><div class="wistia_embed wistia_async_i0n0bp99fs videoFoam=true" style="height:100%;position:relative;width:100%"><div class="wistia_swatch" style="height:100%;left:0;opacity:0;overflow:hidden;position:absolute;top:0;transition:opacity 200ms;width:100%;"><img src="https://fast.wistia.com/embed/medias/i0n0bp99fs/swatch" style="filter:blur(5px);height:100%;object-fit:contain;width:100%;" alt="" aria-hidden="true" onload="this.parentNode.style.opacity=1;" /></div></div></div></div>
+  </div> <!-- end wistia -->
 
-<div class='jumbotron'>
-    <div>
-      <h2>
-        Start Normal!
-      </h2>
-    <br>
-        <p>
-          Schools are designed to be social and will not be able to open under the proposed framework.
-        </p>
-        <p>
-          We are calling for the primary driver of this document, San Mateo Public Health Officer Dr. Scott Morrow, to provide the data employed to reach his conclusions.
-        </p>
-        <p>
-          If you agree Dr. Morrow has a responsiblity to present his evidence to parents, teachers and staff, please sign our letter.
-        </p>
-          <div>
-            <a href='{% url "letter" %}' role='button' class='btn btn-primary btn-lg'>Sign the Letter!</a>
-          </div>
-
-        </p>
+  <div class='jumbotron'>
+    <h2>
+      Start Normal!
+    </h2>
+    <p>
+      Schools are designed to be social and will not be able to open under the proposed framework.
+    </p>
+    <p>
+      We are calling for the primary driver of this document, San Mateo Public Health Officer Dr. Scott Morrow, to provide the data employed to reach his conclusions.
+    </p>
+    <p>
+      If you agree we are owed an explanation with evidence, please sign our letter.
+    </p>
+    <p>
+      <a href='{% url "letter" %}' role='button' class='btn btn-primary btn-lg mx-2'>Sign the Letter!</a>
+      <a href='{% url "learn" %}' role='button' class='btn btn-light btn-lg mx-2'>Learn More</a>
+    </p>
     </div>
   </div>
 </section>

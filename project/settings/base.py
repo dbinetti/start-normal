@@ -2,9 +2,13 @@
 # Standard Libary
 import os
 
+from environ import (
+    Env,
+    Path,
+)
+
 # Django
 from django.contrib.messages import constants as messages
-from environ import Env, Path
 
 # Set Environment
 env = Env(
@@ -69,7 +73,6 @@ RQ_QUEUES = {
         'ASYNC': True,
     },
 }
-
 RQ_SHOW_ADMIN_LINK = True
 
 # Sessions
@@ -79,6 +82,10 @@ SESSION_CACHE_ALIAS = "default"
 # Email
 EMAIL_CONFIG = env.email_url('EMAIL_URL')
 vars().update(EMAIL_CONFIG)
+
+# Mailchimp
+MAILCHIMP_API_KEY = env("MAILCHIMP_API_KEY")
+MAILCHIMP_AUDIENCE_ID = env("MAILCHIMP_AUDIENCE_ID")
 
 # File Management
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'

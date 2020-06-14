@@ -2,10 +2,13 @@
 from textwrap import wrap
 
 # Django
+from django.conf import settings
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
+
 # First-Party
 from django_rq import job
+from mailchimp3 import MailChimp
 
 
 # Utility
@@ -27,3 +30,17 @@ def build_email(template, context, subject, to=[], cc=[], bcc=[], attachments=[]
 @job
 def send_email(email):
     return email.send()
+
+
+@job
+def subscribe_email(email):
+    client = MailChimp(mc_api=settings.MAILCHIMP_API_KEY)
+    data = {
+        'email_address': email,
+        'status': 'subscribed',
+    }
+    result = client.lists.members.create(
+        list_id=settings.MAILCHIMP_AUDIENCE_ID,
+        data=data,
+    )
+    return result

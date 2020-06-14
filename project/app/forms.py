@@ -34,6 +34,14 @@ class SignatureForm(forms.ModelForm):
                 ),
             }
 
+class SubscribeForm(forms.Form):
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={'class': 'form-control'})
+    )
+    def clean_email(self):
+        data = self.cleaned_data['email']
+        return data.lower()
 
 
 class CustomUserCreationForm(UserCreationForm):
