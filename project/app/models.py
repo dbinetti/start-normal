@@ -1,8 +1,9 @@
 # Django
-# Third-Party
-import shortuuid
 from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
+
+# First-Party
+import shortuuid
 from shortuuidfield import ShortUUIDField
 
 # Local
@@ -14,6 +15,7 @@ class Signature(models.Model):
         'app.CustomUser',
         on_delete=models.CASCADE,
         null=True,
+        related_name='signature',
     )
 
     class Location(models.TextChoices):
@@ -62,7 +64,7 @@ class Signature(models.Model):
     )
     is_public = models.BooleanField(
         default=False,
-        help_text="""If you would like your name listed on the Start Normal website so others can see, please check this box.""",
+        help_text="""Name on website.""",
 
     )
     is_subscribed = models.BooleanField(
@@ -73,11 +75,10 @@ class Signature(models.Model):
         choices=Location.choices,
         null=True,
         blank=False,
-        help_text="""Please provide your city. (Required)""",
+        help_text="""Your city. (Required)""",
     )
     district = models.CharField(
         max_length=255,
-        choices=Location.choices,
         null=True,
         blank=True,
         help_text="""Your school district. (Optional)""",
@@ -90,15 +91,15 @@ class Signature(models.Model):
     )
     is_volunteer = models.BooleanField(
         default=False,
-        help_text="""If you're willing to volunteer in some manner check this box. """,
+        help_text="""If you're willing to volunteer in some manner please check this box. """,
     )
     is_teacher = models.BooleanField(
         default=False,
-        help_text="""If you're an educator check this box. """,
+        help_text="""If you're an educator please check this box. """,
     )
     is_doctor = models.BooleanField(
         default=False,
-        help_text="""If you're a physician check this box. """,
+        help_text="""If you're a physician please check this box. """,
     )
     email = models.EmailField(
         null=True,

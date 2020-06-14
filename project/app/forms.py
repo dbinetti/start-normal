@@ -1,10 +1,16 @@
 # Django
 from django import forms
-from django.contrib.auth.forms import (SetPasswordForm, UserChangeForm,
-                                       UserCreationForm)
+from django.contrib.auth.forms import (
+    SetPasswordForm,
+    UserChangeForm,
+    UserCreationForm,
+)
 
 # Local
-from .models import CustomUser, Signature
+from .models import (
+    CustomUser,
+    Signature,
+)
 
 
 class CustomSetPasswordForm(SetPasswordForm):
@@ -22,8 +28,12 @@ class AccountForm(forms.ModelForm):
         fields = [
             'name',
             'is_public',
-            'is_subscribed',
             'location',
+            'district',
+            'is_volunteer',
+            'is_teacher',
+            'is_doctor',
+            # 'phone',
             'notes',
         ]
         widgets = {

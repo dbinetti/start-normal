@@ -22,21 +22,34 @@
         <span class="navbar-toggler-icon"></span>
       </button>
         <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-
-            <li class="nav-item">
-              <a {% if "links" in request.path %}class="nav-link active"{% else %}class='nav-link'{% endif %} href="{% url 'about' %}">About</a>
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item ml-3">
+              <a href="{% url 'about' %}">About</a>
+            </li>
+            <li class="nav-item ml-3">
+              <a href='{% url "videos" %}'>Videos</a>
             </li>
 
-            <li class="nav-item">
-              <a {% if "links" in request.path %}class="nav-link active"{% else %}class='nav-link'{% endif %} href='{% url "videos" %}'>Videos</a>
+            <li class="nav-item ml-3">
+              <a href="{% url 'letter' %}">Letter</a>
             </li>
-            <li class="nav-item">
-              <a {% if "links" in request.path %}class="nav-link active"{% else %}class='nav-link'{% endif %} href="{% url 'letter' %}">Letter</a>
-            </li>
-
-
           </ul>
+          {% comment %}
+          <ul class="navbar-nav ml-auto">
+            {% if request.user.is_authenticated %}
+              <li class="nav-item mr-3">
+                <a href="{% url 'account' %}">Signature</a>
+              </li>
+              <li class='nav-item'>
+                <a href='{% url "logout" %}'>Logout</a>
+              </li>
+            {% else %}
+              <li class='nav-item'>
+                <a href='{% url "login" %}'>Login</a>
+              </li>
+            {% endif %}
+          </ul>
+          {% endcomment %}
         </div>
     </nav>
 

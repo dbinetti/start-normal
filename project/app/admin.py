@@ -3,51 +3,58 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 # Local
-from .forms import CustomUserChangeForm, CustomUserCreationForm
-from .models import CustomUser, Signature
+from .forms import (
+    CustomUserChangeForm,
+    CustomUserCreationForm,
+)
+from .models import (
+    CustomUser,
+    Signature,
+)
 
 
 @admin.register(Signature)
 class SignatureAdmin(admin.ModelAdmin):
     save_on_top = True
     fields = [
-        'is_approved',
         'name',
-        'handle',
-        'email',
-        'phone',
-        'is_volunteer',
-        'is_public',
-        'is_subscribed',
+        'is_approved',
         'location',
+        'district',
+        'phone',
+        'is_public',
+        'is_volunteer',
+        'is_teacher',
+        'is_doctor',
+        'email',
         'notes',
+        'user',
     ]
     list_display = [
-        'email',
         'name',
-        'handle',
         'location',
+        'district',
         'is_public',
-        'is_subscribed',
-    ]
-    list_editable = [
-        'name',
-        'handle',
-        'location',
-        'is_public',
-        'is_subscribed',
+        'is_teacher',
+        'is_doctor',
+        'created',
+        'updated',
     ]
     list_filter = [
         'location',
         'is_public',
-        'is_approved',
+        'is_teacher',
+        'is_doctor',
+        'is_volunteer',
+        'created',
     ]
     search_fields = [
         'name',
         'email',
     ]
-
-
+    autocomplete_fields = [
+        'user',
+    ]
 
 
 
@@ -59,6 +66,7 @@ class CustomUserAdmin(UserAdmin):
     model = CustomUser
     list_display = [
         'email',
+        # 'signature',
     ]
     list_filter = [
         'is_admin',
@@ -66,10 +74,14 @@ class CustomUserAdmin(UserAdmin):
     search_fields = [
         'email',
     ]
+    autocomplete_fields = [
+        # 'signature',
+    ]
     fieldsets = (
         (None, {
             'fields': [
                 'email',
+                # 'signature',
             ]
         }
         ),
@@ -90,5 +102,6 @@ class CustomUserAdmin(UserAdmin):
     )
     ordering = ['email']
     filter_horizontal = ()
+
 
 admin.site.register(CustomUser, CustomUserAdmin)
