@@ -15,7 +15,7 @@ from django_rq import job
 
 # Local
 from .forms import (AccountForm, CustomSetPasswordForm, CustomUserCreationForm,
-                    SignatureForm, SubscribeForm)
+                    DeleteForm, SignatureForm, SubscribeForm)
 from .models import CustomUser, Signature
 from .tasks import build_email, send_email, subscribe_email
 
@@ -43,6 +43,29 @@ def account(request):
     return render(
         request,
         'app/account.html',
+        {'form': form,},
+    )
+
+@login_required
+def delete(request):
+    if request.method == "POST":
+        form = DeleteForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            signature = user.signature
+            signature.delete()
+            user.is_active = False
+            user.save()
+            messages.danger(
+                request,
+                "Account Deleted!",
+            )
+            return redirect('index')
+    else:
+        form = DeleteForm()
+    return render(
+        request,
+        'app/delete.html',
         {'form': form,},
     )
 

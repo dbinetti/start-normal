@@ -11,6 +11,11 @@ class CustomSetPasswordForm(SetPasswordForm):
     pass
 
 
+class DeleteForm(forms.Form):
+    confirm = forms.BooleanField(
+        required=True,
+    )
+
 class AccountForm(forms.ModelForm):
     class Meta:
         model = Signature
