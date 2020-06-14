@@ -3,14 +3,8 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 # Local
-from .forms import (
-    CustomUserChangeForm,
-    CustomUserCreationForm,
-)
-from .models import (
-    CustomUser,
-    Signature,
-)
+from .forms import CustomUserChangeForm, CustomUserCreationForm
+from .models import CustomUser, Signature
 
 
 @admin.register(Signature)
@@ -67,7 +61,7 @@ class CustomUserAdmin(UserAdmin):
         'email',
     ]
     list_filter = [
-        'is_staff',
+        'is_admin',
     ]
     search_fields = [
         'email',
@@ -79,7 +73,7 @@ class CustomUserAdmin(UserAdmin):
             ]
         }
         ),
-        ('Permissions', {'fields': ('is_staff', 'is_active')}),
+        ('Permissions', {'fields': ('is_admin', 'is_active')}),
     )
     add_fieldsets = (
         (None, {
@@ -88,7 +82,7 @@ class CustomUserAdmin(UserAdmin):
                 'email',
                 'password1',
                 'password2',
-                'is_staff',
+                'is_admin',
                 'is_active',
             ]
         }

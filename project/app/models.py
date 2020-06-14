@@ -1,10 +1,9 @@
 # Django
 # Third-Party
 import shortuuid
-from shortuuidfield import ShortUUIDField
-
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from shortuuidfield import ShortUUIDField
 
 # Local
 from .managers import CustomUserManager
@@ -117,6 +116,10 @@ class CustomUser(AbstractUser):
         unique=True,
     )
 
+    is_admin = models.BooleanField(
+        default=False,
+    )
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = [
     ]
@@ -126,9 +129,19 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.email
 
-    @property
-    def is_superuser(self):
-        return self.is_staff
+  # @property
+  # def is_superuser(self):
+  #   return self.is_admin
+
+  # @property
+  # def is_staff(self):
+  #   return self.is_admin
+
+  # def has_perm(self, perm, obj=None):
+  #   return self.is_admin
+
+  # def has_module_perms(self, app_label):
+  #   return self.is_admin
 
 
 # @receiver(post_save, sender=User)
