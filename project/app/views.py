@@ -56,7 +56,7 @@ def letter(request):
                 )
                 if context['notes']:
                     email.bcc = ['dbinetti@gmail.com']
-                send_mail.delay(email)
+                send_email.delay(email)
             return redirect('thanks')
     else:
         form = SignatureForm()
