@@ -12,7 +12,7 @@ from .managers import CustomUserManager
 class Signature(models.Model):
     user = models.OneToOneField(
         'app.CustomUser',
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         null=True,
     )
 
