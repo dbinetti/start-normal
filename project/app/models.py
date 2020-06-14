@@ -109,11 +109,13 @@ class CustomUser(AbstractBaseUser):
         primary_key=True,
     )
 
-    username = None
-
     email = models.EmailField(
         blank=False,
         unique=True,
+    )
+
+    is_active = models.BooleanField(
+        default=False,
     )
 
     is_admin = models.BooleanField(
