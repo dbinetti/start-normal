@@ -1,5 +1,6 @@
 # Django
 # First-Party
+import pytest
 from app.forms import SignatureForm
 from django.contrib.auth import get_user_model
 from django.test import TestCase
@@ -81,3 +82,21 @@ class UsersManagersTests(TestCase):
         with self.assertRaises(ValueError):
             User.objects.create_superuser(
                 email='super@user.com', password='foo', is_admin=False)
+
+
+def test_homepage(anon_client):
+    path = reverse('index')
+    response = anon_client.get(path)
+    assert response.status_code == 200
+
+@pytest.mark.django_db
+def test_letter(anon_client):
+    path = reverse('letter')
+    response = anon_client.post(
+        path, {
+            'name': 'Foo Bar',
+            'email': 'foo@bar.com',
+            'location': 'SC',
+        }
+    )
+    assert response.status_code == 302

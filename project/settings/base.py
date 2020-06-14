@@ -2,13 +2,9 @@
 # Standard Libary
 import os
 
-from environ import (
-    Env,
-    Path,
-)
-
 # Django
 from django.contrib.messages import constants as messages
+from environ import Env, Path
 
 # Set Environment
 env = Env(
@@ -26,7 +22,7 @@ SECRET_KEY = env("SECRET_KEY")
 ROOT_URLCONF = 'urls'
 WSGI_APPLICATION = 'wsgi.application'
 ADMINS = [
-    env("DEFAULT_FROM_EMAIL"),
+    ('admin', env("DEFAULT_FROM_EMAIL")),
 ]
 
 
