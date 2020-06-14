@@ -44,7 +44,7 @@ class Signature(models.Model):
         max_length=255,
         null=False,
         blank=False,
-        help_text="""Be aware your real name makes a real a difference.  However, we recognize the need for privacy so use something like 'Concerned Parent' or 'Father of Two' if you feel you must.  Your signature will be part of the public record.""",
+        help_text="""Be aware your real name makes a real a difference.  However, we recognize the need for privacy so use something like 'Concerned Parent' or 'Father of Two' if you must.  This name will become part of the public record when the signatures are submitted. (Required)""",
     )
     handle = models.CharField(
         max_length=255,
@@ -62,6 +62,8 @@ class Signature(models.Model):
     )
     is_public = models.BooleanField(
         default=False,
+        help_text="""If you would like your name listed on the Start Normal website so others can see, please check this box.""",
+
     )
     is_subscribed = models.BooleanField(
         default=True,
@@ -71,28 +73,45 @@ class Signature(models.Model):
         choices=Location.choices,
         null=True,
         blank=False,
-        help_text="""This helps provide specificity to Mr. Callagy.""",
+        help_text="""Please provide your city. (Required)""",
+    )
+    district = models.CharField(
+        max_length=255,
+        choices=Location.choices,
+        null=True,
+        blank=True,
+        help_text="""Your school district. (Optional)""",
     )
     phone = models.CharField(
         max_length=255,
         null=True,
         blank=True,
+        help_text="""Your mobile phone. (Optional)""",
     )
     is_volunteer = models.BooleanField(
         default=False,
+        help_text="""If you're willing to volunteer in some manner check this box. """,
+    )
+    is_teacher = models.BooleanField(
+        default=False,
+        help_text="""If you're an educator check this box. """,
+    )
+    is_doctor = models.BooleanField(
+        default=False,
+        help_text="""If you're a physician check this box. """,
     )
     email = models.EmailField(
         null=True,
         blank=False,
         unique=True,
-        help_text="""Your email is private and not shared.  We need it to manage preferences and send updates.  If you do not wish updates, unclick the 'Send Updates' checkbox.""",
+        help_text="""Your email is private and not shared.  We need it to manage preferences and send updates.  If you do not wish updates, unclick the 'Send Updates' checkbox. (Required)""",
     )
     notes = models.TextField(
         max_length=255,
         null=True,
         blank=True,
         default=None,
-        help_text="""Feel free to include anything you think we should know.  For instance, many have used this box to indicate they are teachers who are supportive of starting normal -- and we love to hear that!""",
+        help_text="""Feel free to include anything else you think we should know.""",
     )
 
     created = models.DateTimeField(
