@@ -23,3 +23,7 @@ def build_email(template, context, subject, to=[], cc=[], bcc=[], attachments=[]
         with attachment[1].open() as f:
             email.attach(attachment[0], f.read(), attachment[2])
     return email
+
+@job
+def queue_email(email):
+    return email.send()
