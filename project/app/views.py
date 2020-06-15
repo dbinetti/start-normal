@@ -17,7 +17,7 @@ from django_rq import job
 # Local
 from .forms import (AccountForm, CustomSetPasswordForm, CustomUserCreationForm,
                     DeleteForm, SignatureForm, SubscribeForm)
-from .models import CustomUser, Signature
+from .models import CustomUser, Faq, Signature
 from .tasks import build_email, send_email, subscribe_email, welcome_email
 
 
@@ -46,21 +46,21 @@ def account(request):
     return render(
         request,
         'app/account.html',
-        {'form': form,},
+        {'form': form},
     )
 
 @login_required
 def faq(request):
     faqs = Faq.objects.filter(
-        'is_active',
+        is_active=True,
     ).order_by(
-        'number',
+        'num',
         'created',
     )
     return render(
         request,
         'app/faq.html',
-        {'faqs': faqs,},
+        {'faqs': faqs},
     )
 
 @login_required

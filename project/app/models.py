@@ -13,11 +13,10 @@ from .managers import CustomUserManager
 class Faq(models.Model):
 
     is_active = models.BooleanField(
-        default=False,
+        default=True,
     )
     num = models.IntegerField(
-        null=True,
-        blank=True,
+        default=50,
     )
     question = models.TextField(
         max_length=255,
