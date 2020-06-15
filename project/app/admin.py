@@ -61,6 +61,7 @@ class CustomUserAdmin(UserAdmin):
     list_display = [
         'email',
         'created',
+        'last_login'
         # 'signature',
     ]
     list_filter = [
@@ -73,9 +74,10 @@ class CustomUserAdmin(UserAdmin):
     autocomplete_fields = [
         # 'signature',
     ]
-    ordering = (
+    ordering = [
+        '-last_login',
         '-created',
-    )
+    ]
     fieldsets = (
         (None, {
             'fields': [
