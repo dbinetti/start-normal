@@ -101,16 +101,16 @@ def letter(request):
                 'Your name has been added to the Letter.',
             )
             context = form.cleaned_data
-            if email:
-                email = build_email(
-                    subject='Start Normal - Thank You!',
-                    template='emails/thank_you.txt',
-                    context=context,
-                    to=[email],
-                )
-                if context['notes']:
-                    email.bcc = ['dbinetti@startnormal.com']
-                send_email.delay(email)
+            email = build_email(
+                subject='Start Normal - Thank You!',
+                template='emails/thank_you.txt',
+                context=context,
+                to=[email],
+            )
+            if context['notes']:
+                email.bcc = ['dbinetti@startnormal.com']
+            send_email.delay(email)
+            subscribe_email.delay(email)
             return redirect('thanks')
     else:
         form = SignatureForm()
