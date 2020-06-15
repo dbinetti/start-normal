@@ -50,6 +50,20 @@ def account(request):
     )
 
 @login_required
+def faq(request):
+    faqs = Faq.objects.filter(
+        'is_active',
+    ).order_by(
+        'number',
+        'created',
+    )
+    return render(
+        request,
+        'app/faq.html',
+        {'faqs': faqs,},
+    )
+
+@login_required
 def delete(request):
     if request.method == "POST":
         form = DeleteForm(request.POST)

@@ -4,7 +4,39 @@ from django.contrib.auth.admin import UserAdmin
 
 # Local
 from .forms import CustomUserChangeForm, CustomUserCreationForm
-from .models import CustomUser, Signature
+from .models import CustomUser, Faq, Signature
+
+
+@admin.register(Faq)
+class FaqAdmin(admin.ModelAdmin):
+    save_on_top = True
+    fields = [
+        'is_active',
+        'num',
+        'question',
+        'answer',
+    ]
+    list_display = [
+        'created',
+        'num',
+        'question',
+        'answer',
+        'is_active',
+    ]
+    list_editable = [
+        'num',
+        'question',
+        'answer',
+    ]
+    list_filter = [
+        'is_active',
+        'created',
+        'updated',
+    ]
+    search_fields = [
+        'question',
+        'answer',
+    ]
 
 
 @admin.register(Signature)

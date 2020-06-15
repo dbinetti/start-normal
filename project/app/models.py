@@ -3,6 +3,7 @@
 import shortuuid
 from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
+from django.utils.text import slugify
 from shortuuidfield import ShortUUIDField
 
 # Local
@@ -11,6 +12,13 @@ from .managers import CustomUserManager
 
 class Faq(models.Model):
 
+    is_active = models.BooleanField(
+        default=False,
+    )
+    num = models.IntegerField(
+        null=True,
+        blank=True,
+    )
     question = models.TextField(
         max_length=255,
         blank=False,
@@ -19,7 +27,14 @@ class Faq(models.Model):
         max_length=1024,
         blank=False,
     )
-
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+    def __str__(self):
+        return str(slugify(self.question))
 
 
 class Signature(models.Model):
