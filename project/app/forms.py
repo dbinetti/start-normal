@@ -62,6 +62,17 @@ class SignatureForm(forms.ModelForm):
                 ),
             }
 
+    def clean_email(self):
+        # Get the email
+        email = self.cleaned_data.get('email')
+        email = email.strip().lower()
+        try:
+            Signature.objects.get(email__iexact=email)
+        except Signature.DoesNotExist:
+            return email
+        raise forms.ValidationError('This email address is already in use.')
+
+
 class SubscribeForm(forms.Form):
     email = forms.EmailField(
         required=True,
