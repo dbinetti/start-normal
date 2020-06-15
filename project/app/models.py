@@ -9,6 +9,19 @@ from shortuuidfield import ShortUUIDField
 from .managers import CustomUserManager
 
 
+class Faq(models.Model):
+
+    question = models.TextField(
+        max_length=255,
+        blank=False,
+    )
+    answer = models.TextField(
+        max_length=1024,
+        blank=False,
+    )
+
+
+
 class Signature(models.Model):
     user = models.OneToOneField(
         'app.CustomUser',
