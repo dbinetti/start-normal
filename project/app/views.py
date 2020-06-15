@@ -18,7 +18,7 @@ from django_rq import job
 from .forms import (AccountForm, CustomSetPasswordForm, CustomUserCreationForm,
                     DeleteForm, SignatureForm, SubscribeForm)
 from .models import CustomUser, Signature
-from .tasks import build_email, send_email, subscribe_email
+from .tasks import build_email, send_email, subscribe_email, welcome_email
 
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
@@ -100,16 +100,7 @@ def letter(request):
                 request,
                 'Your name has been added to the Letter.',
             )
-            context = form.cleaned_data
-            email = build_email(
-                subject='Start Normal - Thank You!',
-                template='emails/thank_you.txt',
-                context=context,
-                to=[email],
-            )
-            if context['notes']:
-                email.bcc = ['dbinetti@startnormal.com']
-            send_email.delay(email)
+            welcome_email.delay(signature)
             subscribe_email.delay(email)
             return redirect('thanks')
     else:

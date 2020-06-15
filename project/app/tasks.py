@@ -46,6 +46,20 @@ def build_email(template, context, subject, to=[], cc=[], bcc=[], attachments=[]
 def send_email(email):
     return email.send()
 
+@job
+def welcome_email(signature):
+    email = signature.email
+    form = PasswordResetForm({'email': email})
+    if form.is_valid():
+        return form.save(
+            domain_override='localhost:8000',
+            subject_template_name='emails/welcome_subject.txt',
+            email_template_name='emails/welcome.html',
+            from_email='dbinetti@startnormal.com',
+            extra_email_context={'signature': signature},
+        )
+    return 'Error {0}'.format(email)
+
 
 @job
 def subscribe_email(email):
