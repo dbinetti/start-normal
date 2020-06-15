@@ -18,10 +18,8 @@ def claim_account(user):
     form = PasswordResetForm({'email': email})
     if form.is_valid():
         return form.save(
-            domain_override='startnormal.com',
             subject_template_name='emails/account_claim_subject.txt',
             email_template_name='emails/account_claim.html',
-            from_email='dbinetti@startnormal.com',
             extra_email_context={'signature':signature},
         )
     return 'Error {0}'.format(user)
