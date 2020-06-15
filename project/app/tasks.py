@@ -18,7 +18,7 @@ def claim_account(user):
     form = PasswordResetForm({'email': email})
     if form.is_valid():
         return form.save(
-            domain_override='start-normal.herokuapp.com',
+            domain_override='www.startnormal.com',
             subject_template_name='emails/account_claim_subject.txt',
             from_email='David Binetti <dbinetti@startnormal.com>',
             email_template_name='emails/account_claim.html',
@@ -52,7 +52,7 @@ def welcome_email(signature):
     form = PasswordResetForm({'email': email})
     if form.is_valid():
         return form.save(
-            domain_override='start-normal.herokuapp.com',
+            domain_override='www.startnormal.com',
             subject_template_name='emails/welcome_subject.txt',
             email_template_name='emails/welcome.html',
             from_email='David Binetti <dbinetti@startnormal.com>',

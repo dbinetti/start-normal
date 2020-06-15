@@ -3,13 +3,7 @@
 
 {% block content %}
 <section class='my-5 col-lg-9'>
-<h2>
-  Mike Callagy<br>
-  San Mateo County Executive
-<br><br><br>
-  Dear Mr. Callagy,
-</h2>
-
+  <h4>Supervisors,</h4>
   <p>
     We, the undersigned parents, are gravely concerned that, as drafted, the reopening schools framework will not allow for in-person instruction.  The document purports to balance the potentially "lifelong adverse ramifications" to child development against the need to protect high-risk adults from community spread, yet there are no data provided to back up the conclusions reached.
   </p>
@@ -22,66 +16,43 @@
 
     The burden is on the Public Health Officer to support his decision and persuade parents that the tradeoffs he made were in the best interest of the community at large.
   </p>
-
-
-  <p>
-    Respectfully,
-    Parents of San Mateo County Schoolchildren
-  </p>
 <p>
 
 </p>
 </section>
 <section class='mt-2 col-lg-9'>
-  <form method='post' action='{% url "letter" %}' class='form-horizontal' role='form'>
-    {% csrf_token %}
-    {% bootstrap_form_errors form %}
-    {% bootstrap_field form.name show_label=False show_help=True placeholder="Name"%}
-    <div class="form-group form-check-inline">
-      <input type="checkbox" name='is_public' class="form-check-input" id="id_is_public">
-      <label class="form-check-label" for="id_is_public">List Name Publicly on Website?</label>
+  <div class='card'>
+    <div class='card-header'>
+      <h5>Respectfully Signed,</h5>
     </div>
-    {% bootstrap_field form.email show_label=False show_help=True placeholder="Private Email"%}
-
-    {% bootstrap_field form.location show_label=False%}
-    {% bootstrap_field form.notes show_label=False size='small' placeholder="Private Notes"%}
-    {% buttons %}
-      <button type="submit" class="btn btn-primary btn-lg btn-block">
-        Add My Name
-      </button>
-    {% endbuttons %}
-
-    {% comment %}
-    {% if form.subject.errors %}
-      <ol role="alertdialog">
-          {% for error in form.subject.errors %}
-          <li role="alert"><strong>{{ error|escape }}</strong></li>
-          {% endfor %}
-      </ol>
-    {% endif %}
-    <div class="form-group p-1">
-      {{form.name}}
+    <div class='card-body'>
+      <form method='post' action='{% url "letter" %}' class='form-horizontal' role='form'>
+        {% csrf_token %}
+        {% bootstrap_form_errors form %}
+        {% bootstrap_field form.name show_label=False show_help=True placeholder="Name"%}
+        {% bootstrap_field form.email show_label=False show_help=True placeholder="Email"%}
+        {% bootstrap_field form.location show_label=False%}
+        <div class="form-group form-check-inline">
+          <input type="checkbox" name='is_public' class="form-check-input" id="id_is_public">
+          <label class="form-check-label" for="id_is_public">List My Name On This Website</label>
+        </div>
+        <div class="form-group form-check-inline">
+          <input type="checkbox" name='is_teacher' class="form-check-input" id="id_is_teacher">
+          <label class="form-check-label" for="id_is_teacher">I'm an Educator</label>
+        </div>
+        <div class="form-group form-check-inline">
+          <input type="checkbox" name='is_doctor' class="form-check-input" id="id_is_doctor">
+          <label class="form-check-label" for="id_is_doctor">I'm a Physician</label>
+        </div>
+        {% bootstrap_field form.notes show_help=False show_label=False size='small' placeholder="Private Notes"%}
+        {% buttons %}
+          <button type="submit" class="btn btn-primary btn-lg btn-block">
+            Add My Name
+          </button>
+        {% endbuttons %}
+      </form>
     </div>
-    <div class="form-group p-1">
-      {{form.city}}
-    </div>
-    <div class="form-group p-1">
-      {{form.email}}
-    </div>
-    <div class="form-group p-1">
-      {{form.is_public}}
-    </div>
-    <div class="form-group p-1">
-      {{form.is_subscribed}}
-    </div>
-    <div class="form-group p-1">
-      {{form.notes}}
-    </div>
-    <div class="form-group p-1">
-      <button type="submit" class="btn btn-primary form-control">Add My Name</button>
-    </div>
-    {% endcomment %}
-  </form>
+  </div>
 </section>
 <section class='my-5'>
 </section>
@@ -90,7 +61,7 @@
   <div class="card">
     <div class="card-body">
       <p class="card-text"><strong>Note:</strong>
-        Your information will not be sold or shared or anything like that.  I have no interest changing the world or making money off this -- I'm just a dad who wants his kids to have a normal childhood.  When this is over all data will be deleted in its entirety and in the meantime is protected by secured servers.
+        Your information will not be shared.  When finished, all data will be deleted and until then is protected by secured servers.  Learn more <a href='{% url "about" %}'>about me</a>.
       </p>
     </div>
   </div>

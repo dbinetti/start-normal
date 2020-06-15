@@ -21,10 +21,10 @@ class AccountForm(forms.ModelForm):
         model = Signature
         fields = [
             'name',
-            'is_public',
             'location',
-            'district',
-            'is_volunteer',
+            # 'district',
+            # 'is_volunteer',
+            'is_public',
             'is_teacher',
             'is_doctor',
             # 'phone',
@@ -45,10 +45,10 @@ class SignatureForm(forms.ModelForm):
         model = Signature
         fields = [
             'name',
-            'handle',
             'email',
             'is_public',
-            'is_subscribed',
+            'is_teacher',
+            'is_doctor',
             'location',
             'notes',
         ]

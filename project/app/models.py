@@ -1,9 +1,8 @@
 # Django
-from django.contrib.auth.models import AbstractBaseUser
-from django.db import models
-
 # First-Party
 import shortuuid
+from django.contrib.auth.models import AbstractBaseUser
+from django.db import models
 from shortuuidfield import ShortUUIDField
 
 # Local
@@ -46,7 +45,7 @@ class Signature(models.Model):
         max_length=255,
         null=False,
         blank=False,
-        help_text="""Be aware your real name makes a real a difference.  However, we recognize the need for privacy so use something like 'Concerned Parent' or 'Father of Two' if you must.  This name will become part of the public record when the signatures are submitted. (Required)""",
+        help_text="""Real name strongly encouraged.  However, if necessary use a descriptor like 'Concerned Parent' or 'Father of Two'. (Required)""",
     )
     handle = models.CharField(
         max_length=255,
@@ -64,7 +63,7 @@ class Signature(models.Model):
     )
     is_public = models.BooleanField(
         default=False,
-        help_text="""Name on website.""",
+        help_text="""List My Name on the Website.""",
 
     )
     is_subscribed = models.BooleanField(
@@ -105,7 +104,7 @@ class Signature(models.Model):
         null=True,
         blank=False,
         unique=True,
-        help_text="""Your email is private and not shared.  We need it to manage preferences and send updates.  If you do not wish updates, unclick the 'Send Updates' checkbox. (Required)""",
+        help_text="""Your email is private and not shared.  It's used to manage preferences and send adminstrative updates. (Required)""",
     )
     notes = models.TextField(
         max_length=255,

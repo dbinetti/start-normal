@@ -16,26 +16,18 @@
     {% csrf_token %}
     {% bootstrap_form_errors form %}
 
-    <div class='row'>
-      <div class='col-md-9'>
-        {% bootstrap_field form.name show_label=False show_help=True placeholder="Name"%}
-      </div>
-      <div class='col-md-3'>
-        <div class="form-group form-check-inline">
-          {% bootstrap_field form.is_public %}
-        </div>
-      </div>
-    </div>
+    {% bootstrap_field form.name show_label=False show_help=True placeholder="Name"%}
 
     <div class='form-group form-horizontal'>
       {% bootstrap_field form.location show_label=False%}
-      {% bootstrap_field form.district show_label=False%}
+      {# {% bootstrap_field form.district show_label=False%} #}
     </div>
 
     <div class="form-group form-check-inline">
+      {% bootstrap_field form.is_public %}
       {% bootstrap_field form.is_teacher %}
       {% bootstrap_field form.is_doctor %}
-      {% bootstrap_field form.is_volunteer %}
+      {# {% bootstrap_field form.is_volunteer %} #}
     </div>
 
     {% bootstrap_field form.notes show_label=False size='small' placeholder="Private Notes"%}
