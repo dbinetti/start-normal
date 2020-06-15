@@ -36,16 +36,10 @@
   <form method='post' action='{% url "letter" %}' class='form-horizontal' role='form'>
     {% csrf_token %}
     {% bootstrap_form_errors form %}
-    <div class='row'>
-      <div class='col-9'>
-        {% bootstrap_field form.name show_label=False show_help=True placeholder="Name"%}
-      </div>
-      <div class='col-3'>
-        <div class="form-group form-check-inline">
-          <input type="checkbox" name='is_public' class="form-check-input" id="id_is_public">
-          <label class="form-check-label" for="id_is_public">List Name Publicly on Website?</label>
-        </div>
-      </div>
+    {% bootstrap_field form.name show_label=False show_help=True placeholder="Name"%}
+    <div class="form-group form-check-inline">
+      <input type="checkbox" name='is_public' class="form-check-input" id="id_is_public">
+      <label class="form-check-label" for="id_is_public">List Name Publicly on Website?</label>
     </div>
     {% bootstrap_field form.email show_label=False show_help=True placeholder="Private Email"%}
 

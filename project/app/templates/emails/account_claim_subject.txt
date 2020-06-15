@@ -1,3 +1,3 @@
 {% autoescape off %}
-Start Normal: Important One-Time Message
+Start Normal: Administrative One-Time Message
 {% endautoescape %}
