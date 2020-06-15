@@ -3,14 +3,8 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 # Local
-from .forms import (
-    CustomUserChangeForm,
-    CustomUserCreationForm,
-)
-from .models import (
-    CustomUser,
-    Signature,
-)
+from .forms import CustomUserChangeForm, CustomUserCreationForm
+from .models import CustomUser, Signature
 
 
 @admin.register(Signature)
@@ -66,10 +60,12 @@ class CustomUserAdmin(UserAdmin):
     model = CustomUser
     list_display = [
         'email',
+        'created',
         # 'signature',
     ]
     list_filter = [
         'is_admin',
+        'created',
     ]
     search_fields = [
         'email',
@@ -77,6 +73,9 @@ class CustomUserAdmin(UserAdmin):
     autocomplete_fields = [
         # 'signature',
     ]
+    ordering = (
+        '-created',
+    )
     fieldsets = (
         (None, {
             'fields': [
