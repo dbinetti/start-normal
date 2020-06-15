@@ -157,7 +157,10 @@ def about(request):
     )
 
 def videos(request):
-    return redirect("https://fast.wistia.net/embed/channel/uutb20lwv5")
+    return render(
+        request,
+        'app/videos.html',
+    )
 
 
 
