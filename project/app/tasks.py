@@ -3,13 +3,28 @@ from textwrap import wrap
 
 # Django
 from django.conf import settings
+from django.contrib.auth.forms import PasswordResetForm
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
-
 # First-Party
 from django_rq import job
 from mailchimp3 import MailChimp
 
+
+@job
+def claim_account(user):
+    email = user.email
+    signature = user.signature
+    form = PasswordResetForm({'email': email})
+    if form.is_valid():
+        return form.save(
+            domain_override='localhost:8000',
+            subject_template_name='emails/account_claim_subject.txt',
+            email_template_name='emails/account_claim.html',
+            from_email='dbinetti@startnormal.com',
+            extra_email_context={'signature':signature},
+        )
+    return 'Error {0}'.format(user)
 
 # Utility
 def build_email(template, context, subject, to=[], cc=[], bcc=[], attachments=[]):
@@ -30,6 +45,20 @@ def build_email(template, context, subject, to=[], cc=[], bcc=[], attachments=[]
 @job
 def send_email(email):
     return email.send()
+
+@job
+def welcome_email(signature):
+    email = signature.email
+    form = PasswordResetForm({'email': email})
+    if form.is_valid():
+        return form.save(
+            domain_override='localhost:8000',
+            subject_template_name='emails/welcome_subject.txt',
+            email_template_name='emails/welcome.html',
+            from_email='dbinetti@startnormal.com',
+            extra_email_context={'signature': signature},
+        )
+    return 'Error {0}'.format(email)
 
 
 @job

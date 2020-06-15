@@ -7,7 +7,7 @@
   <form method='post' action='{% url "delete" %}' role='form'>
     {% csrf_token %}
     {% bootstrap_form_errors form %}
-    {% bootstrap_form form %}
+    {% bootstrap_field form.confirm %}
     {% buttons %}
       <button type="submit" class="btn btn-danger btn-lg btn-block">
         Remove My Signature and Delete All Data
