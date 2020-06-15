@@ -65,6 +65,7 @@ class CustomUserAdmin(UserAdmin):
         # 'signature',
     ]
     list_filter = [
+        'is_active',
         'is_admin',
         'created',
         'last_login',
