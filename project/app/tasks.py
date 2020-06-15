@@ -18,7 +18,7 @@ def claim_account(user):
     form = PasswordResetForm({'email': email})
     if form.is_valid():
         return form.save(
-            domain_override='localhost:8000',
+            domain_override='startnormal.com',
             subject_template_name='emails/account_claim_subject.txt',
             email_template_name='emails/account_claim.html',
             from_email='dbinetti@startnormal.com',
@@ -52,7 +52,7 @@ def welcome_email(signature):
     form = PasswordResetForm({'email': email})
     if form.is_valid():
         return form.save(
-            domain_override='localhost:8000',
+            domain_override='startnormal.com',
             subject_template_name='emails/welcome_subject.txt',
             email_template_name='emails/welcome.html',
             from_email='dbinetti@startnormal.com',
