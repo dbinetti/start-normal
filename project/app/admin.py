@@ -67,6 +67,7 @@ class CustomUserAdmin(UserAdmin):
     list_filter = [
         'is_admin',
         'created',
+        'last_login',
     ]
     search_fields = [
         'email',
