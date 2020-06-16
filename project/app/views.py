@@ -162,6 +162,12 @@ def videos(request):
         'app/videos.html',
     )
 
+def thomas(request):
+    return render(
+        request,
+        'app/thomas.html',
+    )
+
 
 
 @staff_member_required
