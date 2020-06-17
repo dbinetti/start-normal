@@ -21,15 +21,38 @@
 </section>
 
 <section class='mt-2 col-lg-9'>
+
+<div class='card'>
+  <div class='card-header'>
+    <h4>Live Q&A</h4>
+  </div>
+
+
+  <div class='card-body'>
+    <p class="card-title">Thomas has graciously agreed to do a live video Q&A with parents on his experience.  This will take place Monday, June 22, at 10:00AM PDT.  If you'd like to participate (either to ask questions or simply watch) please register using this form.</p>
+<form method="post" action="{% url 'thomas'%}">
+  {% csrf_token %}
+  {% bootstrap_form_errors form %}
+  {# {% bootstrap_form form %} #}
+  {% bootstrap_field form.name show_label=False placeholder="Name (Required, Private)"%}
+  {% bootstrap_field form.email show_label=False placeholder="Email (Required, Private)"%}
+  {% bootstrap_field form.notes show_label=False%}
+
+  {% buttons %}
+    <button type="submit" class="btn btn-primary btn-lg btn-block">
+      Register
+    </button>
+  {% endbuttons %}
   <p>
-    Thomas has also agreed to do a live question and answer session over Zoom on Monday, June 22 at 10:00AM PDT for any parents who would like to speak with him directly.  Register for that webinar here:
+    <small class='text-muted'>The webinar is free, and your information remains private.  We just want to help parents learn more.  If you need help please contact <a href='mailto:dbinetti@startnormal.com'>dbinetti@startnormal.com</a></small>
   </p>
-  <p>
-    <a href='https://us02web.zoom.us/webinar/register/WN_hiYi74PlTxuGKUrN48uBvQ' role='button' class='class="btn btn-primary btn-lg btn-block"'>Register for Thomas Albeck Q&A</a>
-  </p>
-  Thomas's experience is well worth listenting to &mdash; and it might even convince you that starting normal is possible after all.
+</form>
+</div>
+</div>
+
+
 </section>
-<section class='my-5'>
+<section class='my-5 col-lg-9'>
   <div class='card'>
     <div class='card-header'>
       <h4>Transcript, Thomas Albeck Interview with David Binetti</h4>

@@ -1,14 +1,40 @@
 # Django
-# First-Party
-import shortuuid
 from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
 from django.utils.text import slugify
+
+# First-Party
+import shortuuid
 from shortuuidfield import ShortUUIDField
 
 # Local
 from .managers import CustomUserManager
 
+
+class Registration(models.Model):
+
+    email = models.EmailField(
+        blank=False,
+        unique=True,
+        help_text="""Your email will not be used for any purpose other than registration for this Q&A."""
+    )
+    name = models.CharField(
+        max_length=255,
+        blank=False,
+        help_text="""Your name will be used during the Q&A but otherwise will remain private.  Registration for the Q&A DOES NOT signify support for Start Normal."""
+    )
+    notes = models.TextField(
+        max_length=512,
+        blank=True,
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+    def __str__(self):
+        return str(slugify(self.question))
 
 class Faq(models.Model):
 

@@ -1,10 +1,17 @@
 # Django
 from django import forms
-from django.contrib.auth.forms import (SetPasswordForm, UserChangeForm,
-                                       UserCreationForm)
+from django.contrib.auth.forms import (
+    SetPasswordForm,
+    UserChangeForm,
+    UserCreationForm,
+)
 
 # Local
-from .models import CustomUser, Signature
+from .models import (
+    CustomUser,
+    Registration,
+    Signature,
+)
 
 
 class CustomSetPasswordForm(SetPasswordForm):
@@ -15,6 +22,24 @@ class DeleteForm(forms.Form):
     confirm = forms.BooleanField(
         required=True,
     )
+
+class RegistrationForm(forms.ModelForm):
+    class Meta:
+        model = Registration
+        fields = [
+            'email',
+            'name',
+            'notes',
+        ]
+        widgets = {
+            'notes': forms.Textarea(
+                attrs={
+                    'class': 'form-control h-25',
+                    'placeholder': 'Brief Notes/Question (optional, private)',
+                    'rows': 5,
+                    }
+                ),
+            }
 
 class AccountForm(forms.ModelForm):
     class Meta:
