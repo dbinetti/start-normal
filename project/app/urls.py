@@ -17,6 +17,9 @@ urlpatterns = [
     path('delete', views.delete, name='delete',),
     path('account', views.account, name='account',),
     # path('faq', views.faq, name='faq',),
+    path('sign', views.sign, name='sign',),
     path('petition', views.petition, name='petition',),
+    path('signatures', views.signatures, name='signatures',),
+
     path('account/reset/<uidb64>/<token>/', views.CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
 ]

@@ -3,10 +3,10 @@
 {% load humanize %}
 {% load location %}
 {% block content %}
-<br><br>
+<br>
 <section>
   <h1>
-    Sign the Petition
+    Take Action for Kids
   </h1>
 </section>
 
@@ -15,108 +15,40 @@
     <div class='card-header p-3'>
       <div class="progress" style="height: 30px;">
         <div class="progress-bar bg-success" role="progressbar" style="width: {{progress}}%" >{{signatures.count|intcomma}} Signatures</div>
+        <div class='ml-auto p-3'>
+          <p>Goal: 5000</p>
+        </div>
       </div>
     </div>
     <div class='card-header'>
       <ul class="nav nav-tabs card-header-tabs">
         <li class="nav-item">
-          <a href="#sign" class="nav-link active" data-toggle="tab">Sign</a>
+          <a href='{% url "sign" %}' class="nav-link">Sign</a>
         </li>
         <li class="nav-item">
-          <a href="#petition" class="nav-link" data-toggle="tab">Text</a>
+          <a href='{% url "petition" %}' class="nav-link active">Petition</a>
         </li>
         <li class="nav-item">
-          <a href="#signatures" class="nav-link" data-toggle="tab">Signatures</a>
-        </li>
-        <li class="nav-item">
+          <a href='{% url "signatures" %}' class="nav-link ">Signatures</a>
         </li>
       </ul>
     </div>
-    <div class='card-body'>
-      <div class="tab-content">
-        <div class="tab-pane fade show active" id="sign">
-          <form method='post' action='{% url "petition" %}' class=' form-horizontal' role='form'>
-            {% csrf_token %}
-            <h5 class='card-title'>
-              Signature
-            </h5>
-            {% bootstrap_form_errors form %}
-            {% bootstrap_field form.name show_label=False show_help=True placeholder="Name"%}
-            {% bootstrap_field form.email show_label=False show_help=True placeholder="Email"%}
-            {% bootstrap_field form.location show_label=False%}
-            {% comment %}
-            <h5 class='card-title'>
-              Other
-            </h5>
-            {% endcomment %}
-            <div class="form-group form-check-inline">
-              <input type="checkbox" name='is_public' class="form-check-input" id="id_is_public">
-              <label class="form-check-label" for="id_is_public">List My Name On This Website</label>
-            </div>
-            <div class="form-group form-check-inline">
-              <input type="checkbox" name='is_teacher' class="form-check-input" id="id_is_teacher">
-              <label class="form-check-label" for="id_is_teacher">I'm an Educator</label>
-            </div>
-            <div class="form-group form-check-inline">
-              <input type="checkbox" name='is_doctor' class="form-check-input" id="id_is_doctor">
-              <label class="form-check-label" for="id_is_doctor">I'm a Physician</label>
-            </div>
-            {% bootstrap_field form.message show_help=True show_label=False size='small'%}
-            {% bootstrap_field form.notes show_help=True show_label=False size='small'%}
-            {% buttons %}
-              <button type="submit" class="btn btn-primary btn-lg btn-block">
-                Add My Signature
-              </button>
-            {% endbuttons %}
-          </form>
-        </div>
-        <div class="tab-pane fade" id="petition">
-          <h5 class='card-title'>
-            Petition Text
-          </h5>
-          <p class='card-text'>
-            We, the undersigned parents, are gravely concerned that, as drafted, the reopening schools framework does not strike the proper balance between the potentially "lifelong adverse ramifications" to child development and the need to protect high-risk adults from community spread.  This is made more troubling by the lack of data supporting its conclusions.
-          </p>
-          <p class='card-text'>
-            We have repeatedly reached out to the primary driver of the document, San Mateo County Public Health Officer Dr. Scott Morrow, to no avail.  Multiple attempts made in good faith, both directly and indirectly -- including through a personal appeal from a Supervisor -- have been ignored.  This dismissive behavior only heightens our concern, since his decisions take away the power of our local school boards whom we elected to represent our children's interests.
-          </p>
-          <p class='card-text'>
-            We believe Dr. Morrow should broaden his considerations to include the impact on social-emotional learning, working-parent families, and general welfare of students and teachers when considering the impact to high-risk adults who are largely isolated from the schools.  Most of all, if Dr. Morrow is to invoke "science" in support of the framework, he must employ the basis on which hypothesis are evaluated: evidence.
-          </p>
-          <p class='card-text'>
-            The burden is on the Public Health Officer to support his decision and explain to parents that the tradeoffs he made were in the best interest of the community at large.
-          </p>
-        </div>
-        <div class="tab-pane fade" id="signatures">
-          <h5 class='card-title'>
-            Signatures
-          </h5>
-          <div class='table-responsive'>
-            <table class='table table-hover table-sm'>
-              <thead class='thead-light'>
-                <tr>
-                  <th class='w-25'scope='col'>Name</th>
-                  <th class='w-25'scope='col'>Location</th>
-                  <th class='w-50'scope='col'>Message</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for signature in signatures %}
-                  <tr>
-                    {% if signature.is_public %}
-                      <td scope='row'>{{signature.name|title|safe}}</td>
-                    {% else %}
-                      <td scope='row'><em>(Keep Private)</em></td>
-                    {% endif %}
-                    <td>{{signature.get_location_display|location}}</td>
-                    <td>{{signature.message|default_if_none:""|safe}}</td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+    <div class="card-body">
+      <h5 class='card-title'>
+        Petition Text
+      </h5>
+      <p class='card-text'>
+        We, the undersigned parents, are gravely concerned that, as drafted, the reopening schools framework does not strike the proper balance between the potentially "lifelong adverse ramifications" to child development and the need to protect high-risk adults from community spread.  This is made more troubling by the lack of data supporting its conclusions.
+      </p>
+      <p class='card-text'>
+        We have repeatedly reached out to the primary driver of the document, San Mateo County Public Health Officer Dr. Scott Morrow, to no avail.  Multiple attempts made in good faith, both directly and indirectly -- including through a personal appeal from a Supervisor -- have been ignored.  This dismissive behavior only heightens our concern, since his decisions take away the power of our local school boards whom we elected to represent our children's interests.
+      </p>
+      <p class='card-text'>
+        We believe Dr. Morrow should broaden his considerations to include the impact on social-emotional learning, working-parent families, and general welfare of students and teachers when considering the impact to high-risk adults who are largely isolated from the schools.  Most of all, if Dr. Morrow is to invoke "science" in support of the framework, he must employ the basis on which hypothesis are evaluated: evidence.
+      </p>
+      <p class='card-text'>
+        The burden is on the Public Health Officer to support his decision and explain to parents that the tradeoffs he made were in the best interest of the community at large.
+      </p>
     </div>
     <div class='card-footer'>
       <p class="card-text"><small>
