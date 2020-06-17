@@ -2,50 +2,23 @@
 # Third-Party
 import django_rq
 import shortuuid
-from django_rq import job
-
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth import (
-    authenticate,
-    login,
-    logout,
-)
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.core.mail import EmailMessage
-from django.db.models import (
-    Count,
-    Sum,
-)
+from django.db.models import Count, Sum
 from django.dispatch import receiver
-from django.shortcuts import (
-    redirect,
-    render,
-)
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
+from django_rq import job
 
 # Local
-from .forms import (
-    AccountForm,
-    CustomSetPasswordForm,
-    CustomUserCreationForm,
-    DeleteForm,
-    RegistrationForm,
-    SignatureForm,
-    SubscribeForm,
-)
-from .models import (
-    CustomUser,
-    Faq,
-    Signature,
-)
-from .tasks import (
-    build_email,
-    send_email,
-    subscribe_email,
-    welcome_email,
-)
+from .forms import (AccountForm, CustomSetPasswordForm, CustomUserCreationForm,
+                    DeleteForm, RegistrationForm, SignatureForm, SubscribeForm)
+from .models import CustomUser, Faq, Signature
+from .tasks import build_email, send_email, subscribe_email, welcome_email
 
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
@@ -196,6 +169,8 @@ def petition(request):
         is_approved=True,
     ).order_by(
         '-is_public',
+        'location',
+        'created',
     )
     progress = (signatures.count() / 5000) * 100
     return render(
