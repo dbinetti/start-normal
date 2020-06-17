@@ -70,10 +70,16 @@ def account(request):
             )
     else:
         form = AccountForm(instance=signature)
+    signatures = Signature.objects.filter(
+        is_approved=True,
+    ).order_by(
+        '-is_public',
+    )
+    progress = (signatures.count() / 5000) * 100
     return render(
         request,
         'app/account.html',
-        {'form': form},
+        {'form': form, 'progress': progress, 'signatures': signatures},
     )
 
 @login_required
