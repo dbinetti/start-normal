@@ -12,43 +12,65 @@
 <section class='mt-2 col-lg-9'>
   <div class='card'>
     <div class='card-header'>
-      <h5>Signature Form</h5>
+      <ul class="nav nav-tabs card-header-tabs">
+        <li class="nav-item">
+          <a href="#sign" class="nav-link active" data-toggle="tab">Sign</a>
+        </li>
+        <li class="nav-item">
+          <a href="#petition" class="nav-link" data-toggle="tab">Petition</a>
+        </li>
+        <li class="nav-item">
+          <a href="#signatures" class="nav-link" data-toggle="tab">signatures</a>
+        </li>
+      </ul>
     </div>
     <div class='card-body'>
-      <div class='card-title'>
+      <div class="tab-content">
+        <div class="tab-pane fade show active" id="sign">
+              <form method='post' action='{% url "letter" %}' class=' form-horizontal' role='form'>
+                {% csrf_token %}
+                {% bootstrap_form_errors form %}
+                {% bootstrap_field form.name show_label=False show_help=True placeholder="Name"%}
+                {% bootstrap_field form.email show_label=False show_help=True placeholder="Email"%}
+                {% bootstrap_field form.location show_label=False%}
+                <div class="form-group form-check-inline">
+                  <input type="checkbox" name='is_public' class="form-check-input" id="id_is_public">
+                  <label class="form-check-label" for="id_is_public">List My Name On This Website</label>
+                </div>
+                <div class="form-group form-check-inline">
+                  <input type="checkbox" name='is_teacher' class="form-check-input" id="id_is_teacher">
+                  <label class="form-check-label" for="id_is_teacher">I'm an Educator</label>
+                </div>
+                <div class="form-group form-check-inline">
+                  <input type="checkbox" name='is_doctor' class="form-check-input" id="id_is_doctor">
+                  <label class="form-check-label" for="id_is_doctor">I'm a Physician</label>
+                </div>
+                {% bootstrap_field form.notes show_help=False show_label=False size='small' placeholder="Private Notes"%}
+                {% buttons %}
+                  <button type="submit" class="btn btn-primary btn-lg btn-block">
+                    Add My Signature
+                  </button>
+                {% endbuttons %}
+              </form>
+            </div>
+          </div>
+          <div class='card-footer'>
+            <p class="card-text"><small>
+              <span class='text-muted'>Your information isn't shared with anyone and all data will be deleted when this project is over.  Learn more <a href='{% url "about" %}'>about me</a>.</span></small>
+            </p>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="petition">
+          <p>
+            Profile tab content ...
+          </p>
+        </div>
+        <div class="tab-pane fade" id="signatures">
+          <p>
+            Messages tab content ...
+          </p>
+        </div>
       </div>
-      <div class='card-text'>
-        <form method='post' action='{% url "letter" %}' class=' form-horizontal' role='form'>
-          {% csrf_token %}
-          {% bootstrap_form_errors form %}
-          {% bootstrap_field form.name show_label=False show_help=True placeholder="Name"%}
-          {% bootstrap_field form.email show_label=False show_help=True placeholder="Email"%}
-          {% bootstrap_field form.location show_label=False%}
-          <div class="form-group form-check-inline">
-            <input type="checkbox" name='is_public' class="form-check-input" id="id_is_public">
-            <label class="form-check-label" for="id_is_public">List My Name On This Website</label>
-          </div>
-          <div class="form-group form-check-inline">
-            <input type="checkbox" name='is_teacher' class="form-check-input" id="id_is_teacher">
-            <label class="form-check-label" for="id_is_teacher">I'm an Educator</label>
-          </div>
-          <div class="form-group form-check-inline">
-            <input type="checkbox" name='is_doctor' class="form-check-input" id="id_is_doctor">
-            <label class="form-check-label" for="id_is_doctor">I'm a Physician</label>
-          </div>
-          {% bootstrap_field form.notes show_help=False show_label=False size='small' placeholder="Private Notes"%}
-          {% buttons %}
-            <button type="submit" class="btn btn-primary btn-lg btn-block">
-              Add My Signature
-            </button>
-          {% endbuttons %}
-        </form>
-      </div>
-    </div>
-    <div class='card-footer'>
-      <p class="card-text"><small>
-        <span class='text-muted'>Your information isn't shared with anyone and all data will be deleted when this project is over.  Learn more <a href='{% url "about" %}'>about me</a>.</span></small>
-      </p>
     </div>
   </div>
 </section>

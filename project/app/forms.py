@@ -1,17 +1,10 @@
 # Django
 from django import forms
-from django.contrib.auth.forms import (
-    SetPasswordForm,
-    UserChangeForm,
-    UserCreationForm,
-)
+from django.contrib.auth.forms import (SetPasswordForm, UserChangeForm,
+                                       UserCreationForm)
 
 # Local
-from .models import (
-    CustomUser,
-    Registration,
-    Signature,
-)
+from .models import CustomUser, Registration, Signature
 
 
 class CustomSetPasswordForm(SetPasswordForm):
@@ -47,23 +40,28 @@ class AccountForm(forms.ModelForm):
         fields = [
             'name',
             'location',
-            # 'district',
-            # 'is_volunteer',
+            'message',
             'is_public',
             'is_teacher',
             'is_doctor',
-            # 'phone',
             'notes',
         ]
         widgets = {
             'notes': forms.Textarea(
                 attrs={
                     'class': 'form-control h-25',
-                    'placeholder': 'Brief Notes (optional, private)',
+                    'placeholder': 'Private Notes (Optional)',
                     'rows': 5,
-                    }
-                ),
-            }
+                }
+            ),
+            'message': forms.Textarea(
+                attrs={
+                    'class': 'form-control h-25',
+                    'placeholder': 'Public Message (Optional)',
+                    'rows': 5,
+                }
+            ),
+        }
 
 class SignatureForm(forms.ModelForm):
     class Meta:
@@ -71,21 +69,29 @@ class SignatureForm(forms.ModelForm):
         fields = [
             'name',
             'email',
+            'location',
+            'message',
             'is_public',
             'is_teacher',
             'is_doctor',
-            'location',
             'notes',
         ]
         widgets = {
             'notes': forms.Textarea(
                 attrs={
                     'class': 'form-control h-25',
-                    'placeholder': 'Brief Notes (optional, private)',
+                    'placeholder': 'Private Notes (Optional)',
                     'rows': 5,
-                    }
-                ),
-            }
+                }
+            ),
+            'message': forms.Textarea(
+                attrs={
+                    'class': 'form-control h-25',
+                    'placeholder': 'Public Message (Optional)',
+                    'rows': 5,
+                }
+            ),
+        }
 
     def clean_email(self):
         # Get the email
