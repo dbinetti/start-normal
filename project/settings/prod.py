@@ -7,6 +7,10 @@ ALLOWED_HOSTS = [
     '.herokuapp.com',
 ]
 
+# SendGrid
+EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
+SENDGRID_API_KEY = env("SENDGRID_API_KEY")
+
 SECURE_SSL_REDIRECT = True
 
 LOGGING = {
