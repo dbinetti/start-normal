@@ -2,9 +2,13 @@
 # Standard Libary
 import os
 
+from environ import (
+    Env,
+    Path,
+)
+
 # Django
 from django.contrib.messages import constants as messages
-from environ import Env, Path
 
 # Set Environment
 env = Env(
@@ -24,7 +28,7 @@ WSGI_APPLICATION = 'wsgi.application'
 ADMINS = [
     ('admin', env("DEFAULT_FROM_EMAIL")),
 ]
-
+USE_L10N = True
 
 # Datetime
 USE_TZ = True

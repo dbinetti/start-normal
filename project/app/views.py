@@ -1,52 +1,101 @@
 # Django
+# Third-Party
+import django_rq
+import shortuuid
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth import (
-    authenticate,
-    login,
-    logout,
-)
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.core.mail import EmailMessage
-from django.db.models import (
-    Count,
-    Sum,
-)
+from django.db.models import Count, Sum
 from django.dispatch import receiver
-from django.shortcuts import (
-    redirect,
-    render,
-)
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-
-# First-Party
-import django_rq
-import shortuuid
 from django_rq import job
 
 # Local
-from .forms import (
-    AccountForm,
-    CustomSetPasswordForm,
-    CustomUserCreationForm,
-    DeleteForm,
-    RegistrationForm,
-    SignatureForm,
-    SubscribeForm,
-)
-from .models import (
-    CustomUser,
-    Faq,
-    Signature,
-)
-from .tasks import (
-    build_email,
-    send_email,
-    subscribe_email,
-    welcome_email,
-)
+from .forms import (AccountForm, CustomSetPasswordForm, CustomUserCreationForm,
+                    DeleteForm, RegistrationForm, SignatureForm, SubscribeForm)
+from .models import CustomUser, Faq, Signature
+from .tasks import build_email, send_email, subscribe_email, welcome_email
 
+
+def sign(request):
+    if request.user.is_authenticated:
+        return redirect('account')
+    if request.method == "POST":
+        form = SignatureForm(request.POST)
+        if form.is_valid():
+            # Instantiate Signature object
+            signature = form.save(commit=False)
+
+            # Create related user account
+            email = form.cleaned_data.get('email')
+            password = shortuuid.uuid()
+            user = CustomUser(
+                email=email,
+                password=password,
+                is_active=True,
+            )
+            user = user.save()
+
+            # Relate records and save
+            signature.user = user
+            signature.save()
+
+            # Notify User through UI
+            messages.success(
+                request,
+                'Your Signature has been added to the Petition.',
+            )
+            # Execute related tasks
+            welcome_email.delay(signature)
+            subscribe_email.delay(email)
+
+            # Forward to share page
+            return redirect('share')
+    else:
+        form = SignatureForm()
+    signatures = Signature.objects.filter(
+        is_approved=True,
+    ).order_by(
+        '-is_public',
+        'location',
+        'created',
+    )
+    progress = (signatures.count() / 5000) * 100
+    return render(
+        request,
+        'app/sign.html',
+        {'form': form, 'signatures': signatures, 'progress': progress},
+    )
+
+def petition(request):
+    signatures = Signature.objects.filter(
+        is_approved=True,
+    )
+    progress = (signatures.count() / 5000) * 100
+    return render(
+        request,
+        'app/petition.html',
+        {'signatures': signatures, 'progress': progress},
+    )
+
+def signatures(request):
+    signatures = Signature.objects.filter(
+        is_approved=True,
+    ).order_by(
+        '-is_public',
+        'location',
+        'created',
+    )
+    progress = (signatures.count() / 5000) * 100
+    return render(
+        request,
+        'app/signatures.html',
+        {'signatures': signatures, 'progress': progress},
+    )
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     template_name='app/claim.html'
@@ -70,10 +119,14 @@ def account(request):
             )
     else:
         form = AccountForm(instance=signature)
+    signatures = Signature.objects.filter(
+        is_approved=True,
+    )
+    progress = (signatures.count() / 5000) * 100
     return render(
         request,
         'app/account.html',
-        {'form': form},
+        {'form': form, 'progress': progress, 'signatures': signatures},
     )
 
 @login_required
@@ -207,7 +260,6 @@ def thomas(request):
         'app/thomas.html',
         {'form': form,},
     )
-
 
 @staff_member_required
 def report(request):

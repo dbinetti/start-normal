@@ -35,6 +35,7 @@ class Registration(models.Model):
     def __str__(self):
         return str(self.name)
 
+
 class Faq(models.Model):
 
     is_active = models.BooleanField(
@@ -99,27 +100,12 @@ class Signature(models.Model):
         blank=False,
         help_text="""Real name strongly encouraged.  However, if necessary use a descriptor like 'Concerned Parent' or 'Father of Two'. (Required)""",
     )
-    handle = models.CharField(
-        max_length=255,
-        null=False,
-        blank=True,
-        help_text="""Your public name is how it will appear on the website.  This could be your real name (which is the most powerful), or first name initial last name, or something like 'Father of Two'.  If blank, defaults to your real name.""",
-    )
     is_approved = models.BooleanField(
         default=False,
-    )
-    city = models.CharField(
-        max_length=255,
-        null=True,
-        blank=True,
     )
     is_public = models.BooleanField(
         default=False,
         help_text="""List My Name on the Website.""",
-
-    )
-    is_subscribed = models.BooleanField(
-        default=True,
     )
     location = models.CharField(
         max_length=255,
@@ -159,11 +145,18 @@ class Signature(models.Model):
         help_text="""Your email is private and not shared.  It's used to manage preferences and send adminstrative updates. (Required)""",
     )
     notes = models.TextField(
-        max_length=255,
+        max_length=512,
         null=True,
         blank=True,
         default=None,
-        help_text="""Feel free to include anything else you think we should know.""",
+        help_text="""Feel free to include private notes just for us.""",
+    )
+    message = models.TextField(
+        max_length=512,
+        null=True,
+        blank=True,
+        default=None,
+        help_text="""Feel free to include a public message attached to your signature.""",
     )
 
     created = models.DateTimeField(
@@ -175,8 +168,6 @@ class Signature(models.Model):
 
     def __str__(self):
         return str(self.name)
-
-
 
 
 class CustomUser(AbstractBaseUser):

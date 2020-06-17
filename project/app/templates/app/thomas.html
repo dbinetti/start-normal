@@ -2,7 +2,7 @@
 {% load bootstrap4 %}
 
 {% block content %}
-<br><br>
+<br>
 <section>
   <h1>
     Thomas Albeck Interview
@@ -30,7 +30,7 @@
 
   <div class='card-body'>
     <p class="card-title">Thomas has graciously agreed to do a live video Q&A with parents on his experience.  This will take place Monday, June 22, at 10:00AM PDT.  If you'd like to participate (either to ask questions or simply watch) please register using this form.</p>
-<form method="post" action="{% url 'thomas'%}">
+<form method="post" action='{% url "thomas" %}'>
   {% csrf_token %}
   {% bootstrap_form_errors form %}
   {# {% bootstrap_form form %} #}

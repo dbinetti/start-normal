@@ -1,0 +1,70 @@
+{% extends 'app/base.html' %}
+{% load bootstrap4 %}
+{% load humanize %}
+{% load location %}
+{% block content %}
+<br>
+<section>
+  <h1>
+    Take Action for Kids
+  </h1>
+</section>
+
+<section class='mt-2 my-5'>
+  <div class='card'>
+    <div class='card-header p-3'>
+      <div class="progress" style="height: 30px;">
+        <div class="progress-bar bg-success" role="progressbar" style="width: {{progress}}%" >{{signatures.count|intcomma}} Signatures</div>
+        <div class='ml-auto p-3'>
+          <p>Goal: 5000</p>
+        </div>
+      </div>
+    </div>
+    <div class='card-header'>
+      <ul class="nav nav-tabs card-header-tabs">
+        <li class="nav-item">
+          <a href='{% url "sign" %}' class="nav-link">Sign</a>
+        </li>
+        <li class="nav-item">
+          <a href='{% url "petition" %}' class="nav-link active">Petition</a>
+        </li>
+        <li class="nav-item">
+          <a href='{% url "signatures" %}' class="nav-link ">Signatures</a>
+        </li>
+      </ul>
+    </div>
+    <div class="card-body">
+      <div class='col-lg-6'>
+      <h5 class='card-title'>
+        Petition Text
+      </h5>
+      <p class='card-text lead'>
+        We <strong>must</strong> put our students and staff first.
+      </p>
+      <p class='card-text'>
+        The San Mateo Public Health Officer has called to modify the "Four Pillars" in light of child development needs; we support the following changes:
+      </p>
+      <ul class='list-styled'>
+        <li><a data-toggle="collapse" href="#idFace">Removal of the Face Covering Pillar</a></li>
+        <p class='collapse' id='idFace'>
+          Masks work &mdash; but only if worn properly and consistently.  At less than 80% adherence <em>or</em> efficacy masks are a false safety, and will come at great cost in instruction and social emotional impact to our children.
+        </p>
+        <li><a data-toggle="collapse" href="#idDistance">Adjustment of Physical Distance</a></li>
+        <p class='collapse' id='idDistance'>
+          Adjusting to the World Health Organization distance guideline of 1-meter indoors-only has proved safe for tens of millions worldwide, and would allow for full-time instruction.
+        </p>
+      </ul>
+      <p class='card-text'>
+        This will allow for full-time instruction supporting our children's educational, mental, and social-emotional learning, in a safe and healthy environment.
+      </p>
+    </div>
+    </div>
+    <div class='card-footer'>
+      <p class="card-text"><small>
+        <span class='text-muted'>Your information isn't shared with anyone and all data will be deleted when this project is over.  Learn more <a href='{% url "about" %}'>about me</a>.</span></small>
+      </p>
+    </div>
+  </div>
+</section>
+
+{% endblock content %}
