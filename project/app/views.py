@@ -1,51 +1,24 @@
 # Django
-from django.contrib import messages
-from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth import (
-    authenticate,
-    login,
-    logout,
-)
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.views import PasswordResetConfirmView
-from django.core.mail import EmailMessage
-from django.db.models import (
-    Count,
-    Sum,
-)
-from django.dispatch import receiver
-from django.shortcuts import (
-    redirect,
-    render,
-)
-from django.urls import reverse_lazy
-
 # First-Party
 import django_rq
 import shortuuid
+from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import PasswordResetConfirmView
+from django.core.mail import EmailMessage
+from django.db.models import Count, Sum
+from django.dispatch import receiver
+from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
 from django_rq import job
 
 # Local
-from .forms import (
-    AccountForm,
-    CustomSetPasswordForm,
-    CustomUserCreationForm,
-    DeleteForm,
-    RegistrationForm,
-    SignatureForm,
-    SubscribeForm,
-)
-from .models import (
-    CustomUser,
-    Faq,
-    Signature,
-)
-from .tasks import (
-    build_email,
-    send_email,
-    subscribe_email,
-    welcome_email,
-)
+from .forms import (AccountForm, CustomSetPasswordForm, CustomUserCreationForm,
+                    DeleteForm, RegistrationForm, SignatureForm, SubscribeForm)
+from .models import CustomUser, Faq, Signature
+from .tasks import build_email, send_email, subscribe_email, welcome_email
 
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):
@@ -149,6 +122,46 @@ def letter(request):
     return render(
         request,
         'app/letter.html',
+        {'form': form,},
+    )
+
+def petition(request):
+    if request.method == "POST":
+        form = SignatureForm(request.POST)
+        if form.is_valid():
+            # Instantiate Signature object
+            signature = form.save(commit=False)
+
+            # Create related user account
+            email = form.cleaned_data.get('email')
+            password = shortuuid.uuid()
+            user = CustomUser(
+                email=email,
+                password=password,
+                is_active=True,
+            )
+            user = user.save()
+
+            # Relate records and save
+            signature.user = user
+            signature.save()
+
+            # Notify User through UI
+            messages.success(
+                request,
+                'Your Signature has been added to the Petition.',
+            )
+            # Execute related tasks
+            welcome_email.delay(signature)
+            subscribe_email.delay(email)
+
+            # Forward to share page
+            return redirect('share')
+    else:
+        form = SignatureForm()
+    return render(
+        request,
+        'app/petition.html',
         {'form': form,},
     )
 
