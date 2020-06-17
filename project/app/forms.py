@@ -1,10 +1,17 @@
 # Django
 from django import forms
-from django.contrib.auth.forms import (SetPasswordForm, UserChangeForm,
-                                       UserCreationForm)
+from django.contrib.auth.forms import (
+    SetPasswordForm,
+    UserChangeForm,
+    UserCreationForm,
+)
 
 # Local
-from .models import CustomUser, Registration, Signature
+from .models import (
+    CustomUser,
+    Registration,
+    Signature,
+)
 
 
 class CustomSetPasswordForm(SetPasswordForm):
@@ -39,6 +46,7 @@ class AccountForm(forms.ModelForm):
         model = Signature
         fields = [
             'name',
+            # 'email',
             'location',
             'message',
             'is_public',
