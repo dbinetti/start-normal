@@ -33,7 +33,7 @@ class Registration(models.Model):
         auto_now=True,
     )
     def __str__(self):
-        return str(name)
+        return str(self.name)
 
 class Faq(models.Model):
 
