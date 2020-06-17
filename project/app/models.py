@@ -33,8 +33,8 @@ class Registration(models.Model):
     updated = models.DateTimeField(
         auto_now=True,
     )
-    def __str__(self):
-        return str(slugify(self.question))
+    # def __str__(self):
+    #     return str(slugify(self.question))
 
 class Faq(models.Model):
 
