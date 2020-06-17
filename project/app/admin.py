@@ -4,7 +4,30 @@ from django.contrib.auth.admin import UserAdmin
 
 # Local
 from .forms import CustomUserChangeForm, CustomUserCreationForm
-from .models import CustomUser, Faq, Signature
+from .models import CustomUser, Faq, Registration, Signature
+
+
+@admin.register(Registration)
+class RegistrationAdmin(admin.ModelAdmin):
+    save_on_top = True
+    fields = [
+        'name',
+        'email',
+        'notes',
+    ]
+    list_display = [
+        'name',
+        'email',
+        'notes',
+        'created',
+    ]
+    list_filter = [
+        'created',
+    ]
+    search_fields = [
+        'name',
+        'email',
+    ]
 
 
 @admin.register(Faq)

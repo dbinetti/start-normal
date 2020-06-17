@@ -1,10 +1,9 @@
 # Django
+# First-Party
+import shortuuid
 from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
 from django.utils.text import slugify
-
-# First-Party
-import shortuuid
 from shortuuidfield import ShortUUIDField
 
 # Local
@@ -33,8 +32,8 @@ class Registration(models.Model):
     updated = models.DateTimeField(
         auto_now=True,
     )
-    # def __str__(self):
-    #     return str(slugify(self.question))
+    def __str__(self):
+        return str(name)
 
 class Faq(models.Model):
 
