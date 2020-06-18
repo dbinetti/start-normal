@@ -40,7 +40,7 @@
         Signature
       </h5>
       <p>
-        <form method='post' action='{% url "petition" %}' class=' form-horizontal' role='form'>
+        <form method='post' action='{% url "sign" %}' class=' form-horizontal' role='form'>
           {% csrf_token %}
           {% bootstrap_form_errors form %}
           {% bootstrap_field form.name show_label=False show_help=True placeholder="Name"%}

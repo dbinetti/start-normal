@@ -2,23 +2,50 @@
 # Third-Party
 import django_rq
 import shortuuid
+from django_rq import job
+
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import (
+    authenticate,
+    login,
+    logout,
+)
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.core.mail import EmailMessage
-from django.db.models import Count, Sum
+from django.db.models import (
+    Count,
+    Sum,
+)
 from django.dispatch import receiver
-from django.shortcuts import redirect, render
+from django.shortcuts import (
+    redirect,
+    render,
+)
 from django.urls import reverse_lazy
-from django_rq import job
 
 # Local
-from .forms import (AccountForm, CustomSetPasswordForm, CustomUserCreationForm,
-                    DeleteForm, RegistrationForm, SignatureForm, SubscribeForm)
-from .models import CustomUser, Faq, Signature
-from .tasks import build_email, send_email, subscribe_email, welcome_email
+from .forms import (
+    AccountForm,
+    CustomSetPasswordForm,
+    CustomUserCreationForm,
+    DeleteForm,
+    RegistrationForm,
+    SignatureForm,
+    SubscribeForm,
+)
+from .models import (
+    CustomUser,
+    Faq,
+    Signature,
+)
+from .tasks import (
+    build_email,
+    send_email,
+    subscribe_email,
+    welcome_email,
+)
 
 
 def sign(request):
@@ -29,7 +56,7 @@ def sign(request):
         if form.is_valid():
             # Instantiate Signature object
             signature = form.save(commit=False)
-
+            print('1')
             # Create related user account
             email = form.cleaned_data.get('email')
             password = shortuuid.uuid()
@@ -43,18 +70,20 @@ def sign(request):
             # Relate records and save
             signature.user = user
             signature.save()
-
+            print('2')
             # Notify User through UI
             messages.success(
                 request,
                 'Your Signature has been added to the Petition.',
             )
+            print('3')
+
             # Execute related tasks
             welcome_email.delay(signature)
             subscribe_email.delay(email)
 
             # Forward to share page
-            return redirect('share')
+            return redirect('thanks')
     else:
         form = SignatureForm()
     signatures = Signature.objects.filter(
