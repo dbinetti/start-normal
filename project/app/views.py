@@ -202,37 +202,8 @@ def index(request):
     )
 
 def letter(request):
-    if request.method == "POST":
-        form = SignatureForm(request.POST)
-        if form.is_valid():
-            signature = form.save()
+    return redirect('sign')
 
-            email = form.cleaned_data.get('email')
-            password = shortuuid.uuid()
-            user = CustomUser(
-                email=email,
-                password=password,
-                is_active=True,
-            )
-            user.save()
-            user.refresh_from_db()
-            signature.user = user
-            signature.save()
-
-            messages.success(
-                request,
-                'Your name has been added to the Letter.',
-            )
-            welcome_email.delay(signature)
-            subscribe_email.delay(email)
-            return redirect('thanks')
-    else:
-        form = SignatureForm()
-    return render(
-        request,
-        'app/letter.html',
-        {'form': form,},
-    )
 
 def learn(request):
     if request.method == "POST":

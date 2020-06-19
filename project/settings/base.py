@@ -35,6 +35,7 @@ USE_TZ = True
 DATE_FORMAT = 'Y-m-d'
 TIME_FORMAT = 'H:i:s'
 DATETIME_FORMAT = 'Y-m-d H:i:s'
+TIME_ZONE = env("TIME_ZONE")
 
 # Authentication
 AUTH_USER_MODEL = 'app.CustomUser'
@@ -80,6 +81,7 @@ SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 
 # Email
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
 EMAIL_CONFIG = env.email_url('EMAIL_URL')
 vars().update(EMAIL_CONFIG)
 
