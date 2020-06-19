@@ -18,7 +18,7 @@ MIDDLEWARE += [
 ]
 
 # Async settings
-RQ_QUEUES['default']['ASYNC'] = True
+RQ_QUEUES['default']['ASYNC'] = False
 
 DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.timer.TimerPanel',

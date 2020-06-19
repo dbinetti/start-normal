@@ -1,14 +1,16 @@
 # Standard Libary
 from textwrap import wrap
 
+# Third-Party
+from django_rq import job
+from mailchimp3 import MailChimp
+from mailchimp3.helpers import get_subscriber_hash
+
 # Django
 from django.conf import settings
 from django.contrib.auth.forms import PasswordResetForm
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
-# First-Party
-from django_rq import job
-from mailchimp3 import MailChimp
 
 
 @job
@@ -27,7 +29,7 @@ def claim_account(user):
     return 'Error {0}'.format(user)
 
 # Utility
-def build_email(template, context, subject, to=[], cc=[], bcc=[], attachments=[]):
+def build_email(template, subject, context=None, to=[], cc=[], bcc=[], attachments=[]):
     body = render_to_string(template, context)
     email = EmailMessage(
         subject=subject,
@@ -71,5 +73,16 @@ def subscribe_email(email):
     result = client.lists.members.create(
         list_id=settings.MAILCHIMP_AUDIENCE_ID,
         data=data,
+    )
+    return result
+
+
+@job
+def mailchimp_delete_email(email):
+    subscriber_hash = get_subscriber_hash(email)
+    client = MailChimp(mc_api=settings.MAILCHIMP_API_KEY)
+    result = client.lists.members.delete_permanent(
+        list_id=settings.MAILCHIMP_AUDIENCE_ID,
+        subscriber_hash=subscriber_hash,
     )
     return result
