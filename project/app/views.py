@@ -204,7 +204,6 @@ def index(request):
 def letter(request):
     return redirect('sign')
 
-
 def learn(request):
     if request.method == "POST":
         form = SubscribeForm(request.POST)
@@ -285,7 +284,7 @@ def notes(request):
         notes="",
     ).exclude(
         notes=None,
-    ).order_by('id')
+    ).order_by('-id')
     return render(
         request,
         'app/notes.html',
