@@ -1,10 +1,13 @@
 # Django
-# First-Party
+# Third-Party
 import pytest
-from app.forms import SignatureForm
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
+
+# First-Party
+from app.forms import SignatureForm
 
 
 class IndexView(TestCase):
@@ -22,12 +25,12 @@ class IndexView(TestCase):
     #     response = self.client.get(reverse('transcript'))
     #     self.assertEqual(response.status_code, 200)
 
-    def test_letter(self):
-        """
-        If no questions exist, an appropriate message is displayed.
-        """
-        response = self.client.get(reverse('letter'))
-        self.assertEqual(response.status_code, 200)
+    # def test_letter(self):
+    #     """
+    #     If no questions exist, an appropriate message is displayed.
+    #     """
+    #     response = self.client.get(reverse('letter'))
+    #     self.assertEqual(response.status_code, 200)
 
     def test_thanks(self):
         """
@@ -90,8 +93,8 @@ def test_homepage(anon_client):
     assert response.status_code == 200
 
 @pytest.mark.django_db
-def test_letter(anon_client):
-    path = reverse('letter')
+def test_sign(anon_client):
+    path = reverse('sign')
     response = anon_client.post(
         path, {
             'name': 'Foo Bar',
