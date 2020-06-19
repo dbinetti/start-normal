@@ -3,8 +3,22 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 # Local
-from .forms import CustomUserChangeForm, CustomUserCreationForm
-from .models import CustomUser, Faq, Registration, Signature
+from .forms import (
+    CustomUserChangeForm,
+    CustomUserCreationForm,
+)
+from .models import (
+    CustomUser,
+    Faq,
+    Registration,
+    Signature,
+)
+
+
+def approve_signature(modeladmin, request, queryset):
+    queryset.update(is_approved=True)
+
+approve_signature.short_description = "Approve Signatures"
 
 
 @admin.register(Registration)
@@ -85,7 +99,7 @@ class SignatureAdmin(admin.ModelAdmin):
         'is_public',
         'is_teacher',
         'is_doctor',
-        'notes',
+        # 'notes',
         'message',
         'created',
         'updated',
@@ -106,7 +120,9 @@ class SignatureAdmin(admin.ModelAdmin):
     autocomplete_fields = [
         'user',
     ]
-
+    actions = [
+        approve_signature
+    ]
 
 
 
