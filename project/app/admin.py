@@ -3,16 +3,8 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 # Local
-from .forms import (
-    CustomUserChangeForm,
-    CustomUserCreationForm,
-)
-from .models import (
-    CustomUser,
-    Faq,
-    Registration,
-    Signature,
-)
+from .forms import CustomUserChangeForm, CustomUserCreationForm
+from .models import CustomUser, Faq, Registration, Signature
 
 
 @admin.register(Registration)
@@ -77,7 +69,6 @@ class SignatureAdmin(admin.ModelAdmin):
         'name',
         'is_approved',
         'location',
-        'district',
         'phone',
         'is_public',
         'is_volunteer',
@@ -85,15 +76,17 @@ class SignatureAdmin(admin.ModelAdmin):
         'is_doctor',
         'email',
         'notes',
+        'message',
         'user',
     ]
     list_display = [
         'name',
         'location',
-        'district',
         'is_public',
         'is_teacher',
         'is_doctor',
+        'notes',
+        'message',
         'created',
         'updated',
     ]
