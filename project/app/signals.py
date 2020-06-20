@@ -11,7 +11,8 @@ from app.tasks import (
 
 
 @receiver(post_delete, sender=CustomUser)
-def user_post_delete(sender, **kwargs):
+def user_post_delete(sender, instance, **kwargs):
+    user = instance
     result = mailchimp_delete_email.delay(user.email)
     email = build_email(
         to=[user.email],
