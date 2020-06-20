@@ -5,6 +5,7 @@ from django.dispatch import receiver
 # First-Party
 from app.models import CustomUser
 from app.tasks import (
+    build_email,
     mailchimp_delete_email,
     send_email,
 )
