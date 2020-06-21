@@ -21,14 +21,23 @@ from .models import CustomUser, District, Faq, Signature
 from .tasks import build_email, send_email, subscribe_email, welcome_email
 
 
-def district(request, short):
+def district_detail(request, short):
     district = District.objects.get(
         short__iexact=short,
     )
     return render(
         request,
-        'app/district.html',
+        'app/district_detail.html',
         {'district': district},
+    )
+
+
+def district_list(request):
+    districts = District.objects.order_by('name')
+    return render(
+        request,
+        'app/district_list.html',
+        {'districts': districts},
     )
 
 

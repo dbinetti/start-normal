@@ -1,0 +1,21 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+{% block content %}
+<br>
+<section>
+  <h1>
+    District List
+  </h1>
+</section>
+
+<section>
+  <ul class='list-unstyled'>
+    {% for district in districts %}
+      <li><a href='{% url "district-detail" district.short %}'>{{district.name}}</a></li>
+    {% endfor %}
+  </ul>
+</section>
+
+
+{% endblock content %}
