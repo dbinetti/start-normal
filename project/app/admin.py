@@ -3,22 +3,37 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 # Local
-from .forms import (
-    CustomUserChangeForm,
-    CustomUserCreationForm,
-)
-from .models import (
-    CustomUser,
-    Faq,
-    Registration,
-    Signature,
-)
+from .forms import CustomUserChangeForm, CustomUserCreationForm
+from .models import CustomUser, District, Faq, Registration, Signature
 
 
 def approve_signature(modeladmin, request, queryset):
     queryset.update(is_approved=True)
 
 approve_signature.short_description = "Approve Signatures"
+
+
+@admin.register(District)
+class DistrictAdmin(admin.ModelAdmin):
+    save_on_top = True
+    fields = [
+        'name',
+        'short',
+        'status',
+        'meeting_date',
+    ]
+    list_display = [
+        'name',
+        'short',
+        'meeting_date',
+    ]
+    list_filter = [
+        'created',
+    ]
+    search_fields = [
+        'name',
+        'short',
+    ]
 
 
 @admin.register(Registration)

@@ -1,7 +1,6 @@
 # Django
 # Third-Party
 import pytest
-
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
@@ -43,7 +42,7 @@ class IndexView(TestCase):
         form_data = {
             'name': 'foobar',
             'email': 'foo@bar.com',
-            'location': 'SC',
+            'location': 'sc',
         }
         form = SignatureForm(data=form_data)
         self.assertTrue(form.is_valid())
@@ -99,7 +98,7 @@ def test_sign(anon_client):
         path, {
             'name': 'Foo Bar',
             'email': 'foo@bar.com',
-            'location': 'SC',
+            'location': 'sc',
         }
     )
     assert response.status_code == 302

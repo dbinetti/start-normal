@@ -27,6 +27,7 @@ mailchimp3 = "*"
 requests = "*"
 sendgrid = "*"
 django-sendgrid-v5 = "*"
+django-model-utils = "*"
 
 [requires]
 python_full_version = "3.8.3"
