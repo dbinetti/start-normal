@@ -21,15 +21,21 @@ class DistrictAdmin(admin.ModelAdmin):
         'name',
         'short',
         'status',
+        'schedule',
+        'masks',
         'meeting_date',
     ]
     list_display = [
         'name',
         'short',
+        'schedule',
+        'masks',
         'meeting_date',
     ]
     list_filter = [
         'created',
+        'schedule',
+        'masks',
     ]
     search_fields = [
         'name',

@@ -3,18 +3,60 @@
 
 {% block content %}
 <br>
-<section>
+<section class='my-5'>
   <h1>
-    District List
+    Districts
   </h1>
 </section>
 
-<section>
-  <ul class='list-unstyled'>
-    {% for district in districts %}
-      <li><a href='{% url "district-detail" district.short %}'>{{district.name}}</a></li>
-    {% endfor %}
-  </ul>
+<section class='my-5'>
+  <h4>
+    List and Status
+  </h4>
+  <table class='table'>
+    <thead>
+      <tr>
+        <th>
+          Name
+        </th>
+        <th>
+          Schedule
+        </th>
+        <th>
+          Masks
+        </th>
+        <th>
+          Next Meeting
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for district in districts %}
+        <tr>
+          <td>
+            <a href='{% url "district-detail" district.short %}'>{{district.name}}</a>
+          </td>
+          <td>
+            {{district.get_schedule_display}}
+          </td>
+          <td>
+            {{district.get_masks_display}}
+          </td>
+          <td>
+            {{district.next_meeting|default:"(Not enterted)"}}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan=4>
+          If you would like to update the status for your district, please send information to <a href=
+          'mailto:dbinetti@startnormal.com'>dbinetti@startnormal.com</a>.
+        </td>
+      </tr>
+    </tfoot>
+  </table>
 </section>
 
 

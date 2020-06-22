@@ -22,7 +22,7 @@ class ContactInline(admin.TabularInline):
         'role',
     )
     show_change_link = True
-    extra = 1
+    extra = 0
     classes = [
         # 'collapse',
     ]

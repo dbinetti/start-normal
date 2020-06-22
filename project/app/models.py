@@ -11,20 +11,98 @@ from shortuuidfield import ShortUUIDField
 from .managers import CustomUserManager
 
 
-class Registration(models.Model):
-
-    email = models.EmailField(
-        blank=False,
-        unique=True,
-        help_text="""Your email will not be used for any purpose other than registration for this Q&A."""
+class Contact(models.Model):
+    ROLE = Choices(
+        (10, 'super', 'Superintendent'),
+        (20, 'super', 'Board President'),
+        (30, 'super', 'Board Vice-President'),
+        (40, 'super', 'Board Clerk'),
+        (50, 'super', 'Board Trustee'),
+    )
+    is_active = models.BooleanField(
+        default=True,
     )
     name = models.CharField(
         max_length=255,
         blank=False,
-        help_text="""Your name will be used during the Q&A but otherwise will remain private.  Registration for the Q&A DOES NOT signify support for Start Normal."""
     )
-    notes = models.TextField(
-        max_length=512,
+    role = models.IntegerField(
+        null=True,
+        blank=True,
+        choices=ROLE,
+    )
+    email = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    phone = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+    district = models.ForeignKey(
+        'District',
+        on_delete=models.CASCADE,
+        related_name='contacts',
+    )
+
+
+    def __str__(self):
+        return str(self.name)
+
+
+class District(models.Model):
+
+    SCHEDULE = Choices(
+        (10, 'person', "In-Person"),
+        (20, 'blended', "Blended"),
+        (30, 'distance', "Distance"),
+        (40, 'undecided', "Undecided"),
+    )
+    MASKS = Choices(
+        (10, 'required', "Required"),
+        (20, 'optional', "Optional"),
+        (30, 'disallowed', "Disallowed"),
+    )
+
+    is_active = models.BooleanField(
+        default=False,
+    )
+    name = models.CharField(
+        max_length=255,
+        blank=False,
+    )
+    short = models.CharField(
+        max_length=255,
+        blank=False,
+    )
+    status = models.TextField(
+        blank=True,
+    )
+    schedule = models.IntegerField(
+        null=True,
+        blank=False,
+        choices=SCHEDULE,
+        default=SCHEDULE.undecided,
+    )
+    masks = models.IntegerField(
+        null=True,
+        blank=False,
+        choices=MASKS,
+        default=MASKS.required,
+    )
+    is_masks = models.BooleanField(
+        default=True,
+    )
+    meeting_date = models.DateField(
+        null=True,
         blank=True,
     )
     created = models.DateTimeField(
@@ -61,6 +139,32 @@ class Faq(models.Model):
     )
     def __str__(self):
         return str(slugify(self.question))
+
+
+class Registration(models.Model):
+
+    email = models.EmailField(
+        blank=False,
+        unique=True,
+        help_text="""Your email will not be used for any purpose other than registration for this Q&A."""
+    )
+    name = models.CharField(
+        max_length=255,
+        blank=False,
+        help_text="""Your name will be used during the Q&A but otherwise will remain private.  Registration for the Q&A DOES NOT signify support for Start Normal."""
+    )
+    notes = models.TextField(
+        max_length=512,
+        blank=True,
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+    def __str__(self):
+        return str(self.name)
 
 
 class Signature(models.Model):
@@ -190,82 +294,6 @@ class Signature(models.Model):
     updated = models.DateTimeField(
         auto_now=True,
     )
-
-    def __str__(self):
-        return str(self.name)
-
-
-class District(models.Model):
-    is_active = models.BooleanField(
-        default=False,
-    )
-    name = models.CharField(
-        max_length=255,
-        blank=False,
-    )
-    short = models.CharField(
-        max_length=255,
-        blank=False,
-    )
-    status = models.TextField(
-        blank=True,
-    )
-    meeting_date = models.DateField(
-        null=True,
-        blank=True,
-    )
-    created = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated = models.DateTimeField(
-        auto_now=True,
-    )
-    def __str__(self):
-        return str(self.name)
-
-
-class Contact(models.Model):
-    ROLE = Choices(
-        (10, 'super', 'Superintendent'),
-        (20, 'super', 'Board President'),
-        (30, 'super', 'Board Vice-President'),
-        (40, 'super', 'Board Clerk'),
-        (50, 'super', 'Board Trustee'),
-    )
-    is_active = models.BooleanField(
-        default=False,
-    )
-    name = models.CharField(
-        max_length=255,
-        blank=False,
-    )
-    role = models.IntegerField(
-        null=True,
-        blank=True,
-        choices=ROLE,
-    )
-    email = models.CharField(
-        max_length=255,
-        blank=True,
-        default='',
-    )
-    phone = models.CharField(
-        max_length=255,
-        blank=True,
-        default='',
-    )
-    created = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated = models.DateTimeField(
-        auto_now=True,
-    )
-    district = models.ForeignKey(
-        'District',
-        on_delete=models.CASCADE,
-        related_name='contacts',
-    )
-
 
     def __str__(self):
         return str(self.name)
