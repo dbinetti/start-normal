@@ -4,9 +4,8 @@ import shortuuid
 from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
 from django.utils.text import slugify
-from shortuuidfield import ShortUUIDField
-
 from model_utils import Choices
+from shortuuidfield import ShortUUIDField
 
 # Local
 from .managers import CustomUserManager
@@ -225,29 +224,52 @@ class District(models.Model):
         return str(self.name)
 
 
-# class Contact(models.Model):
-#     is_active = models.BooleanField(
-#         default=False,
-#     )
-#     name = models.CharField(
-#         max_length=255,
-#         blank=False,
-#     )
-#     position = models.CharField(
-#         max_length=255,
-#         blank=False,
-#     )
-#     email = models.CharField(
-#         blank=True,
-#     )
-#     created = models.DateTimeField(
-#         auto_now_add=True,
-#     )
-#     updated = models.DateTimeField(
-#         auto_now=True,
-#     )
-#     def __str__(self):
-#         return str(self.name)
+class Contact(models.Model):
+    ROLE = Choices(
+        (10, 'super', 'Superintendent'),
+        (20, 'super', 'Board President'),
+        (30, 'super', 'Board Vice-President'),
+        (40, 'super', 'Board Clerk'),
+        (50, 'super', 'Board Trustee'),
+    )
+    is_active = models.BooleanField(
+        default=False,
+    )
+    name = models.CharField(
+        max_length=255,
+        blank=False,
+    )
+    role = models.IntegerField(
+        null=True,
+        blank=True,
+        choices=ROLE,
+    )
+    email = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    phone = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+    district = models.ForeignKey(
+        'District',
+        on_delete=models.CASCADE,
+        related_name='contacts',
+    )
+
+
+    def __str__(self):
+        return str(self.name)
+
 
 class CustomUser(AbstractBaseUser):
     id = ShortUUIDField(

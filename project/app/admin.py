@@ -4,6 +4,7 @@ from django.contrib.auth.admin import UserAdmin
 
 # Local
 from .forms import CustomUserChangeForm, CustomUserCreationForm
+from .inlines import ContactInline
 from .models import CustomUser, District, Faq, Registration, Signature
 
 
@@ -34,7 +35,9 @@ class DistrictAdmin(admin.ModelAdmin):
         'name',
         'short',
     ]
-
+    inlines = [
+        ContactInline,
+    ]
 
 @admin.register(Registration)
 class RegistrationAdmin(admin.ModelAdmin):

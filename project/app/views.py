@@ -25,10 +25,15 @@ def district_detail(request, short):
     district = District.objects.get(
         short__iexact=short,
     )
+    contacts = district.contacts.filter(
+        is_active=True,
+    ).order_by(
+        'role',
+    )
     return render(
         request,
         'app/district_detail.html',
-        {'district': district},
+        {'district': district, 'contacts': contacts},
     )
 
 
