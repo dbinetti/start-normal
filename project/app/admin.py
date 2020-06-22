@@ -44,7 +44,9 @@ class DistrictAdmin(admin.ModelAdmin):
     inlines = [
         ContactInline,
     ]
-
+    ordering = [
+        'name',
+    ]
 @admin.register(Registration)
 class RegistrationAdmin(admin.ModelAdmin):
     save_on_top = True
