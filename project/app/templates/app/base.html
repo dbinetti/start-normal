@@ -29,6 +29,9 @@
             <li class="nav-item ml-3">
               <a href='{% url "videos" %}'>Videos</a>
             </li>
+            <li class="nav-item ml-3">
+              <a href='{% url "district-list" %}'>Districts</a>
+            </li>
           </ul>
           <ul class="navbar-nav ml-auto">
             {% if request.user.is_authenticated %}
