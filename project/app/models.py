@@ -61,14 +61,14 @@ class Contact(models.Model):
 class District(models.Model):
 
     SCHEDULE = Choices(
-        (0, 'unknown', "(Unkwown)"),
+        (0, 'unknown', "(Unknown)"),
         (10, 'person', "In-Person"),
         (20, 'blended', "Blended"),
         (30, 'distance', "Distance"),
         (40, 'undecided', "Undecided"),
     )
     MASKS = Choices(
-        (0, 'unknown', "(Unkwown)"),
+        (0, 'unknown', "(Unknown)"),
         (10, 'required', "Required"),
         (20, 'optional', "Optional"),
         (30, 'disallowed', "Disallowed"),

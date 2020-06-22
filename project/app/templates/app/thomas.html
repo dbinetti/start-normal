@@ -29,24 +29,21 @@
 
 
   <div class='card-body'>
-    <p class="card-title">Thomas has graciously agreed to do a live video Q&A with parents on his experience.  This will take place Monday, June 22, at 10:00AM PDT.  If you'd like to participate (either to ask questions or simply watch) please register using this form.</p>
-<form method="post" action='{% url "thomas" %}'>
-  {% csrf_token %}
-  {% bootstrap_form_errors form %}
-  {# {% bootstrap_form form %} #}
-  {% bootstrap_field form.name show_label=False placeholder="Name (Required, Private)"%}
-  {% bootstrap_field form.email show_label=False placeholder="Email (Required, Private)"%}
-  {% bootstrap_field form.notes show_label=False%}
+    <p class="card-title">Thomas has graciously agreed to do a live video Q&A with parents on his experience.  This will take place Monday, June 22, at 10:00AM PDT.  We are no longer accepting registrations for this event, but you can participate directly using the following information:
+    </p>
+    <p class='card-text'>
+      <br>
+      Topic: Q&A with Thomas Albeck<br>
+      Time: Jun 22, 2020 10:00 AM Pacific Time (US and Canada)<br>
+      <br>
+      Join Zoom Meeting<br>
+      <a href='https://us02web.zoom.us/j/81341357627?pwd=R3d4LzF5RG1zeGozN0RybkZXRGs0dz09'>https://us02web.zoom.us/j/81341357627?pwd=R3d4LzF5RG1zeGozN0RybkZXRGs0dz09</a>
+      <br>
+      Meeting ID: 813 4135 7627<br>
+      Password: 134407<br>
+    </p>
 
-  {% buttons %}
-    <button type="submit" class="btn btn-primary btn-lg btn-block">
-      Register
-    </button>
-  {% endbuttons %}
-  <p>
-    <small class='text-muted'>The webinar is free, and your information remains private.  We just want to help parents learn more.  If you need help please contact <a href='mailto:dbinetti@startnormal.com'>dbinetti@startnormal.com</a></small>
-  </p>
-</form>
+
 </div>
 </div>
 

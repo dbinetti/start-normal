@@ -13,7 +13,7 @@
   <h4>
     List and Status
   </h4>
-  <table class='table'>
+  <table class='table table-small table-hover'>
     <thead>
       <tr>
         <th>
@@ -43,7 +43,7 @@
             {{district.get_masks_display}}
           </td>
           <td>
-            {{district.next_meeting|default:"(Unknown)"}}
+            {{district.meeting_date|date:"SHORT_DATE_FORMAT"}}
           </td>
         </tr>
       {% endfor %}
