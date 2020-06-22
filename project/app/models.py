@@ -61,12 +61,14 @@ class Contact(models.Model):
 class District(models.Model):
 
     SCHEDULE = Choices(
+        (0, 'unknown', "(Unkwown)"),
         (10, 'person', "In-Person"),
         (20, 'blended', "Blended"),
         (30, 'distance', "Distance"),
         (40, 'undecided', "Undecided"),
     )
     MASKS = Choices(
+        (0, 'unknown', "(Unkwown)"),
         (10, 'required', "Required"),
         (20, 'optional', "Optional"),
         (30, 'disallowed', "Disallowed"),
@@ -90,13 +92,13 @@ class District(models.Model):
         null=True,
         blank=False,
         choices=SCHEDULE,
-        default=SCHEDULE.undecided,
+        default=SCHEDULE.unknown,
     )
     masks = models.IntegerField(
         null=True,
         blank=False,
         choices=MASKS,
-        default=MASKS.required,
+        default=MASKS.unknown,
     )
     is_masks = models.BooleanField(
         default=True,
