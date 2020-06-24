@@ -1,16 +1,15 @@
 # Standard Libary
 from textwrap import wrap
 
-# Third-Party
-from django_rq import job
-from mailchimp3 import MailChimp
-from mailchimp3.helpers import get_subscriber_hash
-
 # Django
 from django.conf import settings
 from django.contrib.auth.forms import PasswordResetForm
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
+# Third-Party
+from django_rq import job
+from mailchimp3 import MailChimp
+from mailchimp3.helpers import get_subscriber_hash
 
 
 @job
@@ -84,5 +83,23 @@ def mailchimp_delete_email(email):
     result = client.lists.members.delete_permanent(
         list_id=settings.MAILCHIMP_AUDIENCE_ID,
         subscriber_hash=subscriber_hash,
+    )
+    return result
+
+@job
+def mailchimp_add_tag(signature):
+    email = signature.email
+    location = signature.get_location_display()
+    list_id = settings.MAILCHIMP_AUDIENCE_ID
+    subscriber_hash = get_subscriber_hash(email)
+    data = {
+        'tags': [
+            {'name': location, 'status': 'active'},
+        ]
+    }
+    result =  client.lists.members.tags.update(
+        list_id=list_id,
+        subscriber_hash=subscriber_hash,
+        data=data,
     )
     return result
