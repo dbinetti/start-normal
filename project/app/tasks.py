@@ -97,6 +97,7 @@ def mailchimp_add_tag(signature):
             {'name': location, 'status': 'active'},
         ]
     }
+    client = MailChimp(mc_api=settings.MAILCHIMP_API_KEY)
     result =  client.lists.members.tags.update(
         list_id=list_id,
         subscriber_hash=subscriber_hash,
