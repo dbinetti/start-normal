@@ -109,9 +109,18 @@ def mailchimp_add_tag(signature):
         ]
     }
     client = MailChimp(mc_api=settings.MAILCHIMP_API_KEY)
-    result =  client.lists.members.tags.update(
-        list_id=list_id,
-        subscriber_hash=subscriber_hash,
-        data=data,
-    )
+    try:
+        result =  client.lists.members.tags.update(
+            list_id=list_id,
+            subscriber_hash=subscriber_hash,
+            data=data,
+        )
+    except MailChimpError as e:
+        error = json.loads(str(e).replace("\'", "\""))
+        if error['title'] == 'Resource Not Found':
+            result =  "Resource Not Found"
+        else:
+            raise e # Invalid Resource
+    except Exception as e:
+        result = e
     return result
