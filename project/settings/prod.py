@@ -2,6 +2,7 @@
 from .base import *
 
 # Core
+SECURE_SSL_REDIRECT = True
 ALLOWED_HOSTS = [
     '.startnormal.com',
     '.herokuapp.com',
@@ -11,7 +12,19 @@ ALLOWED_HOSTS = [
 EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
 SENDGRID_API_KEY = env("SENDGRID_API_KEY")
 
-SECURE_SSL_REDIRECT = True
+# Sentry
+sentry_sdk.init(
+    dsn=env("SENTRY_DSN"),
+    integrations=[
+        DjangoIntegration(),
+        RqIntegration(),
+        RedisIntegration(),
+    ],
+    send_default_pii=True,
+    request_bodies='always',
+    release=env("HEROKU_SLUG_COMMIT"),
+    environment=env("HEROKU_APP_NAME"),
+)
 
 LOGGING = {
     'version': 1,
