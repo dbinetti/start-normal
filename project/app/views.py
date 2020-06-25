@@ -1,9 +1,4 @@
 # Django
-# Third-Party
-import django_rq
-import shortuuid
-from django_rq import job
-
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate
@@ -19,6 +14,11 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
 
+# First-Party
+import django_rq
+import shortuuid
+from django_rq import job
+
 # Local
 from .forms import AccountForm
 from .forms import CustomSetPasswordForm
@@ -33,6 +33,7 @@ from .models import Faq
 from .models import Signature
 from .tasks import build_email
 from .tasks import mailchimp_subscribe_email
+from .tasks import mailchimp_subscribe_signature
 from .tasks import send_email
 from .tasks import welcome_email
 
@@ -94,10 +95,7 @@ def sign(request):
 
             # Execute related tasks
             welcome_email.delay(signature)
-            mailchimp_subscribe_email.delay(
-                email=signature.email,
-                location=signature.get_location_display(),
-            )
+            mailchimp_subscribe_email.delay(signature)
             # Forward to share page
             return redirect('thanks')
     else:

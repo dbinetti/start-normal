@@ -3,17 +3,17 @@
 import json
 from textwrap import wrap
 
-# Third-Party
-from django_rq import job
-from mailchimp3 import MailChimp
-from mailchimp3.helpers import get_subscriber_hash
-from mailchimp3.mailchimpclient import MailChimpError
-
 # Django
 from django.conf import settings
 from django.contrib.auth.forms import PasswordResetForm
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
+
+# First-Party
+from django_rq import job
+from mailchimp3 import MailChimp
+from mailchimp3.helpers import get_subscriber_hash
+from mailchimp3.mailchimpclient import MailChimpError
 
 
 @job
@@ -67,17 +67,32 @@ def welcome_email(signature):
 
 
 @job
-def mailchimp_subscribe_email(email, location=None):
+def mailchimp_subscribe_email(email):
     client = MailChimp(mc_api=settings.MAILCHIMP_API_KEY)
     data = {
         'email_address': email,
         'status': 'subscribed',
     }
-    # if location:
-    #     data['tags'] = [
-    #         {'name': location, 'status': 'active'}
-    #     ]
-    # data = json.dumps(data)
+    try:
+        result = client.lists.members.create(
+            list_id=settings.MAILCHIMP_AUDIENCE_ID,
+            data=data,
+        )
+    except MailChimpError as e:
+        result = str(e)
+    return result
+
+
+@job
+def mailchimp_subscribe_signature(signature):
+    client = MailChimp(mc_api=settings.MAILCHIMP_API_KEY)
+    data = {
+        'email_address': signature.email,
+        'status': 'subscribed',
+        'tags': [
+            {'name': signature.location, 'status': 'active'}
+        ],
+    }
     try:
         result = client.lists.members.create(
             list_id=settings.MAILCHIMP_AUDIENCE_ID,
@@ -93,10 +108,9 @@ def mailchimp_subscribe_email(email, location=None):
             )
             user.is_active = False
             user.save()
+            result = 'Invalid Resource'
         else:
-            raise e # Invalid Resource
-    except Exception as e:
-        result = e
+            raise e
     return result
 
 
