@@ -87,6 +87,12 @@ def mailchimp_subscribe_email(email, location=None):
         error = json.loads(str(e).replace("\'", "\""))
         if error['title'] == 'Member Exists':
             result =  "Member Exists"
+        elif error['title'] == 'Invalid Resource':
+            user = CustomUser.objects.get(
+                email=email,
+            )
+            user.is_active = False
+            user.save()
         else:
             raise e # Invalid Resource
     except Exception as e:
