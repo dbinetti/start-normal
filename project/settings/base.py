@@ -1,14 +1,14 @@
 # Third-Party
 # Standard Libary
+# Standard Library
 import os
-
-from environ import (
-    Env,
-    Path,
-)
 
 # Django
 from django.contrib.messages import constants as messages
+
+# First-Party
+from environ import Env
+from environ import Path
 
 # Set Environment
 env = Env(
@@ -18,6 +18,7 @@ env = Env(
     EMAIL_URL=(str, 'smtp://localhost:1025'),
     REDIS_URL=(str, 'redis://localhost:6379/0'),
 )
+
 root = Path(__file__) - 2
 
 
@@ -46,6 +47,10 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'account'
 LOGOUT_REDIRECT_URL = 'index'
 
+
+# Mailchimp
+MAILCHIMP_API_KEY = env("MAILCHIMP_API_KEY")
+MAILCHIMP_AUDIENCE_ID = env("MAILCHIMP_AUDIENCE_ID")
 
 # Database
 DATABASES = {
@@ -84,10 +89,6 @@ SESSION_CACHE_ALIAS = "default"
 DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")
 EMAIL_CONFIG = env.email_url('EMAIL_URL')
 vars().update(EMAIL_CONFIG)
-
-# Mailchimp
-MAILCHIMP_API_KEY = env("MAILCHIMP_API_KEY")
-MAILCHIMP_AUDIENCE_ID = env("MAILCHIMP_AUDIENCE_ID")
 
 # File Management
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'

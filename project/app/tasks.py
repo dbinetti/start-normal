@@ -66,9 +66,17 @@ def welcome_email(signature):
     return 'Error {0}'.format(email)
 
 
+def get_mailchimp_client():
+    enabled = not settings.DEBUG
+    return MailChimp(
+        mc_api=settings.MAILCHIMP_API_KEY,
+        enabled=enabled,
+    )
+
+
 @job
 def mailchimp_subscribe_email(email):
-    client = MailChimp(mc_api=settings.MAILCHIMP_API_KEY)
+    client = get_mailchimp_client()
     data = {
         'email_address': email,
         'status': 'subscribed',
@@ -85,7 +93,7 @@ def mailchimp_subscribe_email(email):
 
 @job
 def mailchimp_subscribe_signature(signature):
-    client = MailChimp(mc_api=settings.MAILCHIMP_API_KEY)
+    client = get_mailchimp_client()
     data = {
         'email_address': signature.email,
         'status': 'subscribed',
@@ -116,6 +124,7 @@ def mailchimp_subscribe_signature(signature):
 
 @job
 def mailchimp_delete_email(email):
+    client = get_mailchimp_client()
     subscriber_hash = get_subscriber_hash(email)
     client = MailChimp(mc_api=settings.MAILCHIMP_API_KEY)
     result = client.lists.members.delete(
@@ -126,6 +135,7 @@ def mailchimp_delete_email(email):
 
 @job
 def mailchimp_add_tag(signature):
+    client = get_mailchimp_client()
     email = signature.email
     location = signature.get_location_display()
     list_id = settings.MAILCHIMP_AUDIENCE_ID
@@ -135,7 +145,6 @@ def mailchimp_add_tag(signature):
             {'name': location, 'status': 'active'},
         ]
     }
-    client = MailChimp(mc_api=settings.MAILCHIMP_API_KEY)
     try:
         result =  client.lists.members.tags.update(
             list_id=list_id,

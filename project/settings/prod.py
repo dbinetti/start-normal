@@ -20,10 +20,6 @@ ALLOWED_HOSTS = [
 EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
 SENDGRID_API_KEY = env("SENDGRID_API_KEY")
 
-# Mailchimp
-MAILCHIMP_API_KEY = env("MAILCHIMP_API_KEY")
-MAILCHIMP_AUDIENCE_ID = env("MAILCHIMP_AUDIENCE_ID")
-
 # Sentry
 sentry_sdk.init(
     dsn=env("SENTRY_DSN"),
