@@ -95,7 +95,7 @@ def sign(request):
 
             # Execute related tasks
             welcome_email.delay(signature)
-            mailchimp_subscribe_email.delay(signature)
+            mailchimp_subscribe_signature.delay(signature)
             # Forward to share page
             return redirect('thanks')
     else:
