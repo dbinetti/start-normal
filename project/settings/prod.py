@@ -1,4 +1,10 @@
 # Local
+# First-Party
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.django import RedisIntegration
+from sentry_sdk.integrations.django import RqIntegration
+
 from .base import *
 
 # Core
