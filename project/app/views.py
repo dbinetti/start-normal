@@ -96,7 +96,7 @@ def sign(request):
             welcome_email.delay(signature)
             mailchimp_subscribe_email.delay(
                 email=signature.email,
-                location=signature.location,
+                location=signature.get_location_display(),
             )
             # Forward to share page
             return redirect('thanks')

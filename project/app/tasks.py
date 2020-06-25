@@ -73,11 +73,11 @@ def mailchimp_subscribe_email(email, location=None):
         'email_address': email,
         'status': 'subscribed',
     }
-    if location:
-        data['tags'] = [
-            {'name': location, 'status': 'active'}
-        ]
-    data = json.dumps(data)
+    # if location:
+    #     data['tags'] = [
+    #         {'name': location, 'status': 'active'}
+    #     ]
+    # data = json.dumps(data)
     try:
         result = client.lists.members.create(
             list_id=settings.MAILCHIMP_AUDIENCE_ID,
