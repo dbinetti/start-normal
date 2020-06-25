@@ -1,17 +1,19 @@
 # Standard Libary
+# Standard Library
 import json
 from textwrap import wrap
+
+# Third-Party
+from django_rq import job
+from mailchimp3 import MailChimp
+from mailchimp3.helpers import get_subscriber_hash
+from mailchimp3.mailchimpclient import MailChimpError
 
 # Django
 from django.conf import settings
 from django.contrib.auth.forms import PasswordResetForm
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
-# Third-Party
-from django_rq import job
-from mailchimp3 import MailChimp
-from mailchimp3.helpers import get_subscriber_hash
-from mailchimp3.mailchimpclient import MailChimpError
 
 
 @job
@@ -65,12 +67,16 @@ def welcome_email(signature):
 
 
 @job
-def subscribe_email(email):
+def mailchimp_subscribe_email(email, location=None):
     client = MailChimp(mc_api=settings.MAILCHIMP_API_KEY)
     data = {
         'email_address': email,
         'status': 'subscribed',
     }
+    if location:
+        data['tags'] = [
+            {'name': location, 'status': 'active'}
+        ]
     try:
         result = client.lists.members.create(
             list_id=settings.MAILCHIMP_AUDIENCE_ID,

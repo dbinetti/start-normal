@@ -2,23 +2,39 @@
 # Third-Party
 import django_rq
 import shortuuid
+from django_rq import job
+
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate
+from django.contrib.auth import login
+from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.core.mail import EmailMessage
-from django.db.models import Count, Sum
+from django.db.models import Count
+from django.db.models import Sum
 from django.dispatch import receiver
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
+from django.shortcuts import render
 from django.urls import reverse_lazy
-from django_rq import job
 
 # Local
-from .forms import (AccountForm, CustomSetPasswordForm, CustomUserCreationForm,
-                    DeleteForm, RegistrationForm, SignatureForm, SubscribeForm)
-from .models import CustomUser, District, Faq, Signature
-from .tasks import build_email, send_email, subscribe_email, welcome_email
+from .forms import AccountForm
+from .forms import CustomSetPasswordForm
+from .forms import CustomUserCreationForm
+from .forms import DeleteForm
+from .forms import RegistrationForm
+from .forms import SignatureForm
+from .forms import SubscribeForm
+from .models import CustomUser
+from .models import District
+from .models import Faq
+from .models import Signature
+from .tasks import build_email
+from .tasks import mailchimp_subscribe_email
+from .tasks import send_email
+from .tasks import welcome_email
 
 
 def district_detail(request, short):
@@ -78,8 +94,10 @@ def sign(request):
 
             # Execute related tasks
             welcome_email.delay(signature)
-            subscribe_email.delay(email)
-
+            mailchimp_subscribe_email.delay(
+                email=signature.email,
+                location=signature.location,
+            )
             # Forward to share page
             return redirect('thanks')
     else:
@@ -207,7 +225,7 @@ def learn(request):
         form = SubscribeForm(request.POST)
         if form.is_valid():
             email = form.cleaned_data.get('email')
-            subscribe_email.delay(email=email)
+            mailchimp_subscribe_email.delay(email=email)
             messages.success(
                 request,
                 'You have been subscribed.',
