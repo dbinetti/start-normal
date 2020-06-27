@@ -16,6 +16,7 @@ urlpatterns = [
     path('thomas', views.thomas, name='thomas',),
     path('delete', views.delete, name='delete',),
     path('account', views.account, name='account',),
+    path('morrow', views.morrow, name='morrow',),
     path('sign', views.sign, name='sign',),
     path('petition', views.petition, name='petition',),
     path('signatures', views.signatures, name='signatures',),
