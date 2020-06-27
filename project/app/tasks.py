@@ -66,6 +66,35 @@ def welcome_email(signature):
     return 'Error {0}'.format(email)
 
 
+
+def get_segment_id(location):
+    segment_map = {
+        'ath': 684132,
+        'bel': 684136,
+        'brb': 684140,
+        'bur': 684144,
+        'col': 684148,
+        'dc': 684152,
+        'epa': 684156,
+        'fc': 684160,
+        'hmb': 684164,
+        'hil': 684168,
+        'mp': 684172,
+        'mil': 684176,
+        'pac': 684180,
+        'pv': 684184,
+        'rc': 684188,
+        'sb': 684192,
+        'sc': 684196,
+        'sm': 684200,
+        'ssf': 684204,
+        'ws': 684208,
+        'un': 684212,
+        'out': 684216,
+    }
+    return segment_map[location]
+
+
 def get_mailchimp_client():
     enabled = not settings.DEBUG
     return MailChimp(
@@ -135,17 +164,18 @@ def mailchimp_add_tag(signature):
 @job
 def mailchimp_subscribe_signature(signature):
     client = get_mailchimp_client()
-    location = signature.get_location_display()
+    list_id = settings.MAILCHIMP_AUDIENCE_ID
+    segment_id = get_segment_id(location=signature.location)
     data = {
         'email_address': signature.email,
         'status': 'subscribed'
     }
     try:
-        result = client.lists.members.create(
-            list_id=settings.MAILCHIMP_AUDIENCE_ID,
+        result = client.lists.segments.members.create(
+            list_id=list_id,
+            segment_id=segment_id,
             data=data,
         )
-        mailchimp_add_tag(signature)
     except MailChimpError as e:
         error = json.loads(str(e).replace("\'", "\""))
         if error['title'] == 'Member Exists':
