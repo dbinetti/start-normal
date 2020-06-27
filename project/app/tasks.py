@@ -165,28 +165,32 @@ def mailchimp_add_tag(signature):
 def mailchimp_subscribe_signature(signature):
     client = get_mailchimp_client()
     list_id = settings.MAILCHIMP_AUDIENCE_ID
-    segment_id = get_segment_id(location=signature.location)
+    subscriber_hash = get_subscriber_hash(signature.email)
     data = {
+        'status_if_new': 'subscribed',
         'email_address': signature.email,
-        'status': 'subscribed'
+        'merge_fields': {
+            'NAME': signature.name,
+            'LOCATION': signature.get_location_display(),
+        }
     }
-    try:
-        result = client.lists.segments.members.create(
-            list_id=list_id,
-            segment_id=segment_id,
-            data=data,
-        )
-    except MailChimpError as e:
-        error = json.loads(str(e).replace("\'", "\""))
-        if error['title'] == 'Member Exists':
-            result =  "Member Exists"
-        elif error['title'] == 'Invalid Resource':
-            user = CustomUser.objects.get(
-                email=email,
-            )
-            user.is_active = False
-            user.save()
-            result = 'Invalid Resource'
-        else:
-            raise e
+    # try:
+    result = client.lists.members.create_or_update(
+        list_id=list_id,
+        subscriber_hash=subscriber_hash,
+        data=data,
+    )
+    # except MailChimpError as e:
+    #     error = json.loads(str(e).replace("\'", "\""))
+    #     if error['title'] == 'Member Exists':
+    #         result =  "Member Exists"
+    #     # elif error['title'] == 'Invalid Resource':
+    #     #     user = CustomUser.objects.get(
+    #     #         email=email,
+    #     #     )
+    #     #     user.is_active = False
+    #     #     user.save()
+    #     #     result = 'Invalid Resource'
+    #     else:
+    #         raise e
     return result
