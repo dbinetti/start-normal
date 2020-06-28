@@ -23,6 +23,6 @@ urlpatterns = [
     path('signatures', views.signatures, name='signatures',),
 
     path('account/reset/<uidb64>/<token>/', views.CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    path('district/<short>/', views.district_detail, name='district-detail'),
+    path('district/<short>/', views.district, name='district'),
     path('district/', views.district_list, name='district-list'),
 ]

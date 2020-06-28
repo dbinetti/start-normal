@@ -57,7 +57,7 @@ def signup(request):
         {'form': form},
     )
 
-def district_detail(request, short):
+def district(request, short):
     district = District.objects.get(
         short__iexact=short,
     )
@@ -68,7 +68,7 @@ def district_detail(request, short):
     )
     return render(
         request,
-        'app/district_detail.html',
+        'app/district.html',
         {'district': district, 'contacts': contacts},
     )
 
