@@ -73,11 +73,11 @@ def district(request, short):
     )
 
 
-def district_list(request):
+def districts(request):
     districts = District.objects.order_by('name')
     return render(
         request,
-        'app/district_list.html',
+        'app/districts.html',
         {'districts': districts},
     )
 
