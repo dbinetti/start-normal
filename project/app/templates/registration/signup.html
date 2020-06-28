@@ -1,0 +1,27 @@
+{% extends "app/base.html" %}
+{% load bootstrap4 %}
+
+{% block content %}
+<br>
+<section>
+  <h1>
+    Register
+  </h1>
+</section>
+<section class='my-5'>
+  <form method="post">
+    {% csrf_token %}
+    {% bootstrap_form_errors form %}
+    {# {% bootstrap_form form %} #}
+
+    {% bootstrap_field form.email show_label=False show_help=False placeholder="Email"%}
+    {% bootstrap_field form.password1 show_label=False show_help=False placeholder="Password"%}
+    {% bootstrap_field form.password2 show_label=False show_help=False placeholder="Password"%}
+    {% buttons %}
+      <button type="submit" class="btn btn-primary btn-lg btn-block">
+        Register
+      </button>
+    {% endbuttons %}
+  </form>
+</section>
+{% endblock %}

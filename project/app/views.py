@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.core.mail import EmailMessage
 from django.db.models import Count
@@ -37,6 +38,24 @@ from .tasks import mailchimp_subscribe_signature
 from .tasks import send_email
 from .tasks import welcome_email
 
+
+def signup(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('account')
+    else:
+        form = CustomUserCreationForm()
+    return render(
+        request,
+        'registration/signup.html',
+        {'form': form},
+    )
 
 def district_detail(request, short):
     district = District.objects.get(

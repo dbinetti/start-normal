@@ -18,6 +18,7 @@ urlpatterns = [
     path('account', views.account, name='account',),
     path('morrow', views.morrow, name='morrow',),
     path('sign', views.sign, name='sign',),
+    path('signup', views.signup, name='signup',),
     path('petition', views.petition, name='petition',),
     path('signatures', views.signatures, name='signatures',),
 

@@ -1,17 +1,13 @@
 # Django
 from django import forms
-from django.contrib.auth.forms import (
-    SetPasswordForm,
-    UserChangeForm,
-    UserCreationForm,
-)
+from django.contrib.auth.forms import SetPasswordForm
+from django.contrib.auth.forms import UserChangeForm
+from django.contrib.auth.forms import UserCreationForm
 
 # Local
-from .models import (
-    CustomUser,
-    Registration,
-    Signature,
-)
+from .models import CustomUser
+from .models import Registration
+from .models import Signature
 
 
 class CustomSetPasswordForm(SetPasswordForm):
@@ -126,7 +122,7 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta(UserCreationForm):
         model = CustomUser
-        fields = ('email',)
+        fields = ('email','password1', 'password2',)
 
 
 class CustomUserChangeForm(UserChangeForm):
