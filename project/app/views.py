@@ -243,6 +243,12 @@ def thanks(request):
         'app/thanks.html',
     )
 
+def morrow(request):
+    return render(
+        request,
+        'app/morrow.html',
+    )
+
 def about(request):
     return render(
         request,

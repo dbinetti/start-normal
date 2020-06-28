@@ -5,6 +5,7 @@ from textwrap import wrap
 
 # Django
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordResetForm
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
@@ -66,6 +67,35 @@ def welcome_email(signature):
     return 'Error {0}'.format(email)
 
 
+
+def get_segment_id(location):
+    segment_map = {
+        'ath': 684132,
+        'bel': 684136,
+        'brb': 684140,
+        'bur': 684144,
+        'col': 684148,
+        'dc': 684152,
+        'epa': 684156,
+        'fc': 684160,
+        'hmb': 684164,
+        'hil': 684168,
+        'mp': 684172,
+        'mil': 684176,
+        'pac': 684180,
+        'pv': 684184,
+        'rc': 684188,
+        'sb': 684192,
+        'sc': 684196,
+        'sm': 684200,
+        'ssf': 684204,
+        'ws': 684208,
+        'un': 684212,
+        'out': 684216,
+    }
+    return segment_map[location]
+
+
 def get_mailchimp_client():
     enabled = not settings.DEBUG
     return MailChimp(
@@ -91,35 +121,6 @@ def mailchimp_subscribe_email(email):
     return result
 
 
-@job
-def mailchimp_subscribe_signature(signature):
-    client = get_mailchimp_client()
-    data = {
-        'email_address': signature.email,
-        'status': 'subscribed',
-        'tags': [
-            {'name': signature.location, 'status': 'active'}
-        ],
-    }
-    try:
-        result = client.lists.members.create(
-            list_id=settings.MAILCHIMP_AUDIENCE_ID,
-            data=data,
-        )
-    except MailChimpError as e:
-        error = json.loads(str(e).replace("\'", "\""))
-        if error['title'] == 'Member Exists':
-            result =  "Member Exists"
-        elif error['title'] == 'Invalid Resource':
-            user = CustomUser.objects.get(
-                email=email,
-            )
-            user.is_active = False
-            user.save()
-            result = 'Invalid Resource'
-        else:
-            raise e
-    return result
 
 
 @job
@@ -159,4 +160,37 @@ def mailchimp_add_tag(signature):
             raise e # Invalid Resource
     except Exception as e:
         result = e
+    return result
+
+@job
+def mailchimp_subscribe_signature(signature):
+    client = get_mailchimp_client()
+    list_id = settings.MAILCHIMP_AUDIENCE_ID
+    subscriber_hash = get_subscriber_hash(signature.email)
+    data = {
+        'status_if_new': 'subscribed',
+        'email_address': signature.email,
+        'merge_fields': {
+            'NAME': signature.name,
+            'LOCATION': signature.get_location_display(),
+        }
+    }
+    try:
+        result = client.lists.members.create_or_update(
+            list_id=list_id,
+            subscriber_hash=subscriber_hash,
+            data=data,
+        )
+    except MailChimpError as e:
+        error = json.loads(str(e).replace("\'", "\""))
+        if error['title'] == 'Invalid Resource':
+            User = get_user_model()
+            user = User.objects.get(
+                email=signature.email,
+            )
+            user.is_active = False
+            user.save()
+            result = 'Invalid Resource'
+        else:
+            raise e
     return result

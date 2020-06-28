@@ -1,9 +1,10 @@
 # Django
-# First-Party
-import shortuuid
 from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
 from django.utils.text import slugify
+
+# First-Party
+import shortuuid
 from model_utils import Choices
 from shortuuidfield import ShortUUIDField
 
@@ -200,30 +201,6 @@ class Signature(models.Model):
         ('un', 'Unincorporated San Mateo County'),
         ('out', 'Outside of San Mateo County'),
     )
-
-    class Location(models.TextChoices):
-        ATHERTON = 'ATH', ('Atherton')
-        BELMONT = 'BEL', ('Belmont')
-        BRISBANE = 'BRB', ('Brisbane')
-        BURLINGAME = 'BUR', ('Burlingame')
-        COLMA = 'COL', ('Colma')
-        DC = 'DC', ('Daly City')
-        EPA = 'EPA', ('East Palo Alto')
-        FC = 'FC', ('Foster City')
-        HMB = 'HMB', ('Half Moon Bay')
-        HILLSBOROUGH = 'HIL', ('Hillsborough')
-        MP = 'MP', ('Menlo Park')
-        MILLBRAE = 'MIL', ('Millbrae')
-        PACIFICA = 'PAC', ('Pacifica')
-        PV = 'PV', ('Portola Valley')
-        RC = 'RC', ('Redwood City')
-        SB = 'SB', ('San Bruno')
-        SC = 'SC', ('San Carlos')
-        SM = 'SM', ('San Mateo')
-        SSF = 'SSF', ('South San Francisco')
-        WOODSIDE = 'WS', ('Woodside')
-        UN = 'UN', ('Unincorporated San Mateo County')
-        OUT = 'OUT', ('Outside of San Mateo County')
 
     name = models.CharField(
         max_length=255,
