@@ -186,7 +186,7 @@ def mailchimp_subscribe_signature(signature):
         if error['title'] == 'Invalid Resource':
             User = get_user_model()
             user = User.objects.get(
-                email=email,
+                email=signature.email,
             )
             user.is_active = False
             user.save()
