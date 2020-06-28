@@ -12,46 +12,30 @@
 <section class='py-3'>
   <div id='id_wistia'>
 
-    <script src="https://fast.wistia.com/embed/medias/ey4jfjxfyr.jsonp" async></script><script src="https://fast.wistia.com/assets/external/E-v1.js" async></script><div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;"><div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;"><span class="wistia_embed wistia_async_ey4jfjxfyr popover=true popoverAnimateThumbnail=true videoFoam=true" style="display:inline-block;height:100%;position:relative;width:100%">&nbsp;</span></div></div>
+    <script src="https://fast.wistia.com/embed/medias/pstpotj1x9.jsonp" async></script><script src="https://fast.wistia.com/assets/external/E-v1.js" async></script><div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;"><div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;"><span class="wistia_embed wistia_async_pstpotj1x9 popover=true popoverAnimateThumbnail=true videoFoam=true" style="display:inline-block;height:100%;position:relative;width:100%">&nbsp;</span></div></div>
 
   </div> <!-- end wistia -->
 
   <div class='jumbotron'>
-    <div>
-      <h2>
-        We <strong>Can</strong> Balance Safety and Schooling
-      </h2>
-      <p class='card-text'>
-        The San Mateo Public Health Officer has called to modify the "Four Pillars" in light of child development needs; we support the following changes:
-      </p>
-      <ul class='list-styled'>
-        <li><a data-toggle="collapse" href="#idFace">Removal of the Face Covering Pillar</a></li>
-        <p class='collapse' id='idFace'>
-          Masks work &mdash; but only if worn properly and consistently.  At less than 80% adherence <em>or</em> efficacy masks are a false safety, and will come at great cost in instruction and social emotional impact to our children.
-        </p>
-        <li><a data-toggle="collapse" href="#idDistance">Adjustment of Physical Distance</a></li>
-        <p class='collapse' id='idDistance'>
-          Adjusting to the World Health Organization distance guideline of 1-meter indoors-only has proved safe for tens of millions worldwide, and would allow for full-time instruction.
-        </p>
-      </ul>
-      <h3>
-        {# These decisions are being made <strong>NOW</strong> #}
-      </h3>
-      <ul class='list-styled'>
-        {# <li>Your child will be forced to wear a mask at every age.</li> #}
-        {# <li>Your child will only go to school twice a week.</li> #}
-      </ul>
-      <p>
-        These are reasonable modifications, backed by data and real-world experience.  Sign our Petition so we can Start Normal &mdash; our children's future depends on it.
-      </p>
-    </div>
-    <br>
-    <p>
-      <a href='{% url "sign" %}' role='button' class='btn btn-primary btn-lg mx-2'>Sign the Petition!</a>
-      <a href='{% url "learn" %}' role='button' class='btn btn-light btn-lg mx-2'>Learn More</a>
+    <h2>
+      Modify the Four Pillars
+    </h2>
+    <p class='lead my-5'>
+      The <a href='{% url "morrow"%}'>San Mateo Public Health Officer</a> has called to modify the "Four Pillars" in light of child development needs, and clarified the districts must decide on their own reopening policies.  To advocate for your children, go to your <a href='{% url "district-list" %}'>District</a>.
     </p>
-    </div>
+    <p class='my-5'>
+      <a href='{% url "district-list" %}' role='button' class="btn btn-primary btn-lg">
+        Get Involved
+      </a>
+      <a href='{% url "learn" %}' role='button' class='btn btn-light btn-lg mx-2'>
+        Get Informed
+      </a>
+    </p>
+    <br><br>
+    <p>
+      <small class='text-muted'>Note: Now that we have accomplished our main mission we are no longer actively seeking petition signatures; however, you can still sign and view the <a href='{% url "petition" %}'>original petition</a>.</small>
+    </p>
   </div>
 </section>
-<br><br>
+
 {% endblock content %}

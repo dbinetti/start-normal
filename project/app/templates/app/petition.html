@@ -10,7 +10,7 @@
   </h1>
 </section>
 
-<section class='mt-2 my-5'>
+<section class='mt-2 mt-5'>
   <div class='card'>
     <div class='card-header p-3'>
       <div class="progress" style="height: 30px;">
@@ -39,17 +39,17 @@
         Petition Text
       </h5>
       <p class='card-text lead'>
-        We <strong>must</strong> put our students and staff first.
+        We <strong>Can</strong> Balance Safety and Schooling!
       </p>
       <p class='card-text'>
         The San Mateo Public Health Officer has called to modify the "Four Pillars" in light of child development needs; we support the following changes:
       </p>
       <ul class='list-styled'>
-        <li><a data-toggle="collapse" href="#idFace">Removal of the Face Covering Pillar</a></li>
+        <li><a data-toggle="collapse" href="#idFace">Modification of the Face Covering Pillar</a></li>
         <p class='collapse' id='idFace'>
-          Masks work &mdash; but only if worn properly and consistently.  At less than 80% adherence <em>or</em> efficacy masks are a false safety, and will come at great cost in instruction and social emotional impact to our children.
+          Masks work &mdash; but only if worn properly and consistently.  At less than 80% adherence <em>or</em> efficacy masks are a false safety, and will come at great cost in instruction and social emotional impact to our children.  They should be made optional.
         </p>
-        <li><a data-toggle="collapse" href="#idDistance">Adjustment of Physical Distance</a></li>
+        <li><a data-toggle="collapse" href="#idDistance">Modification of the  Physical Distance Pillar</a></li>
         <p class='collapse' id='idDistance'>
           Adjusting to the World Health Organization distance guideline of 1-meter indoors-only has proved safe for tens of millions worldwide, and would allow for full-time instruction.
         </p>
@@ -65,6 +65,9 @@
       </p>
     </div>
   </div>
+</section>
+<section class='mt-2 ml-2'>
+  <a href='{% url "delete" %}'><span class='text-danger'>Delete Signature</span></a>
 </section>
 
 {% endblock content %}
