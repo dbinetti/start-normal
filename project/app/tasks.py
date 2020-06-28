@@ -174,23 +174,21 @@ def mailchimp_subscribe_signature(signature):
             'LOCATION': signature.get_location_display(),
         }
     }
-    # try:
-    result = client.lists.members.create_or_update(
-        list_id=list_id,
-        subscriber_hash=subscriber_hash,
-        data=data,
-    )
-    # except MailChimpError as e:
-    #     error = json.loads(str(e).replace("\'", "\""))
-    #     if error['title'] == 'Member Exists':
-    #         result =  "Member Exists"
-    #     # elif error['title'] == 'Invalid Resource':
-    #     #     user = CustomUser.objects.get(
-    #     #         email=email,
-    #     #     )
-    #     #     user.is_active = False
-    #     #     user.save()
-    #     #     result = 'Invalid Resource'
-    #     else:
-    #         raise e
+    try:
+        result = client.lists.members.create_or_update(
+            list_id=list_id,
+            subscriber_hash=subscriber_hash,
+            data=data,
+        )
+    except MailChimpError as e:
+        error = json.loads(str(e).replace("\'", "\""))
+        if error['title'] == 'Invalid Resource':
+            user = CustomUser.objects.get(
+                email=email,
+            )
+            user.is_active = False
+            user.save()
+            result = 'Invalid Resource'
+        else:
+            raise e
     return result
