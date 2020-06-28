@@ -5,6 +5,7 @@ from textwrap import wrap
 
 # Django
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import PasswordResetForm
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
@@ -183,7 +184,8 @@ def mailchimp_subscribe_signature(signature):
     except MailChimpError as e:
         error = json.loads(str(e).replace("\'", "\""))
         if error['title'] == 'Invalid Resource':
-            user = CustomUser.objects.get(
+            User = get_user_model()
+            user = User.objects.get(
                 email=email,
             )
             user.is_active = False
