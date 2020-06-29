@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.core.mail import EmailMessage
 from django.db.models import Count
@@ -38,7 +39,25 @@ from .tasks import send_email
 from .tasks import welcome_email
 
 
-def district_detail(request, short):
+def signup(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            raw_password = form.cleaned_data.get('password1')
+            user = authenticate(username=username, password=raw_password)
+            login(request, user)
+            return redirect('account')
+    else:
+        form = CustomUserCreationForm()
+    return render(
+        request,
+        'registration/signup.html',
+        {'form': form},
+    )
+
+def district(request, short):
     district = District.objects.get(
         short__iexact=short,
     )
@@ -49,16 +68,16 @@ def district_detail(request, short):
     )
     return render(
         request,
-        'app/district_detail.html',
+        'app/district.html',
         {'district': district, 'contacts': contacts},
     )
 
 
-def district_list(request):
+def districts(request):
     districts = District.objects.order_by('name')
     return render(
         request,
-        'app/district_list.html',
+        'app/districts.html',
         {'districts': districts},
     )
 
@@ -144,7 +163,7 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     success_url = reverse_lazy('account')
 
 @login_required
-def account(request):
+def signature(request):
     user = request.user
     signature = Signature.objects.get(
         user=user,
@@ -165,7 +184,7 @@ def account(request):
     progress = (signatures.count() / 5000) * 100
     return render(
         request,
-        'app/account.html',
+        'app/signature.html',
         {'form': form, 'progress': progress, 'signatures': signatures},
     )
 

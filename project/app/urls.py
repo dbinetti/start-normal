@@ -16,12 +16,14 @@ urlpatterns = [
     path('thomas', views.thomas, name='thomas',),
     path('delete', views.delete, name='delete',),
     path('account', views.account, name='account',),
+    path('signature', views.signature, name='signature',),
     path('morrow', views.morrow, name='morrow',),
     path('sign', views.sign, name='sign',),
+    path('signup', views.signup, name='signup',),
     path('petition', views.petition, name='petition',),
     path('signatures', views.signatures, name='signatures',),
 
     path('account/reset/<uidb64>/<token>/', views.CustomPasswordResetConfirmView.as_view(), name='password_reset_confirm'),
-    path('district/<short>/', views.district_detail, name='district-detail'),
-    path('district/', views.district_list, name='district-list'),
+    path('district/<short>/', views.district, name='district'),
+    path('district/', views.districts, name='districts'),
 ]

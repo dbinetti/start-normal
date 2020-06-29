@@ -34,7 +34,7 @@
       {% for district in districts %}
         <tr>
           <td>
-            <a href='{% url "district-detail" district.short %}'>{{district.name}}</a>
+            <a href='{% url "district" district.short %}'>{{district.name}}</a>
           </td>
           <td>
             {{district.get_schedule_display}}
