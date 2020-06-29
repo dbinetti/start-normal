@@ -166,7 +166,7 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
     success_url = reverse_lazy('account')
 
 @login_required
-def account(request):
+def signature(request):
     user = request.user
     signature = Signature.objects.get(
         user=user,
@@ -187,7 +187,7 @@ def account(request):
     progress = (signatures.count() / 5000) * 100
     return render(
         request,
-        'app/account.html',
+        'app/signature.html',
         {'form': form, 'progress': progress, 'signatures': signatures},
     )
 

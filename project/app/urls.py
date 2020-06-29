@@ -16,6 +16,7 @@ urlpatterns = [
     path('thomas', views.thomas, name='thomas',),
     path('delete', views.delete, name='delete',),
     path('account', views.account, name='account',),
+    path('signature', views.signature, name='signature',),
     path('morrow', views.morrow, name='morrow',),
     path('sign', views.sign, name='sign',),
     path('signup', views.signup, name='signup',),
