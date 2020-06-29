@@ -71,7 +71,7 @@ def sign(request):
         if form.is_valid():
             # Instantiate Signature object
             signature = form.save(commit=False)
-            print('1')
+
             # Create related user account
             email = form.cleaned_data.get('email')
             password = shortuuid.uuid()
@@ -80,19 +80,16 @@ def sign(request):
                 password=password,
                 is_active=True,
             )
-            user = user.save()
-
+            user.save()
+            user.refresh_from_db()
             # Relate records and save
             signature.user = user
             signature.save()
-            print('2')
             # Notify User through UI
             messages.success(
                 request,
                 'Your Signature has been added to the Petition.',
             )
-            print('3')
-
             # Execute related tasks
             welcome_email.delay(signature)
             mailchimp_subscribe_signature.delay(signature)
