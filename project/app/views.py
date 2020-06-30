@@ -180,7 +180,6 @@ def login(request):
         'client_id': settings.AUTH0_CLIENT_ID,
         'scope': 'openid',
         'redirect_uri': redirect_uri,
-        'connection': 'Username-Password-Authentication',
     }
     url = requests.Request(
         'GET',
