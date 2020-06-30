@@ -1,11 +1,16 @@
 # Django
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin
+from django.contrib.auth.admin import UserAdmin as UserAdminBase
 
 # Local
-from .forms import CustomUserChangeForm, CustomUserCreationForm
+from .forms import UserChangeForm
+from .forms import UserCreationForm
 from .inlines import ContactInline
-from .models import CustomUser, District, Faq, Registration, Signature
+from .models import District
+from .models import Faq
+from .models import Registration
+from .models import Signature
+from .models import User
 
 
 def approve_signature(modeladmin, request, queryset):
@@ -152,12 +157,13 @@ class SignatureAdmin(admin.ModelAdmin):
 
 
 
-class CustomUserAdmin(UserAdmin):
+class UserAdmin(UserAdminBase):
     save_on_top = True
-    add_form = CustomUserCreationForm
-    form = CustomUserChangeForm
-    model = CustomUser
+    add_form = UserCreationForm
+    form = UserChangeForm
+    model = User
     list_display = [
+        'username',
         'email',
         'created',
         'last_login'
@@ -170,6 +176,7 @@ class CustomUserAdmin(UserAdmin):
         'last_login',
     ]
     search_fields = [
+        'username',
         'email',
     ]
     autocomplete_fields = [
@@ -182,6 +189,7 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = (
         (None, {
             'fields': [
+                'username',
                 'email',
                 # 'signature',
             ]
@@ -193,6 +201,7 @@ class CustomUserAdmin(UserAdmin):
         (None, {
             'classes': ('wide',),
             'fields': [
+                'username',
                 'email',
                 'password1',
                 'password2',
@@ -206,4 +215,4 @@ class CustomUserAdmin(UserAdmin):
     filter_horizontal = ()
 
 
-admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(User, UserAdmin)

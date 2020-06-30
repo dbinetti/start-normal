@@ -9,7 +9,7 @@ from model_utils import Choices
 from shortuuidfield import ShortUUIDField
 
 # Local
-from .managers import CustomUserManager
+from .managers import UserManager
 
 
 class Contact(models.Model):
@@ -172,7 +172,7 @@ class Registration(models.Model):
 
 class Signature(models.Model):
     user = models.OneToOneField(
-        'app.CustomUser',
+        'app.User',
         on_delete=models.CASCADE,
         null=True,
         related_name='signature',
@@ -278,14 +278,21 @@ class Signature(models.Model):
         return str(self.name)
 
 
-class CustomUser(AbstractBaseUser):
+class User(AbstractBaseUser):
     id = ShortUUIDField(
         primary_key=True,
     )
 
-    email = models.EmailField(
+    username = models.CharField(
+        max_length=150,
         blank=False,
         unique=True,
+    )
+
+    email = models.EmailField(
+        blank=True,
+        unique=True,
+        null=True,
     )
 
     is_active = models.BooleanField(
@@ -304,14 +311,14 @@ class CustomUser(AbstractBaseUser):
         auto_now=True,
     )
 
-    USERNAME_FIELD = 'email'
+    USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = [
     ]
 
-    objects = CustomUserManager()
+    objects = UserManager()
 
     def __str__(self):
-        return self.email
+        return self.username
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"

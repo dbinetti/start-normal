@@ -39,14 +39,20 @@ DATETIME_FORMAT = 'Y-m-d H:i:s'
 TIME_ZONE = env("TIME_ZONE")
 
 # Authentication
-AUTH_USER_MODEL = 'app.CustomUser'
+AUTH_USER_MODEL = 'app.User'
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
+    # 'django.contrib.auth.middleware.RemoteUserMiddleware',
+    # 'django.contrib.auth.backends.ModelBackend',
+    'app.backends.Auth0Backend',
 ]
-LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'account'
+LOGIN_URL = "authorize"
+LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = 'index'
 
+#Auth0
+AUTH0_CLIENT_ID = env("AUTH0_CLIENT_ID")
+AUTH0_SECRET = env("AUTH0_SECRET")
+AUTH0_DOMAIN = env("AUTH0_DOMAIN")
 
 # Mailchimp
 MAILCHIMP_API_KEY = env("MAILCHIMP_API_KEY")

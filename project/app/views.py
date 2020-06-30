@@ -1,9 +1,13 @@
 # Django
+# Standard Library
+import json
+
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate
 from django.contrib.auth import login
-from django.contrib.auth import logout
+from django.contrib.auth import logout as log_out
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import PasswordResetConfirmView
@@ -11,27 +15,30 @@ from django.core.mail import EmailMessage
 from django.db.models import Count
 from django.db.models import Sum
 from django.dispatch import receiver
+from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
+from django.urls import reverse
 from django.urls import reverse_lazy
 
 # First-Party
 import django_rq
+import requests
 import shortuuid
 from django_rq import job
 
 # Local
 from .forms import AccountForm
 from .forms import CustomSetPasswordForm
-from .forms import CustomUserCreationForm
 from .forms import DeleteForm
 from .forms import RegistrationForm
 from .forms import SignatureForm
 from .forms import SubscribeForm
-from .models import CustomUser
+from .forms import UserCreationForm
 from .models import District
 from .models import Faq
 from .models import Signature
+from .models import User
 from .tasks import build_email
 from .tasks import mailchimp_subscribe_email
 from .tasks import mailchimp_subscribe_signature
@@ -39,9 +46,79 @@ from .tasks import send_email
 from .tasks import welcome_email
 
 
+def logout(request):
+    log_out(request)
+    return redirect('https://start-normal.us.auth0.com/v2/logout')
+
+
+
+
+def authorize(request):
+    # redirect_uri = reverse('callback')
+    redirect_uri = 'http://localhost:8000/callback'
+    params = {
+        'response_type': 'code',
+        'client_id': settings.AUTH0_CLIENT_ID,
+        'scope': 'openid',
+        'redirect_uri': redirect_uri,
+        'connection': 'Username-Password-Authentication',
+    }
+    url = requests.Request(
+        'GET',
+        'https://{0}/authorize'.format(settings.AUTH0_DOMAIN),
+        params=params,
+    ).prepare().url
+    return redirect(url)
+
+
+def callback(request):
+    code = request.GET.get('code', '')
+    json_header = {
+        'content-type': 'application/json',
+    }
+    token_url = 'https://{0}/oauth/token'.format(
+        settings.AUTH0_DOMAIN,
+    )
+    # secure = '' if settings.DEBUG else 's'
+    # callback_url = 'http{0}://{1}/complete/auth0/'.format(
+    #     secure,
+    #     settings.AUTH0_DOMAIN,
+    # )
+    # callback_url = reverse('callback')
+    redirect_uri = 'http://localhost:8000/callback'
+
+    token_payload = {
+        'client_id': settings.AUTH0_CLIENT_ID,
+        'client_secret': settings.AUTH0_SECRET,
+        'redirect_uri': redirect_uri,
+        'code': code,
+        'grant_type': 'authorization_code'
+    }
+    token_info = requests.post(
+        token_url,
+        data=json.dumps(token_payload),
+        headers=json_header
+    ).json()
+    user_url = 'https://{0}/userinfo?access_token={1}'.format(
+        settings.AUTH0_DOMAIN,
+        token_info.get('access_token', ''),
+    )
+    user_info = requests.get(user_url).json()
+    username = user_info['sub']
+
+    user = authenticate(username=username)
+    print(user)
+    if user:
+        login(request, user)
+        return redirect('index')
+    return HttpResponse(status=400)
+
+
+
+
 def signup(request):
     if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
+        form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
@@ -50,7 +127,7 @@ def signup(request):
             login(request, user)
             return redirect('account')
     else:
-        form = CustomUserCreationForm()
+        form = UserCreationForm()
     return render(
         request,
         'registration/signup.html',
@@ -70,6 +147,12 @@ def district(request, short):
         request,
         'app/district.html',
         {'district': district, 'contacts': contacts},
+    )
+
+def account(request):
+    return render(
+        request,
+        'app/account.html',
     )
 
 
@@ -94,7 +177,7 @@ def sign(request):
             # Create related user account
             email = form.cleaned_data.get('email')
             password = shortuuid.uuid()
-            user = CustomUser(
+            user = User(
                 email=email,
                 password=password,
                 is_active=True,

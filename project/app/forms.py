@@ -1,13 +1,13 @@
 # Django
 from django import forms
 from django.contrib.auth.forms import SetPasswordForm
-from django.contrib.auth.forms import UserChangeForm
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserChangeForm as UserChangeFormBase
+from django.contrib.auth.forms import UserCreationForm as UserCreationFormBase
 
 # Local
-from .models import CustomUser
 from .models import Registration
 from .models import Signature
+from .models import User
 
 
 class CustomSetPasswordForm(SetPasswordForm):
@@ -118,15 +118,15 @@ class SubscribeForm(forms.Form):
         return data.lower()
 
 
-class CustomUserCreationForm(UserCreationForm):
-
-    class Meta(UserCreationForm):
-        model = CustomUser
-        fields = ('email','password1', 'password2',)
-
-
-class CustomUserChangeForm(UserChangeForm):
+class UserCreationForm(UserCreationFormBase):
 
     class Meta:
-        model = CustomUser
-        fields = ('email',)
+        model = User
+        fields = ('username', 'email','password1', 'password2',)
+
+
+class UserChangeForm(UserChangeFormBase):
+
+    class Meta:
+        model = User
+        fields = ('username', 'email',)
