@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate
-from django.contrib.auth import login
+from django.contrib.auth import login as log_in
 from django.contrib.auth import logout as log_out
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
@@ -46,16 +46,12 @@ from .tasks import send_email
 from .tasks import welcome_email
 
 
-def logout(request):
-    log_out(request)
-    return redirect('https://start-normal.us.auth0.com/v2/logout')
-
-
-
-
-def authorize(request):
-    # redirect_uri = reverse('callback')
-    redirect_uri = 'http://localhost:8000/callback'
+def login(request):
+    redirect_uri = '{0}://{1}/callback'.format(
+        request.scheme,
+        request.get_host(),
+    )
+    print(redirect_uri)
     params = {
         'response_type': 'code',
         'client_id': settings.AUTH0_CLIENT_ID,
@@ -79,14 +75,11 @@ def callback(request):
     token_url = 'https://{0}/oauth/token'.format(
         settings.AUTH0_DOMAIN,
     )
-    # secure = '' if settings.DEBUG else 's'
-    # callback_url = 'http{0}://{1}/complete/auth0/'.format(
-    #     secure,
-    #     settings.AUTH0_DOMAIN,
-    # )
-    # callback_url = reverse('callback')
-    redirect_uri = 'http://localhost:8000/callback'
-
+    redirect_uri = '{0}://{1}/callback'.format(
+        request.scheme,
+        request.get_host(),
+    )
+    print(redirect_uri)
     token_payload = {
         'client_id': settings.AUTH0_CLIENT_ID,
         'client_secret': settings.AUTH0_SECRET,
@@ -107,13 +100,16 @@ def callback(request):
     username = user_info['sub']
 
     user = authenticate(username=username)
-    print(user)
     if user:
-        login(request, user)
+        log_in(request, user)
         return redirect('index')
     return HttpResponse(status=400)
 
 
+def logout(request):
+    log_out(request)
+    logout_url = 'https://{0}/v2/logout'.format(settings.AUTH0_DOMAIN)
+    return redirect(logout_url)
 
 
 def signup(request):
@@ -173,7 +169,6 @@ def sign(request):
         if form.is_valid():
             # Instantiate Signature object
             signature = form.save(commit=False)
-            print('1')
             # Create related user account
             email = form.cleaned_data.get('email')
             password = shortuuid.uuid()
@@ -187,13 +182,11 @@ def sign(request):
             # Relate records and save
             signature.user = user
             signature.save()
-            print('2')
             # Notify User through UI
             messages.success(
                 request,
                 'Your Signature has been added to the Petition.',
             )
-            print('3')
 
             # Execute related tasks
             welcome_email.delay(signature)

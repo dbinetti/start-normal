@@ -43,8 +43,8 @@ AUTH_USER_MODEL = 'app.User'
 AUTHENTICATION_BACKENDS = [
     'app.backends.Auth0Backend',
 ]
-LOGIN_URL = "authorize"
-LOGIN_REDIRECT_URL = "/"
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'account'
 LOGOUT_REDIRECT_URL = 'index'
 
 #Auth0

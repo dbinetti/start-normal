@@ -6,12 +6,14 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index',),
-    path('logout', views.logout, name='logout'),
+    path('subscribe', views.subscribe, name='subscribe',),
+
+    path('login', views.login, name='login'),
     path('callback', views.callback, name='callback'),
-    path('authorize', views.authorize, name='authorize'),
+    path('logout', views.logout, name='logout'),
+
     path('letter', views.letter, name='letter',),
     path('thanks', views.thanks, name='thanks',),
-    path('subscribe', views.subscribe, name='subscribe',),
     path('about', views.about, name='about',),
     path('report', views.report, name='report',),
     path('videos', views.videos, name='videos',),
