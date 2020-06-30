@@ -46,6 +46,133 @@ from .tasks import send_email
 from .tasks import welcome_email
 
 
+# Public
+def index(request):
+    return render(
+        request,
+        'public/index.html',
+    )
+
+def morrow(request):
+    return render(
+        request,
+        'public/morrow.html',
+    )
+
+def about(request):
+    return render(
+        request,
+        'public/about.html',
+    )
+
+def videos(request):
+    return render(
+        request,
+        'public/videos.html',
+    )
+
+def thomas(request):
+    if request.method == "POST":
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            registration = form.save()
+            # email = form.cleaned_data.get('email')
+            messages.success(
+                request,
+                'You have registered for the Q&A with Thomas Albeck!',
+            )
+            # registration_email.delay(signature)
+    else:
+        form = RegistrationForm()
+    return render(
+        request,
+        'public/thomas.html',
+        {'form': form,},
+    )
+
+def district(request, short):
+    district = District.objects.get(
+        short__iexact=short,
+    )
+    contacts = district.contacts.filter(
+        is_active=True,
+    ).order_by(
+        'role',
+    )
+    return render(
+        request,
+        'public/district.html',
+        {'district': district, 'contacts': contacts},
+    )
+
+def districts(request):
+    districts = District.objects.order_by('name')
+    return render(
+        request,
+        'public/districts.html',
+        {'districts': districts},
+    )
+
+def petition(request):
+    signatures = Signature.objects.filter(
+        is_approved=True,
+    )
+    progress = (signatures.count() / 5000) * 100
+    return render(
+        request,
+        'public/petition.html',
+        {'signatures': signatures, 'progress': progress},
+    )
+
+def signatures(request):
+    signatures = Signature.objects.filter(
+        is_approved=True,
+    ).order_by(
+        '-is_public',
+        'location',
+        'created',
+    )
+    progress = (signatures.count() / 5000) * 100
+    return render(
+        request,
+        'public/signatures.html',
+        {'signatures': signatures, 'progress': progress},
+    )
+
+def subscribe(request):
+    if request.method == "POST":
+        form = SubscribeForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get('email')
+            mailchimp_subscribe_email.delay(email=email)
+            messages.success(
+                request,
+                'You have been subscribed.',
+            )
+            return redirect('index')
+    else:
+        form = SubscribeForm()
+    return render(
+        request,
+        'public/subscribe.html',
+        {'form': form,},
+    )
+
+def faq(request):
+    faqs = Faq.objects.filter(
+        is_active=True,
+    ).order_by(
+        'num',
+        'created',
+    )
+    return render(
+        request,
+        'public/faq.html',
+        {'faqs': faqs},
+    )
+
+
+# Authentication
 def login(request):
     redirect_uri = request.build_absolute_uri('callback')
     params = {
@@ -61,7 +188,6 @@ def login(request):
         params=params,
     ).prepare().url
     return redirect(url)
-
 
 def callback(request):
     code = request.GET.get('code', '')
@@ -97,7 +223,6 @@ def callback(request):
         return redirect('index')
     return HttpResponse(status=400)
 
-
 def logout(request):
     log_out(request)
     params = {
@@ -115,66 +240,10 @@ def logout(request):
 def goodbye(request):
     return render(
         request,
-        'app/goodbye.html',
+        'private/goodbye.html',
     )
 
-@login_required
-def account(request):
-    return render(
-        request,
-        'app/account.html',
-    )
-
-def signup(request):
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        if form.is_valid():
-            form.save()
-            username = form.cleaned_data.get('username')
-            raw_password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=raw_password)
-            login(request, user)
-            return redirect('account')
-    else:
-        form = UserCreationForm()
-    return render(
-        request,
-        'registration/signup.html',
-        {'form': form},
-    )
-
-def district(request, short):
-    district = District.objects.get(
-        short__iexact=short,
-    )
-    contacts = district.contacts.filter(
-        is_active=True,
-    ).order_by(
-        'role',
-    )
-    return render(
-        request,
-        'app/district.html',
-        {'district': district, 'contacts': contacts},
-    )
-
-@login_required
-def account(request):
-    return render(
-        request,
-        'app/account.html',
-    )
-
-
-def districts(request):
-    districts = District.objects.order_by('name')
-    return render(
-        request,
-        'app/districts.html',
-        {'districts': districts},
-    )
-
-
+# Private
 def sign(request):
     if request.user.is_authenticated:
         return redirect('account')
@@ -219,41 +288,16 @@ def sign(request):
     progress = (signatures.count() / 5000) * 100
     return render(
         request,
-        'app/sign.html',
+        'public/sign.html',
         {'form': form, 'signatures': signatures, 'progress': progress},
     )
 
-def petition(request):
-    signatures = Signature.objects.filter(
-        is_approved=True,
-    )
-    progress = (signatures.count() / 5000) * 100
+@login_required
+def account(request):
     return render(
         request,
-        'app/petition.html',
-        {'signatures': signatures, 'progress': progress},
+        'private/account.html',
     )
-
-def signatures(request):
-    signatures = Signature.objects.filter(
-        is_approved=True,
-    ).order_by(
-        '-is_public',
-        'location',
-        'created',
-    )
-    progress = (signatures.count() / 5000) * 100
-    return render(
-        request,
-        'app/signatures.html',
-        {'signatures': signatures, 'progress': progress},
-    )
-
-class CustomPasswordResetConfirmView(PasswordResetConfirmView):
-    template_name='app/claim.html'
-    form_class = CustomSetPasswordForm
-    post_reset_login = True
-    success_url = reverse_lazy('account')
 
 @login_required
 def signature(request):
@@ -277,22 +321,8 @@ def signature(request):
     progress = (signatures.count() / 5000) * 100
     return render(
         request,
-        'app/signature.html',
+        'private/signature.html',
         {'form': form, 'progress': progress, 'signatures': signatures},
-    )
-
-@login_required
-def faq(request):
-    faqs = Faq.objects.filter(
-        is_active=True,
-    ).order_by(
-        'num',
-        'created',
-    )
-    return render(
-        request,
-        'app/faq.html',
-        {'faqs': faqs},
     )
 
 @login_required
@@ -314,81 +344,18 @@ def delete(request):
         form = DeleteForm()
     return render(
         request,
-        'app/delete.html',
+        'private/delete.html',
         {'form': form,},
     )
 
-def index(request):
-    return render(
-        request,
-        'app/index.html',
-    )
-
-def letter(request):
-    return redirect('sign')
-
-def subscribe(request):
-    if request.method == "POST":
-        form = SubscribeForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data.get('email')
-            mailchimp_subscribe_email.delay(email=email)
-            messages.success(
-                request,
-                'You have been subscribed.',
-            )
-            return redirect('index')
-    else:
-        form = SubscribeForm()
-    return render(
-        request,
-        'app/subscribe.html',
-        {'form': form,},
-    )
-
+@login_required
 def thanks(request):
     return render(
         request,
-        'app/thanks.html',
+        'private/thanks.html',
     )
 
-def morrow(request):
-    return render(
-        request,
-        'app/morrow.html',
-    )
-
-def about(request):
-    return render(
-        request,
-        'app/about.html',
-    )
-
-def videos(request):
-    return render(
-        request,
-        'app/videos.html',
-    )
-
-def thomas(request):
-    if request.method == "POST":
-        form = RegistrationForm(request.POST)
-        if form.is_valid():
-            registration = form.save()
-            # email = form.cleaned_data.get('email')
-            messages.success(
-                request,
-                'You have registered for the Q&A with Thomas Albeck!',
-            )
-            # registration_email.delay(signature)
-    else:
-        form = RegistrationForm()
-    return render(
-        request,
-        'app/thomas.html',
-        {'form': form,},
-    )
-
+# Admin
 @staff_member_required
 def report(request):
     report = Signature.objects.order_by(
@@ -403,7 +370,7 @@ def report(request):
     )['c']
     return render(
         request,
-        'app/report.html',
+        'staff/report.html',
         {'report': report, 'total': total},
     )
 
@@ -416,6 +383,6 @@ def notes(request):
     ).order_by('-id')
     return render(
         request,
-        'app/notes.html',
+        'staff/notes.html',
         {'signatures': signatures},
     )
