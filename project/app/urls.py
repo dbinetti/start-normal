@@ -11,6 +11,7 @@ urlpatterns = [
     path('login', views.login, name='login'),
     path('callback', views.callback, name='callback'),
     path('logout', views.logout, name='logout'),
+    path('goodbye', views.goodbye, name='goodbye'),
 
     path('letter', views.letter, name='letter',),
     path('thanks', views.thanks, name='thanks',),

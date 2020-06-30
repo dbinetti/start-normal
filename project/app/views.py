@@ -47,11 +47,7 @@ from .tasks import welcome_email
 
 
 def login(request):
-    redirect_uri = '{0}://{1}/callback'.format(
-        request.scheme,
-        request.get_host(),
-    )
-    print(redirect_uri)
+    redirect_uri = request.build_absolute_uri('callback')
     params = {
         'response_type': 'code',
         'client_id': settings.AUTH0_CLIENT_ID,
@@ -75,11 +71,7 @@ def callback(request):
     token_url = 'https://{0}/oauth/token'.format(
         settings.AUTH0_DOMAIN,
     )
-    redirect_uri = '{0}://{1}/callback'.format(
-        request.scheme,
-        request.get_host(),
-    )
-    print(redirect_uri)
+    redirect_uri = request.build_absolute_uri('callback')
     token_payload = {
         'client_id': settings.AUTH0_CLIENT_ID,
         'client_secret': settings.AUTH0_SECRET,
@@ -108,9 +100,30 @@ def callback(request):
 
 def logout(request):
     log_out(request)
-    logout_url = 'https://{0}/v2/logout'.format(settings.AUTH0_DOMAIN)
+    params = {
+        'client_id': settings.AUTH0_CLIENT_ID,
+        'return_to': request.build_absolute_uri('goodbye'),
+    }
+    print(params)
+    logout_url = requests.Request(
+        'GET',
+        'https://{0}/v2/logout'.format(settings.AUTH0_DOMAIN),
+        params=params,
+    ).prepare().url
     return redirect(logout_url)
 
+def goodbye(request):
+    return render(
+        request,
+        'app/goodbye.html',
+    )
+
+@login_required
+def account(request):
+    return render(
+        request,
+        'app/account.html',
+    )
 
 def signup(request):
     if request.method == 'POST':
@@ -145,6 +158,7 @@ def district(request, short):
         {'district': district, 'contacts': contacts},
     )
 
+@login_required
 def account(request):
     return render(
         request,
