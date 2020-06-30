@@ -320,7 +320,7 @@ def index(request):
 def letter(request):
     return redirect('sign')
 
-def learn(request):
+def subscribe(request):
     if request.method == "POST":
         form = SubscribeForm(request.POST)
         if form.is_valid():
@@ -335,7 +335,7 @@ def learn(request):
         form = SubscribeForm()
     return render(
         request,
-        'app/learn.html',
+        'app/subscribe.html',
         {'form': form,},
     )
 

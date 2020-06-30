@@ -41,8 +41,6 @@ TIME_ZONE = env("TIME_ZONE")
 # Authentication
 AUTH_USER_MODEL = 'app.User'
 AUTHENTICATION_BACKENDS = [
-    # 'django.contrib.auth.middleware.RemoteUserMiddleware',
-    # 'django.contrib.auth.backends.ModelBackend',
     'app.backends.Auth0Backend',
 ]
 LOGIN_URL = "authorize"

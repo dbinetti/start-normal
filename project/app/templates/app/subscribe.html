@@ -22,7 +22,7 @@
   </p>
 </section>
 <section class='mt-2 col-lg-9'>
-  <form method='post' action='{% url "learn" %}' class='form-horizontal' role='form'>
+  <form method='post' class='form-horizontal' role='form'>
     {% csrf_token %}
     {% bootstrap_form_errors form %}
     {% bootstrap_form form show_label=False%}
