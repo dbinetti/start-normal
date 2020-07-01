@@ -29,6 +29,7 @@ sendgrid = "*"
 django-sendgrid-v5 = "*"
 django-model-utils = "*"
 sentry-sdk = "*"
+auth0-python = "*"
 
 [requires]
 python_full_version = "3.8.3"
