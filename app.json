@@ -63,6 +63,15 @@
         },
         "MAILCHIMP_AUDIENCE_ID": {
           "generator": "secret"
+        },
+        "AUTH0_CLIENT_ID": {
+          "generator": "secret"
+        },
+        "AUTH0_SECRET": {
+          "generator": "secret"
+        },
+        "AUTH0_DOMAIN": {
+          "generator": "secret"
         }
       },
       "scripts": {
