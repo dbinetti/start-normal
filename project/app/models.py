@@ -278,6 +278,91 @@ class Signature(models.Model):
         return str(self.name)
 
 
+class Account(models.Model):
+    user = models.OneToOneField(
+        'app.User',
+        on_delete=models.SET_NULL,
+        related_name='account',
+        null=True,
+    )
+    LOCATION = Choices(
+        ('ath', 'Atherton'),
+        ('bel', 'Belmont'),
+        ('brb', 'Brisbane'),
+        ('bur', 'Burlingame'),
+        ('col', 'Colma'),
+        ('dc', 'Daly City'),
+        ('epa', 'East Palo Alto'),
+        ('fc', 'Foster City'),
+        ('hmb', 'Half Moon Bay'),
+        ('hil', 'Hillsborough'),
+        ('mp', 'Menlo Park'),
+        ('mil', 'Millbrae'),
+        ('pac', 'Pacifica'),
+        ('pv', 'Portola Valley'),
+        ('rc', 'Redwood City'),
+        ('sb', 'San Bruno'),
+        ('sc', 'San Carlos'),
+        ('sm', 'San Mateo'),
+        ('ssf', 'South San Francisco'),
+        ('ws', 'Woodside'),
+        ('un', 'Unincorporated San Mateo County'),
+        ('out', 'Outside of San Mateo County'),
+    )
+
+    name = models.CharField(
+        max_length=255,
+        help_text="""Real name strongly encouraged.  However, if necessary use a descriptor like 'Concerned Parent' or 'Father of Two'. (Required)""",
+    )
+    location = models.CharField(
+        max_length=255,
+        choices=LOCATION,
+        null=True,
+        blank=False,
+        help_text="""Your city. (Required)""",
+    )
+    phone = models.CharField(
+        max_length=255,
+        null=True,
+        blank=True,
+        help_text="""Your mobile phone. (Optional)""",
+    )
+    is_volunteer = models.BooleanField(
+        default=False,
+        help_text="""If you're willing to volunteer in some manner please check this box. """,
+    )
+    is_teacher = models.BooleanField(
+        default=False,
+        help_text="""If you're an educator please check this box. """,
+    )
+    is_doctor = models.BooleanField(
+        default=False,
+        help_text="""If you're a physician please check this box. """,
+    )
+    email = models.EmailField(
+        null=True,
+        blank=False,
+        unique=True,
+        help_text="""Your email is private and not shared.  It's used to manage preferences and send adminstrative updates. (Required)""",
+    )
+    notes = models.TextField(
+        max_length=512,
+        null=True,
+        blank=True,
+        default=None,
+        help_text="""Feel free to include private notes just for us.""",
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+
+    def __str__(self):
+        return str(self.name)
+
+
 class User(AbstractBaseUser):
     id = ShortUUIDField(
         primary_key=True,
