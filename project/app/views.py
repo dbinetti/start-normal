@@ -179,7 +179,7 @@ def login(request):
     params = {
         'response_type': 'code',
         'client_id': settings.AUTH0_CLIENT_ID,
-        'scope': 'openid',
+        'scope': 'openid profile email',
         'redirect_uri': redirect_uri,
     }
     url = requests.Request(
