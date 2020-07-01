@@ -5,6 +5,7 @@ from django.contrib.auth.forms import UserChangeForm as UserChangeFormBase
 from django.contrib.auth.forms import UserCreationForm as UserCreationFormBase
 
 # Local
+from .models import Account
 from .models import Registration
 from .models import Signature
 from .models import User
@@ -39,13 +40,11 @@ class RegistrationForm(forms.ModelForm):
 
 class AccountForm(forms.ModelForm):
     class Meta:
-        model = Signature
+        model = Account
         fields = [
             'name',
             # 'email',
             'location',
-            'message',
-            'is_public',
             'is_teacher',
             'is_doctor',
             'notes',
@@ -58,14 +57,8 @@ class AccountForm(forms.ModelForm):
                     'rows': 5,
                 }
             ),
-            'message': forms.Textarea(
-                attrs={
-                    'class': 'form-control h-25',
-                    'placeholder': 'Public Message (Optional)',
-                    'rows': 5,
-                }
-            ),
         }
+
 
 class SignatureForm(forms.ModelForm):
     class Meta:

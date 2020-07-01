@@ -6,6 +6,7 @@ from django.contrib.auth.admin import UserAdmin as UserAdminBase
 from .forms import UserChangeForm
 from .forms import UserCreationForm
 from .inlines import ContactInline
+from .models import Account
 from .models import District
 from .models import Faq
 from .models import Registration
@@ -52,6 +53,8 @@ class DistrictAdmin(admin.ModelAdmin):
     ordering = [
         'name',
     ]
+
+
 @admin.register(Registration)
 class RegistrationAdmin(admin.ModelAdmin):
     save_on_top = True
@@ -156,7 +159,46 @@ class SignatureAdmin(admin.ModelAdmin):
     ]
 
 
+@admin.register(Account)
+class AccountAdmin(admin.ModelAdmin):
+    save_on_top = True
+    fields = [
+        'name',
+        'location',
+        'phone',
+        'is_volunteer',
+        'is_teacher',
+        'is_doctor',
+        'email',
+        'notes',
+        'user',
+    ]
+    list_display = [
+        'name',
+        'location',
+        'is_teacher',
+        'is_doctor',
+        'created',
+        'updated',
+    ]
+    list_filter = [
+        'location',
+        'is_teacher',
+        'is_doctor',
+        'is_volunteer',
+        'created',
+    ]
+    search_fields = [
+        'name',
+        'email',
+    ]
+    autocomplete_fields = [
+        'user',
+    ]
 
+
+
+@admin.register(User)
 class UserAdmin(UserAdminBase):
     save_on_top = True
     add_form = UserCreationForm
@@ -213,6 +255,3 @@ class UserAdmin(UserAdminBase):
     )
     ordering = ['email']
     filter_horizontal = ()
-
-
-admin.site.register(User, UserAdmin)

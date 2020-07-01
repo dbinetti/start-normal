@@ -35,6 +35,7 @@ from .forms import RegistrationForm
 from .forms import SignatureForm
 from .forms import SubscribeForm
 from .forms import UserCreationForm
+from .models import Account
 from .models import District
 from .models import Faq
 from .models import Signature
@@ -293,9 +294,25 @@ def sign(request):
 
 @login_required
 def account(request):
+    user = request.user
+    account = Account.objects.get(
+        user=user,
+    )
+    if request.method == "POST":
+        form = AccountForm(request.POST, instance=account)
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                "Saved!",
+            )
+    else:
+        form = AccountForm(instance=account)
     return render(
         request,
-        'private/account.html',
+        'private/account.html', {
+            'form': form,
+        },
     )
 
 @login_required
@@ -330,8 +347,6 @@ def delete(request):
         form = DeleteForm(request.POST)
         if form.is_valid():
             user = request.user
-            signature = user.signature
-            signature.delete()
             user.is_active = False
             user.save()
             messages.error(

@@ -36,15 +36,17 @@
           <ul class="navbar-nav ml-auto">
             {% if request.user.is_authenticated %}
               <li class="nav-item mr-3">
-                <a href="{% url 'account' %}" role='button' class='btn btn-sm btn-primary m-2'>Your Signature</a>
+                <a href="{% url 'account' %}" role='button' class='btn btn-sm btn-primary m-2'>Your Account</a>
               </li>
               <li class='nav-item'>
                 <a href="{% url 'logout' %}" role='button' class='btn btn-sm btn-light m-2'>Logout</a>
               </li>
             {% else %}
+              {% comment %}
               <li class="nav-item">
                 <a href="{% url 'sign' %}" role='button' class='btn btn-sm btn-primary m-2'>Sign the Original Petition!</a>
               </li>
+              {% endcomment %}
               <li class='nav-item'>
                 <a href="{% url 'login' %}" role='button' class='btn btn-sm btn-light m-2'>Login</a>
               </li>
