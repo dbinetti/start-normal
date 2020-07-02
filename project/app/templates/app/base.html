@@ -35,9 +35,11 @@
           </ul>
           <ul class="navbar-nav ml-auto">
             {% if request.user.is_authenticated %}
+                {% comment %}
               <li class="nav-item mr-3">
                 <a href="{% url 'account' %}" role='button' class='btn btn-sm btn-primary m-2'>Your Account</a>
               </li>
+              {% endcomment %}
               <li class='nav-item'>
                 <a href="{% url 'logout' %}" role='button' class='btn btn-sm btn-light m-2'>Logout</a>
               </li>
