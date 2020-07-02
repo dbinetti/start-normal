@@ -1,0 +1,8 @@
+{
+  "enabled": true,
+  "credentials": {
+    "api_key": "##SENDGRID_API_KEY##"
+  },
+  "name": "sendgrid",
+  "default_from_address": "David Binetti <dbinetti@startnormal.com>"
+}
