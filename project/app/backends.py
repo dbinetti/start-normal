@@ -9,7 +9,9 @@ from .models import User
 
 class Auth0Backend(ModelBackend):
 
-    def authenticate(self, request, username, **kwargs):
+    def authenticate(self, request, **kwargs):
+        username = kwargs.get('username', None)
+        email = kwargs.get('email', None)
         try:
             user = User.objects.get(
                 username=username,
@@ -17,6 +19,7 @@ class Auth0Backend(ModelBackend):
         except User.DoesNotExist:
             user = User(
                 username=username,
+                email=email,
                 is_active=True,
             )
             user.set_unusable_password()

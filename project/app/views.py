@@ -216,10 +216,11 @@ def callback(request):
         settings.AUTH0_DOMAIN,
         token_info.get('access_token', ''),
     )
-    user_info = requests.get(user_url).json()
-    username = user_info['sub']
-
-    user = authenticate(username=username)
+    payload = requests.get(user_url).json()
+    # format payload key
+    payload['username'] = payload.pop('sub')
+    request.session['user'] = payload
+    user = authenticate(request, **payload)
     if user:
         log_in(request, user)
         return redirect('index')
