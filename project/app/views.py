@@ -191,6 +191,8 @@ def login(request):
 
 def callback(request):
     code = request.GET.get('code', '')
+    if not code:
+        return HttpResponse(status=400)
     json_header = {
         'content-type': 'application/json',
     }
@@ -229,7 +231,6 @@ def logout(request):
         'client_id': settings.AUTH0_CLIENT_ID,
         'return_to': request.build_absolute_uri('goodbye'),
     }
-    print(params)
     logout_url = requests.Request(
         'GET',
         'https://{0}/v2/logout'.format(settings.AUTH0_DOMAIN),

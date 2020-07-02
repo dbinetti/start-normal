@@ -13,7 +13,6 @@ class Auth0Backend(ModelBackend):
         try:
             user = User.objects.get(
                 username=username,
-                is_active=True,
             )
         except User.DoesNotExist:
             user = User(
@@ -22,6 +21,9 @@ class Auth0Backend(ModelBackend):
             )
             user.set_unusable_password()
             user.save()
+        # if user.is_active:
+        #     return user
+        # return None
         return user
 
     def get_user(self, user_id):
