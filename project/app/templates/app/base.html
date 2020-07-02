@@ -41,7 +41,9 @@
               </li>
               {% endcomment %}
               <li class='nav-item'>
-                <a href="{% url 'logout' %}" role='button' class='btn btn-sm btn-light m-2'>Logout</a>
+                <div style="height: 30px;">
+                  <img class="mh-100" src='{{request.session.user.picture}}'><a href="{% url 'logout' %}" role='button' class='btn btn-sm btn-light m-2'>Logout</a>
+                </div>
               </li>
             {% else %}
               {% comment %}
