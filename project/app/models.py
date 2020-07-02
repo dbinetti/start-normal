@@ -281,9 +281,8 @@ class Signature(models.Model):
 class Account(models.Model):
     user = models.OneToOneField(
         'app.User',
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         related_name='account',
-        null=True,
     )
     LOCATION = Choices(
         ('ath', 'Atherton'),
@@ -375,9 +374,8 @@ class User(AbstractBaseUser):
     )
 
     email = models.EmailField(
-        blank=True,
+        blank=False,
         unique=True,
-        null=True,
     )
 
     is_active = models.BooleanField(

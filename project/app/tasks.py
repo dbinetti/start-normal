@@ -11,10 +11,33 @@ from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 
 # First-Party
+from auth0.v3.authentication import GetToken
+from auth0.v3.management import Auth0
 from django_rq import job
 from mailchimp3 import MailChimp
 from mailchimp3.helpers import get_subscriber_hash
 from mailchimp3.mailchimpclient import MailChimpError
+
+
+def auth0_get_client():
+    get_token = GetToken(settings.AUTH0_DOMAIN)
+    token = get_token.client_credentials(
+        settings.AUTH0_CLIENT_ID,
+        settings.AUTH0_SECRET,
+        'https://{}/api/v2/'.format(settings.AUTH0_DOMAIN),
+    )
+    mgmt_api_token = token['access_token']
+    client = Auth0(
+        settings.AUTH0_DOMAIN,
+        mgmt_api_token,
+    )
+    return client
+
+@job
+def auth0_delete_user(username):
+    client = auth0_get_client()
+    result = client.users.delete(username)
+    return
 
 
 @job
