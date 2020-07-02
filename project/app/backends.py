@@ -11,10 +11,14 @@ class Auth0Backend(ModelBackend):
 
     def authenticate(self, request, username, **kwargs):
         try:
-            user = User.objects.get(username=username)
+            user = User.objects.get(
+                username=username,
+                is_active=True,
+            )
         except User.DoesNotExist:
             user = User(
                 username=username,
+                is_active=True,
             )
             user.set_unusable_password()
             user.save()
