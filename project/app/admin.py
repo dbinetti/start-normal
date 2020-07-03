@@ -6,13 +6,11 @@ from django.contrib.auth.admin import UserAdmin as UserAdminBase
 from .forms import UserChangeForm
 from .forms import UserCreationForm
 from .inlines import ContactInline
-from .inlines import RegistrationInline
 from .inlines import SignatureInline
 from .models import Account
 from .models import District
 from .models import Faq
 from .models import Petition
-from .models import Registration
 from .models import Signature
 from .models import User
 
@@ -88,29 +86,6 @@ class PetitionAdmin(admin.ModelAdmin):
         'district',
     ]
 
-@admin.register(Registration)
-class RegistrationAdmin(admin.ModelAdmin):
-    save_on_top = True
-    fields = [
-        'name',
-        'email',
-        'notes',
-    ]
-    list_display = [
-        'name',
-        'email',
-        'notes',
-        'created',
-    ]
-    list_filter = [
-        'created',
-    ]
-    search_fields = [
-        'name',
-        'email',
-    ]
-
-
 @admin.register(Faq)
 class FaqAdmin(admin.ModelAdmin):
     save_on_top = True
@@ -149,20 +124,23 @@ class SignatureAdmin(admin.ModelAdmin):
     fields = [
         'name',
         'is_approved',
-        'location',
+        'is_public',
         'message',
         'account',
+        'petition',
     ]
     list_display = [
         'name',
-        'location',
-        'message',
+        'is_approved',
+        'is_public',
+        'account',
+        'petition',
         'created',
         'updated',
     ]
     list_filter = [
         'is_approved',
-        'location',
+        'is_public',
         'created',
         'updated',
     ]
@@ -171,6 +149,7 @@ class SignatureAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = [
         'account',
+        'petition',
     ]
     actions = [
         approve_signature
@@ -214,7 +193,6 @@ class AccountAdmin(admin.ModelAdmin):
         'user',
     ]
     inlines = [
-        RegistrationInline,
         SignatureInline,
     ]
 

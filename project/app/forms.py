@@ -6,7 +6,6 @@ from django.contrib.auth.forms import UserCreationForm as UserCreationFormBase
 
 # Local
 from .models import Account
-from .models import Registration
 from .models import Signature
 from .models import User
 
@@ -20,23 +19,6 @@ class DeleteForm(forms.Form):
         required=True,
     )
 
-class RegistrationForm(forms.ModelForm):
-    class Meta:
-        model = Registration
-        fields = [
-            'email',
-            'name',
-            'notes',
-        ]
-        widgets = {
-            'notes': forms.Textarea(
-                attrs={
-                    'class': 'form-control h-25',
-                    'placeholder': 'Brief Notes/Question (optional, private)',
-                    'rows': 5,
-                    }
-                ),
-            }
 
 class AccountForm(forms.ModelForm):
     class Meta:
@@ -65,7 +47,9 @@ class SignatureForm(forms.ModelForm):
         model = Signature
         fields = [
             'name',
-            'location',
+            'petition',
+            'account',
+            'is_public',
             'message',
         ]
         widgets = {

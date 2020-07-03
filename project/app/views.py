@@ -31,7 +31,6 @@ from django_rq import job
 from .forms import AccountForm
 from .forms import CustomSetPasswordForm
 from .forms import DeleteForm
-from .forms import RegistrationForm
 from .forms import SignatureForm
 from .forms import SubscribeForm
 from .forms import UserCreationForm
@@ -41,10 +40,9 @@ from .models import Faq
 from .models import Signature
 from .models import User
 from .tasks import build_email
+from .tasks import mailchimp_create_or_update_from_account
 from .tasks import mailchimp_subscribe_email
-from .tasks import mailchimp_subscribe_signature
 from .tasks import send_email
-from .tasks import welcome_email
 
 
 # Public
@@ -73,22 +71,9 @@ def videos(request):
     )
 
 def thomas(request):
-    if request.method == "POST":
-        form = RegistrationForm(request.POST)
-        if form.is_valid():
-            registration = form.save()
-            # email = form.cleaned_data.get('email')
-            messages.success(
-                request,
-                'You have registered for the Q&A with Thomas Albeck!',
-            )
-            # registration_email.delay(signature)
-    else:
-        form = RegistrationForm()
     return render(
         request,
         'public/thomas.html',
-        {'form': form,},
     )
 
 def district(request, short):
@@ -130,7 +115,7 @@ def signatures(request):
         is_approved=True,
     ).order_by(
         '-is_public',
-        'location',
+        'petition',
         'created',
     )
     progress = (signatures.count() / 5000) * 100
@@ -273,8 +258,8 @@ def sign(request):
                 'Your Signature has been added to the Petition.',
             )
             # Execute related tasks
-            welcome_email.delay(signature)
-            mailchimp_subscribe_signature.delay(signature)
+            # welcome_email.delay(signature)
+            # mailchimp_create_or_update_from_account.delay(signature)
             # Forward to share page
             return redirect('thanks')
     else:
@@ -283,7 +268,7 @@ def sign(request):
         is_approved=True,
     ).order_by(
         '-is_public',
-        'location',
+        'petition',
         'created',
     )
     progress = (signatures.count() / 5000) * 100
@@ -373,9 +358,9 @@ def thanks(request):
 @staff_member_required
 def report(request):
     report = Signature.objects.order_by(
-        'location',
+        'petition',
     ).values(
-        'location',
+        'petition',
     ).annotate(
         c=Count('id'),
     )
