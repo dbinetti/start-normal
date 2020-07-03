@@ -9,6 +9,7 @@ from .inlines import ContactInline
 from .models import Account
 from .models import District
 from .models import Faq
+from .models import Petition
 from .models import Registration
 from .models import Signature
 from .models import User
@@ -54,6 +55,36 @@ class DistrictAdmin(admin.ModelAdmin):
         'name',
     ]
 
+
+@admin.register(Petition)
+class PetitionAdmin(admin.ModelAdmin):
+    save_on_top = True
+    fields = [
+        'name',
+        'text',
+        'district',
+    ]
+    list_display = [
+        'name',
+        'district',
+        'created',
+        'updated',
+    ]
+    list_filter = [
+        'district',
+        'created',
+    ]
+    search_fields = [
+        'name',
+    ]
+    inlines = [
+    ]
+    ordering = [
+        'name',
+    ]
+    autocomplete_fields = [
+        'district',
+    ]
 
 @admin.register(Registration)
 class RegistrationAdmin(admin.ModelAdmin):

@@ -170,58 +170,29 @@ class Registration(models.Model):
         return str(self.name)
 
 
-# class Petition(models.Model):
+class Petition(models.Model):
 
-#     LOCATION = Choices(
-#         ('ath', 'Atherton'),
-#         ('bel', 'Belmont'),
-#         ('brb', 'Brisbane'),
-#         ('bur', 'Burlingame'),
-#         ('col', 'Colma'),
-#         ('dc', 'Daly City'),
-#         ('epa', 'East Palo Alto'),
-#         ('fc', 'Foster City'),
-#         ('hmb', 'Half Moon Bay'),
-#         ('hil', 'Hillsborough'),
-#         ('mp', 'Menlo Park'),
-#         ('mil', 'Millbrae'),
-#         ('pac', 'Pacifica'),
-#         ('pv', 'Portola Valley'),
-#         ('rc', 'Redwood City'),
-#         ('sb', 'San Bruno'),
-#         ('sc', 'San Carlos'),
-#         ('sm', 'San Mateo'),
-#         ('ssf', 'South San Francisco'),
-#         ('ws', 'Woodside'),
-#         ('un', 'Unincorporated San Mateo County'),
-#         ('out', 'Outside of San Mateo County'),
-#     )
-#     name = models.CharField(
-#         max_length=255,
-#         blank=False,
-#     )
-#     text = models.TextField(
-#         max_length=512,
-#         blank=True,
-#     )
-#     target = models.CharField(
-#         max_length=255,
-#         blank=False,
-#     )
-#     location = models.CharField(
-#         max_length=255,
-#         choices=LOCATION,
-#         blank=False,
-#         help_text="""Your city. (Required)""",
-#     )
-#     created = models.DateTimeField(
-#         auto_now_add=True,
-#     )
-#     updated = models.DateTimeField(
-#         auto_now=True,
-#     )
-#     def __str__(self):
-#         return str(self.name)
+    name = models.CharField(
+        max_length=255,
+        blank=False,
+    )
+    text = models.TextField(
+        max_length=512,
+        blank=True,
+    )
+    district = models.ForeignKey(
+        'app.District',
+        on_delete=models.CASCADE,
+        related_name='petitions',
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+    def __str__(self):
+        return str(self.name)
 
 
 class Signature(models.Model):
@@ -277,6 +248,12 @@ class Signature(models.Model):
     account = models.ForeignKey(
         'app.Account',
         on_delete=models.CASCADE,
+        related_name='signatures',
+    )
+    petition = models.ForeignKey(
+        'app.Petition',
+        on_delete=models.SET_NULL,
+        null=True,
         related_name='signatures',
     )
     created = models.DateTimeField(
