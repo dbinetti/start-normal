@@ -162,8 +162,7 @@ class Registration(models.Model):
     )
     account = models.ForeignKey(
         'app.Account',
-        on_delete=models.SET_NULL,
-        null=True,
+        on_delete=models.CASCADE,
         related_name='registrations',
     )
     created = models.DateTimeField(
@@ -258,8 +257,7 @@ class Signature(models.Model):
     )
     petition = models.ForeignKey(
         'app.Petition',
-        on_delete=models.SET_NULL,
-        null=True,
+        on_delete=models.CASCADE,
         related_name='signatures',
     )
     created = models.DateTimeField(

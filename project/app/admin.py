@@ -6,6 +6,8 @@ from django.contrib.auth.admin import UserAdmin as UserAdminBase
 from .forms import UserChangeForm
 from .forms import UserCreationForm
 from .inlines import ContactInline
+from .inlines import RegistrationInline
+from .inlines import SignatureInline
 from .models import Account
 from .models import District
 from .models import Faq
@@ -211,7 +213,10 @@ class AccountAdmin(admin.ModelAdmin):
     autocomplete_fields = [
         'user',
     ]
-
+    inlines = [
+        RegistrationInline,
+        SignatureInline,
+    ]
 
 @admin.register(User)
 class UserAdmin(UserAdminBase):
