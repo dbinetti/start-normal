@@ -173,9 +173,15 @@ class Registration(models.Model):
 class Signature(models.Model):
     user = models.OneToOneField(
         'app.User',
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True,
         related_name='signature',
+    )
+    account = models.ForeignKey(
+        'app.Account',
+        on_delete=models.SET_NULL,
+        related_name='signatures',
+        null=True,
     )
     LOCATION = Choices(
         ('ath', 'Atherton'),
