@@ -65,22 +65,10 @@ class SignatureForm(forms.ModelForm):
         model = Signature
         fields = [
             'name',
-            'email',
             'location',
             'message',
-            'is_public',
-            'is_teacher',
-            'is_doctor',
-            'notes',
         ]
         widgets = {
-            'notes': forms.Textarea(
-                attrs={
-                    'class': 'form-control h-25',
-                    'placeholder': 'Private Notes (Optional)',
-                    'rows': 5,
-                }
-            ),
             'message': forms.Textarea(
                 attrs={
                     'class': 'form-control h-25',
@@ -89,16 +77,6 @@ class SignatureForm(forms.ModelForm):
                 }
             ),
         }
-
-    def clean_email(self):
-        # Get the email
-        email = self.cleaned_data.get('email')
-        email = email.strip().lower()
-        try:
-            Signature.objects.get(email__iexact=email)
-        except Signature.DoesNotExist:
-            return email
-        raise forms.ValidationError('This email address is already in use.')
 
 
 class SubscribeForm(forms.Form):

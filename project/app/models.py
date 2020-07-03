@@ -171,18 +171,6 @@ class Registration(models.Model):
 
 
 class Signature(models.Model):
-    user = models.OneToOneField(
-        'app.User',
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name='signature',
-    )
-    account = models.ForeignKey(
-        'app.Account',
-        on_delete=models.SET_NULL,
-        related_name='signatures',
-        null=True,
-    )
     LOCATION = Choices(
         ('ath', 'Atherton'),
         ('bel', 'Belmont'),
@@ -228,51 +216,16 @@ class Signature(models.Model):
         blank=False,
         help_text="""Your city. (Required)""",
     )
-    district = models.CharField(
-        max_length=255,
-        null=True,
-        blank=True,
-        help_text="""Your school district. (Optional)""",
-    )
-    phone = models.CharField(
-        max_length=255,
-        null=True,
-        blank=True,
-        help_text="""Your mobile phone. (Optional)""",
-    )
-    is_volunteer = models.BooleanField(
-        default=False,
-        help_text="""If you're willing to volunteer in some manner please check this box. """,
-    )
-    is_teacher = models.BooleanField(
-        default=False,
-        help_text="""If you're an educator please check this box. """,
-    )
-    is_doctor = models.BooleanField(
-        default=False,
-        help_text="""If you're a physician please check this box. """,
-    )
-    email = models.EmailField(
-        null=True,
-        blank=False,
-        unique=True,
-        help_text="""Your email is private and not shared.  It's used to manage preferences and send adminstrative updates. (Required)""",
-    )
-    notes = models.TextField(
-        max_length=512,
-        null=True,
-        blank=True,
-        default=None,
-        help_text="""Feel free to include private notes just for us.""",
-    )
     message = models.TextField(
         max_length=512,
-        null=True,
         blank=True,
-        default=None,
         help_text="""Feel free to include a public message attached to your signature.""",
     )
-
+    account = models.ForeignKey(
+        'app.Account',
+        on_delete=models.CASCADE,
+        related_name='signatures',
+    )
     created = models.DateTimeField(
         auto_now_add=True,
     )

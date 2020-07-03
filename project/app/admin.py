@@ -117,23 +117,12 @@ class SignatureAdmin(admin.ModelAdmin):
         'name',
         'is_approved',
         'location',
-        'phone',
-        'is_public',
-        'is_volunteer',
-        'is_teacher',
-        'is_doctor',
-        'email',
-        'notes',
         'message',
-        'user',
+        'account',
     ]
     list_display = [
         'name',
         'location',
-        'is_public',
-        'is_teacher',
-        'is_doctor',
-        # 'notes',
         'message',
         'created',
         'updated',
@@ -141,18 +130,14 @@ class SignatureAdmin(admin.ModelAdmin):
     list_filter = [
         'is_approved',
         'location',
-        'is_public',
-        'is_teacher',
-        'is_doctor',
-        'is_volunteer',
         'created',
+        'updated',
     ]
     search_fields = [
         'name',
-        'email',
     ]
     autocomplete_fields = [
-        'user',
+        'account',
     ]
     actions = [
         approve_signature
@@ -195,7 +180,6 @@ class AccountAdmin(admin.ModelAdmin):
     autocomplete_fields = [
         'user',
     ]
-
 
 
 @admin.register(User)
