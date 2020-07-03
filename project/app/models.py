@@ -160,6 +160,12 @@ class Registration(models.Model):
         max_length=512,
         blank=True,
     )
+    account = models.ForeignKey(
+        'app.Account',
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='registrations',
+    )
     created = models.DateTimeField(
         auto_now_add=True,
     )
