@@ -60,18 +60,20 @@ class DistrictAdmin(admin.ModelAdmin):
 class PetitionAdmin(admin.ModelAdmin):
     save_on_top = True
     fields = [
+        'status',
         'name',
         'text',
         'district',
     ]
     list_display = [
+        'status',
         'name',
         'district',
         'created',
         'updated',
     ]
     list_filter = [
-        'district',
+        'status',
         'created',
     ]
     search_fields = [
@@ -85,6 +87,7 @@ class PetitionAdmin(admin.ModelAdmin):
     autocomplete_fields = [
         'district',
     ]
+
 
 @admin.register(Faq)
 class FaqAdmin(admin.ModelAdmin):
@@ -122,6 +125,7 @@ class FaqAdmin(admin.ModelAdmin):
 class SignatureAdmin(admin.ModelAdmin):
     save_on_top = True
     fields = [
+        'status',
         'name',
         'is_approved',
         'is_public',
@@ -130,6 +134,7 @@ class SignatureAdmin(admin.ModelAdmin):
         'petition',
     ]
     list_display = [
+        'status',
         'name',
         'is_approved',
         'is_public',
@@ -139,6 +144,7 @@ class SignatureAdmin(admin.ModelAdmin):
         'updated',
     ]
     list_filter = [
+        'status',
         'is_approved',
         'is_public',
         'created',
@@ -195,6 +201,7 @@ class AccountAdmin(admin.ModelAdmin):
     inlines = [
         SignatureInline,
     ]
+
 
 @admin.register(User)
 class UserAdmin(UserAdminBase):

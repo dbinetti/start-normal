@@ -12,10 +12,10 @@
 
 <section class='mt-2 mt-5'>
   <div class='card'>
+    <div class='card-header'>
+      <h4>Account Details</h4>
+    </div>
     <div class='card-body'>
-      <h5 class='card-title'>
-        Details
-      </h5>
       <p>
         <form method='post' action='{% url "account" %}' class=' form-horizontal' role='form'>
           {% csrf_token %}
@@ -36,6 +36,56 @@
           {% endbuttons %}
         </form>
       </p>
+    </div>
+    <div class='card-footer'>
+      <p class="card-text"><small>
+        <span class='text-muted'>Your information isn't shared with anyone and all data will be deleted when this project is over.  Learn more <a href='{% url "about" %}'>about me</a>.</span></small>
+      </p>
+    </div>
+  </div>
+</section>
+<section class='mt-2 mt-5'>
+  <div class='card'>
+    <div class='card-header'>
+      <h4>Your Signatures</h4>
+    </div>
+    <div class='card-body'>
+      <table class='table table-sm'>
+        <thead>
+          <tr>
+            <th>
+              Name
+            </th>
+            <th>
+              District
+            </th>
+            <th>
+              Signed
+            </th>
+            <th>
+              Status
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for signature in signatures %}
+            <tr>
+              <td>
+                {{signature.petition.name}}
+              </td>
+              <td>
+                {{signature.petition.district.name}}
+              </td>
+              <td>
+                {{signature.created|date:"SHORT_DATE_FORMAT"}}
+              </td>
+              <td>
+                {{signature.petition.name}}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
     <div class='card-footer'>
       <p class="card-text"><small>

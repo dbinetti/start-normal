@@ -15,10 +15,10 @@ from .managers import UserManager
 class Contact(models.Model):
     ROLE = Choices(
         (10, 'super', 'Superintendent'),
-        (20, 'super', 'Board President'),
-        (30, 'super', 'Board Vice-President'),
-        (40, 'super', 'Board Clerk'),
-        (50, 'super', 'Board Trustee'),
+        (20, 'president', 'Board President'),
+        (30, 'vice', 'Board Vice-President'),
+        (40, 'clerk', 'Board Clerk'),
+        (50, 'trustee', 'Board Trustee'),
     )
     is_active = models.BooleanField(
         default=True,
@@ -146,9 +146,20 @@ class Faq(models.Model):
 
 class Petition(models.Model):
 
+    STATUS = Choices(
+        (0, 'new', 'New'),
+        (10, 'open', 'Open'),
+        (20, 'delivered', 'Delivered'),
+    )
+
     name = models.CharField(
         max_length=255,
         blank=False,
+    )
+    status = models.IntegerField(
+        blank=False,
+        choices=STATUS,
+        default=STATUS.new,
     )
     text = models.TextField(
         max_length=512,
@@ -170,6 +181,15 @@ class Petition(models.Model):
 
 
 class Signature(models.Model):
+    STATUS = Choices(
+        (0, 'new', 'New'),
+        (10, 'signed', 'Signed'),
+        (20, 'removed', 'Removed'),
+    )
+    status = models.IntegerField(
+        choices=STATUS,
+        default=STATUS.new,
+    )
     name = models.CharField(
         max_length=255,
         null=False,
