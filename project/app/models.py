@@ -1,6 +1,7 @@
 # Django
 from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
+from django.db.models.constraints import UniqueConstraint
 from django.utils.text import slugify
 
 # First-Party
@@ -243,6 +244,17 @@ class Signature(models.Model):
 
     def __str__(self):
         return str(self.name)
+
+    class Meta:
+        constraints = [
+            UniqueConstraint(
+                fields=[
+                    'account',
+                    'petition',
+                ],
+                name='unique_signature',
+            )
+        ]
 
 
 class Account(models.Model):

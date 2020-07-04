@@ -21,15 +21,15 @@
           {% csrf_token %}
           {% bootstrap_form_errors form %}
           {% bootstrap_field form.name show_label=False show_help=True placeholder="Name"%}
-          {% bootstrap_field form.location show_label=False%}
+          {# {% bootstrap_field form.location show_label=False%} #}
           <div class="form-group form-check-inline">
-            {% bootstrap_field form.is_volunteer show_help=True show_label=False size='large'%}
+            {% bootstrap_field form.is_volunteer show_help=False show_label=False size='large'%}
           </div>
           <div class="form-group form-check-inline">
-            {% bootstrap_field form.is_teacher show_help=True show_label=False size='large'%}
+            {% bootstrap_field form.is_teacher show_help=False show_label=False size='large'%}
           </div>
           <div class="form-group form-check-inline">
-            {% bootstrap_field form.is_doctor show_help=True show_label=False size='large'%}
+            {% bootstrap_field form.is_doctor show_help=False show_label=False size='large'%}
           </div>
           {# {% bootstrap_field form.notes show_help=True show_label=False size='small'%} #}
           {% buttons %}
@@ -73,7 +73,7 @@
           {% for signature in signatures %}
             <tr>
               <td>
-                <a href='{% url "signature" signature.id %}'>{{signature.petition.name}}</a>
+                <a href='{% url "petition" signature.petition.id %}'>{{signature.petition.name}}</a>
               </td>
               <td>
                 {{signature.petition.district.name}}

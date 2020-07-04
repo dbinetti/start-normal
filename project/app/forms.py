@@ -10,6 +10,34 @@ from .models import Signature
 from .models import User
 
 
+class AccountForm(forms.ModelForm):
+    class Meta:
+        model = Account
+        fields = [
+            'name',
+            # 'email',
+            # 'location',
+            'is_volunteer',
+            'is_teacher',
+            'is_doctor',
+            'notes',
+        ]
+        labels = {
+            "is_volunteer": "I Can Volunteer",
+            "is_teacher": "I'm an Educator",
+            "is_doctor": "I'm a Physician",
+        }
+        widgets = {
+            'notes': forms.Textarea(
+                attrs={
+                    'class': 'form-control h-25',
+                    'placeholder': 'Private Notes (Optional)',
+                    'rows': 5,
+                }
+            ),
+        }
+
+
 class DeleteForm(forms.Form):
     confirm = forms.BooleanField(
         required=True,
@@ -20,29 +48,6 @@ class RemoveForm(forms.Form):
     confirm = forms.BooleanField(
         required=True,
     )
-
-
-class AccountForm(forms.ModelForm):
-    class Meta:
-        model = Account
-        fields = [
-            'name',
-            # 'email',
-            'location',
-            'is_volunteer',
-            'is_teacher',
-            'is_doctor',
-            'notes',
-        ]
-        widgets = {
-            'notes': forms.Textarea(
-                attrs={
-                    'class': 'form-control h-25',
-                    'placeholder': 'Private Notes (Optional)',
-                    'rows': 5,
-                }
-            ),
-        }
 
 
 class SignatureForm(forms.ModelForm):
@@ -63,7 +68,10 @@ class SignatureForm(forms.ModelForm):
                     'rows': 5,
                 }
             ),
+            'petition': forms.HiddenInput(),
+            'account': forms.HiddenInput(),
         }
+
 
 class SignupForm(forms.Form):
     name = forms.CharField(
@@ -80,6 +88,7 @@ class SignupForm(forms.Form):
     )
     is_public = forms.BooleanField(
         required=False,
+        label='Public',
         widget=forms.CheckboxInput(attrs={'class': 'form-control'})
     )
     message = forms.CharField(

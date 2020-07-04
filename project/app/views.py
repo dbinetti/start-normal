@@ -112,8 +112,49 @@ def districts(request):
 
 def petition(request, id):
     petition = Petition.objects.get(id=id)
-    if request.method == "POST":
-        form = SignupForm(request.POST)
+    try:
+        account = request.user.account
+    except AttributeError:
+        account = None
+    try:
+        signature = petition.signatures.get(account=account)
+    except Signature.DoesNotExist:
+        signature = None
+
+    if account:
+        if signature:
+            if request.method == "POST":
+                form = SignatureForm(request.POST, instance=signature)
+                if form.is_valid():
+                    form.save()
+                    messages.success(
+                        request,
+                        "Your Signature has been Saved!",
+                    )
+                    return redirect('account')
+            else:
+                form = SignatureForm(instance=signature)
+        else:
+            if request.method == "POST":
+                form = SignatureForm(request.POST)
+                if form.is_valid():
+                    form.status = Signature.STATUS.signed
+                    form.save()
+                    messages.success(
+                        request,
+                        "Your Signature has been Saved!",
+                    )
+                    return redirect('account')
+            else:
+                form = SignatureForm(initial={
+                    'petition': petition,
+                    'account': account,
+                    'name': account.name,
+                    'is_public': True,
+                })
+    else:
+        # New Signup
+        form = SignupForm(request.POST or None)
         if form.is_valid():
             # Instantiate Variables
             name = form.cleaned_data['name']
@@ -158,13 +199,15 @@ def petition(request, id):
                 account=account,
                 petition=petition,
             )
+
+
+
             messages.success(
                 request,
                 "Your Signature has Been Added to the Petition!",
             )
             return redirect('account')
-    else:
-        form = SignupForm()
+
     return render(
         request,
         'public/petition.html',
