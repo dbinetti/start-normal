@@ -1,13 +1,13 @@
 # Django
-# Third-Party
+from django.contrib.auth.models import AbstractBaseUser
+from django.db import models
+from django.utils.text import slugify
+
+# First-Party
 import shortuuid
 from hashid_field import HashidAutoField
 from model_utils import Choices
 from shortuuidfield import ShortUUIDField
-
-from django.contrib.auth.models import AbstractBaseUser
-from django.db import models
-from django.utils.text import slugify
 
 # Local
 from .managers import UserManager
@@ -221,6 +221,7 @@ class Signature(models.Model):
     message = models.TextField(
         max_length=512,
         blank=True,
+        default='',
         help_text="""Feel free to include a public message attached to your signature.""",
     )
     created = models.DateTimeField(
@@ -286,7 +287,7 @@ class Account(models.Model):
     location = models.CharField(
         max_length=255,
         choices=LOCATION,
-        blank=False,
+        blank=True,
         help_text="""Your city. (Required)""",
     )
     phone = models.CharField(
@@ -309,7 +310,7 @@ class Account(models.Model):
     notes = models.TextField(
         max_length=512,
         blank=True,
-        default=None,
+        default='',
         help_text="""Feel free to include private notes just for us.""",
     )
     created = models.DateTimeField(

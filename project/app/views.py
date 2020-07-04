@@ -2,12 +2,6 @@
 # Standard Library
 import json
 
-# Third-Party
-import django_rq
-import requests
-import shortuuid
-from django_rq import job
-
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
@@ -26,6 +20,14 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.urls import reverse_lazy
+
+# First-Party
+import django_rq
+import requests
+import shortuuid
+from auth0.v3.authentication import Database
+from auth0.v3.authentication import Logout
+from django_rq import job
 
 # Local
 from .forms import AccountForm
@@ -113,10 +115,54 @@ def petition(request, id):
     if request.method == "POST":
         form = SignupForm(request.POST)
         if form.is_valid():
+            # Instantiate Variables
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            is_public = form.cleaned_data['is_public']
+            message = form.cleaned_data['message']
+
+            # Auth0 Signup
+            auth0_client = Database(settings.AUTH0_DOMAIN)
+            auth0_user = auth0_client.signup(
+                client_id=settings.AUTH0_CLIENT_ID,
+                email=email,
+                password=password,
+                connection='Username-Password-Authentication',
+                username='noop', # TODO https://github.com/auth0/auth0-python/issues/228
+            )
+
+            # Create User
+            username = "auth0|{0}".format(auth0_user['_id'])
+            user = User(
+                username=username,
+                email=email,
+                is_active=True,
+            )
+            user.set_unusable_password()
+            user.save()
+
+            # Create Account
+            account = Account.objects.create(
+                name=name,
+                email=email,
+                user=user,
+            )
+
+            # Create Signature
+            signature = Signature.objects.create(
+                status=Signature.STATUS.signed,
+                name=name,
+                is_public=is_public,
+                message=message,
+                account=account,
+                petition=petition,
+            )
             messages.success(
                 request,
-                "Saved!",
+                "Your Signature has Been Added to the Petition!",
             )
+            return redirect('account')
     else:
         form = SignupForm()
     return render(
@@ -249,17 +295,13 @@ def callback(request):
     return HttpResponse(status=400)
 
 def logout(request):
+    auth0_logout = Logout(settings.AUTH0_DOMAIN)
+    auth0_logout.logout(
+        client_id=settings.AUTH0_CLIENT_ID,
+        return_to=request.build_absolute_uri('goodbye'),
+    )
     log_out(request)
-    params = {
-        'client_id': settings.AUTH0_CLIENT_ID,
-        'return_to': request.build_absolute_uri('goodbye'),
-    }
-    logout_url = requests.Request(
-        'GET',
-        'https://{0}/v2/logout'.format(settings.AUTH0_DOMAIN),
-        params=params,
-    ).prepare().url
-    return redirect(logout_url)
+    return redirect('goodbye')
 
 def goodbye(request):
     return render(

@@ -65,27 +65,6 @@ class SignatureForm(forms.ModelForm):
             ),
         }
 
-
-class SignatureForm(forms.ModelForm):
-    class Meta:
-        model = Signature
-        fields = [
-            'name',
-            'petition',
-            'account',
-            'is_public',
-            'message',
-        ]
-        widgets = {
-            'message': forms.Textarea(
-                attrs={
-                    'class': 'form-control h-25',
-                    'placeholder': 'Public Message (Optional)',
-                    'rows': 5,
-                }
-            ),
-        }
-
 class SignupForm(forms.Form):
     name = forms.CharField(
         required=True,
@@ -94,6 +73,14 @@ class SignupForm(forms.Form):
     email = forms.EmailField(
         required=True,
         widget=forms.EmailInput(attrs={'class': 'form-control'})
+    )
+    password = forms.CharField(
+        required=True,
+        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+    )
+    is_public = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(attrs={'class': 'form-control'})
     )
     message = forms.CharField(
         required=False,
