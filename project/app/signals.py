@@ -12,7 +12,7 @@ from app.tasks import mailchimp_delete_email
 from app.tasks import send_email
 
 
-@receiver(post_delete, sender=User)
+# @receiver(post_delete, sender=User)
 def user_post_delete(sender, instance, **kwargs):
     user = instance
     auth0_delete_user(user.username)
@@ -27,7 +27,7 @@ def user_post_delete(sender, instance, **kwargs):
     return
 
 
-@receiver(post_save, sender=User)
+# @receiver(post_save, sender=User)
 def user_post_save(sender, instance, created, **kwargs):
     if created:
         Account.objects.create(
