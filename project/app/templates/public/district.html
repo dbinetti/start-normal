@@ -71,4 +71,39 @@
     </tbody>
   </table>
 </section>
+<section class='my-5'>
+  <h4>
+    Petitions
+  </h4>
+  <table class='table'>
+    <thead>
+      <tr>
+        <th>
+          Name
+        </th>
+        <th>
+          Status
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for petition in petitions %}
+        <tr>
+          <td>
+            <a href='{% url "petition" petition.id %}'>{{petition.name}}</a>
+          </td>
+          <td>
+            {{petition.get_status_display}}
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan=4>
+            (Information not yet entered.  If you would like to send an excel spreadsheet with this contact information we will add it to the website.  Send to <a href='mailto:dbinetti@startnormal.com'>dbinetti@startnormal.com</a>.)
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
 {% endblock content %}

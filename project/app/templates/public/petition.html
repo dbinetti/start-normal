@@ -6,12 +6,13 @@
 <br>
 <section>
   <h1>
-    Take Action for Kids
+          {{petition.name}}
   </h1>
 </section>
 
 <section class='mt-2 mt-5'>
   <div class='card'>
+    {% comment %}
     <div class='card-header p-3'>
       <div class="progress" style="height: 30px;">
         <div class="progress-bar bg-success" role="progressbar" style="width: {{progress}}%" >{{signatures.count|intcomma}} Signatures</div>
@@ -20,6 +21,9 @@
         </div>
       </div>
     </div>
+    {% endcomment %}
+
+    {% comment %}
     <div class='card-header'>
       <ul class="nav nav-tabs card-header-tabs">
         <li class="nav-item">
@@ -33,31 +37,33 @@
         </li>
       </ul>
     </div>
+    {% endcomment %}
+
     <div class="card-body">
       <div class='col-lg-6'>
-      <h5 class='card-title'>
-        Petition Text
-      </h5>
-      <p class='card-text lead'>
-        We <strong>Can</strong> Balance Safety and Schooling!
-      </p>
-      <p class='card-text'>
-        The San Mateo Public Health Officer has called to modify the "Four Pillars" in light of child development needs; we support the following changes:
-      </p>
-      <ul class='list-styled'>
-        <li><a data-toggle="collapse" href="#idFace">Modification of the Face Covering Pillar</a></li>
-        <p class='collapse' id='idFace'>
-          Masks work &mdash; but only if worn properly and consistently.  At less than 80% adherence <em>or</em> efficacy masks are a false safety, and will come at great cost in instruction and social emotional impact to our children.  They should be made optional.
-        </p>
-        <li><a data-toggle="collapse" href="#idDistance">Modification of the  Physical Distance Pillar</a></li>
-        <p class='collapse' id='idDistance'>
-          Adjusting to the World Health Organization distance guideline of 1-meter indoors-only has proved safe for tens of millions worldwide, and would allow for full-time instruction.
-        </p>
-      </ul>
-      <p class='card-text'>
-        This will allow for full-time instruction supporting our children's educational, mental, and social-emotional learning, in a safe and healthy environment.
-      </p>
-    </div>
+        <h5 class='card-title'>
+        </h5>
+        {{petition.text|safe}}
+      </div>
+
+
+<section class='my-5'>
+  <form method='post'>
+    {% csrf_token %}
+    {% bootstrap_form_errors form %}
+    {% bootstrap_form form %}
+    {% buttons %}
+      <button type="submit" class="btn btn-primary btn-lg btn-block">
+        Sign
+      </button>
+    {% endbuttons %}
+  </form>
+</section>
+
+
+
+
+
     </div>
     <div class='card-footer'>
       <p class="card-text"><small>
@@ -67,7 +73,7 @@
   </div>
 </section>
 <section class='mt-2 ml-2'>
-  <a href='{% url "delete" %}'><span class='text-danger'>Delete Signature</span></a>
+  {# <a href='{% url "delete" %}'><span class='text-danger'>Delete Signature</span></a> #}
 </section>
 
 {% endblock content %}

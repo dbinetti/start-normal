@@ -66,6 +66,50 @@ class SignatureForm(forms.ModelForm):
         }
 
 
+class SignatureForm(forms.ModelForm):
+    class Meta:
+        model = Signature
+        fields = [
+            'name',
+            'petition',
+            'account',
+            'is_public',
+            'message',
+        ]
+        widgets = {
+            'message': forms.Textarea(
+                attrs={
+                    'class': 'form-control h-25',
+                    'placeholder': 'Public Message (Optional)',
+                    'rows': 5,
+                }
+            ),
+        }
+
+class SignupForm(forms.Form):
+    name = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={'class': 'form-control'})
+    )
+    message = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+            attrs={
+                'class': 'form-control h-25',
+                'placeholder': 'Public Message (Optional)',
+                'rows': 5,
+            }
+        )
+    )
+    def clean_email(self):
+        data = self.cleaned_data['email']
+        return data.lower()
+
+
 class SubscribeForm(forms.Form):
     email = forms.EmailField(
         required=True,

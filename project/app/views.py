@@ -32,11 +32,13 @@ from .forms import AccountForm
 from .forms import DeleteForm
 from .forms import RemoveForm
 from .forms import SignatureForm
+from .forms import SignupForm
 from .forms import SubscribeForm
 from .forms import UserCreationForm
 from .models import Account
 from .models import District
 from .models import Faq
+from .models import Petition
 from .models import Signature
 from .models import User
 from .tasks import build_email
@@ -85,10 +87,17 @@ def district(request, short):
     ).order_by(
         'role',
     )
+    petitions = district.petitions.all(
+    ).order_by(
+        'created',
+    )
     return render(
         request,
-        'public/district.html',
-        {'district': district, 'contacts': contacts},
+        'public/district.html', {
+            'district': district,
+            'contacts': contacts,
+            'petitions': petitions,
+        },
     )
 
 def districts(request):
@@ -99,16 +108,23 @@ def districts(request):
         {'districts': districts},
     )
 
-def petition(request):
-    signatures = Signature.objects.filter(
-        is_approved=True,
-    )
-    progress = (signatures.count() / 5000) * 100
+def petition(request, id):
+    petition = Petition.objects.get(id=id)
+    if request.method == "POST":
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            messages.success(
+                request,
+                "Saved!",
+            )
+    else:
+        form = SignupForm()
     return render(
         request,
         'public/petition.html',
-        {'signatures': signatures, 'progress': progress},
+        {'petition': petition, 'form': form},
     )
+
 
 @login_required
 def signature(request, id):
