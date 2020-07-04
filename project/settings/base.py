@@ -3,12 +3,11 @@
 # Standard Library
 import os
 
-# Django
-from django.contrib.messages import constants as messages
-
-# First-Party
 from environ import Env
 from environ import Path
+
+# Django
+from django.contrib.messages import constants as messages
 
 # Set Environment
 env = Env(
@@ -44,7 +43,6 @@ HASHID_FIELD_SALT = env("HASHID_FIELD_SALT")
 # Authentication
 AUTH_USER_MODEL = 'app.User'
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
     'app.backends.Auth0Backend',
 ]
 
