@@ -300,11 +300,11 @@ class Account(models.Model):
     updated = models.DateTimeField(
         auto_now=True,
     )
-    user = models.OneToOneField(
-        'app.User',
-        on_delete=models.CASCADE,
-        related_name='account',
-    )
+    # user = models.OneToOneField(
+    #     'app.User',
+    #     on_delete=models.CASCADE,
+    #     related_name='account',
+    # )
 
     def __str__(self):
         return str(self.name)

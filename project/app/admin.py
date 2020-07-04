@@ -174,7 +174,7 @@ class AccountAdmin(admin.ModelAdmin):
         'is_doctor',
         'email',
         'notes',
-        'user',
+        # 'user',
     ]
     list_display = [
         'name',
@@ -196,7 +196,7 @@ class AccountAdmin(admin.ModelAdmin):
         'email',
     ]
     autocomplete_fields = [
-        'user',
+        # 'user',
     ]
     inlines = [
         SignatureInline,
