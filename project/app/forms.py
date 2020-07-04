@@ -10,10 +10,6 @@ from .models import Signature
 from .models import User
 
 
-class CustomSetPasswordForm(SetPasswordForm):
-    pass
-
-
 class DeleteForm(forms.Form):
     confirm = forms.BooleanField(
         required=True,
@@ -33,6 +29,7 @@ class AccountForm(forms.ModelForm):
             'name',
             # 'email',
             'location',
+            'is_volunteer',
             'is_teacher',
             'is_doctor',
             'notes',

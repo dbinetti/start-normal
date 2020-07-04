@@ -14,15 +14,12 @@
   <div class='card'>
     <div class='card-header'>
       <h4>
-        Your Signature
+        {{signature.petition.name}}
       </h4>
     </div>
     <div class='card-body'>
       <p>
-        {{signature.petition.name}}
-      </p>
-      <p>
-        {{signature.petition.district}}
+        {{signature.petition.text|safe}}
       </p>
     </div>
     <div class='card-footer'>

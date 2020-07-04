@@ -23,12 +23,15 @@
           {% bootstrap_field form.name show_label=False show_help=True placeholder="Name"%}
           {% bootstrap_field form.location show_label=False%}
           <div class="form-group form-check-inline">
+            {% bootstrap_field form.is_volunteer show_help=True show_label=False size='large'%}
+          </div>
+          <div class="form-group form-check-inline">
             {% bootstrap_field form.is_teacher show_help=True show_label=False size='large'%}
           </div>
           <div class="form-group form-check-inline">
             {% bootstrap_field form.is_doctor show_help=True show_label=False size='large'%}
           </div>
-          {% bootstrap_field form.notes show_help=True show_label=False size='small'%}
+          {# {% bootstrap_field form.notes show_help=True show_label=False size='small'%} #}
           {% buttons %}
             <button type="submit" class="btn btn-primary btn-lg btn-block">
               Save Preferences
@@ -37,11 +40,13 @@
         </form>
       </p>
     </div>
+
     <div class='card-footer'>
       <p class="card-text"><small>
         <span class='text-muted'>Your information isn't shared with anyone and all data will be deleted when this project is over.  Learn more <a href='{% url "about" %}'>about me</a>.</span></small>
       </p>
     </div>
+
   </div>
 </section>
 <section class='mt-2 mt-5'>
@@ -60,9 +65,6 @@
               District
             </th>
             <th>
-              Signed
-            </th>
-            <th>
               Status
             </th>
           </tr>
@@ -77,20 +79,12 @@
                 {{signature.petition.district.name}}
               </td>
               <td>
-                {{signature.created|date:"SHORT_DATE_FORMAT"}}
-              </td>
-              <td>
                 {{signature.get_status_display}}
               </td>
             </tr>
           {% endfor %}
         </tbody>
       </table>
-    </div>
-    <div class='card-footer'>
-      <p class="card-text"><small>
-        <span class='text-muted'>Your information isn't shared with anyone and all data will be deleted when this project is over.  Learn more <a href='{% url "about" %}'>about me</a>.</span></small>
-      </p>
     </div>
   </div>
 </section>

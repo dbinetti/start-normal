@@ -1,13 +1,13 @@
 # Django
-from django.contrib.auth.models import AbstractBaseUser
-from django.db import models
-from django.utils.text import slugify
-
-# First-Party
+# Third-Party
 import shortuuid
 from hashid_field import HashidAutoField
 from model_utils import Choices
 from shortuuidfield import ShortUUIDField
+
+from django.contrib.auth.models import AbstractBaseUser
+from django.db import models
+from django.utils.text import slugify
 
 # Local
 from .managers import UserManager
@@ -175,8 +175,7 @@ class Petition(models.Model):
         default=STATUS.new,
     )
     text = models.TextField(
-        max_length=512,
-        blank=True,
+        blank=False,
     )
     created = models.DateTimeField(
         auto_now_add=True,

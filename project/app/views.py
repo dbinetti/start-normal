@@ -29,7 +29,6 @@ from django.urls import reverse_lazy
 
 # Local
 from .forms import AccountForm
-from .forms import CustomSetPasswordForm
 from .forms import DeleteForm
 from .forms import RemoveForm
 from .forms import SignatureForm
