@@ -38,11 +38,15 @@ TIME_FORMAT = 'H:i:s'
 DATETIME_FORMAT = 'Y-m-d H:i:s'
 TIME_ZONE = env("TIME_ZONE")
 
+# HashIDs
+HASHID_FIELD_SALT = env("HASHID_FIELD_SALT")
+
 # Authentication
 AUTH_USER_MODEL = 'app.User'
 AUTHENTICATION_BACKENDS = [
     'app.backends.Auth0Backend',
 ]
+
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'account'
 LOGOUT_REDIRECT_URL = 'goodbye'

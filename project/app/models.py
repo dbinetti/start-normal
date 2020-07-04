@@ -5,6 +5,7 @@ from django.utils.text import slugify
 
 # First-Party
 import shortuuid
+from hashid_field import HashidAutoField
 from model_utils import Choices
 from shortuuidfield import ShortUUIDField
 
@@ -19,6 +20,9 @@ class Contact(models.Model):
         (30, 'vice', 'Board Vice-President'),
         (40, 'clerk', 'Board Clerk'),
         (50, 'trustee', 'Board Trustee'),
+    )
+    id = HashidAutoField(
+        primary_key=True,
     )
     is_active = models.BooleanField(
         default=True,
@@ -75,6 +79,9 @@ class District(models.Model):
         (30, 'disallowed', "Disallowed"),
     )
 
+    id = HashidAutoField(
+        primary_key=True,
+    )
     is_active = models.BooleanField(
         default=False,
     )
@@ -120,6 +127,9 @@ class District(models.Model):
 
 class Faq(models.Model):
 
+    id = HashidAutoField(
+        primary_key=True,
+    )
     is_active = models.BooleanField(
         default=True,
     )
@@ -152,6 +162,9 @@ class Petition(models.Model):
         (20, 'delivered', 'Delivered'),
     )
 
+    id = HashidAutoField(
+        primary_key=True,
+    )
     name = models.CharField(
         max_length=255,
         blank=False,
@@ -185,6 +198,9 @@ class Signature(models.Model):
         (0, 'new', 'New'),
         (10, 'signed', 'Signed'),
         (20, 'removed', 'Removed'),
+    )
+    id = HashidAutoField(
+        primary_key=True,
     )
     status = models.IntegerField(
         choices=STATUS,
@@ -256,6 +272,9 @@ class Account(models.Model):
         ('out', 'Outside of San Mateo County'),
     )
 
+    id = HashidAutoField(
+        primary_key=True,
+    )
     name = models.CharField(
         max_length=255,
         help_text="""Real name strongly encouraged.  However, if necessary use a descriptor like 'Concerned Parent' or 'Father of Two'. (Required)""",
