@@ -71,7 +71,7 @@
           {% for signature in signatures %}
             <tr>
               <td>
-                {{signature.petition.name}}
+                <a href='{% url "signature" signature.id %}'>{{signature.petition.name}}</a>
               </td>
               <td>
                 {{signature.petition.district.name}}
@@ -80,7 +80,7 @@
                 {{signature.created|date:"SHORT_DATE_FORMAT"}}
               </td>
               <td>
-                {{signature.petition.name}}
+                {{signature.get_status_display}}
               </td>
             </tr>
           {% endfor %}

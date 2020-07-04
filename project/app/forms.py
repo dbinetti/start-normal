@@ -20,6 +20,12 @@ class DeleteForm(forms.Form):
     )
 
 
+class RemoveForm(forms.Form):
+    confirm = forms.BooleanField(
+        required=True,
+    )
+
+
 class AccountForm(forms.ModelForm):
     class Meta:
         model = Account

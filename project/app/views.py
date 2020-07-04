@@ -2,6 +2,12 @@
 # Standard Library
 import json
 
+# Third-Party
+import django_rq
+import requests
+import shortuuid
+from django_rq import job
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
@@ -21,16 +27,11 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.urls import reverse_lazy
 
-# First-Party
-import django_rq
-import requests
-import shortuuid
-from django_rq import job
-
 # Local
 from .forms import AccountForm
 from .forms import CustomSetPasswordForm
 from .forms import DeleteForm
+from .forms import RemoveForm
 from .forms import SignatureForm
 from .forms import SubscribeForm
 from .forms import UserCreationForm
@@ -110,20 +111,41 @@ def petition(request):
         {'signatures': signatures, 'progress': progress},
     )
 
-def signatures(request):
-    signatures = Signature.objects.filter(
-        is_approved=True,
-    ).order_by(
-        '-is_public',
-        'petition',
-        'created',
+@login_required
+def signature(request, id):
+    signature = Signature.objects.get(
+        id=id,
     )
-    progress = (signatures.count() / 5000) * 100
     return render(
         request,
-        'public/signatures.html',
-        {'signatures': signatures, 'progress': progress},
+        'private/signature.html',
+        {'signature': signature},
     )
+
+
+@login_required
+def signature_remove(request, id):
+    signature = Signature.objects.get(
+        id=id,
+    )
+    if request.method == "POST":
+        form = RemoveForm(request.POST)
+        if form.is_valid():
+            signature.status = signature.STATUS.removed
+            signature.save()
+            messages.error(
+                request,
+                "Signature Removed!",
+            )
+            return redirect('account')
+    else:
+        form = RemoveForm()
+    return render(
+        request,
+        'private/signature_remove.html',
+        {'form': form,},
+    )
+
 
 def subscribe(request):
     if request.method == "POST":
@@ -303,31 +325,31 @@ def account(request):
         },
     )
 
-@login_required
-def signature(request):
-    user = request.user
-    signature = Signature.objects.get(
-        user=user,
-    )
-    if request.method == "POST":
-        form = AccountForm(request.POST, instance=signature)
-        if form.is_valid():
-            form.save()
-            messages.success(
-                request,
-                "Saved!",
-            )
-    else:
-        form = AccountForm(instance=signature)
-    signatures = Signature.objects.filter(
-        is_approved=True,
-    )
-    progress = (signatures.count() / 5000) * 100
-    return render(
-        request,
-        'private/signature.html',
-        {'form': form, 'progress': progress, 'signatures': signatures},
-    )
+# @login_required
+# def signature(request):
+#     user = request.user
+#     signature = Signature.objects.get(
+#         user=user,
+#     )
+#     if request.method == "POST":
+#         form = AccountForm(request.POST, instance=signature)
+#         if form.is_valid():
+#             form.save()
+#             messages.success(
+#                 request,
+#                 "Saved!",
+#             )
+#     else:
+#         form = AccountForm(instance=signature)
+#     signatures = Signature.objects.filter(
+#         is_approved=True,
+#     )
+#     progress = (signatures.count() / 5000) * 100
+#     return render(
+#         request,
+#         'private/signature.html',
+#         {'form': form, 'progress': progress, 'signatures': signatures},
+#     )
 
 @login_required
 def delete(request):
