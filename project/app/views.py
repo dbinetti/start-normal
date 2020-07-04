@@ -2,6 +2,14 @@
 # Standard Library
 import json
 
+# Third-Party
+import django_rq
+import requests
+import shortuuid
+from auth0.v3.authentication import Database
+from auth0.v3.authentication import Logout
+from django_rq import job
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
@@ -20,14 +28,6 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.urls import reverse_lazy
-
-# First-Party
-import django_rq
-import requests
-import shortuuid
-from auth0.v3.authentication import Database
-from auth0.v3.authentication import Logout
-from django_rq import job
 
 # Local
 from .forms import AccountForm
@@ -171,24 +171,23 @@ def petition(request, id):
                 password=password,
                 connection='Username-Password-Authentication',
                 username='noop', # TODO https://github.com/auth0/auth0-python/issues/228
+                user_metadata={
+                    'name': name,
+                }
             )
 
             # Create User
             username = "auth0|{0}".format(auth0_user['_id'])
-            user = User(
+
+            user = authenticate(
+                request,
                 username=username,
                 email=email,
-                is_active=True,
             )
-            user.set_unusable_password()
-            user.save()
-
-            # Create Account
-            account = Account.objects.create(
-                name=name,
-                email=email,
-                user=user,
-            )
+            user.refresh_from_db()
+            account = user.account
+            account.name = name
+            account.save()
 
             # Create Signature
             signature = Signature.objects.create(
@@ -199,9 +198,7 @@ def petition(request, id):
                 account=account,
                 petition=petition,
             )
-
-
-
+            log_in(request, user)
             messages.success(
                 request,
                 "Your Signature has Been Added to the Petition!",
