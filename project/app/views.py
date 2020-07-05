@@ -103,7 +103,11 @@ def district(request, short):
     )
 
 def districts(request):
-    districts = District.objects.order_by('name')
+    districts = District.objects.filter(
+        is_active=True,
+    ).order_by(
+        'name',
+    )
     return render(
         request,
         'public/districts.html',

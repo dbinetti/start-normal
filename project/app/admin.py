@@ -24,7 +24,7 @@ approve_signature.short_description = "Approve Signatures"
 @admin.register(District)
 class DistrictAdmin(admin.ModelAdmin):
     save_on_top = True
-    fields = [
+    exclude = [
         'name',
         'short',
         'status',
@@ -34,12 +34,15 @@ class DistrictAdmin(admin.ModelAdmin):
     ]
     list_display = [
         'name',
-        'short',
-        'schedule',
-        'masks',
-        'meeting_date',
+        'cd_status',
+        'cd_id',
+        'nces_district_id',
+        'county_name',
     ]
     list_filter = [
+        'is_active',
+        'cd_status',
+        'doc',
         'created',
         'schedule',
         'masks',

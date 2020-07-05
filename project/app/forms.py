@@ -6,6 +6,7 @@ from django.contrib.auth.forms import UserCreationForm as UserCreationFormBase
 
 # Local
 from .models import Account
+from .models import District
 from .models import Signature
 from .models import User
 
@@ -37,6 +38,11 @@ class AccountForm(forms.ModelForm):
             ),
         }
 
+
+class DistrictForm(forms.ModelForm):
+    class Meta:
+        model = District
+        exclude = ['short']
 
 class DeleteForm(forms.Form):
     confirm = forms.BooleanField(

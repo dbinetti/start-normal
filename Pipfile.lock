@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "aec11530a19b6dc2b192a2b9092e8dc36dd37ef0cd61233f47cf42283d5de534"
+            "sha256": "ef1f0f356e8b67f7417e37ff41472be1624eedeccb58ddc3da9b8692714f315c"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,6 +16,21 @@
         ]
     },
     "default": {
+        "algoliasearch": {
+            "hashes": [
+                "sha256:48460675555e6effab946adc58b7483bb88a5a68ddc4bdebee09d93e9253318c",
+                "sha256:842fb3e2fb57dc0daa2e97bf0d2e8191498781540901da118e98c24048d8d812"
+            ],
+            "version": "==1.20.0"
+        },
+        "algoliasearch-django": {
+            "hashes": [
+                "sha256:c25b49b7df3d410625f983bbf907b063796d57c6021e1643987900e72d07906d",
+                "sha256:c64dc2dab76ade6b05638a188e4a4af1ec952d5aa407aeab3ce6cbaed082d4c5"
+            ],
+            "index": "pypi",
+            "version": "==1.7.1"
+        },
         "appnope": {
             "hashes": [
                 "sha256:5b26757dc6f79a3b7dc9fab95359328d5747fcb2409d331ea66d0272b90ab2a0",

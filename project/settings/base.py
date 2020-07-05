@@ -78,6 +78,11 @@ CACHES = {
     },
 }
 
+# Algolia
+ALGOLIA = {
+    'APPLICATION_ID': 'MyAppID',
+    'API_KEY': 'MyApiKey'
+}
 
 # RQ
 RQ_QUEUES = {

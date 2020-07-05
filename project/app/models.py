@@ -148,8 +148,113 @@ class Contact(models.Model):
         return str(self.name)
 
 
+# class School(models.Model):
+#     id = HashidAutoField(
+#         primary_key=True,
+#     )
+#     is_active = models.BooleanField(
+#         default=False,
+#     )
+
+
+#     cdcode_id = models.IntegerField(
+#         null=True,
+#         blank=True,
+#     )
+
+#     nces_district_id = models.IntegerField(
+#         null=True,
+#         blank=True,
+#     )
+
+#     nces_school_id = models.IntegerField(
+#         null=True,
+#         blank=True,
+#     )
+
+#     district_name = models.CharField(
+#         max_length=255,
+#         default='',
+#         blank=True,
+#     )
+
+#     school_name = models.CharField(
+#         max_length=255,
+#         default='',
+#         blank=True,
+#     )
+
+#     school_kind = models.
+
+#     county = models.CharField(
+#         max_length=15,
+#         default='',
+#         blank=True,
+#     )
+
+#     phone = models.CharField(
+#         max_length=14,
+#         default='',
+#         blank=True,
+#     )
+#     email = models.CharField(
+#         max_length=50,
+#         default='',
+#         blank=True,
+#     )
+#     latitude = models.DecimalField(
+#         max_digits=10,
+#         null=True,
+#     )
+#     longitude = models.DecimalField(
+#         max_digits=10,
+#         null=True,
+#     )
+#     doc = models.IntegerField(
+#         null=True,
+#         blank=True,
+#     )
+
+#     created = models.DateTimeField(
+#         auto_now_add=True,
+#     )
+#     updated = models.DateTimeField(
+#         auto_now=True,
+#     )
+
+#     def location(self):
+#         return(self.latitude, self.longitude)
+
+#     def __str__(self):
+#         return str(self.name)
+
+
+
+
+
 class District(models.Model):
 
+    DOC = Choices(
+        (0, 'county', 'County Office of Education'),
+        (2, 'state', 'State Board of Education'),
+        (3, 'charter', 'Statewide Benefit Charter'),
+        (31, 'special', 'State Special Schools'),
+        (34, 'non', 'Non-school Location*'),
+        (42, 'jpa', 'Joint Powers Authority (JPA)'),
+        (52, 'elementary', 'Elementary School District'),
+        (54, 'unified', 'Unified School District'),
+        (56, 'high', 'High School District'),
+        (58, 'ccd', 'Community College District'),
+        (98, 'roc', 'Regional Occupational Center/Program (ROC/P)'),
+        (99, 'admin', 'Administration Only'),
+    )
+
+
+    CDSTATUS = Choices(
+        (10, 'active', "Active"),
+        (20, 'closed', "Closed"),
+        (30, 'merged', "Merged"),
+    )
     SCHEDULE = Choices(
         (0, 'unknown', "(Unknown)"),
         (10, 'person', "In-Person"),
@@ -206,6 +311,100 @@ class District(models.Model):
     updated = models.DateTimeField(
         auto_now=True,
     )
+
+    cd_status = models.IntegerField(
+        null=True,
+        blank=True,
+        choices=CDSTATUS,
+    )
+    cd_id = models.IntegerField(
+        null=True,
+        blank=True,
+        unique=True,
+    )
+    nces_district_id = models.IntegerField(
+        null=True,
+        blank=True,
+        unique=True,
+    )
+    district_name = models.CharField(
+        max_length=255,
+        default='',
+        blank=True,
+    )
+    county_name = models.CharField(
+        max_length=255,
+        default='',
+        blank=True,
+    )
+    address = models.CharField(
+        max_length=255,
+        default='',
+        blank=True,
+    )
+    city = models.CharField(
+        max_length=255,
+        default='',
+        blank=True,
+    )
+    state = models.CharField(
+        max_length=255,
+        default='',
+        blank=True,
+    )
+    zipcode = models.CharField(
+        max_length=255,
+        default='',
+        blank=True,
+    )
+    phone = models.CharField(
+        max_length=255,
+        default='',
+        blank=True,
+    )
+    website = models.URLField(
+        blank=True,
+        default='',
+    )
+    doc = models.IntegerField(
+        null=True,
+        blank=True,
+        choices=DOC,
+    )
+    latitude = models.DecimalField(
+        max_digits=10,
+        decimal_places=6,
+        null=True,
+        blank=True,
+    )
+    longitude = models.DecimalField(
+        max_digits=10,
+        decimal_places=6,
+        null=True,
+        blank=True,
+    )
+    admin_first_name = models.CharField(
+        max_length=255,
+        blank=True,
+        default = '',
+    )
+    admin_last_name = models.CharField(
+        max_length=255,
+        blank=True,
+        default = '',
+    )
+    admin_email = models.EmailField(
+        max_length=255,
+        blank=True,
+        default = '',
+    )
+
+    def should_index(self):
+        return self.is_active
+
+    def location(self):
+        return(self.latitude, self.longitude)
+
     def __str__(self):
         return str(self.name)
 
