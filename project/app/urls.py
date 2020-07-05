@@ -7,32 +7,27 @@ from . import views
 urlpatterns = [
     # Public
     path('', views.index, name='index',),
-    path('morrow', views.morrow, name='morrow',),
     path('about', views.about, name='about',),
-    path('videos', views.videos, name='videos',),
-    path('thomas', views.thomas, name='thomas',),
     path('district/<short>', views.district, name='district'),
     path('district', views.districts, name='districts'),
+    path('faq', views.faq, name='faq',),
+    path('goodbye', views.goodbye, name='goodbye'),
+    path('morrow', views.morrow, name='morrow',),
     path('petition/<id>', views.petition, name='petition',),
-    # path('signatures', views.signatures, name='signatures',),
-    path('signature/<id>', views.signature, name='signature'),
+    path('subscribe', views.subscribe, name='subscribe',),
+    path('thomas', views.thomas, name='thomas',),
+    path('videos', views.videos, name='videos',),
+
+    # Private
+    path('account', views.account, name='account',),
+    path('delete', views.delete, name='delete',),
     path('signature/<id>/add', views.signature_add, name='signature-add'),
     path('signature/<id>/remove', views.signature_remove, name='signature-remove'),
-    path('subscribe', views.subscribe, name='subscribe',),
-    path('faq', views.faq, name='faq',),
 
     # Authentication
     path('login', views.login, name='login'),
     path('callback', views.callback, name='callback'),
     path('logout', views.logout, name='logout'),
-    path('goodbye', views.goodbye, name='goodbye'),
-
-    # Private
-    # path('sign', views.sign, name='sign',),
-    path('account', views.account, name='account',),
-    # path('signature', views.signature, name='signature',),
-    path('delete', views.delete, name='delete',),
-    # path('thanks', views.thanks, name='thanks',),
 
     # Staff
     path('report', views.report, name='report',),

@@ -53,7 +53,7 @@ from .tasks import send_email
 def index(request):
     return render(
         request,
-        'public/index.html',
+        'app/index.html',
     )
 
 def morrow(request):
@@ -309,7 +309,7 @@ def logout(request):
 def goodbye(request):
     return render(
         request,
-        'private/goodbye.html',
+        'public/goodbye.html',
     )
 
 
