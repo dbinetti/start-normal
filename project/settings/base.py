@@ -80,8 +80,8 @@ CACHES = {
 
 # Algolia
 ALGOLIA = {
-    'APPLICATION_ID': 'MyAppID',
-    'API_KEY': 'MyApiKey'
+    'APPLICATION_ID': env("ALOGLIA_APPLICATION_ID"),
+    'API_KEY': env("ALGOLIA_API_KEY"),
 }
 
 # RQ
