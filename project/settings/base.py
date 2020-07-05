@@ -3,11 +3,12 @@
 # Standard Library
 import os
 
-from environ import Env
-from environ import Path
-
 # Django
 from django.contrib.messages import constants as messages
+
+# First-Party
+from environ import Env
+from environ import Path
 
 # Set Environment
 env = Env(
@@ -80,7 +81,7 @@ CACHES = {
 
 # Algolia
 ALGOLIA = {
-    'APPLICATION_ID': env("ALOGLIA_APPLICATION_ID"),
+    'APPLICATION_ID': env("ALGOLIA_APPLICATION_ID"),
     'API_KEY': env("ALGOLIA_API_KEY"),
 }
 
