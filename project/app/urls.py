@@ -16,6 +16,7 @@ urlpatterns = [
     path('petition/<id>', views.petition, name='petition',),
     # path('signatures', views.signatures, name='signatures',),
     path('signature/<id>', views.signature, name='signature'),
+    path('signature/<id>/add', views.signature_add, name='signature-add'),
     path('signature/<id>/remove', views.signature_remove, name='signature-remove'),
     path('subscribe', views.subscribe, name='subscribe',),
     path('faq', views.faq, name='faq',),
@@ -35,5 +36,4 @@ urlpatterns = [
 
     # Staff
     path('report', views.report, name='report',),
-    path('notes', views.notes, name='notes',),
 ]

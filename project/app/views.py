@@ -211,43 +211,6 @@ def petition(request, id):
         {'petition': petition, 'form': form},
     )
 
-
-@login_required
-def signature(request, id):
-    signature = Signature.objects.get(
-        id=id,
-    )
-    return render(
-        request,
-        'private/signature.html',
-        {'signature': signature},
-    )
-
-
-@login_required
-def signature_remove(request, id):
-    signature = Signature.objects.get(
-        id=id,
-    )
-    if request.method == "POST":
-        form = RemoveForm(request.POST)
-        if form.is_valid():
-            signature.status = signature.STATUS.removed
-            signature.save()
-            messages.error(
-                request,
-                "Signature Removed!",
-            )
-            return redirect('account')
-    else:
-        form = RemoveForm()
-    return render(
-        request,
-        'private/signature_remove.html',
-        {'form': form,},
-    )
-
-
 def subscribe(request):
     if request.method == "POST":
         form = SubscribeForm(request.POST)
@@ -349,52 +312,50 @@ def goodbye(request):
         'private/goodbye.html',
     )
 
-# Private
-def sign(request):
-    if request.user.is_authenticated:
-        return redirect('account')
-    if request.method == "POST":
-        form = SignatureForm(request.POST)
-        if form.is_valid():
-            # Instantiate Signature object
-            signature = form.save(commit=False)
-            # Create related user account
-            email = form.cleaned_data.get('email')
-            password = shortuuid.uuid()
-            user = User(
-                email=email,
-                password=password,
-                is_active=True,
-            )
-            user.save()
-            user.refresh_from_db()
-            # Relate records and save
-            signature.user = user
-            signature.save()
-            # Notify User through UI
-            messages.success(
-                request,
-                'Your Signature has been added to the Petition.',
-            )
-            # Execute related tasks
-            # welcome_email.delay(signature)
-            # mailchimp_create_or_update_from_account.delay(signature)
-            # Forward to share page
-            return redirect('thanks')
-    else:
-        form = SignatureForm()
-    signatures = Signature.objects.filter(
-        is_approved=True,
-    ).order_by(
-        '-is_public',
-        'petition',
-        'created',
+
+@login_required
+def signature(request, id):
+    signature = Signature.objects.get(
+        id=id,
     )
-    progress = (signatures.count() / 5000) * 100
     return render(
         request,
-        'public/sign.html',
-        {'form': form, 'signatures': signatures, 'progress': progress},
+        'private/signature.html',
+        {'signature': signature},
+    )
+
+@login_required
+def signature_add(request, id):
+    signature = Signature.objects.get(
+        id=id,
+    )
+    return render(
+        request,
+        'private/signature_add.html',
+        {'signature': signature},
+    )
+
+@login_required
+def signature_remove(request, id):
+    signature = Signature.objects.get(
+        id=id,
+    )
+    if request.method == "POST":
+        form = RemoveForm(request.POST)
+        if form.is_valid():
+            signature.status = signature.STATUS.removed
+            signature.save()
+            messages.error(
+                request,
+                "Signature Removed!",
+            )
+            return redirect('account')
+    else:
+        form = RemoveForm()
+    return render(
+        request,
+        'private/signature_remove.html',
+        {'form': form,},
     )
 
 @login_required
@@ -422,32 +383,6 @@ def account(request):
         },
     )
 
-# @login_required
-# def signature(request):
-#     user = request.user
-#     signature = Signature.objects.get(
-#         user=user,
-#     )
-#     if request.method == "POST":
-#         form = AccountForm(request.POST, instance=signature)
-#         if form.is_valid():
-#             form.save()
-#             messages.success(
-#                 request,
-#                 "Saved!",
-#             )
-#     else:
-#         form = AccountForm(instance=signature)
-#     signatures = Signature.objects.filter(
-#         is_approved=True,
-#     )
-#     progress = (signatures.count() / 5000) * 100
-#     return render(
-#         request,
-#         'private/signature.html',
-#         {'form': form, 'progress': progress, 'signatures': signatures},
-#     )
-
 @login_required
 def delete(request):
     if request.method == "POST":
@@ -468,12 +403,6 @@ def delete(request):
         {'form': form,},
     )
 
-@login_required
-def thanks(request):
-    return render(
-        request,
-        'private/thanks.html',
-    )
 
 # Admin
 @staff_member_required
@@ -492,17 +421,4 @@ def report(request):
         request,
         'staff/report.html',
         {'report': report, 'total': total},
-    )
-
-@staff_member_required
-def notes(request):
-    signatures = Signature.objects.exclude(
-        notes="",
-    ).exclude(
-        notes=None,
-    ).order_by('-id')
-    return render(
-        request,
-        'staff/notes.html',
-        {'signatures': signatures},
     )

@@ -9,7 +9,10 @@ urlpatterns = [
     path('', include('app.urls')),
     path('admin/', admin.site.urls),
     path('django-rq/', include('django_rq.urls')),
-    path('robots.txt', TemplateView.as_view(template_name="robots.txt", content_type="text/plain",)),
+    path('robots.txt', TemplateView.as_view(
+        template_name="robots.txt",
+        content_type="text/plain",
+    )),
 ]
 
 if settings.DEBUG:

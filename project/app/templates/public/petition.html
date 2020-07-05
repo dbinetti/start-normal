@@ -2,13 +2,11 @@
 {% load bootstrap4 %}
 {% load humanize %}
 {% load location %}
+
+{% block title %}{{petition.name}}{% endblock title %}
+{% block header %}{{petition.name}}{% endblock header %}
+
 {% block content %}
-<br>
-<section>
-  <h1>
-          {{petition.name}}
-  </h1>
-</section>
 
 <section class='mt-2 mt-5'>
   <div class='card'>

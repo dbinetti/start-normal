@@ -12,58 +12,62 @@
       {# <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous"> #}
       {# <link rel="stylesheet" type="text/css" href="{% static 'app/style.css' %}"> #}
       {# <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,900;1,300;1,400;1,900&display=swap" rel="stylesheet"> #}
-      <title>{% block title %}Start Normal!{% endblock %}</title>
+      <title>Start Normal! - {% block title %}{% endblock %}</title>
     </head>
     <body>
 
     <nav class="navbar navbar-expand-sm navbar-light">
       <a class="navbar-brand" href="{% url 'index' %}"><img class="d-inline-block mr-1" src='{% static "app/logo.png" %}'></a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
+      <span class="navbar-toggler-icon"></span>
       </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav mr-auto">
-            <li class="nav-item ml-3">
-              <a href='{% url "districts" %}'>Districts</a>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item ml-3">
+            <a href='{% url "districts" %}'>Districts</a>
+          </li>
+          <li class="nav-item ml-3">
+            <a href='{% url "videos" %}'>Videos</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+          {% if request.user.is_authenticated %}
+            <li class='nav-item'>
+              <div style="height: 30px;">
+                <a href="{% url 'account' %}"><img class="mh-100 m-2" src='{{request.session.user.picture}}'>&nbsp;Account</a>
+              </div>
             </li>
-            <li class="nav-item ml-3">
-              <a href='{% url "videos" %}'>Videos</a>
+            <li class='nav-item'>
+              <div style="height: 30px;">
+                <a href="{% url 'logout' %}" role='button' class='btn btn-sm btn-light m-2'>Logout</a>
+              </div>
             </li>
-          </ul>
-          <ul class="navbar-nav ml-auto">
-            {% if request.user.is_authenticated %}
-                {% comment %}
-              <li class="nav-item mr-3">
-                <a href="{% url 'account' %}" role='button' class='btn btn-sm btn-primary m-2'>Your Account</a>
-              </li>
-              {% endcomment %}
-              <li class='nav-item'>
-                <div style="height: 30px;">
-                  <a href="{% url 'account' %}"><img class="mh-100 m-2" src='{{request.session.user.picture}}'>&nbsp;Account</a>
-                </div>
-              </li>
-              <li class='nav-item'>
-                <div style="height: 30px;">
-                  <a href="{% url 'logout' %}" role='button' class='btn btn-sm btn-light m-2'>Logout</a>
-                </div>
-              </li>
-            {% else %}
-              {% comment %}
-              <li class="nav-item">
-                <a href="{% url 'sign' %}" role='button' class='btn btn-sm btn-primary m-2'>Sign the Original Petition!</a>
-              </li>
-              {% endcomment %}
-              <li class='nav-item'>
-                <a href="{% url 'login' %}" role='button' class='btn btn-sm btn-light m-2'>Login</a>
-              </li>
-            {% endif %}
-          </ul>
-        </div>
+          {% else %}
+            {% comment %}
+            <li class="nav-item">
+              <a href="{% url 'sign' %}" role='button' class='btn btn-sm btn-primary m-2'>Sign the Original Petition!</a>
+            </li>
+            {% endcomment %}
+            <li class='nav-item'>
+              <a href="{% url 'login' %}" role='button' class='btn btn-sm btn-light m-2'>Login</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
     </nav>
     <div id="content" class='container'>
+
       {% bootstrap_messages %}
+
+      <section class='my-5'>
+        <h1>
+          {% block header %}{% endblock header %}
+        </h1>
+      </section>
+
       {% block content %}
       {% endblock %}
+
     </div>
     <br><br><br>
     <nav class="navbar navbar-expand-sm navbar-light">
