@@ -24,13 +24,10 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav mr-auto">
             <li class="nav-item ml-3">
-              <a href="{% url 'about' %}">About</a>
+              <a href='{% url "districts" %}'>Districts</a>
             </li>
             <li class="nav-item ml-3">
               <a href='{% url "videos" %}'>Videos</a>
-            </li>
-            <li class="nav-item ml-3">
-              <a href='{% url "districts" %}'>Districts</a>
             </li>
           </ul>
           <ul class="navbar-nav ml-auto">
@@ -63,11 +60,21 @@
           </ul>
         </div>
     </nav>
-      <div id="content" class='container'>
-        {% bootstrap_messages %}
-        {% block content %}
-        {% endblock %}
-        <br><br><br>
-      </div>
+    <div id="content" class='container'>
+      {% bootstrap_messages %}
+      {% block content %}
+      {% endblock %}
+    </div>
+    <br><br><br>
+    <nav class="navbar navbar-expand-sm navbar-light">
+      <ul class="nav nav-pills mr-auto">
+        <li class="nav-item ml-3">
+          <a href="{% url 'about' %}">About</a>
+        </li>
+      </ul>
+    </nav>
+    <br><br><br>
+    {% block scripts %}
+    {% endblock scripts %}
     </body>
 </html>

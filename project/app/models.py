@@ -1,17 +1,101 @@
 # Django
-from django.contrib.auth.models import AbstractBaseUser
-from django.db import models
-from django.db.models.constraints import UniqueConstraint
-from django.utils.text import slugify
-
-# First-Party
+# Third-Party
 import shortuuid
 from hashid_field import HashidAutoField
 from model_utils import Choices
 from shortuuidfield import ShortUUIDField
 
+from django.contrib.auth.models import AbstractBaseUser
+from django.db import models
+from django.db.models.constraints import UniqueConstraint
+from django.utils.text import slugify
+
 # Local
 from .managers import UserManager
+
+
+class Account(models.Model):
+
+    LOCATION = Choices(
+        ('ath', 'Atherton'),
+        ('bel', 'Belmont'),
+        ('brb', 'Brisbane'),
+        ('bur', 'Burlingame'),
+        ('col', 'Colma'),
+        ('dc', 'Daly City'),
+        ('epa', 'East Palo Alto'),
+        ('fc', 'Foster City'),
+        ('hmb', 'Half Moon Bay'),
+        ('hil', 'Hillsborough'),
+        ('mp', 'Menlo Park'),
+        ('mil', 'Millbrae'),
+        ('pac', 'Pacifica'),
+        ('pv', 'Portola Valley'),
+        ('rc', 'Redwood City'),
+        ('sb', 'San Bruno'),
+        ('sc', 'San Carlos'),
+        ('sm', 'San Mateo'),
+        ('ssf', 'South San Francisco'),
+        ('ws', 'Woodside'),
+        ('un', 'Unincorporated San Mateo County'),
+        ('out', 'Outside of San Mateo County'),
+    )
+
+    id = HashidAutoField(
+        primary_key=True,
+    )
+    name = models.CharField(
+        max_length=255,
+        help_text="""Real name strongly encouraged.  However, if necessary use a descriptor like 'Concerned Parent' or 'Father of Two'. (Required)""",
+    )
+    email = models.EmailField(
+        blank=False,
+        unique=True,
+        help_text="""Your email is private and not shared.  It's used to manage preferences and send adminstrative updates. (Required)""",
+    )
+    location = models.CharField(
+        max_length=255,
+        choices=LOCATION,
+        blank=True,
+        help_text="""Your city. (Required)""",
+    )
+    phone = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="""Your mobile phone. (Optional)""",
+    )
+    is_volunteer = models.BooleanField(
+        default=False,
+        help_text="""If you're willing to volunteer please check this box.""",
+    )
+    is_teacher = models.BooleanField(
+        default=False,
+        help_text="""If you're an educator please check this box.""",
+    )
+    is_doctor = models.BooleanField(
+        default=False,
+        help_text="""If you're a physician please check this box.""",
+    )
+    notes = models.TextField(
+        max_length=512,
+        blank=True,
+        default='',
+        help_text="""Feel free to include private notes just for us.""",
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+    user = models.OneToOneField(
+        'app.User',
+        on_delete=models.CASCADE,
+        related_name='account',
+    )
+
+    def __str__(self):
+        return str(self.name)
 
 
 class Contact(models.Model):
@@ -255,91 +339,6 @@ class Signature(models.Model):
                 name='unique_signature',
             )
         ]
-
-
-class Account(models.Model):
-
-    LOCATION = Choices(
-        ('ath', 'Atherton'),
-        ('bel', 'Belmont'),
-        ('brb', 'Brisbane'),
-        ('bur', 'Burlingame'),
-        ('col', 'Colma'),
-        ('dc', 'Daly City'),
-        ('epa', 'East Palo Alto'),
-        ('fc', 'Foster City'),
-        ('hmb', 'Half Moon Bay'),
-        ('hil', 'Hillsborough'),
-        ('mp', 'Menlo Park'),
-        ('mil', 'Millbrae'),
-        ('pac', 'Pacifica'),
-        ('pv', 'Portola Valley'),
-        ('rc', 'Redwood City'),
-        ('sb', 'San Bruno'),
-        ('sc', 'San Carlos'),
-        ('sm', 'San Mateo'),
-        ('ssf', 'South San Francisco'),
-        ('ws', 'Woodside'),
-        ('un', 'Unincorporated San Mateo County'),
-        ('out', 'Outside of San Mateo County'),
-    )
-
-    id = HashidAutoField(
-        primary_key=True,
-    )
-    name = models.CharField(
-        max_length=255,
-        help_text="""Real name strongly encouraged.  However, if necessary use a descriptor like 'Concerned Parent' or 'Father of Two'. (Required)""",
-    )
-    email = models.EmailField(
-        blank=False,
-        unique=True,
-        help_text="""Your email is private and not shared.  It's used to manage preferences and send adminstrative updates. (Required)""",
-    )
-    location = models.CharField(
-        max_length=255,
-        choices=LOCATION,
-        blank=True,
-        help_text="""Your city. (Required)""",
-    )
-    phone = models.CharField(
-        max_length=255,
-        blank=True,
-        help_text="""Your mobile phone. (Optional)""",
-    )
-    is_volunteer = models.BooleanField(
-        default=False,
-        help_text="""If you're willing to volunteer please check this box.""",
-    )
-    is_teacher = models.BooleanField(
-        default=False,
-        help_text="""If you're an educator please check this box.""",
-    )
-    is_doctor = models.BooleanField(
-        default=False,
-        help_text="""If you're a physician please check this box.""",
-    )
-    notes = models.TextField(
-        max_length=512,
-        blank=True,
-        default='',
-        help_text="""Feel free to include private notes just for us.""",
-    )
-    created = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated = models.DateTimeField(
-        auto_now=True,
-    )
-    user = models.OneToOneField(
-        'app.User',
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name='account',
-    )
-
-    def __str__(self):
-        return str(self.name)
 
 
 class User(AbstractBaseUser):

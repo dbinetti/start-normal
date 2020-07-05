@@ -55,10 +55,10 @@ class SignatureForm(forms.ModelForm):
         model = Signature
         fields = [
             'name',
-            'petition',
-            'account',
             'is_public',
             'message',
+            'petition',
+            'account',
         ]
         widgets = {
             'message': forms.Textarea(
