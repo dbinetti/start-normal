@@ -298,13 +298,18 @@ def callback(request):
     return HttpResponse(status=400)
 
 def logout(request):
-    auth0_logout = Logout(settings.AUTH0_DOMAIN)
-    auth0_logout.logout(
-        client_id=settings.AUTH0_CLIENT_ID,
-        return_to=request.build_absolute_uri('goodbye'),
-    )
     log_out(request)
-    return redirect('goodbye')
+    params = {
+        'client_id': settings.AUTH0_CLIENT_ID,
+        'return_to': request.build_absolute_uri('goodbye'),
+    }
+    logout_url = requests.Request(
+        'GET',
+        'https://{0}/v2/logout'.format(settings.AUTH0_DOMAIN),
+        params=params,
+    ).prepare().url
+    return redirect(logout_url)
+
 
 def goodbye(request):
     return render(
