@@ -1,4 +1,7 @@
 # Django
+# Standard Library
+from operator import attrgetter
+
 # Third-Party
 import shortuuid
 from autoslug import AutoSlugField
@@ -14,6 +17,12 @@ from django.utils.text import slugify
 # Local
 from .managers import UserManager
 
+
+def get_populate_from(instance):
+    attrs = [attr.replace("__", ".") for attr in instance.AUTOSLUG_FIELDS]
+    attrs_values = [attrgetter(attr)(instance) for attr in attrs]
+
+    return "-".join(attrs_values)
 
 class Account(models.Model):
 
@@ -150,6 +159,11 @@ class Contact(models.Model):
 
 
 class School(models.Model):
+    AUTOSLUG_FIELDS = [
+        'name',
+        'city',
+        'state',
+    ]
     SOC = Choices(
         (8, 'preschool', 'Preschool'),
         (9, 'specialedu', 'Special Education Schools (Public)'),
@@ -240,8 +254,9 @@ class School(models.Model):
         blank=False,
     )
     slug = AutoSlugField(
+        max_length=255,
         always_update=True,
-        populate_from='name',
+        populate_from=get_populate_from,
         unique=True,
     )
     status = models.TextField(
@@ -427,6 +442,11 @@ class School(models.Model):
 
 
 class District(models.Model):
+    AUTOSLUG_FIELDS = [
+        'name',
+        'county_name',
+        'state',
+    ]
 
     DOC = Choices(
         (0, 'county', 'County Office of Education'),
@@ -474,8 +494,9 @@ class District(models.Model):
         blank=False,
     )
     slug = AutoSlugField(
+        max_length=255,
         always_update=True,
-        populate_from='name',
+        populate_from=get_populate_from,
         unique=True,
     )
     status = models.TextField(
