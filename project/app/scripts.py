@@ -1,6 +1,9 @@
 # Standard Library
 import csv
 
+# Third-Party
+from algoliasearch_django.decorators import disable_auto_indexing
+
 # Django
 from django.db import IntegrityError
 
@@ -75,6 +78,7 @@ def districts_list():
             return errors
 
 
+@disable_auto_indexing
 def import_districts(districts):
     t = len(districts)
     i = 0
@@ -176,7 +180,7 @@ def schools_list(filename):
             print('Error!')
             return errors
 
-
+@disable_auto_indexing
 def import_schools(schools):
     t = len(schools)
     i = 0
