@@ -99,7 +99,7 @@
     ]);
 
     search.addWidgets([
-      instantsearch.widgets.hits({
+      instantsearch.widgets.infiniteHits({
         container: '#hits',
         templates: {
           item(item) {
@@ -111,7 +111,11 @@
         },
         cssClasses: {
           list: 'list',
-          item: 'my-3'
+          item: 'my-3',
+          loadPrevious: 'btn btn-primary mt-5',
+          loadMore: 'btn btn-primary mt-5',
+          disabledLoadPrevious: 'btn btn-primary mt-5',
+          disabledLoadMore: 'btn btn-primary mt-5',
         },
       }),
     ]);
