@@ -186,7 +186,7 @@ class School(models.Model):
         (70, 'adult', 'Adult Education Centers'),
         (98, 'roc', 'Regional Occupational Center/Program (ROC/P)'),
     )
-    CDSTATUS = Choices(
+    STATUS = Choices(
         (10, 'active', "Active"),
         (20, 'closed', "Closed"),
         (30, 'merged', "Merged"),
@@ -261,7 +261,7 @@ class School(models.Model):
     status = models.IntegerField(
         null=True,
         blank=True,
-        choices=CDSTATUS,
+        choices=STATUS,
     )
     cd_id = models.IntegerField(
         null=True,
@@ -421,7 +421,7 @@ class District(models.Model):
         (98, 'roc', 'Regional Occupational Center/Program (ROC/P)'),
         (99, 'admin', 'Administration Only'),
     )
-    CDSTATUS = Choices(
+    STATUS = Choices(
         (10, 'active', "Active"),
         (20, 'closed', "Closed"),
         (30, 'merged', "Merged"),
@@ -458,7 +458,7 @@ class District(models.Model):
     status = models.IntegerField(
         null=True,
         blank=True,
-        choices=CDSTATUS,
+        choices=STATUS,
     )
     cd_id = models.IntegerField(
         null=True,
