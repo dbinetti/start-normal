@@ -5,17 +5,18 @@
 {% block header %}Get Involved{% endblock header %}
 
 {% block content %}
-  {% comment %}
+
   <section>
     <div id="searchbox" class='my-5'>
-      <!-- SearchBox widget will appear here -->
     </div>
+    {# <div id="refine" class='my-5'> #}
+    {# </div> #}
     <div id="hits" class='my-5'>
-      <!-- Hits widget will appear here -->
     </div>
   </section>
-  {% endcomment %}
 
+
+  {% comment %}
   <section class='my-5'>
     <h4>
       Click on a District Name for Further Detail
@@ -65,10 +66,10 @@
       </tfoot>
     </table>
   </section>
-
+{% endcomment %}
 
 {% endblock content %}
-{% comment %}
+
 {% block scripts %}
   <script>
 
@@ -102,17 +103,40 @@
         container: '#hits',
         templates: {
           item(item) {
-            return `<a href='district/${item.slug}'>${item.name}</a>`;
+            return `
+              <strong><a href='district/${item.slug}'>${item.name}</a></strong><br>
+              ${item.address}  ${item.city}, ${item.state}
+            `;
           }
         },
         cssClasses: {
           list: 'list',
+          item: 'my-3'
         },
       }),
     ]);
+
+    // search.addWidgets([
+    //   instantsearch.widgets.refinementList({
+    //     container: '#refine',
+    //     attribute: 'get_doc_display',
+    //     // Optional parameters
+    //     operator: string,
+    //     limit: number,
+    //     showMore: boolean,
+    //     showMoreLimit: number,
+    //     searchable: boolean,
+    //     searchablePlaceholder: string,
+    //     searchableIsAlwaysActive: boolean,
+    //     searchableEscapeFacetValues: boolean,
+    //     sortBy: string[]|function,
+    //     templates: object,
+    //     cssClasses: object,
+    //     transformItems: function,
+    //   })
+    // ]);
 
     search.start();
 
   </script>
 {% endblock scripts %}
-{% endcomment %}

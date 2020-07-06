@@ -35,6 +35,7 @@ class DistrictIndex(AlgoliaIndex):
             'city',
             'state',
             'county',
+            'get_doc_display',
         ],
     }
     should_index = 'is_active'
@@ -71,6 +72,7 @@ class SchoolIndex(AlgoliaIndex):
             'city',
             'state',
             'county',
+            'get_soc_display',
             'get_eil_display',
         ],
     }
