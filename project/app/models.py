@@ -411,6 +411,7 @@ class School(models.Model):
         on_delete=models.SET_NULL,
         related_name='schools',
         null=True,
+        blank=True,
     )
 
 
