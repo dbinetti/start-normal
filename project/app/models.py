@@ -429,9 +429,6 @@ class School(models.Model):
     )
 
 
-    def should_index(self):
-        return self.is_active
-
     def location(self):
         return(self.latitude, self.longitude)
 
@@ -612,9 +609,6 @@ class District(models.Model):
         blank=True,
         default = '',
     )
-
-    def should_index(self):
-        return self.is_active
 
     def location(self):
         return(self.latitude, self.longitude)
