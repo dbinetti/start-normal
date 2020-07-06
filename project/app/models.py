@@ -424,10 +424,8 @@ class School(models.Model):
     )
     district = models.ForeignKey(
         'District',
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         related_name='schools',
-        null=True,
-        blank=True,
     )
 
 
