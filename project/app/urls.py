@@ -8,7 +8,7 @@ urlpatterns = [
     # Public
     path('', views.index, name='index',),
     path('about', views.about, name='about',),
-    path('district/<short>', views.district, name='district'),
+    path('district/<slug>', views.district, name='district'),
     path('district', views.districts, name='districts'),
     path('faq', views.faq, name='faq',),
     path('goodbye', views.goodbye, name='goodbye'),

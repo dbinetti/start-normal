@@ -1,21 +1,24 @@
 # Third-Party
+import algoliasearch_django as algoliasearch
 from algoliasearch_django import AlgoliaIndex
-from algoliasearch_django.decorators import register
 
 # Local
 from .models import District
 
 
-# @register(District)
 class DistrictIndex(AlgoliaIndex):
     fields = [
         'name',
-         'date',
+        'slug',
     ]
     geo_field = 'location'
     settings = {
         'searchableAttributes': [
             'name',
+            'slug',
+            'county_name',
+            'city',
+            'state',
         ],
     }
     should_index = 'should_index'

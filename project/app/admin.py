@@ -26,7 +26,6 @@ class DistrictAdmin(admin.ModelAdmin):
     save_on_top = True
     exclude = [
         'name',
-        'short',
         'status',
         'schedule',
         'masks',
@@ -49,7 +48,6 @@ class DistrictAdmin(admin.ModelAdmin):
     ]
     search_fields = [
         'name',
-        'short',
     ]
     inlines = [
         ContactInline,

@@ -5,56 +5,114 @@
 {% block header %}Get Involved{% endblock header %}
 
 {% block content %}
+  {% comment %}
+  <section>
+    <div id="searchbox" class='my-5'>
+      <!-- SearchBox widget will appear here -->
+    </div>
+    <div id="hits" class='my-5'>
+      <!-- Hits widget will appear here -->
+    </div>
+  </section>
+  {% endcomment %}
 
-<section class='my-5'>
-  <h4>
-    Click on a District Name for Further Detail
-  </h4>
-  <table class='table table-small table-hover'>
-    <thead>
-      <tr>
-        <th>
-          Name
-        </th>
-        <th>
-          Schedule
-        </th>
-        <th>
-          Masks
-        </th>
-        <th>
-          Next Meeting
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for district in districts %}
+  <section class='my-5'>
+    <h4>
+      Click on a District Name for Further Detail
+    </h4>
+    <table class='table table-small table-hover'>
+      <thead>
         <tr>
-          <td>
-            <a href='{% url "district" district.short %}'>{{district.name}}</a>
-          </td>
-          <td>
-            {{district.get_schedule_display}}
-          </td>
-          <td>
-            {{district.get_masks_display}}
-          </td>
-          <td>
-            {{district.meeting_date|date:"SHORT_DATE_FORMAT"}}
+          <th>
+            Name
+          </th>
+          <th>
+            Schedule
+          </th>
+          <th>
+            Masks
+          </th>
+          <th>
+            Next Meeting
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for district in districts %}
+          <tr>
+            <td>
+              <a href='{% url "district" district.slug %}'>{{district.name}}</a>
+            </td>
+            <td>
+              {{district.get_schedule_display}}
+            </td>
+            <td>
+              {{district.get_masks_display}}
+            </td>
+            <td>
+              {{district.meeting_date|date:"SHORT_DATE_FORMAT"}}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan=4>
+            If you would like to update the status for your district, please send information to <a href=
+            'mailto:dbinetti@startnormal.com'>dbinetti@startnormal.com</a>.  We will also be happy to add private schools to this list &mdash; please just send us the information.
           </td>
         </tr>
-      {% endfor %}
-    </tbody>
-    <tfoot>
-      <tr>
-        <td colspan=4>
-          If you would like to update the status for your district, please send information to <a href=
-          'mailto:dbinetti@startnormal.com'>dbinetti@startnormal.com</a>.  We will also be happy to add private schools to this list &mdash; please just send us the information.
-        </td>
-      </tr>
-    </tfoot>
-  </table>
-</section>
+      </tfoot>
+    </table>
+  </section>
 
 
 {% endblock content %}
+{% comment %}
+{% block scripts %}
+  <script>
+
+    const searchClient = algoliasearch(
+      "{{ALGOLIA_APPLICATION_ID}}",
+      "{{ALGOLIA_SEARCH_KEY}}",
+    );
+
+    let search = instantsearch({
+      indexName: "{{index}}",
+      searchClient,
+    });
+
+    search.addWidgets([
+      instantsearch.widgets.searchBox({
+        container: '#searchbox',
+        placeholder: 'Search Districts...',
+        autofocus: true,
+        showReset: false,
+        showSubmit: false,
+        cssClasses: {
+          root: 'root',
+          form: 'form',
+          input: 'input form-control form-control-large',
+        },
+      }),
+    ]);
+
+    search.addWidgets([
+      instantsearch.widgets.hits({
+        container: '#hits',
+        templates: {
+          item(item) {
+            return `<a href='district/${item.slug}'>${item.name}</a>`;
+          }
+        },
+        cssClasses: {
+          list: 'list',
+        },
+      }),
+    ]);
+
+    search.start();
+
+  </script>
+{% endblock scripts %}
+{% endcomment %}

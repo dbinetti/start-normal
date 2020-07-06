@@ -3,12 +3,11 @@
 # Standard Library
 import os
 
-# Django
-from django.contrib.messages import constants as messages
-
-# First-Party
 from environ import Env
 from environ import Path
+
+# Django
+from django.contrib.messages import constants as messages
 
 # Set Environment
 env = Env(
@@ -83,6 +82,7 @@ CACHES = {
 ALGOLIA = {
     'APPLICATION_ID': env("ALGOLIA_APPLICATION_ID"),
     'API_KEY': env("ALGOLIA_API_KEY"),
+    'SEARCH_KEY': env("ALGOLIA_SEARCH_KEY"),
 }
 
 # RQ
@@ -186,6 +186,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_rq',
+    'algoliasearch_django',
     'bootstrap4',
     'app',
 ]

@@ -1,6 +1,7 @@
 # Django
 # Third-Party
 import shortuuid
+from autoslug import AutoSlugField
 from hashid_field import HashidAutoField
 from model_utils import Choices
 from shortuuidfield import ShortUUIDField
@@ -230,8 +231,6 @@ class Contact(models.Model):
 
 
 
-
-
 class District(models.Model):
 
     DOC = Choices(
@@ -279,9 +278,9 @@ class District(models.Model):
         max_length=255,
         blank=False,
     )
-    short = models.CharField(
-        max_length=255,
-        blank=False,
+    slug = AutoSlugField(
+        populate_from='name',
+        unique_with='cd_status',
     )
     status = models.TextField(
         blank=True,

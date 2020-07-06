@@ -80,9 +80,9 @@ def thomas(request):
         'public/thomas.html',
     )
 
-def district(request, short):
+def district(request, slug):
     district = District.objects.get(
-        short__iexact=short,
+        slug__iexact=slug,
     )
     contacts = district.contacts.filter(
         is_active=True,
@@ -108,10 +108,22 @@ def districts(request):
     ).order_by(
         'name',
     )
+    ALGOLIA_APPLICATION_ID = settings.ALGOLIA['APPLICATION_ID']
+    ALGOLIA_SEARCH_KEY = settings.ALGOLIA['SEARCH_KEY']
+    suffix = settings.ALGOLIA.get('INDEX_SUFFIX', '')
+    if suffix:
+        index = 'District_dev'
+    else:
+        index = 'District'
+
     return render(
         request,
-        'public/districts.html',
-        {'districts': districts},
+        'public/districts.html', {
+            'districts': districts,
+            'ALGOLIA_APPLICATION_ID': ALGOLIA_APPLICATION_ID,
+            'ALGOLIA_SEARCH_KEY': ALGOLIA_SEARCH_KEY,
+            'index': index,
+        },
     )
 
 def petition(request, id):

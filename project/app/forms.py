@@ -42,7 +42,7 @@ class AccountForm(forms.ModelForm):
 class DistrictForm(forms.ModelForm):
     class Meta:
         model = District
-        exclude = ['short']
+        exclude = ['slug']
 
 class DeleteForm(forms.Form):
     confirm = forms.BooleanField(

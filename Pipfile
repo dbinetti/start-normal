@@ -32,6 +32,7 @@ sentry-sdk = "*"
 auth0-python = "*"
 django-hashid-field = "*"
 algoliasearch-django = "*"
+django-autoslug = "*"
 
 [requires]
 python_full_version = "3.8.3"
