@@ -407,6 +407,11 @@ class District(models.Model):
         'county',
         'state',
     ]
+    STATUS = Choices(
+        (10, 'active', "Active"),
+        (20, 'closed', "Closed"),
+        (30, 'merged', "Merged"),
+    )
     DOC = Choices(
         (0, 'county', 'County Office of Education'),
         (2, 'state', 'State Board of Education'),
@@ -420,24 +425,6 @@ class District(models.Model):
         (58, 'ccd', 'Community College District'),
         (98, 'roc', 'Regional Occupational Center/Program (ROC/P)'),
         (99, 'admin', 'Administration Only'),
-    )
-    STATUS = Choices(
-        (10, 'active', "Active"),
-        (20, 'closed', "Closed"),
-        (30, 'merged', "Merged"),
-    )
-    SCHEDULE = Choices(
-        (0, 'unknown', "(Unknown)"),
-        (10, 'person', "In-Person"),
-        (20, 'blended', "Blended"),
-        (30, 'distance', "Distance"),
-        (40, 'undecided', "Undecided"),
-    )
-    MASKS = Choices(
-        (0, 'unknown', "(Unknown)"),
-        (10, 'required', "Required"),
-        (20, 'optional', "Optional"),
-        (30, 'disallowed', "Disallowed"),
     )
     id = HashidAutoField(
         primary_key=True,
@@ -456,70 +443,64 @@ class District(models.Model):
         unique=True,
     )
     status = models.IntegerField(
-        null=True,
-        blank=True,
+        blank=False,
         choices=STATUS,
+        default=STATUS.active,
     )
     cd_id = models.IntegerField(
-        null=True,
-        blank=True,
+        null=False,
+        blank=False,
         unique=True,
     )
     nces_district_id = models.IntegerField(
-        null=True,
-        blank=True,
+        null=False,
+        blank=False,
         unique=True,
     )
     county = models.CharField(
         max_length=255,
-        default='',
-        blank=True,
+        blank=False,
     )
     address = models.CharField(
         max_length=255,
-        default='',
-        blank=True,
+        blank=False,
     )
     city = models.CharField(
         max_length=255,
-        default='',
-        blank=True,
+        blank=False,
     )
     state = models.CharField(
         max_length=255,
-        default='',
-        blank=True,
+        blank=False,
     )
     zipcode = models.CharField(
         max_length=255,
-        default='',
-        blank=True,
+        blank=False,
     )
     phone = models.CharField(
         max_length=255,
-        default='',
         blank=True,
+        default='',
     )
     website = models.URLField(
         blank=True,
         default='',
     )
     doc = models.IntegerField(
-        null=True,
-        blank=True,
+        blank=False,
         choices=DOC,
     )
     latitude = models.DecimalField(
         max_digits=10,
         decimal_places=6,
-        null=True,
         blank=True,
+        null=True,
     )
     longitude = models.DecimalField(
         max_digits=10,
         decimal_places=6,
-        null=True,
         blank=True,
+        null=True,
     )
     admin_first_name = models.CharField(
         max_length=255,
