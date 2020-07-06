@@ -281,7 +281,7 @@ class District(models.Model):
     )
     slug = AutoSlugField(
         populate_from='name',
-        unique_with='cd_status',
+        unique=True,
     )
     status = models.TextField(
         blank=True,
