@@ -254,7 +254,6 @@ class School(models.Model):
         unique=True,
     )
     nces_school_id = models.IntegerField(
-        null=True,
         blank=False,
         unique=True,
     )
