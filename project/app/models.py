@@ -313,7 +313,7 @@ class School(models.Model):
         default='',
         blank=True,
     )
-    county_name = models.CharField(
+    county = models.CharField(
         max_length=255,
         default='',
         blank=True,
@@ -442,7 +442,7 @@ class School(models.Model):
 class District(models.Model):
     AUTOSLUG_FIELDS = [
         'name',
-        'county_name',
+        'county',
         'state',
     ]
 
@@ -546,7 +546,7 @@ class District(models.Model):
         default='',
         blank=True,
     )
-    county_name = models.CharField(
+    county = models.CharField(
         max_length=255,
         default='',
         blank=True,

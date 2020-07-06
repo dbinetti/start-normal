@@ -32,7 +32,7 @@ class SchoolAdmin(admin.ModelAdmin):
         'cd_status',
         'cd_id',
         'nces_district_id',
-        'county_name',
+        'county',
         'soc',
         'funding_type',
         'is_charter',
@@ -85,7 +85,7 @@ class DistrictAdmin(admin.ModelAdmin):
         'cd_status',
         'cd_id',
         'nces_district_id',
-        'county_name',
+        'county',
     ]
     list_filter = [
         'is_active',
