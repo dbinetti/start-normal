@@ -140,9 +140,8 @@ class Contact(models.Model):
     )
     district = models.ForeignKey(
         'District',
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         related_name='contacts',
-        null=True,
     )
 
 
@@ -469,9 +468,8 @@ class Petition(models.Model):
     )
     district = models.ForeignKey(
         'app.District',
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         related_name='petitions',
-        null=True,
     )
     def __str__(self):
         return str(self.name)
