@@ -31,7 +31,6 @@ class SchoolAdmin(admin.ModelAdmin):
         'name',
         'status',
         'cd_id',
-        'nces_district_id',
         'county',
         'soc',
         'funding',

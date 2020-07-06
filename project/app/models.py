@@ -228,20 +228,6 @@ class School(models.Model):
         (40, 'n', 'Not Virtual'),
         (50, 'p', 'Partial Virtual'),
     )
-    SCHEDULE = Choices(
-        (0, 'unknown', "(Unknown)"),
-        (10, 'person', "In-Person"),
-        (20, 'blended', "Blended"),
-        (30, 'distance', "Distance"),
-        (40, 'undecided', "Undecided"),
-    )
-    MASKS = Choices(
-        (0, 'unknown', "(Unknown)"),
-        (10, 'required', "Required"),
-        (20, 'optional', "Optional"),
-        (30, 'disallowed', "Disallowed"),
-    )
-
     id = HashidAutoField(
         primary_key=True,
     )
@@ -259,62 +245,55 @@ class School(models.Model):
         unique=True,
     )
     status = models.IntegerField(
-        null=True,
-        blank=True,
+        blank=False,
         choices=STATUS,
+        default=STATUS.active,
     )
     cd_id = models.IntegerField(
-        null=True,
-        blank=True,
+        blank=False,
         unique=True,
-    )
-    nces_district_id = models.IntegerField(
-        null=True,
-        blank=True,
-        unique=False,
     )
     nces_school_id = models.IntegerField(
         null=True,
-        blank=True,
+        blank=False,
         unique=True,
     )
     county = models.CharField(
         max_length=255,
+        blank=False,
         default='',
-        blank=True,
     )
     address = models.CharField(
         max_length=255,
+        blank=False,
         default='',
-        blank=True,
     )
     city = models.CharField(
         max_length=255,
+        blank=False,
         default='',
-        blank=True,
     )
     state = models.CharField(
         max_length=255,
+        blank=False,
         default='',
-        blank=True,
     )
     zipcode = models.CharField(
         max_length=255,
+        blank=False,
         default='',
-        blank=True,
     )
     phone = models.CharField(
         max_length=255,
-        default='',
         blank=True,
+        default='',
     )
     website = models.URLField(
         blank=True,
         default='',
     )
     soc = models.IntegerField(
-        null=True,
-        blank=True,
+        blank=False,
         choices=SOC,
     )
     is_charter = models.BooleanField(
@@ -325,36 +304,32 @@ class School(models.Model):
         blank=True,
     )
     funding = models.IntegerField(
-        null=True,
-        blank=True,
         choices=FUNDING,
+        blank=True,
+        null=True,
     )
     edops = models.IntegerField(
-        null=True,
-        blank=True,
         choices=EDOPS,
+        blank=True,
+        null=True,
     )
     eil = models.IntegerField(
-        null=True,
-        blank=True,
         choices=EIL,
+        blank=True,
+        null=True,
     )
     grades = models.CharField(
         max_length=255,
         blank=True,
+        default='',
     )
     virtual = models.IntegerField(
-        null=True,
-        blank=True,
         choices=VIRTUAL,
+        blank=True,
+        null=True,
     )
     is_magnet = models.BooleanField(
         default=False,
-    )
-    fed_nces_school_id = models.IntegerField(
-        null=True,
-        blank=True,
-        unique=True,
     )
     latitude = models.DecimalField(
         max_digits=10,
