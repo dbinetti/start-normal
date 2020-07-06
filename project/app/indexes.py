@@ -53,7 +53,7 @@ class SchoolIndex(AlgoliaIndex):
         'website',
         'get_soc_display',
         'nces_school_id',
-        'eil',
+        'get_eil_display',
         'grades',
         'district',
     ]
@@ -71,6 +71,7 @@ class SchoolIndex(AlgoliaIndex):
             'city',
             'state',
             'county',
+            'get_eil_display',
         ],
     }
     should_index = 'is_active'

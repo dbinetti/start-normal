@@ -9,7 +9,8 @@ class AppConfig(AppConfig):
         import algoliasearch_django as algoliasearch
 
         from .indexes import DistrictIndex
+        from .indexes import SchoolIndex
         District = self.get_model('district')
         algoliasearch.register(District, DistrictIndex)
-        # School = self.get_model('school')
-        # algoliasearch.register(School, SchoolIndex)
+        School = self.get_model('school')
+        algoliasearch.register(School, SchoolIndex)

@@ -294,6 +294,11 @@ class School(models.Model):
         'city',
         'state',
     ]
+    STATUS = Choices(
+        (10, 'active', "Active"),
+        (20, 'closed', "Closed"),
+        (30, 'merged', "Merged"),
+    )
     SOC = Choices(
         (8, 'preschool', 'Preschool'),
         (9, 'specialedu', 'Special Education Schools (Public)'),
@@ -315,11 +320,6 @@ class School(models.Model):
         (69, 'communityday', 'District Community Day Schools'),
         (70, 'adult', 'Adult Education Centers'),
         (98, 'roc', 'Regional Occupational Center/Program (ROC/P)'),
-    )
-    STATUS = Choices(
-        (10, 'active', "Active"),
-        (20, 'closed', "Closed"),
-        (30, 'merged', "Merged"),
     )
     FUNDING = Choices(
         (0, 'unknown', "(Unknown)"),
