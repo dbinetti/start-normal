@@ -7,6 +7,7 @@ from django.contrib.auth.forms import UserCreationForm as UserCreationFormBase
 # Local
 from .models import Account
 from .models import District
+from .models import School
 from .models import Signature
 from .models import User
 
@@ -43,6 +44,13 @@ class DistrictForm(forms.ModelForm):
     class Meta:
         model = District
         exclude = ['slug']
+
+
+class SchoolForm(forms.ModelForm):
+    class Meta:
+        model = School
+        exclude = ['slug']
+
 
 class DeleteForm(forms.Form):
     confirm = forms.BooleanField(

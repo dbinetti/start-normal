@@ -11,6 +11,7 @@ from .models import Account
 from .models import District
 from .models import Faq
 from .models import Petition
+from .models import School
 from .models import Signature
 from .models import User
 
@@ -19,6 +20,54 @@ def approve_signature(modeladmin, request, queryset):
     queryset.update(is_approved=True)
 
 approve_signature.short_description = "Approve Signatures"
+
+
+@admin.register(School)
+class SchoolAdmin(admin.ModelAdmin):
+    exclude = [
+        'slug',
+    ]
+    list_display = [
+        'name',
+        'cd_status',
+        'cd_id',
+        'nces_district_id',
+        'county_name',
+        'soc',
+        'funding_type',
+        'is_charter',
+        'edops_type',
+        'eil',
+        'grade_span',
+        'virtual_type',
+        'is_magnet',
+        'address',
+        'website',
+        'phone',
+        'admin_first_name',
+        'admin_last_name',
+        'admin_email',
+    ]
+    list_filter = [
+        'is_active',
+        'cd_status',
+        'soc',
+        'funding_type',
+        'is_charter',
+        'edops_type',
+        'eil',
+        'grade_span',
+        'virtual_type',
+        'is_magnet',
+    ]
+    search_fields = [
+        'name',
+    ]
+    inlines = [
+        # ContactInline,
+    ]
+
+
 
 
 @admin.register(District)

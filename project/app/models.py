@@ -149,86 +149,279 @@ class Contact(models.Model):
         return str(self.name)
 
 
-# class School(models.Model):
-#     id = HashidAutoField(
-#         primary_key=True,
-#     )
-#     is_active = models.BooleanField(
-#         default=False,
-#     )
+class School(models.Model):
+    SOC = Choices(
+        (8, 'preschool', 'Preschool'),
+        (9, 'specialedu', 'Special Education Schools (Public)'),
+        (10, 'county', 'County Community'),
+        (11, 'yaf', 'Youth Authority Facilities (CEA)'),
+        (13, 'opportunity', 'Opportunity Schools'),
+        (14, 'juvenile', 'Juvenile Court Schools'),
+        (15, 'other', 'Other County or District Programs'),
+        (31, 'specialschool', 'State Special Schools'),
+        (60, 'elementary', 'Elementary School (Public)'),
+        (61, 'elementary1', 'Elementary School in 1 School District (Public)'),
+        (62, 'intermediate', 'Intermediate/Middle Schools (Public)'),
+        (63, 'alternative', 'Alternative Schools of Choice'),
+        (64, 'junior', 'Junior High Schools (Public)'),
+        (65, 'k12', 'K-12 Schools (Public)'),
+        (66, 'high', 'High Schools (Public)'),
+        (67, 'high1', 'High Schools in 1 School District (Public)'),
+        (68, 'continuuation', 'Continuation High Schools'),
+        (69, 'communityday', 'District Community Day Schools'),
+        (70, 'adult', 'Adult Education Centers'),
+        (98, 'roc', 'Regional Occupational Center/Program (ROC/P)'),
+    )
+
+    CDSTATUS = Choices(
+        (10, 'active', "Active"),
+        (20, 'closed', "Closed"),
+        (30, 'merged', "Merged"),
+    )
+    FUNDING = Choices(
+        (0, 'unknown', "(Unknown)"),
+        (10, 'direct', "Direct Funding"),
+        (20, 'indirect', "Indirect Funding"),
+        (30, 'disallowed', "Disallowed"),
+    )
+    EDOPS = Choices(
+        (10, 'altsoc', 'Alternative School of Choice'),
+        (20, 'comm', 'County Community School'),
+        (30, 'commday', 'Community Day School'),
+        (40, 'con', 'Continuation School'),
+        (50, 'juv', 'Juvenile Court School'),
+        (60, 'opp', 'Opportunity School'),
+        (70, 'yth', 'Youth Authority School'),
+        (80, 'sss', 'State Special School'),
+        (90, 'spec', 'Special Education School'),
+        (100, 'trad', 'Traditional'),
+        (110, 'rop', 'Regional Occupational Program'),
+        (120, 'homhos', 'Home and Hospital'),
+        (130, 'specon', 'District Consortia Special Education School'),
+    )
+    EIL = Choices(
+        (10, 'ps', 'Preschool'),
+        (20, 'elem', 'Elementary'),
+        (30, 'intmidjr', 'Intermediate/Middle/Junior High'),
+        (40, 'hs', 'High School'),
+        (50, 'elemhigh', 'Elementary-High Combination'),
+        (60, 'a', 'Adult'),
+        (70, 'ug', 'Ungraded'),
+    )
+    VIRTUAL = Choices(
+        (10, 'f', 'Exclusively Virutal'),
+        (20, 'v', 'Primarily Virtual'),
+        (30, 'c', 'Primarily Classroom'),
+        (40, 'n', 'Not Virtual'),
+        (50, 'p', 'Partial Virtual'),
+    )
+    SCHEDULE = Choices(
+        (0, 'unknown', "(Unknown)"),
+        (10, 'person', "In-Person"),
+        (20, 'blended', "Blended"),
+        (30, 'distance', "Distance"),
+        (40, 'undecided', "Undecided"),
+    )
+    MASKS = Choices(
+        (0, 'unknown', "(Unknown)"),
+        (10, 'required', "Required"),
+        (20, 'optional', "Optional"),
+        (30, 'disallowed', "Disallowed"),
+    )
+
+    id = HashidAutoField(
+        primary_key=True,
+    )
+    is_active = models.BooleanField(
+        default=False,
+    )
+    name = models.CharField(
+        max_length=255,
+        blank=False,
+    )
+    slug = AutoSlugField(
+        populate_from='name',
+        unique=True,
+    )
+    status = models.TextField(
+        blank=True,
+    )
+    schedule = models.IntegerField(
+        null=True,
+        blank=False,
+        choices=SCHEDULE,
+        default=SCHEDULE.unknown,
+    )
+    masks = models.IntegerField(
+        null=True,
+        blank=False,
+        choices=MASKS,
+        default=MASKS.unknown,
+    )
+    is_masks = models.BooleanField(
+        default=True,
+    )
+    meeting_date = models.DateField(
+        null=True,
+        blank=True,
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+
+    cd_status = models.IntegerField(
+        null=True,
+        blank=True,
+        choices=CDSTATUS,
+    )
+    cd_id = models.IntegerField(
+        null=True,
+        blank=True,
+        unique=True,
+    )
+    nces_district_id = models.IntegerField(
+        null=True,
+        blank=True,
+        unique=False,
+    )
+    nces_school_id = models.IntegerField(
+        null=True,
+        blank=True,
+        unique=True,
+    )
+    district_name = models.CharField(
+        max_length=255,
+        default='',
+        blank=True,
+    )
+    county_name = models.CharField(
+        max_length=255,
+        default='',
+        blank=True,
+    )
+    address = models.CharField(
+        max_length=255,
+        default='',
+        blank=True,
+    )
+    city = models.CharField(
+        max_length=255,
+        default='',
+        blank=True,
+    )
+    state = models.CharField(
+        max_length=255,
+        default='',
+        blank=True,
+    )
+    zipcode = models.CharField(
+        max_length=255,
+        default='',
+        blank=True,
+    )
+    phone = models.CharField(
+        max_length=255,
+        default='',
+        blank=True,
+    )
+    website = models.URLField(
+        blank=True,
+        default='',
+    )
+    soc = models.IntegerField(
+        null=True,
+        blank=True,
+        choices=SOC,
+    )
 
 
-#     cdcode_id = models.IntegerField(
-#         null=True,
-#         blank=True,
-#     )
 
-#     nces_district_id = models.IntegerField(
-#         null=True,
-#         blank=True,
-#     )
+    is_charter = models.BooleanField(
+        default=False,
+    )
+    charter_number = models.IntegerField(
+        null=True,
+        blank=True,
+    )
+    funding_type = models.IntegerField(
+        null=True,
+        blank=True,
+        choices=FUNDING,
+    )
 
-#     nces_school_id = models.IntegerField(
-#         null=True,
-#         blank=True,
-#     )
+    edops_type = models.IntegerField(
+        null=True,
+        blank=True,
+        choices=EDOPS,
+    )
+    eil = models.IntegerField(
+        null=True,
+        blank=True,
+        choices=EIL,
+    )
+    grade_span = models.CharField(
+        max_length=255,
+        blank=True,
+    )
+    virtual_type = models.IntegerField(
+        null=True,
+        blank=True,
+        choices=VIRTUAL,
+    )
+    is_magnet = models.BooleanField(
+        default=False,
+    )
+    fed_nces_school_id = models.IntegerField(
+        null=True,
+        blank=True,
+        unique=True,
+    )
+    latitude = models.DecimalField(
+        max_digits=10,
+        decimal_places=6,
+        null=True,
+        blank=True,
+    )
+    longitude = models.DecimalField(
+        max_digits=10,
+        decimal_places=6,
+        null=True,
+        blank=True,
+    )
+    admin_first_name = models.CharField(
+        max_length=255,
+        blank=True,
+        default = '',
+    )
+    admin_last_name = models.CharField(
+        max_length=255,
+        blank=True,
+        default = '',
+    )
+    admin_email = models.EmailField(
+        max_length=255,
+        blank=True,
+        default = '',
+    )
+    district = models.ForeignKey(
+        'District',
+        on_delete=models.SET_NULL,
+        related_name='schools',
+        null=True,
+    )
 
-#     district_name = models.CharField(
-#         max_length=255,
-#         default='',
-#         blank=True,
-#     )
 
-#     school_name = models.CharField(
-#         max_length=255,
-#         default='',
-#         blank=True,
-#     )
+    def should_index(self):
+        return self.is_active
 
-#     school_kind = models.
+    def location(self):
+        return(self.latitude, self.longitude)
 
-#     county = models.CharField(
-#         max_length=15,
-#         default='',
-#         blank=True,
-#     )
-
-#     phone = models.CharField(
-#         max_length=14,
-#         default='',
-#         blank=True,
-#     )
-#     email = models.CharField(
-#         max_length=50,
-#         default='',
-#         blank=True,
-#     )
-#     latitude = models.DecimalField(
-#         max_digits=10,
-#         null=True,
-#     )
-#     longitude = models.DecimalField(
-#         max_digits=10,
-#         null=True,
-#     )
-#     doc = models.IntegerField(
-#         null=True,
-#         blank=True,
-#     )
-
-#     created = models.DateTimeField(
-#         auto_now_add=True,
-#     )
-#     updated = models.DateTimeField(
-#         auto_now=True,
-#     )
-
-#     def location(self):
-#         return(self.latitude, self.longitude)
-
-#     def __str__(self):
-#         return str(self.name)
-
+    def __str__(self):
+        return str(self.name)
 
 
 class District(models.Model):
