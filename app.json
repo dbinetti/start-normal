@@ -79,6 +79,9 @@
         "ALGOLIA_SECRET_KEY": {
           "generator": "secret"
         },
+        "ALGOLIA_SEARCH_KEY": {
+          "generator": "secret"
+        },
         "AUTH0_SECRET": {
           "generator": "secret"
         },
