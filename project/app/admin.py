@@ -29,17 +29,17 @@ class SchoolAdmin(admin.ModelAdmin):
     ]
     list_display = [
         'name',
-        'cd_status',
+        'status',
         'cd_id',
         'nces_district_id',
         'county',
         'soc',
-        'funding_type',
+        'funding',
         'is_charter',
-        'edops_type',
+        'edops',
         'eil',
-        'grade_span',
-        'virtual_type',
+        'grades',
+        'virtual',
         'is_magnet',
         'address',
         'website',
@@ -50,14 +50,13 @@ class SchoolAdmin(admin.ModelAdmin):
     ]
     list_filter = [
         'is_active',
-        'cd_status',
+        'status',
         'soc',
-        'funding_type',
+        'funding',
         'is_charter',
-        'edops_type',
+        'edops',
         'eil',
-        'grade_span',
-        'virtual_type',
+        'virtual',
         'is_magnet',
     ]
     search_fields = [
@@ -75,25 +74,20 @@ class DistrictAdmin(admin.ModelAdmin):
     save_on_top = True
     exclude = [
         'name',
-        'status',
-        'schedule',
-        'masks',
         'meeting_date',
     ]
     list_display = [
         'name',
-        'cd_status',
+        'status',
         'cd_id',
         'nces_district_id',
         'county',
     ]
     list_filter = [
         'is_active',
-        'cd_status',
+        'status',
         'doc',
         'created',
-        'schedule',
-        'masks',
     ]
     search_fields = [
         'name',

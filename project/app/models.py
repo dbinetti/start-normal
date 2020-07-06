@@ -186,7 +186,6 @@ class School(models.Model):
         (70, 'adult', 'Adult Education Centers'),
         (98, 'roc', 'Regional Occupational Center/Program (ROC/P)'),
     )
-
     CDSTATUS = Choices(
         (10, 'active', "Active"),
         (20, 'closed', "Closed"),
@@ -259,36 +258,7 @@ class School(models.Model):
         populate_from=get_populate_from,
         unique=True,
     )
-    status = models.TextField(
-        blank=True,
-    )
-    schedule = models.IntegerField(
-        null=True,
-        blank=False,
-        choices=SCHEDULE,
-        default=SCHEDULE.unknown,
-    )
-    masks = models.IntegerField(
-        null=True,
-        blank=False,
-        choices=MASKS,
-        default=MASKS.unknown,
-    )
-    is_masks = models.BooleanField(
-        default=True,
-    )
-    meeting_date = models.DateField(
-        null=True,
-        blank=True,
-    )
-    created = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated = models.DateTimeField(
-        auto_now=True,
-    )
-
-    cd_status = models.IntegerField(
+    status = models.IntegerField(
         null=True,
         blank=True,
         choices=CDSTATUS,
@@ -307,11 +277,6 @@ class School(models.Model):
         null=True,
         blank=True,
         unique=True,
-    )
-    district_name = models.CharField(
-        max_length=255,
-        default='',
-        blank=True,
     )
     county = models.CharField(
         max_length=255,
@@ -352,9 +317,6 @@ class School(models.Model):
         blank=True,
         choices=SOC,
     )
-
-
-
     is_charter = models.BooleanField(
         default=False,
     )
@@ -362,13 +324,12 @@ class School(models.Model):
         null=True,
         blank=True,
     )
-    funding_type = models.IntegerField(
+    funding = models.IntegerField(
         null=True,
         blank=True,
         choices=FUNDING,
     )
-
-    edops_type = models.IntegerField(
+    edops = models.IntegerField(
         null=True,
         blank=True,
         choices=EDOPS,
@@ -378,11 +339,11 @@ class School(models.Model):
         blank=True,
         choices=EIL,
     )
-    grade_span = models.CharField(
+    grades = models.CharField(
         max_length=255,
         blank=True,
     )
-    virtual_type = models.IntegerField(
+    virtual = models.IntegerField(
         null=True,
         blank=True,
         choices=VIRTUAL,
@@ -422,13 +383,17 @@ class School(models.Model):
         blank=True,
         default = '',
     )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
     district = models.ForeignKey(
         'District',
         on_delete=models.CASCADE,
         related_name='schools',
     )
-
-
     def location(self):
         return(self.latitude, self.longitude)
 
@@ -442,7 +407,6 @@ class District(models.Model):
         'county',
         'state',
     ]
-
     DOC = Choices(
         (0, 'county', 'County Office of Education'),
         (2, 'state', 'State Board of Education'),
@@ -457,8 +421,6 @@ class District(models.Model):
         (98, 'roc', 'Regional Occupational Center/Program (ROC/P)'),
         (99, 'admin', 'Administration Only'),
     )
-
-
     CDSTATUS = Choices(
         (10, 'active', "Active"),
         (20, 'closed', "Closed"),
@@ -477,7 +439,6 @@ class District(models.Model):
         (20, 'optional', "Optional"),
         (30, 'disallowed', "Disallowed"),
     )
-
     id = HashidAutoField(
         primary_key=True,
     )
@@ -494,36 +455,7 @@ class District(models.Model):
         populate_from=get_populate_from,
         unique=True,
     )
-    status = models.TextField(
-        blank=True,
-    )
-    schedule = models.IntegerField(
-        null=True,
-        blank=False,
-        choices=SCHEDULE,
-        default=SCHEDULE.unknown,
-    )
-    masks = models.IntegerField(
-        null=True,
-        blank=False,
-        choices=MASKS,
-        default=MASKS.unknown,
-    )
-    is_masks = models.BooleanField(
-        default=True,
-    )
-    meeting_date = models.DateField(
-        null=True,
-        blank=True,
-    )
-    created = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated = models.DateTimeField(
-        auto_now=True,
-    )
-
-    cd_status = models.IntegerField(
+    status = models.IntegerField(
         null=True,
         blank=True,
         choices=CDSTATUS,
@@ -537,11 +469,6 @@ class District(models.Model):
         null=True,
         blank=True,
         unique=True,
-    )
-    district_name = models.CharField(
-        max_length=255,
-        default='',
-        blank=True,
     )
     county = models.CharField(
         max_length=255,
@@ -609,7 +536,12 @@ class District(models.Model):
         blank=True,
         default = '',
     )
-
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
     def location(self):
         return(self.latitude, self.longitude)
 
