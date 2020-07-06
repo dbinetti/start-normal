@@ -240,6 +240,7 @@ class School(models.Model):
         blank=False,
     )
     slug = AutoSlugField(
+        always_update=True,
         populate_from='name',
         unique=True,
     )
@@ -473,6 +474,7 @@ class District(models.Model):
         blank=False,
     )
     slug = AutoSlugField(
+        always_update=True,
         populate_from='name',
         unique=True,
     )
