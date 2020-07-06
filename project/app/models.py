@@ -255,7 +255,7 @@ class School(models.Model):
     )
     slug = AutoSlugField(
         max_length=255,
-        always_update=True,
+        always_update=False,
         populate_from=get_populate_from,
         unique=True,
     )
@@ -495,7 +495,7 @@ class District(models.Model):
     )
     slug = AutoSlugField(
         max_length=255,
-        always_update=True,
+        always_update=False,
         populate_from=get_populate_from,
         unique=True,
     )
