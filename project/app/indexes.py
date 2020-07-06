@@ -4,6 +4,7 @@ from algoliasearch_django import AlgoliaIndex
 
 # Local
 from .models import District
+from .models import School
 
 
 class DistrictIndex(AlgoliaIndex):
@@ -16,9 +17,32 @@ class DistrictIndex(AlgoliaIndex):
         'searchableAttributes': [
             'name',
             'slug',
-            'county_name',
+            'county',
             'city',
             'state',
+            # 'attributesForFaceting': [
+            #     'city',
+            #     'state',
+            #     'county',
+            # ],
         ],
     }
-    should_index = 'should_index'
+    should_index = 'is_active'
+
+
+# class SchoolIndex(AlgoliaIndex):
+#     fields = [
+#         'name',
+#         'slug',
+#     ]
+#     geo_field = 'location'
+#     settings = {
+#         'searchableAttributes': [
+#             'name',
+#             'slug',
+#             'county',
+#             'city',
+#             'state',
+#         ],
+#     }
+#     should_index = 'is_active'
