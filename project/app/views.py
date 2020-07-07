@@ -2,14 +2,6 @@
 # Standard Library
 import json
 
-# Third-Party
-import django_rq
-import requests
-import shortuuid
-from auth0.v3.authentication import Database
-from auth0.v3.authentication import Logout
-from django_rq import job
-
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
@@ -28,6 +20,14 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.urls import reverse_lazy
+
+# First-Party
+import django_rq
+import requests
+import shortuuid
+from auth0.v3.authentication import Database
+from auth0.v3.authentication import Logout
+from django_rq import job
 
 # Local
 from .forms import AccountForm
@@ -49,37 +49,40 @@ from .tasks import mailchimp_subscribe_email
 from .tasks import send_email
 
 
-# Public
+# Root
 def index(request):
     return render(
         request,
         'app/index.html',
     )
 
-def morrow(request):
-    return render(
-        request,
-        'public/morrow.html',
-    )
-
 def about(request):
     return render(
         request,
-        'public/about.html',
+        'app/about.html',
     )
 
-def videos(request):
+def faq(request):
+    faqs = Faq.objects.filter(
+        is_active=True,
+    ).order_by(
+        'num',
+        'created',
+    )
     return render(
         request,
-        'public/videos.html',
+        'app/faq.html',
+        {'faqs': faqs},
     )
 
-def thomas(request):
+def robots(request):
     return render(
         request,
-        'public/thomas.html',
+        'app/robots.txt',
     )
 
+
+# Involved
 def district(request, slug):
     district = District.objects.get(
         slug__iexact=slug,
@@ -95,139 +98,178 @@ def district(request, slug):
     )
     return render(
         request,
-        'public/district.html', {
+        'app/involved/district.html', {
             'district': district,
             'contacts': contacts,
             'petitions': petitions,
         },
     )
 
-def districts(request):
-    districts = District.objects.filter(
-        is_active=True,
-    ).order_by(
-        'name',
-    )
+def involved(request):
     ALGOLIA_APPLICATION_ID = settings.ALGOLIA['APPLICATION_ID']
     ALGOLIA_SEARCH_KEY = settings.ALGOLIA['SEARCH_KEY']
-    suffix = settings.ALGOLIA.get('INDEX_SUFFIX', '')
-    if suffix:
-        index = 'District_dev'
-    else:
-        index = 'District'
-
+    index = "District" if settings.ALGOLIA['INDEX_SUFFIX'] else "District_".format(
+        settings.ALGOLIA['INDEX_SUFFIX'],
+    )
     return render(
         request,
-        'public/districts.html', {
-            'districts': districts,
+        'app/involved/involved.html', {
             'ALGOLIA_APPLICATION_ID': ALGOLIA_APPLICATION_ID,
             'ALGOLIA_SEARCH_KEY': ALGOLIA_SEARCH_KEY,
             'index': index,
         },
     )
 
-def petition(request, id):
-    petition = Petition.objects.get(id=id)
-    try:
-        account = request.user.account
-    except AttributeError:
-        account = None
-    try:
-        signature = petition.signatures.get(account=account)
-    except Signature.DoesNotExist:
-        signature = None
+# def petition(request, id):
+#     petition = Petition.objects.get(id=id)
+#     try:
+#         account = request.user.account
+#     except AttributeError:
+#         account = None
+#     try:
+#         signature = petition.signatures.get(account=account)
+#     except Signature.DoesNotExist:
+#         signature = None
 
-    if account:
-        if signature:
-            if request.method == "POST":
-                form = SignatureForm(request.POST, instance=signature)
-                if form.is_valid():
-                    form.save()
-                    messages.success(
-                        request,
-                        "Your Signature has been Saved!",
-                    )
-                    return redirect('account')
-            else:
-                form = SignatureForm(instance=signature)
-        else:
-            if request.method == "POST":
-                form = SignatureForm(request.POST)
-                if form.is_valid():
-                    form.status = Signature.STATUS.signed
-                    form.save()
-                    messages.success(
-                        request,
-                        "Your Signature has been Saved!",
-                    )
-                    return redirect('account')
-            else:
-                form = SignatureForm(initial={
-                    'petition': petition,
-                    'account': account,
-                    'name': account.name,
-                    'is_public': True,
-                })
-    else:
-        # New Signup
-        form = SignupForm(request.POST or None)
-        if form.is_valid():
-            # Instantiate Variables
-            name = form.cleaned_data['name']
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            is_public = form.cleaned_data['is_public']
-            message = form.cleaned_data['message']
+#     if account:
+#         if signature:
+#             if request.method == "POST":
+#                 form = SignatureForm(request.POST, instance=signature)
+#                 if form.is_valid():
+#                     form.save()
+#                     messages.success(
+#                         request,
+#                         "Your Signature has been Saved!",
+#                     )
+#                     return redirect('account')
+#             else:
+#                 form = SignatureForm(instance=signature)
+#         else:
+#             if request.method == "POST":
+#                 form = SignatureForm(request.POST)
+#                 if form.is_valid():
+#                     form.status = Signature.STATUS.signed
+#                     form.save()
+#                     messages.success(
+#                         request,
+#                         "Your Signature has been Saved!",
+#                     )
+#                     return redirect('account')
+#             else:
+#                 form = SignatureForm(initial={
+#                     'petition': petition,
+#                     'account': account,
+#                     'name': account.name,
+#                     'is_public': True,
+#                 })
+#     else:
+#         # New Signup
+#         form = SignupForm(request.POST or None)
+#         if form.is_valid():
+#             # Instantiate Variables
+#             name = form.cleaned_data['name']
+#             email = form.cleaned_data['email']
+#             password = form.cleaned_data['password']
+#             is_public = form.cleaned_data['is_public']
+#             message = form.cleaned_data['message']
 
-            # Auth0 Signup
-            auth0_client = Database(settings.AUTH0_DOMAIN)
-            auth0_user = auth0_client.signup(
-                client_id=settings.AUTH0_CLIENT_ID,
-                email=email,
-                password=password,
-                connection='Username-Password-Authentication',
-                username='noop', # TODO https://github.com/auth0/auth0-python/issues/228
-                user_metadata={
-                    'name': name,
-                }
-            )
+#             # Auth0 Signup
+#             auth0_client = Database(settings.AUTH0_DOMAIN)
+#             auth0_user = auth0_client.signup(
+#                 client_id=settings.AUTH0_CLIENT_ID,
+#                 email=email,
+#                 password=password,
+#                 connection='Username-Password-Authentication',
+#                 username='noop', # TODO https://github.com/auth0/auth0-python/issues/228
+#                 user_metadata={
+#                     'name': name,
+#                 }
+#             )
 
-            # Create User
-            username = "auth0|{0}".format(auth0_user['_id'])
+#             # Create User
+#             username = "auth0|{0}".format(auth0_user['_id'])
 
-            user = authenticate(
-                request,
-                username=username,
-                email=email,
-            )
-            user.refresh_from_db()
-            account = user.account
-            account.name = name
-            account.save()
+#             user = authenticate(
+#                 request,
+#                 username=username,
+#                 email=email,
+#             )
+#             user.refresh_from_db()
+#             account = user.account
+#             account.name = name
+#             account.save()
 
-            # Create Signature
-            signature = Signature.objects.create(
-                status=Signature.STATUS.signed,
-                name=name,
-                is_public=is_public,
-                message=message,
-                account=account,
-                petition=petition,
-            )
-            log_in(request, user)
-            messages.success(
-                request,
-                "Your Signature has Been Added to the Petition!",
-            )
-            return redirect('account')
+#             # Create Signature
+#             signature = Signature.objects.create(
+#                 status=Signature.STATUS.signed,
+#                 name=name,
+#                 is_public=is_public,
+#                 message=message,
+#                 account=account,
+#                 petition=petition,
+#             )
+#             log_in(request, user)
+#             messages.success(
+#                 request,
+#                 "Your Signature has Been Added to the Petition!",
+#             )
+#             return redirect('account')
 
+#     return render(
+#         request,
+#         'public/petition.html',
+#         {'petition': petition, 'form': form},
+#     )
+
+
+@login_required
+def signature(request, id):
+    signature = Signature.objects.get(
+        id=id,
+    )
     return render(
         request,
-        'public/petition.html',
-        {'petition': petition, 'form': form},
+        'app/involved/signature.html',
+        {'signature': signature},
     )
 
-def subscribe(request):
+@login_required
+def signature_add(request, id):
+    signature = Signature.objects.get(
+        id=id,
+    )
+    return render(
+        request,
+        'app/involved/signature_add.html',
+        {'signature': signature},
+    )
+
+@login_required
+def signature_remove(request, id):
+    signature = Signature.objects.get(
+        id=id,
+    )
+    if request.method == "POST":
+        form = RemoveForm(request.POST)
+        if form.is_valid():
+            signature.status = signature.STATUS.removed
+            signature.save()
+            messages.error(
+                request,
+                "Signature Removed!",
+            )
+            return redirect('account')
+    else:
+        form = RemoveForm()
+    return render(
+        request,
+        'app/involved/signature_remove.html',
+        {'form': form,},
+    )
+
+
+# Informed
+def informed(request):
     if request.method == "POST":
         form = SubscribeForm(request.POST)
         if form.is_valid():
@@ -242,25 +284,76 @@ def subscribe(request):
         form = SubscribeForm()
     return render(
         request,
-        'public/subscribe.html',
+        'app/informed/informed.html',
         {'form': form,},
     )
 
-def faq(request):
-    faqs = Faq.objects.filter(
-        is_active=True,
-    ).order_by(
-        'num',
-        'created',
-    )
+def morrow(request):
     return render(
         request,
-        'public/faq.html',
-        {'faqs': faqs},
+        'app/informed/morrow.html',
+    )
+
+def thomas(request):
+    return render(
+        request,
+        'app/informed/thomas.html',
     )
 
 
-# Authentication
+# Account
+@login_required
+def account(request):
+    user = request.user
+    account = Account.objects.get(
+        user=user,
+    )
+    if request.method == "POST":
+        form = AccountForm(request.POST, instance=account)
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                "Saved!",
+            )
+    else:
+        form = AccountForm(instance=account)
+    signatures = account.signatures.order_by('created')
+    return render(
+        request,
+        'app/account/account.html', {
+            'form': form,
+            'signatures': signatures,
+        },
+    )
+
+@login_required
+def delete(request):
+    if request.method == "POST":
+        form = DeleteForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            user.delete()
+            messages.error(
+                request,
+                "Account Deleted!",
+            )
+            return redirect('index')
+    else:
+        form = DeleteForm()
+    return render(
+        request,
+        'app/account/delete.html',
+        {'form': form,},
+    )
+def goodbye(request):
+    return render(
+        request,
+        'app/account/goodbye.html',
+    )
+
+
+
 def login(request):
     redirect_uri = request.build_absolute_uri('callback')
     params = {
@@ -326,105 +419,6 @@ def logout(request):
     ).prepare().url
     return redirect(logout_url)
 
-
-def goodbye(request):
-    return render(
-        request,
-        'public/goodbye.html',
-    )
-
-
-@login_required
-def signature(request, id):
-    signature = Signature.objects.get(
-        id=id,
-    )
-    return render(
-        request,
-        'private/signature.html',
-        {'signature': signature},
-    )
-
-@login_required
-def signature_add(request, id):
-    signature = Signature.objects.get(
-        id=id,
-    )
-    return render(
-        request,
-        'private/signature_add.html',
-        {'signature': signature},
-    )
-
-@login_required
-def signature_remove(request, id):
-    signature = Signature.objects.get(
-        id=id,
-    )
-    if request.method == "POST":
-        form = RemoveForm(request.POST)
-        if form.is_valid():
-            signature.status = signature.STATUS.removed
-            signature.save()
-            messages.error(
-                request,
-                "Signature Removed!",
-            )
-            return redirect('account')
-    else:
-        form = RemoveForm()
-    return render(
-        request,
-        'private/signature_remove.html',
-        {'form': form,},
-    )
-
-@login_required
-def account(request):
-    user = request.user
-    account = Account.objects.get(
-        user=user,
-    )
-    if request.method == "POST":
-        form = AccountForm(request.POST, instance=account)
-        if form.is_valid():
-            form.save()
-            messages.success(
-                request,
-                "Saved!",
-            )
-    else:
-        form = AccountForm(instance=account)
-    signatures = account.signatures.order_by('created')
-    return render(
-        request,
-        'private/account.html', {
-            'form': form,
-            'signatures': signatures,
-        },
-    )
-
-@login_required
-def delete(request):
-    if request.method == "POST":
-        form = DeleteForm(request.POST)
-        if form.is_valid():
-            user = request.user
-            user.delete()
-            messages.error(
-                request,
-                "Account Deleted!",
-            )
-            return redirect('index')
-    else:
-        form = DeleteForm()
-    return render(
-        request,
-        'private/delete.html',
-        {'form': form,},
-    )
-
-
 # Admin
 @staff_member_required
 def report(request):
@@ -440,6 +434,6 @@ def report(request):
     )['c']
     return render(
         request,
-        'staff/report.html',
+        'app/admin/report.html',
         {'report': report, 'total': total},
     )

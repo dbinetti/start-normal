@@ -1,6 +1,8 @@
-import pytest
 # Django
 from django.test.client import Client
+
+# First-Party
+import pytest
 
 
 @pytest.fixture

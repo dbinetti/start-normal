@@ -17,9 +17,6 @@ MIDDLEWARE += [
     'querycount.middleware.QueryCountMiddleware',
 ]
 
-# Algolia
-ALGOLIA['INDEX_SUFFIX'] = 'dev'
-
 # Async settings
 RQ_QUEUES['default']['ASYNC'] = False
 

@@ -1,9 +1,8 @@
 {% extends 'app/base.html' %}
 
-{% block title %}Home{% endblock title %}
+{% block title %}Home{% endblock title%}
 
 {% block content %}
-
 
 <section class='py-3'>
   <div id='id_wistia'>
@@ -17,13 +16,13 @@
       Modify the Four Pillars
     </h2>
     <p class='lead my-5'>
-      The <a href='{% url "morrow"%}'>San Mateo Public Health Officer</a> has called to modify the "Four Pillars" in light of child development needs, and clarified the districts must decide on their own reopening policies.  To advocate for your children, go to your <a href='{% url "districts" %}'>District</a>.
+      The <a href='{% url "morrow"%}'>San Mateo Public Health Officer</a> has called to modify the "Four Pillars" in light of child development needs, and clarified the districts must decide on their own reopening policies.  To advocate for your children, go to your <a href='{% url "involved" %}'>District</a>.
     </p>
     <p class='my-5'>
-      <a href='{% url "districts" %}' role='button' class="btn btn-primary btn-lg">
+      <a href='{% url "involved" %}' role='button' class="btn btn-primary btn-lg">
         Get Involved
       </a>
-      <a href='{% url "subscribe" %}' role='button' class='btn btn-light btn-lg mx-2'>
+      <a href='{% url "informed" %}' role='button' class='btn btn-light btn-lg mx-2'>
         Get Informed
       </a>
     </p>

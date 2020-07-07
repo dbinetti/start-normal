@@ -1,0 +1,68 @@
+{% extends 'app/base.html' %}
+
+{% load bootstrap4 %}
+
+{% block title %}Get Informed!{% endblock title %}
+{% block header %}Get Informed!{% endblock header %}
+
+{% block content %}
+
+  <section>
+    <p class='lead'>
+      If you're not ready to take action but want to stay infomed there are some resources below.
+    </p>
+  </section>
+
+  <section class='mt-2 col-lg-9'>
+    <div class='card'>
+      <div class='card-header'>
+        <h4>Email Updates</h4>
+      </div>
+      <div class='card-body'>
+        <p class='card-title'>
+          I send infrequent updates (generally once a few days, never more than once a day) with the latest video or interview and you can unsubscribe anytime.
+        </p>
+        <form method='post' class='form-horizontal' role='form'>
+          {% csrf_token %}
+          {% bootstrap_form_errors form %}
+          {% bootstrap_form form show_label=False%}
+          {% buttons %}
+            <button type="submit" class="btn btn-primary btn-lg btn-block">
+              Subscribe
+            </button>
+          {% endbuttons %}
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class='my-5 col-lg-9'>
+    <div class='card'>
+      <div class='card-header'>
+        <h4>
+          Educational Videos
+        </h4>
+      </div>
+      <div class='card-body'>
+        <p class='card-title'>
+          Below are some educational videos (originally focused on my home county of San Mateo.)
+        </p>
+        <ul class='list-unstyled'>
+          <li class='my-3'><script src="https://fast.wistia.com/embed/medias/i0n0bp99fs.jsonp" async></script><script src="https://fast.wistia.com/assets/external/E-v1.js" async></script><div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;"><div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;"><span class="wistia_embed wistia_async_i0n0bp99fs popover=true popoverAnimateThumbnail=true videoFoam=true" style="display:inline-block;height:100%;position:relative;width:100%">&nbsp;</span></div></div></li>
+
+          <li class='my-3'><script src="https://fast.wistia.com/embed/medias/ggwb3cjaez.jsonp" async></script><script src="https://fast.wistia.com/assets/external/E-v1.js" async></script><div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;"><div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;"><span class="wistia_embed wistia_async_ggwb3cjaez popover=true popoverAnimateThumbnail=true videoFoam=true" style="display:inline-block;height:100%;position:relative;width:100%">&nbsp;</span></div></div></li>
+
+          <li class='my-3'><script src="https://fast.wistia.com/embed/medias/fdhyfqu7kz.jsonp" async></script><script src="https://fast.wistia.com/assets/external/E-v1.js" async></script><div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;"><div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;"><span class="wistia_embed wistia_async_fdhyfqu7kz popover=true popoverAnimateThumbnail=true videoFoam=true" style="display:inline-block;height:100%;position:relative;width:100%">&nbsp;</span></div></div></li>
+
+          <li class='my-3'><script src="https://fast.wistia.com/embed/medias/udtdq1cryi.jsonp" async></script><script src="https://fast.wistia.com/assets/external/E-v1.js" async></script><div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;"><div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;"><span class="wistia_embed wistia_async_udtdq1cryi popover=true popoverAnimateThumbnail=true videoFoam=true" style="display:inline-block;height:100%;position:relative;width:100%">&nbsp;</span></div></div></li>
+
+          <li class='my-3'><script src="https://fast.wistia.com/embed/medias/hczgf4tqt4.jsonp" async></script><script src="https://fast.wistia.com/assets/external/E-v1.js" async></script><div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;"><div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;"><span class="wistia_embed wistia_async_hczgf4tqt4 popover=true popoverAnimateThumbnail=true videoFoam=true" style="display:inline-block;height:100%;position:relative;width:100%">&nbsp;</span></div></div></li>
+
+          <li class='my-3'><script src="https://fast.wistia.com/embed/medias/ey4jfjxfyr.jsonp" async></script><script src="https://fast.wistia.com/assets/external/E-v1.js" async></script><div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;"><div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;"><span class="wistia_embed wistia_async_ey4jfjxfyr popover=true popoverAnimateThumbnail=true videoFoam=true" style="display:inline-block;height:100%;position:relative;width:100%">&nbsp;</span></div></div></li>
+
+          <li class='my-3'><script src="https://fast.wistia.com/embed/medias/pstpotj1x9.jsonp" async></script><script src="https://fast.wistia.com/assets/external/E-v1.js" async></script><div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;"><div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;"><span class="wistia_embed wistia_async_pstpotj1x9 popover=true popoverAnimateThumbnail=true videoFoam=true" style="display:inline-block;height:100%;position:relative;width:100%">&nbsp;</span></div></div></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+{% endblock content %}

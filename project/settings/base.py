@@ -3,11 +3,12 @@
 # Standard Library
 import os
 
-from environ import Env
-from environ import Path
-
 # Django
 from django.contrib.messages import constants as messages
+
+# First-Party
+from environ import Env
+from environ import Path
 
 # Set Environment
 env = Env(
@@ -83,6 +84,7 @@ ALGOLIA = {
     'APPLICATION_ID': env("ALGOLIA_APPLICATION_ID"),
     'API_KEY': env("ALGOLIA_API_KEY"),
     'SEARCH_KEY': env("ALGOLIA_SEARCH_KEY"),
+    'INDEX_SUFFIX': 'dev',
 }
 
 # RQ
@@ -139,6 +141,16 @@ BOOTSTRAP4 = {
         "url": "https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js",
         "integrity": "sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo",
         "crossorigin": "anonymous",
+    },
+    "theme_url": None,
+    'javascript_in_head': True,
+    'include_jquery': 'slim',
+}
+
+# Font Awesome
+DJANGO_ICONS = {
+    "ICONS": {
+        "settings": {"name": "far fa-gear"},
     },
 }
 

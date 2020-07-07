@@ -142,16 +142,12 @@ class FaqAdmin(admin.ModelAdmin):
         'answer',
     ]
     list_display = [
-        'created',
-        'num',
         'question',
-        'answer',
+        'num',
         'is_active',
     ]
     list_editable = [
         'num',
-        'question',
-        'answer',
     ]
     list_filter = [
         'is_active',

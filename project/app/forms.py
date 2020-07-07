@@ -134,7 +134,14 @@ class UserCreationForm(UserCreationFormBase):
 
     class Meta:
         model = User
-        fields = ('username', 'email','password1', 'password2',)
+        fields = ('username', 'email',)
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_unusuable_password()
+        if commit:
+            user.save()
+        return user
 
 
 class UserChangeForm(UserChangeFormBase):

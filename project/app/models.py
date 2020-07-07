@@ -2,17 +2,17 @@
 # Standard Library
 from operator import attrgetter
 
-# Third-Party
+from django.contrib.auth.models import AbstractBaseUser
+from django.db import models
+from django.db.models.constraints import UniqueConstraint
+from django.utils.text import slugify
+
+# First-Party
 import shortuuid
 from autoslug import AutoSlugField
 from hashid_field import HashidAutoField
 from model_utils import Choices
 from shortuuidfield import ShortUUIDField
-
-from django.contrib.auth.models import AbstractBaseUser
-from django.db import models
-from django.db.models.constraints import UniqueConstraint
-from django.utils.text import slugify
 
 # Local
 from .managers import UserManager
@@ -516,12 +516,11 @@ class Faq(models.Model):
     num = models.IntegerField(
         default=50,
     )
-    question = models.TextField(
+    question = models.CharField(
         max_length=255,
         blank=False,
     )
     answer = models.TextField(
-        max_length=1024,
         blank=False,
     )
     created = models.DateTimeField(
