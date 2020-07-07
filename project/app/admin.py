@@ -27,7 +27,24 @@ approve_signature.short_description = "Approve Signatures"
 
 @admin.register(Department)
 class DepartmentAdmin(MPTTModelAdmin):
-    pass
+    exclude = [
+        'slug',
+    ]
+    list_display = [
+        'name',
+    ]
+    list_filter = [
+        'kind',
+        'status',
+    ]
+    search_fields = [
+        'name',
+    ]
+    inlines = [
+        # ContactInline,
+    ]
+
+
 
 @admin.register(School)
 class SchoolAdmin(admin.ModelAdmin):
