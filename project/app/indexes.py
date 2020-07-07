@@ -32,7 +32,7 @@ class DepartmentIndex(AlgoliaIndex):
             'get_kind_display',
         ],
     }
-    should_index = 'is_active'
+    should_index = 'should_index'
 
 
 # class SchoolIndex(AlgoliaIndex):

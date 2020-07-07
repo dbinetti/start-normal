@@ -79,8 +79,8 @@
   <script>
 
     const searchClient = algoliasearch(
-      "{{ALGOLIA_APPLICATION_ID}}",
-      "{{ALGOLIA_SEARCH_KEY}}",
+      "{{app_id}}",
+      "{{search_key}}",
     );
 
     let search = instantsearch({
@@ -91,7 +91,7 @@
     search.addWidgets([
       instantsearch.widgets.searchBox({
         container: '#searchbox',
-        placeholder: 'Search Districts...',
+        placeholder: 'Search Schools...',
         autofocus: true,
         showReset: false,
         showSubmit: false,

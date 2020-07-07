@@ -2,6 +2,14 @@
 # Standard Library
 import json
 
+# Third-Party
+import django_rq
+import requests
+import shortuuid
+from auth0.v3.authentication import Database
+from auth0.v3.authentication import Logout
+from django_rq import job
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
@@ -20,14 +28,6 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.urls import reverse_lazy
-
-# First-Party
-import django_rq
-import requests
-import shortuuid
-from auth0.v3.authentication import Database
-from auth0.v3.authentication import Logout
-from django_rq import job
 
 # Local
 from .forms import AccountForm
@@ -124,17 +124,12 @@ def school(request, slug):
     )
 
 def involved(request):
-    ALGOLIA_APPLICATION_ID = settings.ALGOLIA['APPLICATION_ID']
-    ALGOLIA_SEARCH_KEY = settings.ALGOLIA['SEARCH_KEY']
-    index = "District" if settings.ALGOLIA['INDEX_SUFFIX'] else "District_".format(
-        settings.ALGOLIA['INDEX_SUFFIX'],
-    )
     return render(
         request,
         'app/involved/involved.html', {
-            'ALGOLIA_APPLICATION_ID': ALGOLIA_APPLICATION_ID,
-            'ALGOLIA_SEARCH_KEY': ALGOLIA_SEARCH_KEY,
-            'index': index,
+            'app_id': settings.ALGOLIA['APPLICATION_ID'],
+            'search_key': settings.ALGOLIA['SEARCH_KEY'],
+            'index': "Department_{0}".format(ALGOLIA['INDEX_SUFFIX']),
         },
     )
 

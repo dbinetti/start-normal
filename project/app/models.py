@@ -284,11 +284,16 @@ class Department(MPTTModel):
         related_name='children',
     )
 
+    def __str__(self):
+        return str(self.name)
+
     def location(self):
         return(self.lat, self.lon)
 
-    def __str__(self):
-        return str(self.name)
+    def should_index(self):
+        if self.is_active and self.kind >=500:
+            return True
+        return False
 
     class MPTTMeta:
         order_insertion_by = ['name']

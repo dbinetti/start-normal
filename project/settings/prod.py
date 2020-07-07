@@ -1,5 +1,5 @@
 # Local
-# First-Party
+# Third-Party
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 
@@ -21,7 +21,7 @@ EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
 SENDGRID_API_KEY = env("SENDGRID_API_KEY")
 
 # Algolia
-ALGOLIA['INDEX_SUFFIX'] = ''
+ALGOLIA['INDEX_SUFFIX'] = 'prod'
 
 # Sentry
 sentry_sdk.init(
