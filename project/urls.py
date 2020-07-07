@@ -10,7 +10,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('django-rq/', include('django_rq.urls')),
     path('robots.txt', TemplateView.as_view(
-        template_name="robots.txt",
+        template_name="app/robots.txt",
         content_type="text/plain",
     )),
 ]
