@@ -1,7 +1,3 @@
-# Django
-# Standard Library
-from operator import attrgetter
-
 # Third-Party
 import shortuuid
 from autoslug import AutoSlugField
@@ -11,6 +7,7 @@ from mptt.models import MPTTModel
 from mptt.models import TreeForeignKey
 from shortuuidfield import ShortUUIDField
 
+# Django
 from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
 from django.db.models.constraints import UniqueConstraint
@@ -21,11 +18,23 @@ from .managers import UserManager
 
 
 def get_populate_from(instance):
-    attrs = [attr.replace("__", ".") for attr in instance.AUTOSLUG_FIELDS]
-    attrs_values = [attrgetter(attr)(instance) for attr in attrs]
-
-    return "-".join(attrs_values)
-
+    if instance.kind in range(400, 500):
+        fields = [
+            'name',
+            'county',
+            'state',
+        ]
+    elif instance.kind in range(500, 600):
+        fields = [
+            'name',
+            'city',
+            'state',
+        ]
+    else:
+        fields = [
+            'name',
+        ]
+    return "-".join(fields)
 
 class Account(models.Model):
 
@@ -206,8 +215,7 @@ class Department(MPTTModel):
     slug = AutoSlugField(
         max_length=255,
         always_update=True,
-        populate_from='name',
-        # populate_from=get_populate_from,
+        populate_from=get_populate_from,
         unique=True,
     )
     status = models.IntegerField(
@@ -300,11 +308,6 @@ class Department(MPTTModel):
 
 
 class District(models.Model):
-    AUTOSLUG_FIELDS = [
-        'name',
-        'county',
-        'state',
-    ]
     STATUS = Choices(
         (10, 'active', "Active"),
         (20, 'closed', "Closed"),
@@ -429,11 +432,6 @@ class District(models.Model):
 
 
 class School(models.Model):
-    AUTOSLUG_FIELDS = [
-        'name',
-        'city',
-        'state',
-    ]
     STATUS = Choices(
         (10, 'active', "Active"),
         (20, 'closed', "Closed"),
