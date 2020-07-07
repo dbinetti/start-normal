@@ -3,77 +3,71 @@ import algoliasearch_django as algoliasearch
 from algoliasearch_django import AlgoliaIndex
 
 # Local
-from .models import District
-from .models import School
+from .models import Department
 
 
-class DistrictIndex(AlgoliaIndex):
+class DepartmentIndex(AlgoliaIndex):
     fields = [
         'name',
         'slug',
-        'county',
+        'get_status_display',
+        'get_kind_display',
+        'nces_id',
         'address',
         'city',
         'state',
         'zipcode',
+        'county',
         'phone',
         'website',
-        'get_doc_display',
-        'nces_district_id',
     ]
     geo_field = 'location'
     settings = {
         'searchableAttributes': [
             'name',
-            'slug',
-            'county',
-            'city',
-            'state',
-            'nces_district_id',
+            'nces_id',
         ],
         'attributesForFaceting': [
-            'city',
-            'state',
-            'county',
-            'get_doc_display',
+            'get_status_display',
+            'get_kind_display',
         ],
     }
     should_index = 'is_active'
 
 
-class SchoolIndex(AlgoliaIndex):
-    fields = [
-        'name',
-        'slug',
-        'county',
-        'address',
-        'city',
-        'state',
-        'zipcode',
-        'phone',
-        'website',
-        'get_soc_display',
-        'nces_school_id',
-        'get_eil_display',
-        'grades',
-        'district',
-    ]
-    geo_field = 'location'
-    settings = {
-        'searchableAttributes': [
-            'name',
-            'slug',
-            'county',
-            'city',
-            'state',
-            'nces_school_id',
-        ],
-        'attributesForFaceting': [
-            'city',
-            'state',
-            'county',
-            'get_soc_display',
-            'get_eil_display',
-        ],
-    }
-    should_index = 'is_active'
+# class SchoolIndex(AlgoliaIndex):
+#     fields = [
+#         'name',
+#         'slug',
+#         'county',
+#         'address',
+#         'city',
+#         'state',
+#         'zipcode',
+#         'phone',
+#         'website',
+#         'get_soc_display',
+#         'nces_school_id',
+#         'get_eil_display',
+#         'grades',
+#         'district',
+#     ]
+#     geo_field = 'location'
+#     settings = {
+#         'searchableAttributes': [
+#             'name',
+#             'slug',
+#             'county',
+#             'city',
+#             'state',
+#             'nces_school_id',
+#         ],
+#         'attributesForFaceting': [
+#             'city',
+#             'state',
+#             'county',
+#             'get_soc_display',
+#             'get_eil_display',
+#         ],
+#     }
+#     should_index = 'is_active'

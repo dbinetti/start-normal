@@ -8,9 +8,6 @@ class AppConfig(AppConfig):
         from .signals import user_post_delete, user_post_save
         import algoliasearch_django as algoliasearch
 
-        from .indexes import DistrictIndex
-        from .indexes import SchoolIndex
-        District = self.get_model('district')
-        algoliasearch.register(District, DistrictIndex)
-        School = self.get_model('school')
-        algoliasearch.register(School, SchoolIndex)
+        from .indexes import DepartmentIndex
+        Department = self.get_model('department')
+        algoliasearch.register(Department, DepartmentIndex)
