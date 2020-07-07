@@ -515,15 +515,29 @@ class Department(MPTTModel):
         (30, 'merged', "Merged"),
     )
     KIND = Choices(
+        ('District', [
+            (400, 'county', 'County Office of Education'),
+            (402, 'state', 'State Board of Education'),
+            (403, 'charter', 'Statewide Benefit Charter'),
+            (431, 'special', 'State Special Schools'),
+            (434, 'non', 'Non-school Location*'),
+            (442, 'jpa', 'Joint Powers Authority (JPA)'),
+            (452, 'elementary', 'Elementary School District'),
+            (454, 'unified', 'Unified School District'),
+            (456, 'high', 'High School District'),
+            (458, 'ccd', 'Community College District'),
+            (498, 'roc', 'Regional Occupational Center/Program (ROC/P)'),
+            (499, 'admin', 'Administration Only'),
+        ]),
         ('School', [
-            (10, 'ps', 'Preschool'),
-            (20, 'elem', 'Elementary'),
-            (30, 'intmidjr', 'Intermediate/Middle/Junior High'),
-            (40, 'hs', 'High School'),
-            (50, 'elemhigh', 'Elementary-High Combination'),
-            (60, 'a', 'Adult'),
-            (70, 'ug', 'Ungraded'),
-        ])
+            (510, 'ps', 'Preschool'),
+            (520, 'elem', 'Elementary'),
+            (530, 'intmidjr', 'Intermediate/Middle/Junior High'),
+            (540, 'hs', 'High School'),
+            (550, 'elemhigh', 'Elementary-High Combination'),
+            (560, 'a', 'Adult'),
+            (570, 'ug', 'Ungraded'),
+        ]),
     )
     id = HashidAutoField(
         primary_key=True,
@@ -547,28 +561,34 @@ class Department(MPTTModel):
         choices=STATUS,
         default=STATUS.active,
     )
+    kind = models.IntegerField(
+        blank=True,
+        null=True,
+        choices=KIND,
+    )
     nces_id = models.IntegerField(
-        blank=False,
+        blank=True,
+        null=True,
         unique=True,
     )
     address = models.CharField(
         max_length=255,
-        blank=False,
+        blank=True,
         default='',
     )
     city = models.CharField(
         max_length=255,
-        blank=False,
+        blank=True,
         default='',
     )
     state = models.CharField(
         max_length=255,
-        blank=False,
+        blank=True,
         default='',
     )
     zipcode = models.CharField(
         max_length=255,
-        blank=False,
+        blank=True,
         default='',
     )
     phone = models.CharField(
