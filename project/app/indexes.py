@@ -26,6 +26,9 @@ class DepartmentIndex(AlgoliaIndex):
         'searchableAttributes': [
             'name',
             'nces_id',
+            'city',
+            'state',
+            'county',
         ],
         'attributesForFaceting': [
             'get_status_display',
