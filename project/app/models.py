@@ -1,3 +1,6 @@
+# Standard Library
+from operator import attrgetter
+
 # Third-Party
 import shortuuid
 from autoslug import AutoSlugField
@@ -34,7 +37,8 @@ def get_populate_from(instance):
         fields = [
             'name',
         ]
-    return "-".join(fields)
+    attrs_values = [attrgetter(field)(instance) for field in fields]
+    return "-".join(attrs_values)
 
 class Account(models.Model):
 
