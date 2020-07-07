@@ -37,8 +37,8 @@ def get_populate_from(instance):
         fields = [
             'name',
         ]
-    attrs_values = [attrgetter(field)(instance) for field in fields]
-    return "-".join(attrs_values)
+    values = [getattr(instance, field) for field in fields]
+    return slugify("-".join(values))
 
 class Account(models.Model):
 
