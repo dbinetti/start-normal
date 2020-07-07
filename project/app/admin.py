@@ -2,12 +2,16 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as UserAdminBase
 
+# First-Party
+from mptt.admin import MPTTModelAdmin
+
 # Local
 from .forms import UserChangeForm
 from .forms import UserCreationForm
 from .inlines import ContactInline
 from .inlines import SignatureInline
 from .models import Account
+from .models import Department
 from .models import District
 from .models import Faq
 from .models import Petition
@@ -21,6 +25,9 @@ def approve_signature(modeladmin, request, queryset):
 
 approve_signature.short_description = "Approve Signatures"
 
+@admin.register(Department)
+class DepartmentAdmin(MPTTModelAdmin):
+    pass
 
 @admin.register(School)
 class SchoolAdmin(admin.ModelAdmin):

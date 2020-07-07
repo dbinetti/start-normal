@@ -41,6 +41,7 @@ from .models import Account
 from .models import District
 from .models import Faq
 from .models import Petition
+from .models import School
 from .models import Signature
 from .models import User
 from .tasks import build_email
@@ -100,6 +101,23 @@ def district(request, slug):
         request,
         'app/involved/district.html', {
             'district': district,
+            'contacts': contacts,
+            'petitions': petitions,
+        },
+    )
+
+def school(request, slug):
+    school = School.objects.get(
+        slug__iexact=slug,
+    )
+    petitions = school.petitions.all(
+    ).order_by(
+        'created',
+    )
+    return render(
+        request,
+        'app/involved/school.html', {
+            'school': school,
             'contacts': contacts,
             'petitions': petitions,
         },

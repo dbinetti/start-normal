@@ -12,6 +12,8 @@ import shortuuid
 from autoslug import AutoSlugField
 from hashid_field import HashidAutoField
 from model_utils import Choices
+from mptt.models import MPTTModel
+from mptt.models import TreeForeignKey
 from shortuuidfield import ShortUUIDField
 
 # Local
@@ -503,6 +505,115 @@ class School(models.Model):
 
     def __str__(self):
         return str(self.name)
+
+
+class Department(MPTTModel):
+
+    STATUS = Choices(
+        (10, 'active', "Active"),
+        (20, 'closed', "Closed"),
+        (30, 'merged', "Merged"),
+    )
+    KIND = Choices(
+        ('School', [
+            (10, 'ps', 'Preschool'),
+            (20, 'elem', 'Elementary'),
+            (30, 'intmidjr', 'Intermediate/Middle/Junior High'),
+            (40, 'hs', 'High School'),
+            (50, 'elemhigh', 'Elementary-High Combination'),
+            (60, 'a', 'Adult'),
+            (70, 'ug', 'Ungraded'),
+        ])
+    )
+    id = HashidAutoField(
+        primary_key=True,
+    )
+    is_active = models.BooleanField(
+        default=False,
+    )
+    name = models.CharField(
+        max_length=255,
+        blank=False,
+    )
+    slug = AutoSlugField(
+        max_length=255,
+        always_update=True,
+        populate_from='name',
+        # populate_from=get_populate_from,
+        unique=True,
+    )
+    status = models.IntegerField(
+        blank=False,
+        choices=STATUS,
+        default=STATUS.active,
+    )
+    nces_id = models.IntegerField(
+        blank=False,
+        unique=True,
+    )
+    address = models.CharField(
+        max_length=255,
+        blank=False,
+        default='',
+    )
+    city = models.CharField(
+        max_length=255,
+        blank=False,
+        default='',
+    )
+    state = models.CharField(
+        max_length=255,
+        blank=False,
+        default='',
+    )
+    zipcode = models.CharField(
+        max_length=255,
+        blank=False,
+        default='',
+    )
+    phone = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    website = models.URLField(
+        blank=True,
+        default='',
+    )
+    lat = models.DecimalField(
+        max_digits=10,
+        decimal_places=6,
+        null=True,
+        blank=True,
+    )
+    lon = models.DecimalField(
+        max_digits=10,
+        decimal_places=6,
+        null=True,
+        blank=True,
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+    parent = TreeForeignKey(
+        'self',
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name='children',
+    )
+
+    def location(self):
+        return(self.lat, self.lon)
+
+    def __str__(self):
+        return str(self.name)
+
+    class MPTTMeta:
+        order_insertion_by = ['name']
 
 
 class Faq(models.Model):

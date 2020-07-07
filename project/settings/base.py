@@ -200,5 +200,6 @@ INSTALLED_APPS = [
     'django_rq',
     'algoliasearch_django',
     'bootstrap4',
+    'mptt',
     'app',
 ]
