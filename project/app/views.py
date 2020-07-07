@@ -346,12 +346,6 @@ def delete(request):
         'app/account/delete.html',
         {'form': form,},
     )
-def goodbye(request):
-    return render(
-        request,
-        'app/account/goodbye.html',
-    )
-
 
 
 def login(request):
@@ -410,13 +404,17 @@ def logout(request):
     log_out(request)
     params = {
         'client_id': settings.AUTH0_CLIENT_ID,
-        'return_to': request.build_absolute_uri('goodbye'),
+        'return_to': request.build_absolute_uri('index'),
     }
     logout_url = requests.Request(
         'GET',
         'https://{0}/v2/logout'.format(settings.AUTH0_DOMAIN),
         params=params,
     ).prepare().url
+    messages.success(
+        request,
+        "You Have Been Logged Out!",
+    )
     return redirect(logout_url)
 
 # Admin

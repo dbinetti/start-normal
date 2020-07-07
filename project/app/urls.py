@@ -26,7 +26,6 @@ urlpatterns = [
     # Account
     path('account', views.account, name='account',),
     path('delete', views.delete, name='delete',),
-    path('goodbye', views.goodbye, name='goodbye',),
     path('login', views.login, name='login'),
     path('callback', views.callback, name='callback'),
     path('logout', views.logout, name='logout'),
