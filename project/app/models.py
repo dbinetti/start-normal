@@ -165,12 +165,6 @@ class Contact(models.Model):
     updated = models.DateTimeField(
         auto_now=True,
     )
-    district = models.ForeignKey(
-        'District',
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name='contacts',
-    )
     department = models.ForeignKey(
         'app.Department',
         related_name='contacts',
@@ -714,12 +708,6 @@ class Petition(models.Model):
     )
     updated = models.DateTimeField(
         auto_now=True,
-    )
-    district = models.ForeignKey(
-        'app.District',
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name='petitions',
     )
     def __str__(self):
         return str(self.name)

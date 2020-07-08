@@ -1,9 +1,9 @@
 # Django
-# Third-Party
-from mptt.admin import MPTTModelAdmin
-
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as UserAdminBase
+
+# First-Party
+from mptt.admin import MPTTModelAdmin
 
 # Local
 from .forms import UserChangeForm
@@ -45,7 +45,7 @@ class DepartmentAdmin(MPTTModelAdmin):
         'nces_id',
     ]
     inlines = [
-        ContactInline,
+        # ContactInline,
     ]
     autocomplete_fields = [
         'parent',
@@ -122,7 +122,7 @@ class DistrictAdmin(admin.ModelAdmin):
         'name',
     ]
     inlines = [
-        ContactInline,
+        # ContactInline,
     ]
     ordering = [
         'name',
@@ -136,12 +136,10 @@ class PetitionAdmin(admin.ModelAdmin):
         'status',
         'name',
         'text',
-        'district',
     ]
     list_display = [
         'status',
         'name',
-        'district',
         'created',
         'updated',
     ]
@@ -158,7 +156,6 @@ class PetitionAdmin(admin.ModelAdmin):
         'name',
     ]
     autocomplete_fields = [
-        'district',
     ]
 
 
