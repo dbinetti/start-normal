@@ -680,39 +680,6 @@ class Faq(models.Model):
         return str(slugify(self.question))
 
 
-class Petition(models.Model):
-
-    STATUS = Choices(
-        (0, 'new', 'New'),
-        (10, 'open', 'Open'),
-        (20, 'delivered', 'Delivered'),
-    )
-
-    id = HashidAutoField(
-        primary_key=True,
-    )
-    name = models.CharField(
-        max_length=255,
-        blank=False,
-    )
-    status = models.IntegerField(
-        blank=False,
-        choices=STATUS,
-        default=STATUS.new,
-    )
-    text = models.TextField(
-        blank=False,
-    )
-    created = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated = models.DateTimeField(
-        auto_now=True,
-    )
-    def __str__(self):
-        return str(self.name)
-
-
 class Signature(models.Model):
     STATUS = Choices(
         (0, 'new', 'New'),
@@ -771,7 +738,7 @@ class Signature(models.Model):
     #         UniqueConstraint(
     #             fields=[
     #                 'account',
-    #                 'petition',
+    #                 'department',
     #             ],
     #             name='unique_signature',
     #         )

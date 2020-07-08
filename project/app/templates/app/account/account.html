@@ -48,47 +48,6 @@
 
   </div>
 </section>
-{% comment %}
-<section class='mt-2 mt-5'>
-  <div class='card'>
-    <div class='card-header'>
-      <h4>Your Signatures</h4>
-    </div>
-    <div class='card-body'>
-      <table class='table table-sm'>
-        <thead>
-          <tr>
-            <th>
-              Name
-            </th>
-            <th>
-              District
-            </th>
-            <th>
-              Status
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for signature in signatures %}
-            <tr>
-              <td>
-                <a href='{% url "petition" signature.petition.id %}'>{{signature.petition.name}}</a>
-              </td>
-              <td>
-                {{signature.petition.district.name}}
-              </td>
-              <td>
-                {{signature.get_status_display}}
-              </td>
-            </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </div>
-</section>
-{% endcomment %}
 <section class='mt-2 ml-2'>
   <a href='{% url "delete" %}'><span class='text-danger'>Delete Account</span></a>
 </section>

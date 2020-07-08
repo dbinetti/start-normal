@@ -32,11 +32,11 @@ class ContactInline(admin.TabularInline):
 class SignatureInline(admin.TabularInline):
     model = Signature
     fields = [
-        'petition',
         'is_approved',
         'is_public',
         'message',
         'account',
+        'department',
     ]
     readonly_fields = [
     ]

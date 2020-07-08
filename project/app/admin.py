@@ -14,7 +14,6 @@ from .models import Account
 from .models import Department
 from .models import District
 from .models import Faq
-from .models import Petition
 from .models import School
 from .models import Signature
 from .models import User
@@ -126,36 +125,6 @@ class DistrictAdmin(admin.ModelAdmin):
     ]
     ordering = [
         'name',
-    ]
-
-
-@admin.register(Petition)
-class PetitionAdmin(admin.ModelAdmin):
-    save_on_top = True
-    fields = [
-        'status',
-        'name',
-        'text',
-    ]
-    list_display = [
-        'status',
-        'name',
-        'created',
-        'updated',
-    ]
-    list_filter = [
-        'status',
-        'created',
-    ]
-    search_fields = [
-        'name',
-    ]
-    inlines = [
-    ]
-    ordering = [
-        'name',
-    ]
-    autocomplete_fields = [
     ]
 
 

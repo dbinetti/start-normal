@@ -40,7 +40,6 @@ from .forms import UserCreationForm
 from .models import Account
 from .models import District
 from .models import Faq
-from .models import Petition
 from .models import School
 from .models import Signature
 from .models import User
@@ -106,10 +105,6 @@ def school(request, slug):
         slug=slug,
     )
     contacts = school.contacts.order_by('role')
-    # petitions = school.petitions.all(
-    # ).order_by(
-    #     'created',
-    # )
     return render(
         request,
         'app/involved/school.html', {
