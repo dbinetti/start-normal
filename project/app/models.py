@@ -766,6 +766,13 @@ class Signature(models.Model):
         related_name='signatures',
     )
 
+    department = models.ForeignKey(
+        'app.Department',
+        related_name='signatures',
+        on_delete=models.SET_NULL,
+        null=True,
+    )
+
     def __str__(self):
         return str(self.name)
 
