@@ -784,16 +784,16 @@ class Signature(models.Model):
     def __str__(self):
         return str(self.name)
 
-    class Meta:
-        constraints = [
-            UniqueConstraint(
-                fields=[
-                    'account',
-                    'petition',
-                ],
-                name='unique_signature',
-            )
-        ]
+    # class Meta:
+    #     constraints = [
+    #         UniqueConstraint(
+    #             fields=[
+    #                 'account',
+    #                 'petition',
+    #             ],
+    #             name='unique_signature',
+    #         )
+    #     ]
 
 
 class User(AbstractBaseUser):
