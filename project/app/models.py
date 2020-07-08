@@ -168,7 +168,12 @@ class Contact(models.Model):
         on_delete=models.CASCADE,
         related_name='contacts',
     )
-
+    department = models.ForeignKey(
+        'app.Department',
+        related_name='contacts',
+        on_delete=models.SET_NULL,
+        null=True,
+    )
 
     def __str__(self):
         return str(self.name)
