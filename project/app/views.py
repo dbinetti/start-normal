@@ -2,14 +2,6 @@
 # Standard Library
 import json
 
-# Third-Party
-import django_rq
-import requests
-import shortuuid
-from auth0.v3.authentication import Database
-from auth0.v3.authentication import Logout
-from django_rq import job
-
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
@@ -28,6 +20,14 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.urls import reverse_lazy
+
+# First-Party
+import django_rq
+import requests
+import shortuuid
+from auth0.v3.authentication import Database
+from auth0.v3.authentication import Logout
+from django_rq import job
 
 # Local
 from .forms import AccountForm
@@ -93,16 +93,11 @@ def district(request, slug):
     ).order_by(
         'role',
     )
-    petitions = district.petitions.all(
-    ).order_by(
-        'created',
-    )
     return render(
         request,
         'app/involved/district.html', {
             'district': district,
             'contacts': contacts,
-            'petitions': petitions,
         },
     )
 
@@ -433,9 +428,9 @@ def logout(request):
 @staff_member_required
 def report(request):
     report = Signature.objects.order_by(
-        'petition',
+        'department',
     ).values(
-        'petition',
+        'department',
     ).annotate(
         c=Count('id'),
     )

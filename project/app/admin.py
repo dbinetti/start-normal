@@ -197,7 +197,7 @@ class SignatureAdmin(admin.ModelAdmin):
         'is_public',
         'message',
         'account',
-        'petition',
+        'department',
     ]
     list_display = [
         'status',
@@ -205,7 +205,7 @@ class SignatureAdmin(admin.ModelAdmin):
         'is_approved',
         'is_public',
         'account',
-        'petition',
+        'department',
         'created',
         'updated',
     ]
@@ -221,7 +221,7 @@ class SignatureAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = [
         'account',
-        'petition',
+        'department',
     ]
     actions = [
         approve_signature

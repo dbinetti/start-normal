@@ -71,7 +71,7 @@ class SignatureForm(forms.ModelForm):
             'name',
             'is_public',
             'message',
-            'petition',
+            'department',
             'account',
         ]
         widgets = {
@@ -82,7 +82,7 @@ class SignatureForm(forms.ModelForm):
                     'rows': 5,
                 }
             ),
-            'petition': forms.HiddenInput(),
+            'department': forms.HiddenInput(),
             'account': forms.HiddenInput(),
         }
 
