@@ -126,12 +126,14 @@ class Account(models.Model):
 
 class Contact(models.Model):
     ROLE = Choices(
-        (10, 'super', 'Superintendent'),
-        (20, 'president', 'Board President'),
-        (30, 'vice', 'Board Vice-President'),
-        (40, 'clerk', 'Board Clerk'),
-        (50, 'trustee', 'Board Trustee'),
+        (410, 'super', 'Superintendent'),
+        (420, 'president', 'Board President'),
+        (430, 'vice', 'Board Vice-President'),
+        (440, 'clerk', 'Board Clerk'),
+        (450, 'trustee', 'Board Trustee'),
+        (510, 'principal', 'Principal'),
     )
+
     id = HashidAutoField(
         primary_key=True,
     )
