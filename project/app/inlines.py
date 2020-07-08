@@ -36,7 +36,7 @@ class SignatureInline(admin.TabularInline):
         'is_public',
         'message',
         'account',
-        'department',
+        'petition',
     ]
     readonly_fields = [
     ]

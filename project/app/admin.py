@@ -11,9 +11,9 @@ from .forms import UserCreationForm
 from .inlines import ContactInline
 from .inlines import SignatureInline
 from .models import Account
-from .models import Department
 from .models import District
 from .models import Faq
+from .models import Petition
 from .models import School
 from .models import Signature
 from .models import User
@@ -24,8 +24,8 @@ def approve_signature(modeladmin, request, queryset):
 
 approve_signature.short_description = "Approve Signatures"
 
-@admin.register(Department)
-class DepartmentAdmin(MPTTModelAdmin):
+@admin.register(Petition)
+class PetitionAdmin(MPTTModelAdmin):
     exclude = [
         'slug',
     ]
@@ -166,7 +166,7 @@ class SignatureAdmin(admin.ModelAdmin):
         'is_public',
         'message',
         'account',
-        'department',
+        'petition',
     ]
     list_display = [
         'status',
@@ -174,7 +174,7 @@ class SignatureAdmin(admin.ModelAdmin):
         'is_approved',
         'is_public',
         'account',
-        'department',
+        'petition',
         'created',
         'updated',
     ]
@@ -190,7 +190,7 @@ class SignatureAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = [
         'account',
-        'department',
+        'petition',
     ]
     actions = [
         approve_signature

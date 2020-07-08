@@ -119,7 +119,7 @@ def involved(request):
         'app/involved/involved.html', {
             'app_id': settings.ALGOLIA['APPLICATION_ID'],
             'search_key': settings.ALGOLIA['SEARCH_KEY'],
-            'index': "Department_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
+            'index': "Petition_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
         },
     )
 
@@ -423,9 +423,9 @@ def logout(request):
 @staff_member_required
 def report(request):
     report = Signature.objects.order_by(
-        'department',
+        'petition',
     ).values(
-        'department',
+        'petition',
     ).annotate(
         c=Count('id'),
     )

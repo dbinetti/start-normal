@@ -9,6 +9,6 @@ class AppConfig(AppConfig):
         # from .signals import user_post_delete, user_post_save
         # import algoliasearch_django as algoliasearch
 
-        # from .indexes import DepartmentIndex
-        # Department = self.get_model('department')
-        # algoliasearch.register(Department, DepartmentIndex)
+        # from .indexes import PetitionIndex
+        # Petition = self.get_model('petition')
+        # algoliasearch.register(Petition, PetitionIndex)
