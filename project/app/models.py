@@ -165,7 +165,8 @@ class Contact(models.Model):
     )
     district = models.ForeignKey(
         'District',
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
+        null=True,
         related_name='contacts',
     )
     department = models.ForeignKey(

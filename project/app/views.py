@@ -2,6 +2,14 @@
 # Standard Library
 import json
 
+# Third-Party
+import django_rq
+import requests
+import shortuuid
+from auth0.v3.authentication import Database
+from auth0.v3.authentication import Logout
+from django_rq import job
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
@@ -20,14 +28,6 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.urls import reverse_lazy
-
-# First-Party
-import django_rq
-import requests
-import shortuuid
-from auth0.v3.authentication import Database
-from auth0.v3.authentication import Logout
-from django_rq import job
 
 # Local
 from .forms import AccountForm
@@ -110,6 +110,7 @@ def school(request, slug):
     school = School.objects.get(
         slug=slug,
     )
+    contacts = school.contacts.order_by('role')
     # petitions = school.petitions.all(
     # ).order_by(
     #     'created',
@@ -118,7 +119,7 @@ def school(request, slug):
         request,
         'app/involved/school.html', {
             'school': school,
-            # 'petitions': petitions,
+            'contacts': contacts,
         },
     )
 
