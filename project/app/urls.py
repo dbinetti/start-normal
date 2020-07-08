@@ -11,9 +11,9 @@ urlpatterns = [
     path('faq', views.faq, name='faq',),
 
     # Involved
-    # path('involved', views.involved, name='involved'),
+    path('involved', views.involved, name='involved'),
+    path('school/<slug>', views.school, name='school'),
     # path('district/<slug>', views.district, name='district'),
-    # path('school/<slug>', views.school, name='school'),
     # path('petition/<id>', views.petition, name='petition',),
     # path('signature/<id>', views.signature, name='signature'),
     # path('signature/<id>/add', views.signature_add, name='signature-add'),

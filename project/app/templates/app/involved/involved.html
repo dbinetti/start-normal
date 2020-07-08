@@ -7,7 +7,7 @@
 
   <section>
     <p class='lead'>
-      Search Below for your School to see how you can get involved.
+      Search below for your school to see how you can get involved.
     </p>
   </section>
 
@@ -19,59 +19,6 @@
     <div id="hits" class='my-5'>
     </div>
   </section>
-
-
-  {% comment %}
-  <section class='my-5'>
-    <h4>
-      Click on a District Name for Further Detail
-    </h4>
-    <table class='table table-small table-hover'>
-      <thead>
-        <tr>
-          <th>
-            Name
-          </th>
-          <th>
-            Schedule
-          </th>
-          <th>
-            Masks
-          </th>
-          <th>
-            Next Meeting
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for district in districts %}
-          <tr>
-            <td>
-              <a href='{% url "district" district.slug %}'>{{district.name}}</a>
-            </td>
-            <td>
-              {{district.get_schedule_display}}
-            </td>
-            <td>
-              {{district.get_masks_display}}
-            </td>
-            <td>
-              {{district.meeting_date|date:"SHORT_DATE_FORMAT"}}
-            </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-      <tfoot>
-        <tr>
-          <td colspan=4>
-            If you would like to update the status for your district, please send information to <a href=
-            'mailto:dbinetti@startnormal.com'>dbinetti@startnormal.com</a>.  We will also be happy to add private schools to this list &mdash; please just send us the information.
-          </td>
-        </tr>
-      </tfoot>
-    </table>
-  </section>
-{% endcomment %}
 
 {% endblock content %}
 
@@ -109,7 +56,7 @@
         templates: {
           item(item) {
             return `
-              <strong><a href='district/${item.slug}'>${item.name}</a></strong><br>
+              <strong><a href='school/${item.slug}'>${item.name}</a></strong><br>
               ${item.address}  ${item.city}, ${item.state}
             `;
           }

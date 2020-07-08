@@ -216,6 +216,9 @@ class Department(MPTTModel):
         max_length=255,
         blank=False,
     )
+    text = models.TextField(
+        blank=True,
+    )
     slug = AutoSlugField(
         max_length=255,
         always_update=True,
@@ -706,7 +709,8 @@ class Petition(models.Model):
     )
     district = models.ForeignKey(
         'app.District',
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
+        null=True,
         related_name='petitions',
     )
     def __str__(self):

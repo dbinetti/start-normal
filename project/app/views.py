@@ -2,14 +2,6 @@
 # Standard Library
 import json
 
-# Third-Party
-import django_rq
-import requests
-import shortuuid
-from auth0.v3.authentication import Database
-from auth0.v3.authentication import Logout
-from django_rq import job
-
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
@@ -28,6 +20,14 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.urls import reverse_lazy
+
+# First-Party
+import django_rq
+import requests
+import shortuuid
+from auth0.v3.authentication import Database
+from auth0.v3.authentication import Logout
+from django_rq import job
 
 # Local
 from .forms import AccountForm
@@ -108,18 +108,17 @@ def district(request, slug):
 
 def school(request, slug):
     school = School.objects.get(
-        slug__iexact=slug,
+        slug=slug,
     )
-    petitions = school.petitions.all(
-    ).order_by(
-        'created',
-    )
+    # petitions = school.petitions.all(
+    # ).order_by(
+    #     'created',
+    # )
     return render(
         request,
         'app/involved/school.html', {
             'school': school,
-            'contacts': contacts,
-            'petitions': petitions,
+            # 'petitions': petitions,
         },
     )
 
@@ -129,7 +128,7 @@ def involved(request):
         'app/involved/involved.html', {
             'app_id': settings.ALGOLIA['APPLICATION_ID'],
             'search_key': settings.ALGOLIA['SEARCH_KEY'],
-            'index': "Department_{0}".format(ALGOLIA['INDEX_SUFFIX']),
+            'index': "Department_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
         },
     )
 
@@ -359,7 +358,6 @@ def delete(request):
         'app/account/delete.html',
         {'form': form,},
     )
-
 
 def login(request):
     redirect_uri = request.build_absolute_uri('callback')
