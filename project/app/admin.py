@@ -45,9 +45,9 @@ class DepartmentAdmin(MPTTModelAdmin):
         'nces_id',
     ]
     inlines = [
-        # ContactInline,
+        ContactInline,
     ]
-    autocomplete = [
+    autocomplete_fields = [
         'parent',
     ]
 
