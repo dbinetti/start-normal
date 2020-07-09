@@ -185,7 +185,7 @@ def petition(request, slug):
                 request,
                 "Your Signature has Been Added to the Petition!",
             )
-            return redirect('account')
+            return redirect('pending')
 
     return render(
         request,
@@ -304,6 +304,20 @@ def account(request):
     )
 
 @login_required
+def pending(request):
+    return render(
+        request,
+        'app/account/pending.html',
+    )
+
+@login_required
+def welcome(request):
+    return render(
+        request,
+        'app/account/welcome.html',
+    )
+
+@login_required
 def delete(request):
     if request.method == "POST":
         form = DeleteForm(request.POST)
@@ -323,6 +337,8 @@ def delete(request):
         {'form': form,},
     )
 
+
+# Authentication
 def login(request):
     redirect_uri = request.build_absolute_uri('callback')
     params = {
@@ -339,6 +355,8 @@ def login(request):
     return redirect(url)
 
 def callback(request):
+    print(request.GET)
+    print(request.POST)
     code = request.GET.get('code', '')
     if not code:
         return HttpResponse(status=400)
