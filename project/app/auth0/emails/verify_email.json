@@ -5,6 +5,5 @@
   "subject": "Start Normal - Please Verify Email",
   "urlLifetimeInSeconds": 432000,
   "template": "verify_email",
-  "redirectTo": "https://www.startnormal.com/welcome",
   "enabled": true
 }
