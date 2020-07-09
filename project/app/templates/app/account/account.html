@@ -19,18 +19,31 @@
         <form method='post' action='{% url "account" %}' class=' form-horizontal' role='form'>
           {% csrf_token %}
           {% bootstrap_form_errors form %}
-          {% bootstrap_field form.name show_label=False show_help=True placeholder="Name"%}
-          {# {% bootstrap_field form.location show_label=False%} #}
-          <div class="form-group form-check-inline">
-            {% bootstrap_field form.is_volunteer show_help=False show_label=False size='large'%}
+          <div class='form-group'>
+            <input disabled='true' type="text" name="name" value="{{user.name}}" class="form-control" id="id_name">
           </div>
-          <div class="form-group form-check-inline">
-            {% bootstrap_field form.is_teacher show_help=False show_label=False size='large'%}
+          <div class='form-group'>
+            <input disabled='true' type="text" name="email" value="{{user.email}}" class="form-control" id="id_email">
           </div>
-          <div class="form-group form-check-inline">
-            {% bootstrap_field form.is_doctor show_help=False show_label=False size='large'%}
+          <div class='row'>
+            <div class="form-group form-check-inline">
+              {% bootstrap_field form.is_public show_help=False show_label=False size='large'%}
+            </div>
+            <div class="form-group form-check-inline">
+              {% bootstrap_field form.is_subscribe show_help=False show_label=False size='large'%}
+            </div>
           </div>
-          {# {% bootstrap_field form.notes show_help=True show_label=False size='small'%} #}
+          <div class='row'>
+            <div class="form-group form-check-inline">
+              {% bootstrap_field form.is_volunteer show_help=False show_label=False size='large'%}
+            </div>
+            <div class="form-group form-check-inline">
+              {% bootstrap_field form.is_teacher show_help=False show_label=False size='large'%}
+            </div>
+            <div class="form-group form-check-inline">
+              {% bootstrap_field form.is_doctor show_help=False show_label=False size='large'%}
+            </div>
+          </div>
           {% buttons %}
             <button type="submit" class="btn btn-primary btn-lg btn-block">
               Save Account Details
@@ -41,8 +54,10 @@
     </div>
 
     <div class='card-footer'>
-      <p class="card-text"><small>
-        <span class='text-muted'>Your information isn't shared with anyone and all data will be deleted when this project is over.  Learn more <a href='{% url "about" %}'>about me</a>.</span></small>
+      <p class="card-text">
+        <small class='text-muted'>
+          If you would like to change your name or email please contact Dave at <a href='mailto:dbinetti@startnormal.com'>dbinetti@startnormal.com</a>.
+        </small>
       </p>
     </div>
 

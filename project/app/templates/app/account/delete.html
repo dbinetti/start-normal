@@ -1,10 +1,16 @@
 {% extends 'app/base.html' %}
 
+{% load bootstrap4 %}
+
 {% block title %}Delete Account{% endblock title %}
 {% block header %}Delete Account{% endblock header %}
 
 {% block content %}
-
+<section>
+  <p class='lead'>
+    Deleting your account will remove all information from the system.  There is no undo!
+  </p>
+</section>
 <section class='my-5'>
   <form method='post' action='{% url "delete" %}' role='form'>
     {% csrf_token %}

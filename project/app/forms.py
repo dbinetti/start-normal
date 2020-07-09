@@ -14,15 +14,16 @@ class AccountForm(forms.ModelForm):
     class Meta:
         model = Account
         fields = [
-            'name',
-            # 'email',
             # 'location',
+            'is_public',
+            'is_subscribe',
             'is_volunteer',
             'is_teacher',
             'is_doctor',
-            'notes',
         ]
         labels = {
+            "is_public": "List my Name on the Website",
+            "is_subscribe": "Send Updates",
             "is_volunteer": "I Can Volunteer",
             "is_teacher": "I'm an Educator",
             "is_doctor": "I'm a Physician",
@@ -109,6 +110,10 @@ class SignupForm(forms.Form):
         data = self.cleaned_data['email']
         return data.lower()
 
+    def clean_name(self):
+        data = self.cleaned_data['name']
+        return data.title()
+
 
 class SubscribeForm(forms.Form):
     email = forms.EmailField(
@@ -121,6 +126,25 @@ class SubscribeForm(forms.Form):
 
 
 class UserCreationForm(UserCreationFormBase):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['password1'].required = False
+        self.fields['password2'].required = False
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_unusable_password()
+        if commit:
+            user.save()
+        return user
+
+    def clean_email(self):
+        data = self.cleaned_data['email']
+        return data.lower()
+
+    def clean_name(self):
+        data = self.cleaned_data['name']
+        return data.title()
 
     class Meta:
         model = User
@@ -130,15 +154,17 @@ class UserCreationForm(UserCreationFormBase):
             'name',
         ]
 
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.set_unusuable_password()
-        if commit:
-            user.save()
-        return user
 
 
 class UserChangeForm(UserChangeFormBase):
+
+    def clean_email(self):
+        data = self.cleaned_data['email']
+        return data.lower()
+
+    def clean_name(self):
+        data = self.cleaned_data['name']
+        return data.title()
 
     class Meta:
         model = User

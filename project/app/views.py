@@ -164,17 +164,18 @@ def petition(request, slug):
                 request,
                 username=username,
                 email=email,
+                name=name,
             )
             user.refresh_from_db()
             account = user.account
+            account.is_public = is_public
+            account.email = email
             account.name = name
             account.save()
 
             # Create Signature
             signature = Signature.objects.create(
                 status=Signature.STATUS.signed,
-                name=name,
-                is_public=is_public,
                 message=message,
                 account=account,
                 petition=petition,
@@ -296,6 +297,7 @@ def account(request):
     return render(
         request,
         'app/account/account.html', {
+            'user': user,
             'form': form,
             'signatures': signatures,
         },

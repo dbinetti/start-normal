@@ -768,10 +768,10 @@ class User(AbstractBaseUser):
     )
     name = models.CharField(
         max_length=255,
-        blank=True,
+        blank=False,
     )
     is_active = models.BooleanField(
-        default=False,
+        default=True,
     )
     is_admin = models.BooleanField(
         default=False,
@@ -784,7 +784,9 @@ class User(AbstractBaseUser):
     )
 
     USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = [
+        'name',
+    ]
 
     objects = UserManager()
 

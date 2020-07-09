@@ -12,6 +12,7 @@ class Auth0Backend(ModelBackend):
     def authenticate(self, request, **kwargs):
         username = kwargs.get('username', None)
         email = kwargs.get('email', None)
+        name = kwargs.get('name', None)
         try:
             user = User.objects.get(
                 username=username,
@@ -20,6 +21,7 @@ class Auth0Backend(ModelBackend):
             user = User(
                 username=username,
                 email=email,
+                name=name,
                 is_active=True,
             )
             user.set_unusable_password()

@@ -245,12 +245,11 @@ class UserAdmin(UserAdminBase):
     form = UserChangeForm
     model = User
     list_display = [
-        'username',
-        'email',
         'name',
+        'email',
+        'username',
         'created',
         'last_login'
-        # 'signature',
     ]
     list_filter = [
         'is_active',
@@ -259,12 +258,9 @@ class UserAdmin(UserAdminBase):
         'last_login',
     ]
     search_fields = [
-        'username',
-        'email',
         'name',
-    ]
-    autocomplete_fields = [
-        # 'signature',
+        'email',
+        'username',
     ]
     ordering = [
         '-last_login',
@@ -273,9 +269,9 @@ class UserAdmin(UserAdminBase):
     fieldsets = (
         (None, {
             'fields': [
-                'username',
-                'email',
                 'name',
+                'email',
+                'username',
             ]
         }
         ),
@@ -285,14 +281,13 @@ class UserAdmin(UserAdminBase):
         (None, {
             'classes': ('wide',),
             'fields': [
-                'username',
-                'email',
                 'name',
+                'email',
+                'username',
                 'is_admin',
                 'is_active',
             ]
         }
         ),
     )
-    ordering = ['email']
     filter_horizontal = ()
