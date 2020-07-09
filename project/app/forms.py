@@ -6,8 +6,6 @@ from django.contrib.auth.forms import UserCreationForm as UserCreationFormBase
 
 # Local
 from .models import Account
-from .models import District
-from .models import School
 from .models import Signature
 from .models import User
 
@@ -38,18 +36,6 @@ class AccountForm(forms.ModelForm):
                 }
             ),
         }
-
-
-class DistrictForm(forms.ModelForm):
-    class Meta:
-        model = District
-        exclude = ['slug']
-
-
-class SchoolForm(forms.ModelForm):
-    class Meta:
-        model = School
-        exclude = ['slug']
 
 
 class DeleteForm(forms.Form):
@@ -90,27 +76,31 @@ class SignatureForm(forms.ModelForm):
 class SignupForm(forms.Form):
     name = forms.CharField(
         required=True,
-        widget=forms.TextInput(attrs={'class': 'form-control'})
+        help_text="""Real name strongly encouraged.  However, if necessary use a descriptor like 'Concerned Parent' or 'Father of Two'. (Required)""",
     )
     email = forms.EmailField(
         required=True,
-        widget=forms.EmailInput(attrs={'class': 'form-control'})
+        help_text="""Your email is private and not shared.  It's used to manage preferences and send adminstrative updates. (Required)""",
     )
     password = forms.CharField(
         required=True,
-        widget=forms.PasswordInput(attrs={'class': 'form-control'})
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        help_text="""A password is required to manage preferences. (Required)""",
     )
     is_public = forms.BooleanField(
-        required=False,
-        label='Public',
-        widget=forms.CheckboxInput(attrs={'class': 'form-control'})
+        initial=True,
+        label='List My Name on the Website',
+    )
+    is_subscribe = forms.BooleanField(
+        initial=True,
+        label='Receive Updates (roughly once/week)',
     )
     message = forms.CharField(
         required=False,
         widget=forms.Textarea(
             attrs={
                 'class': 'form-control h-25',
-                'placeholder': 'Public Message (Optional)',
+                'placeholder': 'Attach a Public Message to your Signature (Optional)',
                 'rows': 5,
             }
         )

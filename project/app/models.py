@@ -90,6 +90,14 @@ class Account(models.Model):
         blank=True,
         help_text="""Your mobile phone. (Optional)""",
     )
+    is_public = models.BooleanField(
+        default=False,
+        help_text="""List name on website.""",
+    )
+    is_subscribe = models.BooleanField(
+        default=False,
+        help_text="""Subscribe for updates.""",
+    )
     is_volunteer = models.BooleanField(
         default=False,
         help_text="""If you're willing to volunteer please check this box.""",
@@ -733,16 +741,16 @@ class Signature(models.Model):
     def __str__(self):
         return str(self.name)
 
-    # class Meta:
-    #     constraints = [
-    #         UniqueConstraint(
-    #             fields=[
-    #                 'account',
-    #                 'petition',
-    #             ],
-    #             name='unique_signature',
-    #         )
-    #     ]
+    class Meta:
+        constraints = [
+            UniqueConstraint(
+                fields=[
+                    'account',
+                    'petition',
+                ],
+                name='unique_signature',
+            )
+        ]
 
 
 class User(AbstractBaseUser):

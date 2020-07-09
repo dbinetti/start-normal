@@ -12,9 +12,7 @@ urlpatterns = [
 
     # Involved
     path('involved', views.involved, name='involved'),
-    path('school/<slug>', views.school, name='school'),
-    # path('district/<slug>', views.district, name='district'),
-    # path('petition/<id>', views.petition, name='petition',),
+    path('petition/<slug>', views.petition, name='petition'),
     # path('signature/<id>', views.signature, name='signature'),
     # path('signature/<id>/add', views.signature_add, name='signature-add'),
     # path('signature/<id>/remove', views.signature_remove, name='signature-remove'),

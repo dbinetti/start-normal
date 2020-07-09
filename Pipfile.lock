@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "9156fd91aafa17bb12340924d951b253c8306a572a9e9ce2edcdbb67980dfb4e"
+            "sha256": "9c23ac4b3e8291fcd1ac8499214fc9f85c1ec2995f9748557006ba18eadfcd21"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -48,12 +48,8 @@
             "version": "==3.2.10"
         },
         "auth0-python": {
-            "hashes": [
-                "sha256:39fdee7d412483e30560db6595d505eabdf95a6e559993d7e06947ed814bd2b4",
-                "sha256:5e1d5a15fc6af2d09549a12c53f0174ee4d638472ff6b538c267367589c004e1"
-            ],
-            "index": "pypi",
-            "version": "==3.11.0"
+            "git": "https://github.com/auth0/auth0-python.git",
+            "ref": "967168d080710c88f370e8bca2a4ddcad585feae"
         },
         "backcall": {
             "hashes": [
@@ -397,11 +393,11 @@
         },
         "sendgrid": {
             "hashes": [
-                "sha256:54e51ca9afbfe1a4706864f42eb1a12d597e375249d80a8ce679e7a4fa91e776",
-                "sha256:dd0eddf079be040172a4d0afdf9b9becb4e53210ead015a0e6b2d680eea92ac0"
+                "sha256:0374f2188b7737850d6064e4e882582edc317cf427d6b967b0a3248cba44afc0",
+                "sha256:76ffbe1187e96cc1133bcfc5438c7e3aa2d886584140a2ca2f588ec345d8489f"
             ],
             "index": "pypi",
-            "version": "==6.4.1"
+            "version": "==6.4.2"
         },
         "sentry-sdk": {
             "hashes": [
