@@ -33,7 +33,6 @@ class SignatureInline(admin.TabularInline):
     model = Signature
     fields = [
         'is_approved',
-        'is_public',
         'message',
         'account',
         'petition',
@@ -47,4 +46,7 @@ class SignatureInline(admin.TabularInline):
     extra = 0
     classes = [
         # 'collapse',
+    ]
+    autocomplete_fields = [
+        'petition',
     ]

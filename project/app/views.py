@@ -134,7 +134,6 @@ def petition(request, slug):
                     'petition': petition,
                     'account': account,
                     'name': account.name,
-                    'is_public': True,
                 })
     else:
         # New Signup

@@ -55,8 +55,6 @@ class SignatureForm(forms.ModelForm):
     class Meta:
         model = Signature
         fields = [
-            'name',
-            'is_public',
             'message',
             'petition',
             'account',
