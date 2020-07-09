@@ -124,7 +124,11 @@ class UserCreationForm(UserCreationFormBase):
 
     class Meta:
         model = User
-        fields = ('username', 'email',)
+        fields = [
+            'username',
+            'email',
+            'name',
+        ]
 
     def save(self, commit=True):
         user = super().save(commit=False)
@@ -138,4 +142,8 @@ class UserChangeForm(UserChangeFormBase):
 
     class Meta:
         model = User
-        fields = ('username', 'email',)
+        fields = [
+            'username',
+            'email',
+            'name',
+        ]

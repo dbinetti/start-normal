@@ -247,6 +247,7 @@ class UserAdmin(UserAdminBase):
     list_display = [
         'username',
         'email',
+        'name',
         'created',
         'last_login'
         # 'signature',
@@ -260,6 +261,7 @@ class UserAdmin(UserAdminBase):
     search_fields = [
         'username',
         'email',
+        'name',
     ]
     autocomplete_fields = [
         # 'signature',
@@ -273,7 +275,7 @@ class UserAdmin(UserAdminBase):
             'fields': [
                 'username',
                 'email',
-                # 'signature',
+                'name',
             ]
         }
         ),
@@ -285,8 +287,7 @@ class UserAdmin(UserAdminBase):
             'fields': [
                 'username',
                 'email',
-                'password1',
-                'password2',
+                'name',
                 'is_admin',
                 'is_active',
             ]
