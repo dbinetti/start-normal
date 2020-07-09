@@ -168,6 +168,7 @@ def petition(request, slug):
             user.refresh_from_db()
             account = user.account
             account.is_public = is_public
+            account.is_subscribe = is_subscribe
             account.email = email
             account.name = name
             account.save()

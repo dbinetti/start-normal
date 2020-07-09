@@ -82,11 +82,11 @@ class Account(models.Model):
         help_text="""Your mobile phone. (Optional)""",
     )
     is_public = models.BooleanField(
-        default=False,
+        default=True,
         help_text="""List name on website.""",
     )
     is_subscribe = models.BooleanField(
-        default=False,
+        default=True,
         help_text="""Subscribe for updates.""",
     )
     is_volunteer = models.BooleanField(

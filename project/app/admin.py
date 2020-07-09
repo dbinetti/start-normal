@@ -214,6 +214,8 @@ class AccountAdmin(admin.ModelAdmin):
     ]
     list_filter = [
         'location',
+        'is_public',
+        'is_subscribe',
         'is_teacher',
         'is_doctor',
         'is_volunteer',
