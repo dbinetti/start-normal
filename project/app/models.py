@@ -70,15 +70,6 @@ class Account(models.Model):
     id = HashidAutoField(
         primary_key=True,
     )
-    name = models.CharField(
-        max_length=255,
-        help_text="""Real name strongly encouraged.  However, if necessary use a descriptor like 'Concerned Parent' or 'Father of Two'. (Required)""",
-    )
-    email = models.EmailField(
-        blank=False,
-        unique=True,
-        help_text="""Your email is private and not shared.  It's used to manage preferences and send adminstrative updates. (Required)""",
-    )
     location = models.CharField(
         max_length=255,
         choices=LOCATION,
@@ -129,7 +120,7 @@ class Account(models.Model):
     )
 
     def __str__(self):
-        return str(self.name)
+        return str(self.user)
 
 
 class Contact(models.Model):

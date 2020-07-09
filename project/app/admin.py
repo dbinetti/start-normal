@@ -1,9 +1,9 @@
 # Django
+# Third-Party
+from mptt.admin import MPTTModelAdmin
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as UserAdminBase
-
-# First-Party
-from mptt.admin import MPTTModelAdmin
 
 # Local
 from .forms import UserChangeForm
@@ -93,8 +93,6 @@ class SchoolAdmin(admin.ModelAdmin):
     inlines = [
         # ContactInline,
     ]
-
-
 
 
 @admin.register(District)
@@ -201,18 +199,16 @@ class SignatureAdmin(admin.ModelAdmin):
 class AccountAdmin(admin.ModelAdmin):
     save_on_top = True
     fields = [
-        'name',
+        'user',
         'location',
         'phone',
         'is_volunteer',
         'is_teacher',
         'is_doctor',
-        'email',
         'notes',
-        # 'user',
     ]
     list_display = [
-        'name',
+        'user',
         'location',
         'is_teacher',
         'is_doctor',
@@ -227,11 +223,10 @@ class AccountAdmin(admin.ModelAdmin):
         'created',
     ]
     search_fields = [
-        'name',
-        'email',
+        'user__name',
     ]
     autocomplete_fields = [
-        # 'user',
+        'user',
     ]
     inlines = [
         SignatureInline,
