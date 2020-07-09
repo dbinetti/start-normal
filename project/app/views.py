@@ -315,6 +315,10 @@ def welcome(request):
     return render(
         request,
         'app/account/welcome.html',
+        context={
+            'get': request.GET,
+            'post': request.POST,
+        }
     )
 
 @login_required
@@ -340,6 +344,8 @@ def delete(request):
 
 # Authentication
 def login(request):
+    print(request.GET)
+    print(request.POST)
     redirect_uri = request.build_absolute_uri('callback')
     params = {
         'response_type': 'code',
