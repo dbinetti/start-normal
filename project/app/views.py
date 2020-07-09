@@ -344,8 +344,6 @@ def delete(request):
 
 # Authentication
 def login(request):
-    print(request.GET)
-    print(request.POST)
     redirect_uri = request.build_absolute_uri('callback')
     params = {
         'response_type': 'code',
@@ -361,8 +359,6 @@ def login(request):
     return redirect(url)
 
 def callback(request):
-    print(request.GET)
-    print(request.POST)
     code = request.GET.get('code', '')
     if not code:
         return HttpResponse(status=400)
