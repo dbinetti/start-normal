@@ -23,7 +23,7 @@ def auth0_get_client():
     get_token = GetToken(settings.AUTH0_DOMAIN)
     token = get_token.client_credentials(
         settings.AUTH0_CLIENT_ID,
-        settings.AUTH0_SECRET,
+        settings.AUTH0_CLIENT_SECRET,
         'https://{}/api/v2/'.format(settings.AUTH0_DOMAIN),
     )
     mgmt_api_token = token['access_token']

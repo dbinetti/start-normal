@@ -3,11 +3,12 @@
 # Standard Library
 import os
 
-from environ import Env
-from environ import Path
-
 # Django
 from django.contrib.messages import constants as messages
+
+# First-Party
+from environ import Env
+from environ import Path
 
 # Set Environment
 env = Env(
@@ -52,7 +53,7 @@ LOGOUT_REDIRECT_URL = 'index'
 
 #Auth0
 AUTH0_CLIENT_ID = env("AUTH0_CLIENT_ID")
-AUTH0_SECRET = env("AUTH0_SECRET")
+AUTH0_CLIENT_SECRET = env("AUTH0_CLIENT_SECRET")
 AUTH0_DOMAIN = env("AUTH0_DOMAIN")
 
 # Mailchimp

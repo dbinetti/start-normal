@@ -371,7 +371,7 @@ def callback(request):
     redirect_uri = request.build_absolute_uri('callback')
     token_payload = {
         'client_id': settings.AUTH0_CLIENT_ID,
-        'client_secret': settings.AUTH0_SECRET,
+        'client_secret': settings.AUTH0_CLIENT_SECRET,
         'redirect_uri': redirect_uri,
         'code': code,
         'grant_type': 'authorization_code'
