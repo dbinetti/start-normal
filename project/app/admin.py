@@ -1,9 +1,9 @@
 # Django
-# Third-Party
-from mptt.admin import MPTTModelAdmin
-
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as UserAdminBase
+
+# First-Party
+from mptt.admin import MPTTModelAdmin
 
 # Local
 from .forms import UserChangeForm
@@ -11,9 +11,11 @@ from .forms import UserCreationForm
 from .inlines import ContactInline
 from .inlines import SignatureInline
 from .models import Account
+from .models import Contact
 from .models import District
 from .models import Faq
 from .models import Petition
+from .models import Report
 from .models import School
 from .models import Signature
 from .models import User
@@ -94,6 +96,31 @@ class SchoolAdmin(admin.ModelAdmin):
         # ContactInline,
     ]
 
+
+@admin.register(Report)
+class ReportAdmin(admin.ModelAdmin):
+    fields = [
+        'name',
+        'text',
+        'user',
+        'petition',
+    ]
+    list_display = [
+        'name',
+        'status',
+        'user',
+        'petition',
+    ]
+    list_filter = [
+        'status',
+    ]
+    search_fields = [
+        'name',
+    ]
+    autocomplete_fields = [
+        'user',
+        'petition',
+    ]
 
 @admin.register(District)
 class DistrictAdmin(admin.ModelAdmin):

@@ -1,7 +1,13 @@
 # Standard Library
 from operator import attrgetter
 
-# Third-Party
+# Django
+from django.contrib.auth.models import AbstractBaseUser
+from django.db import models
+from django.db.models.constraints import UniqueConstraint
+from django.utils.text import slugify
+
+# First-Party
 import shortuuid
 from autoslug import AutoSlugField
 from hashid_field import HashidAutoField
@@ -9,12 +15,6 @@ from model_utils import Choices
 from mptt.models import MPTTModel
 from mptt.models import TreeForeignKey
 from shortuuidfield import ShortUUIDField
-
-# Django
-from django.contrib.auth.models import AbstractBaseUser
-from django.db import models
-from django.db.models.constraints import UniqueConstraint
-from django.utils.text import slugify
 
 # Local
 from .managers import UserManager
@@ -167,6 +167,48 @@ class Contact(models.Model):
     petition = models.ForeignKey(
         'app.Petition',
         related_name='contacts',
+        on_delete=models.CASCADE,
+    )
+
+    def __str__(self):
+        return str(self.name)
+
+
+class Report(models.Model):
+    STATUS = Choices(
+        (0, 'new', 'New'),
+        (10, 'approved', 'Approved'),
+        (20, 'rejected', 'Rejected'),
+    )
+    id = HashidAutoField(
+        primary_key=True,
+    )
+    status = models.IntegerField(
+        blank=False,
+        choices=STATUS,
+        default=STATUS.new,
+    )
+    name = models.CharField(
+        max_length=100,
+        blank=False,
+    )
+    text = models.TextField(
+        blank=False,
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+    petition = models.ForeignKey(
+        'app.Petition',
+        related_name='reports',
+        on_delete=models.CASCADE,
+    )
+    user = models.ForeignKey(
+        'app.User',
+        related_name='reports',
         on_delete=models.CASCADE,
     )
 
