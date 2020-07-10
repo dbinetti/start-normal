@@ -1,13 +1,12 @@
 # Third-Party
-# First-Party
 import algoliasearch_django as algoliasearch
 from algoliasearch_django import AlgoliaIndex
 
 # Local
-from .models import Petition
+from .models import Organization
 
 
-class PetitionIndex(AlgoliaIndex):
+class OrganizationIndex(AlgoliaIndex):
     fields = [
         'name',
         'slug',

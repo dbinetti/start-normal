@@ -19,12 +19,12 @@ from django.core.management.base import BaseCommand
 # First-Party
 from app.factories import AccountFactory
 from app.factories import ContactFactory
-from app.factories import PetitionFactory
+from app.factories import OrganizationFactory
 from app.factories import ReportFactory
 from app.factories import SignatureFactory
 from app.factories import UserFactory
 from app.models import Contact
-from app.models import Petition
+from app.models import Organization
 from app.models import Report
 
 
@@ -48,11 +48,11 @@ class Command(BaseCommand):
         account = AccountFactory(
             user=user,
         )
-        scsd = PetitionFactory(
+        scsd = OrganizationFactory(
             is_active=True,
             name='San Carlos School District',
-            status=Petition.STATUS.active,
-            kind=Petition.KIND.elementary,
+            status=Organization.STATUS.active,
+            kind=Organization.KIND.elementary,
             nces_id=5400,
             address='123 Main St',
             city='San Carlos',
@@ -62,15 +62,15 @@ class Command(BaseCommand):
             lat=-122.0,
         )
 
-        central = PetitionFactory(
+        central = OrganizationFactory(
             parent=scsd,
         )
 
-        ba = PetitionFactory(
+        ba = OrganizationFactory(
             is_active=True,
             name='Brittan Acres',
-            status=Petition.STATUS.active,
-            kind=Petition.KIND.elem,
+            status=Organization.STATUS.active,
+            kind=Organization.KIND.elem,
             nces_id=5402,
             address='123 Main St',
             city='San Carlos',
@@ -82,28 +82,28 @@ class Command(BaseCommand):
         )
         SignatureFactory(
             user=user,
-            petition=central,
+            organization=central,
         )
         ContactFactory(
             name='Mao Harmeier',
             role=Contact.ROLE.super,
-            petition=scsd,
+            organization=scsd,
         )
         ContactFactory(
             name='Suzanne Fast',
             role=Contact.ROLE.principal,
-            petition=ba,
+            organization=ba,
         )
         ContactFactory(
             name='Tom Domer',
             role=Contact.ROLE.principal,
-            petition=central,
+            organization=central,
         )
         ReportFactory(
             name='Bad news',
             status=Report.STATUS.approved,
             text="Now is the time for all good men to come to the aid of their schools!",
-            petition=central,
+            organization=central,
             user=user,
         )
         self.stdout.write("Complete.")

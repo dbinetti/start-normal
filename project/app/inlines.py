@@ -35,7 +35,7 @@ class SignatureInline(admin.TabularInline):
         'is_approved',
         'message',
         'user',
-        'petition',
+        'organization',
     ]
     readonly_fields = [
     ]
@@ -48,5 +48,5 @@ class SignatureInline(admin.TabularInline):
         # 'collapse',
     ]
     autocomplete_fields = [
-        'petition',
+        'organization',
     ]

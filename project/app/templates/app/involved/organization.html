@@ -4,17 +4,17 @@
 {% load humanize %}
 {% load location %}
 
-{% block title %}{{petition.name}}{% endblock title %}
-{% block header %}{{petition.name}}{% endblock header %}
+{% block title %}{{organization.name}}{% endblock title %}
+{% block header %}{{organization.name}}{% endblock header %}
 {% block subheader %}
-  {{petition.address}}, {{petition.city}}, {{petition.state}}&nbsp;&nbsp;<a href='tel:{{petition.phone}}'>{{petition.phone}}</a>&nbsp;<a href='{{petition.website}}'>{{petition.website}}</a>
+  {{organization.address}}, {{organization.city}}, {{organization.state}}&nbsp;&nbsp;<a href='tel:{{organization.phone}}'>{{organization.phone}}</a>&nbsp;<a href='{{organization.website}}'>{{organization.website}}</a>
 {% endblock subheader %}
 
 {% block content %}
 
   <section>
     <p class='lead'>
-      Signing this petition will send a message that you want school to start as normal as possible &mdash; meaning full-time, in-person instruction with safety requirements balanced against children's developmental needs.
+      Send a message that you want school to start as normal as possible &mdash; meaning full-time, in-person instruction with safety requirements balanced against children's developmental needs.
     </p>
   </section>
 
@@ -28,7 +28,7 @@
         </div>
         <div class="card-body">
           <div class='card-title'>
-            Your signature status on this petition is <strong>{{signature.get_status_display}}</strong> with this message:<br>
+            Your signature status on this organization is <strong>{{signature.get_status_display}}</strong> with this message:<br>
             <em>{{signature.message|default:"(No message)"}}</em>
           </div>
           <div class='card-text'>
@@ -43,7 +43,7 @@
       <div class='card'>
         <div class='card-header'>
           <h5>
-            Sign Petition
+            Sign Organization
           </h5>
         </div>
         <div class="card-body">
@@ -54,7 +54,7 @@
                   {% bootstrap_form_errors form %}
                   {% bootstrap_field form.message show_label=False show_help=True%}
                   {% bootstrap_field form.user %}
-                  {% bootstrap_field form.petition %}
+                  {% bootstrap_field form.organization %}
                   {% buttons %}
                     <button type="submit" class="btn btn-primary btn-lg btn-block" id='id-button-signup'>
                       Sign

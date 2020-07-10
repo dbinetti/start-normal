@@ -11,7 +11,7 @@ urlpatterns = [
 
     # Involved
     path('involved', views.involved, name='involved'),
-    path('petition/<slug>', views.petition, name='petition'),
+    path('organization/<slug>', views.organization, name='organization'),
     path('signature/<id>', views.signature, name='signature'),
 
     # Informed

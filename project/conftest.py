@@ -44,6 +44,6 @@ def admin_client():
 
 @pytest.fixture
 # @disable_auto_indexing
-def petition():
-    petition = PetitionFactory()
-    return petition
+def organization():
+    organization = OrganizationFactory()
+    return organization

@@ -161,7 +161,7 @@ def import_privates(privates):
     for private in privates:
         i+=1
         print(f"{i}/{t}")
-        Petition.objects.create(**privates)
+        Organization.objects.create(**privates)
 
 
 def schools_list(filename):

@@ -63,7 +63,7 @@ class SignatureForm(forms.ModelForm):
         fields = [
             'status',
             'message',
-            'petition',
+            'organization',
             'user',
         ]
         widgets = {
@@ -74,7 +74,7 @@ class SignatureForm(forms.ModelForm):
                     'rows': 5,
                 }
             ),
-            'petition': forms.HiddenInput(),
+            'organization': forms.HiddenInput(),
             'user': forms.HiddenInput(),
         }
 
@@ -83,7 +83,7 @@ class SignExistingForm(forms.ModelForm):
         model = Signature
         fields = [
             'message',
-            'petition',
+            'organization',
             'user',
         ]
         widgets = {
@@ -94,7 +94,7 @@ class SignExistingForm(forms.ModelForm):
                     'rows': 5,
                 }
             ),
-            'petition': forms.HiddenInput(),
+            'organization': forms.HiddenInput(),
             'user': forms.HiddenInput(),
         }
 

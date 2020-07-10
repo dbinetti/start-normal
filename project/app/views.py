@@ -41,7 +41,7 @@ from .forms import SignupForm
 from .forms import SubscribeForm
 from .forms import UserCreationForm
 from .models import Account
-from .models import Petition
+from .models import Organization
 from .models import Signature
 from .models import User
 from .tasks import build_email
@@ -77,18 +77,18 @@ def involved(request):
         'app/involved/involved.html', {
             'app_id': settings.ALGOLIA['APPLICATION_ID'],
             'search_key': settings.ALGOLIA['SEARCH_KEY'],
-            'index': "Petition_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
+            'index': "Organization_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
         },
     )
 
-def petition(request, slug):
+def organization(request, slug):
     user = request.user
-    petition = Petition.objects.get(slug=slug)
-    signatures = petition.signatures.filter(
+    organization = Organization.objects.get(slug=slug)
+    signatures = organization.signatures.filter(
         status=Signature.STATUS.signed,
     ).order_by('-created')
     try:
-        signature = petition.signatures.get(user=user)
+        signature = organization.signatures.get(user=user)
     except Exception:
         # Anonymous
         signature = None
@@ -110,7 +110,7 @@ def petition(request, slug):
                     return redirect('account')
             else:
                 form = SignExistingForm(initial={
-                    'petition': petition,
+                    'organization': organization,
                     'user': user,
                 })
     else:
@@ -143,9 +143,9 @@ def petition(request, slug):
                     )
                     return render(
                         request,
-                        'app/involved/petition.html',
+                        'app/involved/organization.html',
                         context={
-                            'petition': petition,
+                            'organization': organization,
                             'form': form,
                         },
                     )
@@ -169,20 +169,20 @@ def petition(request, slug):
                 status=Signature.STATUS.signed,
                 message=message,
                 user=user,
-                petition=petition,
+                organization=organization,
             )
             log_in(request, user)
             messages.success(
                 request,
-                "Your Signature has Been Added to the Petition!",
+                "Your Signature has Been Added to the Organization!",
             )
             return redirect('pending')
     signatures.count = 100
     return render(
         request,
-        'app/involved/petition.html',
+        'app/involved/organization.html',
         context={
-            'petition': petition,
+            'organization': organization,
             'form': form,
             'signature': signature,
             'signatures': signatures,
@@ -194,7 +194,7 @@ def signature(request, id):
     signature = Signature.objects.get(
         id=id,
     )
-    petition = signature.petition
+    organization = signature.organization
     if request.method == "POST":
         form = SignatureForm(request.POST, instance=signature)
         if form.is_valid():
@@ -210,7 +210,7 @@ def signature(request, id):
         request,
         'app/involved/signature.html',
         context = {
-            'petition': petition,
+            'organization': organization,
             'signature': signature,
             'form': form,
         },
@@ -391,9 +391,9 @@ def logout(request):
 @staff_member_required
 def report(request):
     report = Signature.objects.order_by(
-        'petition',
+        'organization',
     ).values(
-        'petition',
+        'organization',
     ).annotate(
         c=Count('id'),
     )

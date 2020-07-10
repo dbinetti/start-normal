@@ -12,7 +12,7 @@ from .inlines import ContactInline
 from .inlines import SignatureInline
 from .models import Account
 from .models import Contact
-from .models import Petition
+from .models import Organization
 from .models import Report
 from .models import Signature
 from .models import User
@@ -23,8 +23,8 @@ def approve_signature(modeladmin, request, queryset):
 
 approve_signature.short_description = "Approve Signatures"
 
-@admin.register(Petition)
-class PetitionAdmin(MPTTModelAdmin):
+@admin.register(Organization)
+class OrganizationAdmin(MPTTModelAdmin):
     exclude = [
         'slug',
     ]
@@ -57,13 +57,13 @@ class ReportAdmin(admin.ModelAdmin):
         'name',
         'text',
         'user',
-        'petition',
+        'organization',
     ]
     list_display = [
         'name',
         'status',
         'user',
-        'petition',
+        'organization',
     ]
     list_filter = [
         'status',
@@ -73,7 +73,7 @@ class ReportAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = [
         'user',
-        'petition',
+        'organization',
     ]
 
 
@@ -86,13 +86,13 @@ class SignatureAdmin(admin.ModelAdmin):
         'is_approved',
         'message',
         'user',
-        'petition',
+        'organization',
     ]
     list_display = [
         'status',
         'is_approved',
         'user',
-        'petition',
+        'organization',
         'created',
         'updated',
     ]
@@ -107,7 +107,7 @@ class SignatureAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = [
         'user',
-        'petition',
+        'organization',
     ]
     actions = [
         approve_signature

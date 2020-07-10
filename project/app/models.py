@@ -164,8 +164,8 @@ class Contact(models.Model):
     updated = models.DateTimeField(
         auto_now=True,
     )
-    petition = models.ForeignKey(
-        'app.Petition',
+    organization = models.ForeignKey(
+        'app.Organization',
         related_name='contacts',
         on_delete=models.CASCADE,
     )
@@ -201,8 +201,8 @@ class Report(models.Model):
     updated = models.DateTimeField(
         auto_now=True,
     )
-    petition = models.ForeignKey(
-        'app.Petition',
+    organization = models.ForeignKey(
+        'app.Organization',
         related_name='reports',
         on_delete=models.CASCADE,
     )
@@ -216,7 +216,7 @@ class Report(models.Model):
         return str(self.name)
 
 
-class Petition(MPTTModel):
+class Organization(MPTTModel):
 
     STATUS = Choices(
         (10, 'active', "Active"),
@@ -389,8 +389,8 @@ class Signature(models.Model):
         on_delete=models.CASCADE,
         related_name='signatures',
     )
-    petition = models.ForeignKey(
-        'app.Petition',
+    organization = models.ForeignKey(
+        'app.Organization',
         related_name='signatures',
         on_delete=models.CASCADE,
     )
@@ -403,7 +403,7 @@ class Signature(models.Model):
     #         UniqueConstraint(
     #             fields=[
     #                 'user',
-    #                 'petition',
+    #                 'organization',
     #             ],
     #             name='unique_signature',
     #         )

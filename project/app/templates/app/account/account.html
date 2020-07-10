@@ -71,7 +71,7 @@
     <table class='table'>
       <theaad>
         <tr>
-          <th>Petition</th>
+          <th>Organization</th>
           <th>Message</th>
           <th>Updated</th>
           <th>Status</th>
@@ -80,7 +80,7 @@
       <tbody>
         {% for signature in signatures %}
           <tr>
-            <td><a href='{% url "signature" signature.id %}'>{{signature.petition.name}}</a></td>
+            <td><a href='{% url "signature" signature.id %}'>{{signature.organization.name}}</a></td>
             <td>{{signature.message|truncatewords:5|default:"(No message)" }}</td>
             <td>{{signature.updated|date}}</td>
             <td>{{signature.get_status_display}}</td>

@@ -21,7 +21,7 @@ from django.db.models.signals import post_save
 # Local
 from .models import Account
 from .models import Contact
-from .models import Petition
+from .models import Organization
 from .models import Report
 from .models import Signature
 from .models import User
@@ -42,9 +42,9 @@ class ContactFactory(DjangoModelFactory):
     is_active = True
     name = 'Seymour Skinner'
     role = Contact.ROLE.principal
-    # petition = RelatedFactory(
-    #     'app.factories.PetitionFactory',
-    #     factory_related_name='petition',
+    # organization = RelatedFactory(
+    #     'app.factories.OrganizationFactory',
+    #     factory_related_name='organization',
     # )
     class Meta:
         model = Contact
@@ -54,9 +54,9 @@ class ReportFactory(DjangoModelFactory):
     status = Report.STATUS.approved
     name = 'Bad News'
     text = 'Now is the time for all good men to come to the aid of their schools.'
-    # petition = RelatedFactory(
-    #     'app.factories.PetitionFactory',
-    #     factory_related_name='petition',
+    # organization = RelatedFactory(
+    #     'app.factories.OrganizationFactory',
+    #     factory_related_name='organization',
     # )
     # user = RelatedFactory(
     #     'app.factories.UserFactory',
@@ -66,11 +66,11 @@ class ReportFactory(DjangoModelFactory):
         model = Report
 
 
-class PetitionFactory(DjangoModelFactory):
+class OrganizationFactory(DjangoModelFactory):
     is_active = True
     name = 'Central Middle'
-    status = Petition.STATUS.active
-    kind = Petition.KIND.intmidjr
+    status = Organization.STATUS.active
+    kind = Organization.KIND.intmidjr
     nces_id = 5401
     address = '123 Main St'
     city = 'San Carlos'
@@ -79,15 +79,15 @@ class PetitionFactory(DjangoModelFactory):
     lon = 32.0
     lat = -122.0
     class Meta:
-        model = Petition
+        model = Organization
 
 
 class SignatureFactory(DjangoModelFactory):
     is_approved = True
     message = "Foo to the Bar!"
-    # petition = RelatedFactory(
-    #     'app.factories.PetitionFactory',
-    #     factory_related_name='petition',
+    # organization = RelatedFactory(
+    #     'app.factories.OrganizationFactory',
+    #     factory_related_name='organization',
     # )
     # user = RelatedFactory(
     #     'app.factories.UserFactory',

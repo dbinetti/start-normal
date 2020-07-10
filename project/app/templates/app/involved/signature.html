@@ -4,10 +4,10 @@
 {% load humanize %}
 {% load location %}
 
-{% block title %}{{petition.name}}{% endblock title %}
-{% block header %}{{petition.name}}{% endblock header %}
+{% block title %}{{organization.name}}{% endblock title %}
+{% block header %}{{organization.name}}{% endblock header %}
 {% block subheader %}
-  {{petition.address}}, {{petition.city}}, {{petition.state}}&nbsp;&nbsp;<a href='tel:{{petition.phone}}'>{{petition.phone}}</a>&nbsp;<a href='{{petition.website}}'>{{petition.website}}</a>
+  {{organization.address}}, {{organization.city}}, {{organization.state}}&nbsp;&nbsp;<a href='tel:{{organization.phone}}'>{{organization.phone}}</a>&nbsp;<a href='{{organization.website}}'>{{organization.website}}</a>
 {% endblock subheader %}
 
 {% block content %}
@@ -33,7 +33,7 @@
           {% bootstrap_field form.status show_label=False show_help=True%}
           {% bootstrap_field form.message show_label=False show_help=True%}
           {% bootstrap_field form.user %}
-          {% bootstrap_field form.petition %}
+          {% bootstrap_field form.organization %}
           {% buttons %}
             <button type="submit" class="btn btn-primary btn-lg btn-block" id='id-button-signup'>
               Save Signature Details
