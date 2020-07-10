@@ -14,7 +14,7 @@ class AccountForm(forms.ModelForm):
     class Meta:
         model = Account
         fields = [
-            # 'location',
+            'message',
             'is_public',
             'is_subscribe',
             'is_volunteer',
@@ -29,10 +29,10 @@ class AccountForm(forms.ModelForm):
             "is_doctor": "I'm a Physician",
         }
         widgets = {
-            'notes': forms.Textarea(
+            'message': forms.Textarea(
                 attrs={
-                    'class': 'form-control h-25',
-                    'placeholder': 'Private Notes (Optional)',
+                    'class': 'form-control',
+                    'placeholder': 'Share a Message with your Public Officials (Optional)',
                     'rows': 5,
                 }
             ),

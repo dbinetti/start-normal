@@ -42,39 +42,8 @@ def get_populate_from(instance):
 
 class Account(models.Model):
 
-    LOCATION = Choices(
-        ('ath', 'Atherton'),
-        ('bel', 'Belmont'),
-        ('brb', 'Brisbane'),
-        ('bur', 'Burlingame'),
-        ('col', 'Colma'),
-        ('dc', 'Daly City'),
-        ('epa', 'East Palo Alto'),
-        ('fc', 'Foster City'),
-        ('hmb', 'Half Moon Bay'),
-        ('hil', 'Hillsborough'),
-        ('mp', 'Menlo Park'),
-        ('mil', 'Millbrae'),
-        ('pac', 'Pacifica'),
-        ('pv', 'Portola Valley'),
-        ('rc', 'Redwood City'),
-        ('sb', 'San Bruno'),
-        ('sc', 'San Carlos'),
-        ('sm', 'San Mateo'),
-        ('ssf', 'South San Francisco'),
-        ('ws', 'Woodside'),
-        ('un', 'Unincorporated San Mateo County'),
-        ('out', 'Outside of San Mateo County'),
-    )
-
     id = HashidAutoField(
         primary_key=True,
-    )
-    location = models.CharField(
-        max_length=255,
-        choices=LOCATION,
-        blank=True,
-        help_text="""Your city. (Required)""",
     )
     phone = models.CharField(
         max_length=255,
@@ -107,12 +76,6 @@ class Account(models.Model):
         default='',
         help_text="""Feel free to include private notes just for us.""",
     )
-    notes = models.TextField(
-        max_length=512,
-        blank=True,
-        default='',
-        help_text="""Feel free to include private notes just for us.""",
-    )
     created = models.DateTimeField(
         auto_now_add=True,
     )
@@ -124,6 +87,45 @@ class Account(models.Model):
         on_delete=models.CASCADE,
         related_name='account',
     )
+
+    # TODO Cruft
+    LOCATION = Choices(
+        ('ath', 'Atherton'),
+        ('bel', 'Belmont'),
+        ('brb', 'Brisbane'),
+        ('bur', 'Burlingame'),
+        ('col', 'Colma'),
+        ('dc', 'Daly City'),
+        ('epa', 'East Palo Alto'),
+        ('fc', 'Foster City'),
+        ('hmb', 'Half Moon Bay'),
+        ('hil', 'Hillsborough'),
+        ('mp', 'Menlo Park'),
+        ('mil', 'Millbrae'),
+        ('pac', 'Pacifica'),
+        ('pv', 'Portola Valley'),
+        ('rc', 'Redwood City'),
+        ('sb', 'San Bruno'),
+        ('sc', 'San Carlos'),
+        ('sm', 'San Mateo'),
+        ('ssf', 'South San Francisco'),
+        ('ws', 'Woodside'),
+        ('un', 'Unincorporated San Mateo County'),
+        ('out', 'Outside of San Mateo County'),
+    )
+    location = models.CharField(
+        max_length=255,
+        choices=LOCATION,
+        blank=True,
+        help_text="""Your city. (Required)""",
+    )
+    notes = models.TextField(
+        max_length=512,
+        blank=True,
+        default='',
+        help_text="""Feel free to include private notes just for us.""",
+    )
+
 
     def __str__(self):
         return str(self.user)
@@ -403,6 +405,65 @@ class Affiliation(models.Model):
 
     def __str__(self):
         return str(self.name)
+
+    # class Meta:
+    #     constraints = [
+    #         UniqueConstraint(
+    #             fields=[
+    #                 'user',
+    #                 'organization',
+    #             ],
+    #             name='unique_affiliation',
+    #         )
+    #     ]
+
+
+class Student(models.Model):
+    id = HashidAutoField(
+        primary_key=True,
+    )
+    GRADE = Choices(
+        (0, 'decline', 'Decline to State'),
+        (2, 'tk', 'Transitional Kindergarten'),
+        (5, 'k', 'Kindergarten'),
+        (10, 'first', 'First  Grade'),
+        (20, 'second', 'Second  Grade'),
+        (30, 'third', 'Third  Grade'),
+        (40, 'fourth', 'Fourth  Grade'),
+        (50, 'fifth', 'Fifth  Grade'),
+        (60, 'sixth', 'Sixth  Grade'),
+        (70, 'seventh', 'Seventh Grade'),
+        (80, 'eighth', 'Eighth Grade'),
+        (90, 'ninth', 'Ninth Grade'),
+        (100, 'tenth', 'Tenth Grade'),
+        (110, 'eleventh', 'Eleventh Grade'),
+        (120, 'twelfth', 'Twelfth Grade'),
+        (130, 'fresh', 'Freshman'),
+        (140, 'soph', 'Sophomore'),
+    )
+    grade = models.IntegerField(
+        blank=False,
+        choices=GRADE,
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+    user = models.ForeignKey(
+        'app.User',
+        on_delete=models.CASCADE,
+        related_name='students',
+    )
+    organization = models.ForeignKey(
+        'app.Organization',
+        related_name='students',
+        on_delete=models.CASCADE,
+    )
+
+    def __str__(self):
+        return str(self.id)
 
     # class Meta:
     #     constraints = [

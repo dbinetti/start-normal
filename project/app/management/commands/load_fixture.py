@@ -9,6 +9,7 @@ from app.models import Affiliation
 from app.models import Contact
 from app.models import Organization
 from app.models import Report
+from app.models import Student
 from app.models import User
 
 
@@ -72,10 +73,15 @@ class Command(BaseCommand):
             lat=-122.0,
             parent=scsd,
         )
-        Affiliation.objects.create(
-            status=Affiliation.STATUS.signed,
+        Student.objects.create(
+            grade=Student.GRADE.sixth,
             user=user,
             organization=central,
+        )
+        Student.objects.create(
+            grade=Student.GRADE.third,
+            user=user,
+            organization=ba,
         )
         Contact.objects.create(
             name='Mao Harmeier',

@@ -267,13 +267,13 @@ def account(request):
             )
     else:
         form = AccountForm(instance=account)
-    affiliations = user.affiliations.order_by('created')
+    students = user.students.order_by('grade')
     return render(
         request,
         'app/account/account.html', {
             'user': user,
             'form': form,
-            'affiliations': affiliations,
+            'students': students,
         },
     )
 

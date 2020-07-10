@@ -25,6 +25,9 @@
             <div class='form-group'>
               <input disabled='true' type="text" name="email" value="{{user.email}}" class="form-control" id="id_email">
             </div>
+            <div class="form-group">
+              {% bootstrap_field form.message show_help=False show_label=False%}
+            </div>
             <div class='row'>
               <div class="form-group form-check-inline">
                 {% bootstrap_field form.is_public show_help=False show_label=False size='large'%}
@@ -68,28 +71,31 @@
   </section>
 
   <section class='my-5'>
-    <table class='table'>
-      <thead>
-        <tr>
-          <th>School</th>
-          <th>Message</th>
-          <th>Updated</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for affiliation in affiliations %}
-          <tr>
-            <td><a href='{% url "affiliation" affiliation.id %}'>{{affiliation.organization.name}}</a></td>
-            <td>{{affiliation.message|truncatewords:5|default:"(No message)" }}</td>
-            <td>{{affiliation.updated|date}}</td>
-            <td>{{affiliation.get_status_display}}</td>
-          </tr>
-        {% endfor %}
-      </tbody>
-      <tfoot>
-      </tfoot>
-    </table>
+    <div class='card'>
+      <div class='card-header'>
+        <h4>Students</h4>
+      </div>
+      <div class='card-body'>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>School</th>
+              <th>Grade</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for student in students %}
+              <tr>
+                <td>{{student.organization.name}}</td>
+                <td>{{student.get_grade_display}}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+          <tfoot>
+          </tfoot>
+        </table>
+      </div>
+    </div>
   </section>
 
 {% endblock content %}
