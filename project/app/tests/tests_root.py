@@ -7,7 +7,7 @@ from django.test import TestCase
 from django.urls import reverse
 
 # First-Party
-from app.forms import SignatureForm
+from app.forms import AffiliationForm
 
 # def test_index_anon(anon_client):
 #     path = reverse('index')
@@ -72,13 +72,13 @@ from app.forms import SignatureForm
     #     response = self.client.get(reverse('thanks'))
     #     self.assertEqual(response.status_code, 200)
 
-    # def test_signature_form(self):
+    # def test_affiliation_form(self):
     #     form_data = {
     #         'name': 'foobar',
     #         'email': 'foo@bar.com',
     #         'location': 'sc',
     #     }
-    #     form = SignatureForm(data=form_data)
+    #     form = AffiliationForm(data=form_data)
     #     self.assertTrue(form.is_valid())
 
 

@@ -356,7 +356,7 @@ class Organization(MPTTModel):
         order_insertion_by = ['name']
 
 
-class Signature(models.Model):
+class Affiliation(models.Model):
     STATUS = Choices(
         (0, 'new', 'New'),
         (10, 'signed', 'Signed'),
@@ -376,7 +376,7 @@ class Signature(models.Model):
         max_length=512,
         blank=True,
         default='',
-        help_text="""Feel free to include a public message attached to your signature.""",
+        help_text="""Feel free to include a public message attached to your affiliation.""",
     )
     created = models.DateTimeField(
         auto_now_add=True,
@@ -387,11 +387,11 @@ class Signature(models.Model):
     user = models.ForeignKey(
         'app.User',
         on_delete=models.CASCADE,
-        related_name='signatures',
+        related_name='affiliations',
     )
     organization = models.ForeignKey(
         'app.Organization',
-        related_name='signatures',
+        related_name='affiliations',
         on_delete=models.CASCADE,
     )
 
@@ -405,7 +405,7 @@ class Signature(models.Model):
     #                 'user',
     #                 'organization',
     #             ],
-    #             name='unique_signature',
+    #             name='unique_affiliation',
     #         )
     #     ]
 

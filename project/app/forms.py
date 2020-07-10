@@ -6,7 +6,7 @@ from django.contrib.auth.forms import UserCreationForm as UserCreationFormBase
 
 # Local
 from .models import Account
-from .models import Signature
+from .models import Affiliation
 from .models import User
 
 
@@ -57,9 +57,9 @@ class SignForm(forms.Form):
     )
 
 
-class SignatureForm(forms.ModelForm):
+class AffiliationForm(forms.ModelForm):
     class Meta:
-        model = Signature
+        model = Affiliation
         fields = [
             'status',
             'message',
@@ -80,7 +80,7 @@ class SignatureForm(forms.ModelForm):
 
 class SignExistingForm(forms.ModelForm):
     class Meta:
-        model = Signature
+        model = Affiliation
         fields = [
             'message',
             'organization',
@@ -126,7 +126,7 @@ class SignupForm(forms.Form):
         widget=forms.Textarea(
             attrs={
                 'class': 'form-control h-25',
-                'placeholder': 'Attach a Public Message to your Signature (Optional)',
+                'placeholder': 'Attach a Public Message to your Affiliation (Optional)',
                 'rows': 5,
             }
         )

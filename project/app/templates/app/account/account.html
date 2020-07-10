@@ -78,12 +78,12 @@
         </tr>
       </thead>
       <tbody>
-        {% for signature in signatures %}
+        {% for affiliation in affiliations %}
           <tr>
-            <td><a href='{% url "signature" signature.id %}'>{{signature.organization.name}}</a></td>
-            <td>{{signature.message|truncatewords:5|default:"(No message)" }}</td>
-            <td>{{signature.updated|date}}</td>
-            <td>{{signature.get_status_display}}</td>
+            <td><a href='{% url "affiliation" affiliation.id %}'>{{affiliation.organization.name}}</a></td>
+            <td>{{affiliation.message|truncatewords:5|default:"(No message)" }}</td>
+            <td>{{affiliation.updated|date}}</td>
+            <td>{{affiliation.get_status_display}}</td>
           </tr>
         {% endfor %}
       </tbody>

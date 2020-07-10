@@ -8,20 +8,20 @@ from django.contrib.auth.admin import UserAdmin as UserAdminBase
 # Local
 from .forms import UserChangeForm
 from .forms import UserCreationForm
+from .inlines import AffiliationInline
 from .inlines import ContactInline
-from .inlines import SignatureInline
 from .models import Account
+from .models import Affiliation
 from .models import Contact
 from .models import Organization
 from .models import Report
-from .models import Signature
 from .models import User
 
 
-def approve_signature(modeladmin, request, queryset):
+def approve_affiliation(modeladmin, request, queryset):
     queryset.update(is_approved=True)
 
-approve_signature.short_description = "Approve Signatures"
+approve_affiliation.short_description = "Approve Affiliations"
 
 @admin.register(Organization)
 class OrganizationAdmin(MPTTModelAdmin):
@@ -78,8 +78,8 @@ class ReportAdmin(admin.ModelAdmin):
 
 
 
-@admin.register(Signature)
-class SignatureAdmin(admin.ModelAdmin):
+@admin.register(Affiliation)
+class AffiliationAdmin(admin.ModelAdmin):
     save_on_top = True
     fields = [
         'status',
@@ -110,7 +110,7 @@ class SignatureAdmin(admin.ModelAdmin):
         'organization',
     ]
     actions = [
-        approve_signature
+        approve_affiliation
     ]
 
 
@@ -152,7 +152,7 @@ class AccountAdmin(admin.ModelAdmin):
         'user',
     ]
     inlines = [
-        # SignatureInline,
+        # AffiliationInline,
     ]
 
 

@@ -18,10 +18,10 @@ from django.core.management.base import BaseCommand
 
 # First-Party
 from app.factories import AccountFactory
+from app.factories import AffiliationFactory
 from app.factories import ContactFactory
 from app.factories import OrganizationFactory
 from app.factories import ReportFactory
-from app.factories import SignatureFactory
 from app.factories import UserFactory
 from app.models import Contact
 from app.models import Organization
@@ -80,7 +80,7 @@ class Command(BaseCommand):
             lat=-122.0,
             parent=scsd,
         )
-        SignatureFactory(
+        AffiliationFactory(
             user=user,
             organization=central,
         )

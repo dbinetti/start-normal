@@ -99,10 +99,10 @@ def mailchimp_delete_email(email):
 
 
 # @job
-# def mailchimp_add_tag(signature):
+# def mailchimp_add_tag(affiliation):
 #     client = get_mailchimp_client()
-#     email = signature.email
-#     location = signature.get_location_display()
+#     email = affiliation.email
+#     location = affiliation.get_location_display()
 #     list_id = settings.MAILCHIMP_AUDIENCE_ID
 #     subscriber_hash = get_subscriber_hash(email)
 #     data = {

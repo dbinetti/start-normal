@@ -18,7 +18,7 @@
     </p>
   </section>
 
-  {% if signature %}
+  {% if affiliation %}
     <section class='mt-2 mt-5'>
       <div class='card'>
         <div class='card-header'>
@@ -28,11 +28,11 @@
         </div>
         <div class="card-body">
           <div class='card-title'>
-            Your signature status on this organization is <strong>{{signature.get_status_display}}</strong> with this message:<br>
-            <em>{{signature.message|default:"(No message)"}}</em>
+            Your affiliation status on this organization is <strong>{{affiliation.get_status_display}}</strong> with this message:<br>
+            <em>{{affiliation.message|default:"(No message)"}}</em>
           </div>
           <div class='card-text'>
-            <a href='{% url "signature" signature.id %}'>Update Signature</a>
+            <a href='{% url "affiliation" affiliation.id %}'>Update Affiliation</a>
           </div>
         </div>
       </div>
@@ -89,12 +89,12 @@
     </section>
   {% endif %}
 
-  {% if signatures.count > 10 %}
+  {% if affiliations.count > 10 %}
     <section class='my-5'>
       <div class='card'>
         <div class='card-header'>
           <h5>
-            Signatures
+            Affiliations
           </h5>
         </div>
         <div class="card-body">
@@ -106,16 +106,16 @@
               </tr>
             </thead>
             <tbody>
-              {% for signature in signatures %}
+              {% for affiliation in affiliations %}
                 <tr>
                   <td>
-                    {% if signature.user.account.is_public %}
-                      {{signature.user.name}}
+                    {% if affiliation.user.account.is_public %}
+                      {{affiliation.user.name}}
                     {% else %}
                       <em>Name Withheld</em>
                     {% endif %}
                   </td>
-                  <td>{{signature.message|truncatewords:5|default:"(No message)" }}</td>
+                  <td>{{affiliation.message|truncatewords:5|default:"(No message)" }}</td>
                 </tr>
               {% endfor %}
             </tbody>

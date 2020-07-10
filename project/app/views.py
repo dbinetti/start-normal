@@ -32,17 +32,17 @@ from django.urls import reverse_lazy
 
 # Local
 from .forms import AccountForm
+from .forms import AffiliationForm
 from .forms import DeleteForm
 from .forms import RemoveForm
-from .forms import SignatureForm
 from .forms import SignExistingForm
 from .forms import SignForm
 from .forms import SignupForm
 from .forms import SubscribeForm
 from .forms import UserCreationForm
 from .models import Account
+from .models import Affiliation
 from .models import Organization
-from .models import Signature
 from .models import User
 from .tasks import build_email
 from .tasks import mailchimp_create_or_update_from_account
@@ -84,28 +84,28 @@ def involved(request):
 def organization(request, slug):
     user = request.user
     organization = Organization.objects.get(slug=slug)
-    signatures = organization.signatures.filter(
-        status=Signature.STATUS.signed,
+    affiliations = organization.affiliations.filter(
+        status=Affiliation.STATUS.signed,
     ).order_by('-created')
     try:
-        signature = organization.signatures.get(user=user)
+        affiliation = organization.affiliations.get(user=user)
     except Exception:
         # Anonymous
-        signature = None
-    except Signature.DoesNotExist:
-        signature = None
+        affiliation = None
+    except Affiliation.DoesNotExist:
+        affiliation = None
     if user.is_authenticated:
-        if signature:
+        if affiliation:
             form = None
         else:
             if request.method == "POST":
                 form = SignExistingForm(request.POST)
                 if form.is_valid():
-                    form.status = Signature.STATUS.signed
+                    form.status = Affiliation.STATUS.signed
                     form.save()
                     messages.success(
                         request,
-                        "Your Signature has been Saved!",
+                        "Your Affiliation has been Saved!",
                     )
                     return redirect('account')
             else:
@@ -164,9 +164,9 @@ def organization(request, slug):
             account.is_subscribe = is_subscribe
             account.save()
 
-            # Create Signature
-            signature = Signature.objects.create(
-                status=Signature.STATUS.signed,
+            # Create Affiliation
+            affiliation = Affiliation.objects.create(
+                status=Affiliation.STATUS.signed,
                 message=message,
                 user=user,
                 organization=organization,
@@ -174,44 +174,44 @@ def organization(request, slug):
             log_in(request, user)
             messages.success(
                 request,
-                "Your Signature has Been Added to the Organization!",
+                "Your Affiliation has Been Added to the Organization!",
             )
             return redirect('pending')
-    signatures.count = 100
+    affiliations.count = 100
     return render(
         request,
         'app/involved/organization.html',
         context={
             'organization': organization,
             'form': form,
-            'signature': signature,
-            'signatures': signatures,
+            'affiliation': affiliation,
+            'affiliations': affiliations,
         },
     )
 
 @login_required
-def signature(request, id):
-    signature = Signature.objects.get(
+def affiliation(request, id):
+    affiliation = Affiliation.objects.get(
         id=id,
     )
-    organization = signature.organization
+    organization = affiliation.organization
     if request.method == "POST":
-        form = SignatureForm(request.POST, instance=signature)
+        form = AffiliationForm(request.POST, instance=affiliation)
         if form.is_valid():
-            signature.save()
+            affiliation.save()
             messages.success(
                 request,
-                "Signature Saved!",
+                "Affiliation Saved!",
             )
             return redirect('account')
     else:
-        form = SignatureForm(instance=signature)
+        form = AffiliationForm(instance=affiliation)
     return render(
         request,
-        'app/involved/signature.html',
+        'app/involved/affiliation.html',
         context = {
             'organization': organization,
-            'signature': signature,
+            'affiliation': affiliation,
             'form': form,
         },
     )
@@ -267,13 +267,13 @@ def account(request):
             )
     else:
         form = AccountForm(instance=account)
-    signatures = account.user.signatures.order_by('created')
+    affiliations = account.user.affiliations.order_by('created')
     return render(
         request,
         'app/account/account.html', {
             'user': user,
             'form': form,
-            'signatures': signatures,
+            'affiliations': affiliations,
         },
     )
 
@@ -390,14 +390,14 @@ def logout(request):
 # Admin
 @staff_member_required
 def report(request):
-    report = Signature.objects.order_by(
+    report = Affiliation.objects.order_by(
         'organization',
     ).values(
         'organization',
     ).annotate(
         c=Count('id'),
     )
-    total = Signature.objects.aggregate(
+    total = Affiliation.objects.aggregate(
         c=Count('id'),
     )['c']
     return render(

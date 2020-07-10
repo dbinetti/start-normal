@@ -4,8 +4,8 @@ from django.apps import apps
 from django.contrib import admin
 
 # Local
+from .models import Affiliation
 from .models import Contact
-from .models import Signature
 
 
 class ContactInline(admin.TabularInline):
@@ -29,8 +29,8 @@ class ContactInline(admin.TabularInline):
     ]
 
 
-class SignatureInline(admin.TabularInline):
-    model = Signature
+class AffiliationInline(admin.TabularInline):
+    model = Affiliation
     fields = [
         'is_approved',
         'message',
