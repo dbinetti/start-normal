@@ -1,0 +1,53 @@
+{% extends 'app/base.html' %}
+
+{% load bootstrap4 %}
+{% load humanize %}
+{% load location %}
+
+{% block title %}{{petition.name}}{% endblock title %}
+{% block header %}{{petition.name}}{% endblock header %}
+{% block subheader %}
+  {{petition.address}}, {{petition.city}}, {{petition.state}}&nbsp;&nbsp;<a href='tel:{{petition.phone}}'>{{petition.phone}}</a>&nbsp;<a href='{{petition.website}}'>{{petition.website}}</a>
+{% endblock subheader %}
+
+{% block content %}
+
+<section>
+  <p class='lead'>
+    This is your current signature status.  Remove, re-sign, or update your public message using the form below.
+  </p>
+</section>
+
+<section class='mt-2 mt-5'>
+  <div class='card'>
+    <div class='card-header'>
+      <h5>
+        Signature Details
+      </h5>
+    </div>
+    <div class="card-body">
+      <div class='card-text'>
+        <form method='post'>
+          {% csrf_token %}
+          {% bootstrap_form_errors form %}
+          {% bootstrap_field form.status show_label=False show_help=True%}
+          {% bootstrap_field form.message show_label=False show_help=True%}
+          {% bootstrap_field form.user %}
+          {% bootstrap_field form.petition %}
+          {% buttons %}
+            <button type="submit" class="btn btn-primary btn-lg btn-block" id='id-button-signup'>
+              Save Signature Details
+            </button>
+          {% endbuttons %}
+        </form>
+      </div>
+    </div>
+    <div class='card-footer'>
+      <p class="card-text"><small>
+        <span class='text-muted'>Your information isn't shared with anyone and all data will be deleted when this project is over.  Learn more <a href='{% url "about" %}'>about me</a>.</span></small>
+      </p>
+    </div>
+  </div>
+</section>
+
+{% endblock content %}

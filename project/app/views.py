@@ -209,63 +209,31 @@ def petition(request, slug):
         },
     )
 
-
 @login_required
 def signature(request, id):
     signature = Signature.objects.get(
         id=id,
     )
-    return render(
-        request,
-        'app/involved/signature.html',
-        {'signature': signature},
-    )
-
-@login_required
-def signature_add(request, id):
-    signature = Signature.objects.get(
-        id=id,
-    )
+    petition = signature.petition
     if request.method == "POST":
-        form = SignForm(request.POST)
+        form = SignatureForm(request.POST, instance=signature)
         if form.is_valid():
-            signature.status = signature.STATUS.signed
             signature.save()
             messages.success(
                 request,
-                "Signature Added!",
+                "Signature Saved!",
             )
             return redirect('account')
     else:
-        form = SignForm()
+        form = SignatureForm(instance=signature)
     return render(
         request,
-        'app/involved/signature_add.html',
-        {'form': form,},
-    )
-
-
-@login_required
-def signature_remove(request, id):
-    signature = Signature.objects.get(
-        id=id,
-    )
-    if request.method == "POST":
-        form = RemoveForm(request.POST)
-        if form.is_valid():
-            signature.status = signature.STATUS.removed
-            signature.save()
-            messages.error(
-                request,
-                "Signature Removed!",
-            )
-            return redirect('account')
-    else:
-        form = RemoveForm()
-    return render(
-        request,
-        'app/involved/signature_remove.html',
-        {'form': form,},
+        'app/involved/signature.html',
+        context = {
+            'petition': petition,
+            'signature': signature,
+            'form': form,
+        },
     )
 
 

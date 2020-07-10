@@ -72,24 +72,18 @@
       <theaad>
         <tr>
           <th>Petition</th>
+          <th>Message</th>
+          <th>Updated</th>
           <th>Status</th>
-          <th>Signed</th>
-          <th>Action</th>
         </tr>
       </thead>
       <tbody>
         {% for signature in signatures %}
           <tr>
-            <td>{{signature.petition.name}}</td>
+            <td><a href='{% url "signature" signature.id %}'>{{signature.petition.name}}</a></td>
+            <td>{{signature.message|truncatewords:5|default:"(No message)" }}</td>
+            <td>{{signature.updated|date}}</td>
             <td>{{signature.get_status_display}}</td>
-            <td>{{signature.created|date}}</td>
-            <td>
-              {% if signature.status == signature.STATUS.signed %}
-                <a href='{% url "signature-remove" signature.id %}'><span class='text-danger'>Remove</span></a>
-              {% else %}
-                <a href='{% url "signature-add" signature.id %}'><span class='text-success'>Re-Sign</span></a>
-              {% endif %}
-            </td>
           </tr>
         {% endfor %}
       </tbody>
