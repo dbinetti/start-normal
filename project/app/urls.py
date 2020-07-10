@@ -14,8 +14,8 @@ urlpatterns = [
     path('involved', views.involved, name='involved'),
     path('petition/<slug>', views.petition, name='petition'),
     # path('signature/<id>', views.signature, name='signature'),
-    # path('signature/<id>/add', views.signature_add, name='signature-add'),
-    # path('signature/<id>/remove', views.signature_remove, name='signature-remove'),
+    path('signature/<id>/add', views.signature_add, name='signature-add'),
+    path('signature/<id>/remove', views.signature_remove, name='signature-remove'),
 
     # Informed
     path('informed', views.informed, name='informed',),

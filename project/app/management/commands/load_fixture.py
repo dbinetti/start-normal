@@ -29,6 +29,20 @@ class Command(BaseCommand):
             is_admin=False,
         )
         petition = PetitionFactory()
+        ba = PetitionFactory(
+            is_active=True,
+            name='Brittan Acres',
+            status=Petition.STATUS.active,
+            kind=Petition.KIND.elementary,
+            nces_id=5402,
+            address='123 Main St',
+            city='San Carlos',
+            state='CA',
+            website=Faker('url'),
+            lon=32.0,
+            lat=-122.0,
+        )
+
         SignatureFactory(
             user=user,
             petition=petition,

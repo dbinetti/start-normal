@@ -35,6 +35,7 @@ from .forms import AccountForm
 from .forms import DeleteForm
 from .forms import RemoveForm
 from .forms import SignatureForm
+from .forms import SignForm
 from .forms import SignupForm
 from .forms import SubscribeForm
 from .forms import UserCreationForm
@@ -225,11 +226,24 @@ def signature_add(request, id):
     signature = Signature.objects.get(
         id=id,
     )
+    if request.method == "POST":
+        form = SignForm(request.POST)
+        if form.is_valid():
+            signature.status = signature.STATUS.signed
+            signature.save()
+            messages.success(
+                request,
+                "Signature Added!",
+            )
+            return redirect('account')
+    else:
+        form = SignForm()
     return render(
         request,
         'app/involved/signature_add.html',
-        {'signature': signature},
+        {'form': form,},
     )
+
 
 @login_required
 def signature_remove(request, id):

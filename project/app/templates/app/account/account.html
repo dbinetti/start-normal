@@ -74,14 +74,22 @@
           <th>Petition</th>
           <th>Status</th>
           <th>Signed</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
         {% for signature in signatures %}
           <tr>
-            {# <td><a href='{% url "signature" signature.id %}'>{{signature.petition.name}}</a></td> #}
-            <td>{{signature.status}}</td>
+            <td>{{signature.petition.name}}</td>
+            <td>{{signature.get_status_display}}</td>
             <td>{{signature.created|date}}</td>
+            <td>
+              {% if signature.status == signature.STATUS.signed %}
+                <a href='{% url "signature-remove" signature.id %}'><span class='text-danger'>Remove</span></a>
+              {% else %}
+                <a href='{% url "signature-add" signature.id %}'><span class='text-success'>Re-Sign</span></a>
+              {% endif %}
+            </td>
           </tr>
         {% endfor %}
       </tbody>

@@ -51,6 +51,12 @@ class RemoveForm(forms.Form):
     )
 
 
+class SignForm(forms.Form):
+    confirm = forms.BooleanField(
+        required=True,
+    )
+
+
 class SignatureForm(forms.ModelForm):
     class Meta:
         model = Signature
