@@ -2,6 +2,15 @@
 # Standard Library
 import json
 
+# Third-Party
+import django_rq
+import requests
+import shortuuid
+from auth0.v3.authentication import Database
+from auth0.v3.authentication import Logout
+from auth0.v3.exceptions import Auth0Error
+from django_rq import job
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
@@ -21,15 +30,6 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.urls import reverse_lazy
 
-# First-Party
-import django_rq
-import requests
-import shortuuid
-from auth0.v3.authentication import Database
-from auth0.v3.authentication import Logout
-from auth0.v3.exceptions import Auth0Error
-from django_rq import job
-
 # Local
 from .forms import AccountForm
 from .forms import DeleteForm
@@ -41,10 +41,7 @@ from .forms import SignupForm
 from .forms import SubscribeForm
 from .forms import UserCreationForm
 from .models import Account
-from .models import District
-from .models import Faq
 from .models import Petition
-from .models import School
 from .models import Signature
 from .models import User
 from .tasks import build_email
@@ -64,19 +61,6 @@ def about(request):
     return render(
         request,
         'app/about.html',
-    )
-
-def faq(request):
-    faqs = Faq.objects.filter(
-        is_active=True,
-    ).order_by(
-        'num',
-        'created',
-    )
-    return render(
-        request,
-        'app/faq.html',
-        {'faqs': faqs},
     )
 
 def robots(request):

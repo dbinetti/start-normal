@@ -1,9 +1,9 @@
 # Django
+# Third-Party
+from mptt.admin import MPTTModelAdmin
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as UserAdminBase
-
-# First-Party
-from mptt.admin import MPTTModelAdmin
 
 # Local
 from .forms import UserChangeForm
@@ -12,11 +12,8 @@ from .inlines import ContactInline
 from .inlines import SignatureInline
 from .models import Account
 from .models import Contact
-from .models import District
-from .models import Faq
 from .models import Petition
 from .models import Report
-from .models import School
 from .models import Signature
 from .models import User
 
@@ -53,49 +50,6 @@ class PetitionAdmin(MPTTModelAdmin):
     ]
 
 
-@admin.register(School)
-class SchoolAdmin(admin.ModelAdmin):
-    exclude = [
-        'slug',
-    ]
-    list_display = [
-        'name',
-        'status',
-        'cd_id',
-        'county',
-        'soc',
-        'funding',
-        'is_charter',
-        'edops',
-        'eil',
-        'grades',
-        'virtual',
-        'is_magnet',
-        'address',
-        'website',
-        'phone',
-        'admin_first_name',
-        'admin_last_name',
-        'admin_email',
-    ]
-    list_filter = [
-        'is_active',
-        'status',
-        'soc',
-        'funding',
-        'is_charter',
-        'edops',
-        'eil',
-        'virtual',
-        'is_magnet',
-    ]
-    search_fields = [
-        'name',
-    ]
-    inlines = [
-        # ContactInline,
-    ]
-
 
 @admin.register(Report)
 class ReportAdmin(admin.ModelAdmin):
@@ -122,63 +76,6 @@ class ReportAdmin(admin.ModelAdmin):
         'petition',
     ]
 
-@admin.register(District)
-class DistrictAdmin(admin.ModelAdmin):
-    save_on_top = True
-    exclude = [
-        'name',
-        'meeting_date',
-    ]
-    list_display = [
-        'name',
-        'status',
-        'cd_id',
-        'nces_district_id',
-        'county',
-    ]
-    list_filter = [
-        'is_active',
-        'status',
-        'doc',
-        'created',
-    ]
-    search_fields = [
-        'name',
-    ]
-    inlines = [
-        # ContactInline,
-    ]
-    ordering = [
-        'name',
-    ]
-
-
-@admin.register(Faq)
-class FaqAdmin(admin.ModelAdmin):
-    save_on_top = True
-    fields = [
-        'is_active',
-        'num',
-        'question',
-        'answer',
-    ]
-    list_display = [
-        'question',
-        'num',
-        'is_active',
-    ]
-    list_editable = [
-        'num',
-    ]
-    list_filter = [
-        'is_active',
-        'created',
-        'updated',
-    ]
-    search_fields = [
-        'question',
-        'answer',
-    ]
 
 
 @admin.register(Signature)

@@ -1,17 +1,15 @@
 # Standard Library
 import csv
 
+# Third-Party
+from algoliasearch_django.decorators import disable_auto_indexing
+
 # Django
 from django.db import IntegrityError
-
-# First-Party
-from algoliasearch_django.decorators import disable_auto_indexing
 
 # Local
 from .forms import DistrictForm
 from .forms import SchoolForm
-from .models import District
-from .models import School
 
 
 def districts_list():
