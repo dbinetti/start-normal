@@ -8,6 +8,7 @@ import requests
 import shortuuid
 from auth0.v3.authentication import Database
 from auth0.v3.authentication import Logout
+from auth0.v3.exceptions import Auth0Error
 from django_rq import job
 
 from django.conf import settings
@@ -99,6 +100,9 @@ def petition(request, slug):
     petition = Petition.objects.get(slug=slug)
     try:
         signature = petition.signatures.get(user=user)
+    except TypeError:
+        # Anonymous
+        signature = None
     except Signature.DoesNotExist:
         signature = None
     if user.is_authenticated:
@@ -139,18 +143,33 @@ def petition(request, slug):
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
             is_public = form.cleaned_data['is_public']
+            is_subscribe = form.cleaned_data['is_subscribe']
             message = form.cleaned_data['message']
 
             # Auth0 Signup
             auth0_client = Database(settings.AUTH0_DOMAIN)
-            auth0_user = auth0_client.signup(
-                client_id=settings.AUTH0_CLIENT_ID,
-                name=name,
-                email=email,
-                password=password,
-                connection='Username-Password-Authentication',
-            )
-
+            try:
+                auth0_user = auth0_client.signup(
+                    client_id=settings.AUTH0_CLIENT_ID,
+                    name=name,
+                    email=email,
+                    password=password,
+                    connection='Username-Password-Authentication',
+                )
+            except Auth0Error as e:
+                if e.error_code == 'user_exists':
+                    messages.warning(
+                        request,
+                        "That email is in use.  Try to login (upper right corner.)",
+                    )
+                    return render(
+                        request,
+                        'app/involved/petition.html',
+                        context={
+                            'petition': petition,
+                            'form': form,
+                        },
+                    )
             # Create User
             username = "auth0|{0}".format(auth0_user['_id'])
 
@@ -305,6 +324,8 @@ def pending(request):
 
 @login_required
 def welcome(request):
+    user = request.user
+
     return render(
         request,
         'app/account/welcome.html',
