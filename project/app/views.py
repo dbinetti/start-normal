@@ -267,7 +267,7 @@ def account(request):
             )
     else:
         form = AccountForm(instance=account)
-    affiliations = account.user.affiliations.order_by('created')
+    affiliations = user.affiliations.order_by('created')
     return render(
         request,
         'app/account/account.html', {

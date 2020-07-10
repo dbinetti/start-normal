@@ -101,6 +101,12 @@ class Account(models.Model):
         default=False,
         help_text="""If you're a physician please check this box.""",
     )
+    message = models.TextField(
+        max_length=512,
+        blank=True,
+        default='',
+        help_text="""Feel free to include private notes just for us.""",
+    )
     notes = models.TextField(
         max_length=512,
         blank=True,
