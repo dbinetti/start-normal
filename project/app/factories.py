@@ -30,10 +30,10 @@ from .models import User
 @mute_signals(post_delete, post_save)
 class AccountFactory(DjangoModelFactory):
     is_public = True
-    # user = RelatedFactory(
-    #     'app.factories.AccountFactory',
-    #     factory_related_name='account',
-    # )
+    user = RelatedFactory(
+        'app.factories.AccountFactory',
+        factory_related_name='account',
+    )
     class Meta:
         model = Account
 
@@ -103,9 +103,9 @@ class UserFactory(DjangoModelFactory):
     email = Faker('email')
     password = PostGenerationMethodCall('set_unusable_password')
     is_active = True
-    # account = SubFactory(
-    #     'app.factories.AccountFactory',
-    #     user=None,
-    # )
+    account = SubFactory(
+        'app.factories.AccountFactory',
+        user=None,
+    )
     class Meta:
         model = User
