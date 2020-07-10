@@ -22,6 +22,7 @@ from django.db.models.signals import post_save
 from .models import Account
 from .models import Contact
 from .models import Petition
+from .models import Report
 from .models import Signature
 from .models import User
 
@@ -29,25 +30,40 @@ from .models import User
 @mute_signals(post_delete, post_save)
 class AccountFactory(DjangoModelFactory):
     is_public = True
-    user = SubFactory(
-        'app.factories.UserFactory',
-        account=None,
-    )
+    # user = RelatedFactory(
+    #     'app.factories.AccountFactory',
+    #     factory_related_name='account',
+    # )
     class Meta:
         model = Account
 
-@mute_signals(post_delete, post_save)
-class UserFactory(DjangoModelFactory):
-    name = Faker('name_male')
-    email = Faker('email')
-    password = PostGenerationMethodCall('set_unusable_password')
+
+class ContactFactory(DjangoModelFactory):
     is_active = True
-    account = RelatedFactory(
-        'app.factories.AccountFactory',
-        factory_related_name='user',
-    )
+    name = 'Seymour Skinner'
+    role = Contact.ROLE.principal
+    # petition = RelatedFactory(
+    #     'app.factories.PetitionFactory',
+    #     factory_related_name='petition',
+    # )
     class Meta:
-        model = User
+        model = Contact
+
+
+class ReportFactory(DjangoModelFactory):
+    status = Report.STATUS.approved
+    name = 'Bad News'
+    text = 'Now is the time for all good men to come to the aid of their schools.'
+    # petition = RelatedFactory(
+    #     'app.factories.PetitionFactory',
+    #     factory_related_name='petition',
+    # )
+    # user = RelatedFactory(
+    #     'app.factories.UserFactory',
+    #     factory_related_name='user',
+    # )
+    class Meta:
+        model = Report
 
 
 class PetitionFactory(DjangoModelFactory):
@@ -69,7 +85,27 @@ class PetitionFactory(DjangoModelFactory):
 class SignatureFactory(DjangoModelFactory):
     is_approved = True
     message = "Foo to the Bar!"
-    petition = RelatedFactory('app.factories.PetitionFactory', factory_related_name='petition')
-    user = RelatedFactory('app.factories.UserFactory', factory_related_name='user')
+    # petition = RelatedFactory(
+    #     'app.factories.PetitionFactory',
+    #     factory_related_name='petition',
+    # )
+    # user = RelatedFactory(
+    #     'app.factories.UserFactory',
+    #     factory_related_name='user',
+    # )
     class Meta:
         model = Signature
+
+
+@mute_signals(post_delete, post_save)
+class UserFactory(DjangoModelFactory):
+    name = Faker('name_male')
+    email = Faker('email')
+    password = PostGenerationMethodCall('set_unusable_password')
+    is_active = True
+    # account = SubFactory(
+    #     'app.factories.AccountFactory',
+    #     user=None,
+    # )
+    class Meta:
+        model = User

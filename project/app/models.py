@@ -1,13 +1,7 @@
 # Standard Library
 from operator import attrgetter
 
-# Django
-from django.contrib.auth.models import AbstractBaseUser
-from django.db import models
-from django.db.models.constraints import UniqueConstraint
-from django.utils.text import slugify
-
-# First-Party
+# Third-Party
 import shortuuid
 from autoslug import AutoSlugField
 from hashid_field import HashidAutoField
@@ -15,6 +9,12 @@ from model_utils import Choices
 from mptt.models import MPTTModel
 from mptt.models import TreeForeignKey
 from shortuuidfield import ShortUUIDField
+
+# Django
+from django.contrib.auth.models import AbstractBaseUser
+from django.db import models
+from django.db.models.constraints import UniqueConstraint
+from django.utils.text import slugify
 
 # Local
 from .managers import UserManager
@@ -356,6 +356,141 @@ class Petition(MPTTModel):
         order_insertion_by = ['name']
 
 
+class Signature(models.Model):
+    STATUS = Choices(
+        (0, 'new', 'New'),
+        (10, 'signed', 'Signed'),
+        (20, 'removed', 'Removed'),
+    )
+    id = HashidAutoField(
+        primary_key=True,
+    )
+    status = models.IntegerField(
+        choices=STATUS,
+        default=STATUS.signed,
+    )
+    is_approved = models.BooleanField(
+        default=False,
+    )
+    message = models.TextField(
+        max_length=512,
+        blank=True,
+        default='',
+        help_text="""Feel free to include a public message attached to your signature.""",
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+    user = models.ForeignKey(
+        'app.User',
+        on_delete=models.CASCADE,
+        related_name='signatures',
+    )
+    petition = models.ForeignKey(
+        'app.Petition',
+        related_name='signatures',
+        on_delete=models.CASCADE,
+    )
+
+    def __str__(self):
+        return str(self.name)
+
+    class Meta:
+        constraints = [
+            UniqueConstraint(
+                fields=[
+                    'user',
+                    'petition',
+                ],
+                name='unique_signature',
+            )
+        ]
+
+
+class User(AbstractBaseUser):
+    id = HashidAutoField(
+        primary_key=True,
+    )
+    username = models.CharField(
+        max_length=150,
+        blank=False,
+        unique=True,
+    )
+    email = models.EmailField(
+        blank=False,
+        unique=True,
+    )
+    name = models.CharField(
+        max_length=255,
+        blank=False,
+    )
+    is_active = models.BooleanField(
+        default=False,
+    )
+    is_admin = models.BooleanField(
+        default=False,
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = [
+        'name',
+    ]
+
+    objects = UserManager()
+
+    @property
+    def is_staff(self):
+        return self.is_admin
+
+    def __str__(self):
+        return self.name
+
+    def has_perm(self, perm, obj=None):
+        return True
+
+    def has_module_perms(self, app_label):
+        return True
+
+
+
+
+class Faq(models.Model):
+
+    id = HashidAutoField(
+        primary_key=True,
+    )
+    is_active = models.BooleanField(
+        default=True,
+    )
+    num = models.IntegerField(
+        default=50,
+    )
+    question = models.CharField(
+        max_length=255,
+        blank=False,
+    )
+    answer = models.TextField(
+        blank=False,
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+    def __str__(self):
+        return str(slugify(self.question))
+
+
 class District(models.Model):
     STATUS = Choices(
         (10, 'active', "Active"),
@@ -690,136 +825,3 @@ class School(models.Model):
 
     def __str__(self):
         return str(self.name)
-
-
-class Faq(models.Model):
-
-    id = HashidAutoField(
-        primary_key=True,
-    )
-    is_active = models.BooleanField(
-        default=True,
-    )
-    num = models.IntegerField(
-        default=50,
-    )
-    question = models.CharField(
-        max_length=255,
-        blank=False,
-    )
-    answer = models.TextField(
-        blank=False,
-    )
-    created = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated = models.DateTimeField(
-        auto_now=True,
-    )
-    def __str__(self):
-        return str(slugify(self.question))
-
-
-class Signature(models.Model):
-    STATUS = Choices(
-        (0, 'new', 'New'),
-        (10, 'signed', 'Signed'),
-        (20, 'removed', 'Removed'),
-    )
-    id = HashidAutoField(
-        primary_key=True,
-    )
-    status = models.IntegerField(
-        choices=STATUS,
-        default=STATUS.signed,
-    )
-    is_approved = models.BooleanField(
-        default=False,
-    )
-    message = models.TextField(
-        max_length=512,
-        blank=True,
-        default='',
-        help_text="""Feel free to include a public message attached to your signature.""",
-    )
-    created = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated = models.DateTimeField(
-        auto_now=True,
-    )
-    user = models.ForeignKey(
-        'app.User',
-        on_delete=models.CASCADE,
-        related_name='signatures',
-    )
-    petition = models.ForeignKey(
-        'app.Petition',
-        related_name='signatures',
-        on_delete=models.CASCADE,
-    )
-
-    def __str__(self):
-        return str(self.name)
-
-    class Meta:
-        constraints = [
-            UniqueConstraint(
-                fields=[
-                    'user',
-                    'petition',
-                ],
-                name='unique_signature',
-            )
-        ]
-
-
-class User(AbstractBaseUser):
-    id = HashidAutoField(
-        primary_key=True,
-    )
-    username = models.CharField(
-        max_length=150,
-        blank=False,
-        unique=True,
-    )
-    email = models.EmailField(
-        blank=False,
-        unique=True,
-    )
-    name = models.CharField(
-        max_length=255,
-        blank=False,
-    )
-    is_active = models.BooleanField(
-        default=False,
-    )
-    is_admin = models.BooleanField(
-        default=False,
-    )
-    created = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated = models.DateTimeField(
-        auto_now=True,
-    )
-
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = [
-        'name',
-    ]
-
-    objects = UserManager()
-
-    @property
-    def is_staff(self):
-        return self.is_admin
-
-    def __str__(self):
-        return self.name
-
-    def has_perm(self, perm, obj=None):
-        return True
-
-    def has_module_perms(self, app_label):
-        return True
