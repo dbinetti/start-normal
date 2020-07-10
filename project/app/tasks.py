@@ -3,20 +3,20 @@
 import json
 from textwrap import wrap
 
-# Django
-from django.conf import settings
-from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import PasswordResetForm
-from django.core.mail import EmailMessage
-from django.template.loader import render_to_string
-
-# First-Party
+# Third-Party
 from auth0.v3.authentication import GetToken
 from auth0.v3.management import Auth0
 from django_rq import job
 from mailchimp3 import MailChimp
 from mailchimp3.helpers import get_subscriber_hash
 from mailchimp3.mailchimpclient import MailChimpError
+
+# Django
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import PasswordResetForm
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
 
 
 def auth0_get_client():
