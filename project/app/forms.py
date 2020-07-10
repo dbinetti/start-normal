@@ -1,4 +1,7 @@
 # Django
+# Third-Party
+from dal import autocomplete
+
 from django import forms
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.forms import UserChangeForm as UserChangeFormBase
@@ -109,7 +112,7 @@ class StudentForm(forms.ModelForm):
             'user',
         ]
         widgets = {
-            'organization': forms.HiddenInput(),
+            'organization': autocomplete.ModelSelect2(url='school-search'),
             'user': forms.HiddenInput(),
         }
 

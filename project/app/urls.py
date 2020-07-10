@@ -30,6 +30,9 @@ urlpatterns = [
     path('callback', views.callback, name='callback'),
     path('logout', views.logout, name='logout'),
 
+    # Autocomplete
+    path('school-search', views.SchoolAutocomplete.as_view(), name='school-search',),
+
     # Admin
     path('report', views.report, name='report',),
 ]

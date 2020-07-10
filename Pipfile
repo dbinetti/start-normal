@@ -35,6 +35,7 @@ django-hashid-field = "*"
 algoliasearch-django = "*"
 django-autoslug = "*"
 django-mptt = "*"
+django-autocomplete-light = "*"
 
 [requires]
 python_full_version = "3.8.3"

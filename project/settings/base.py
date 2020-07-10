@@ -3,12 +3,11 @@
 # Standard Library
 import os
 
-# Django
-from django.contrib.messages import constants as messages
-
-# First-Party
 from environ import Env
 from environ import Path
+
+# Django
+from django.contrib.messages import constants as messages
 
 # Set Environment
 env = Env(
@@ -199,6 +198,8 @@ INSTALLED_APPS = [
     'django_rq',
     'algoliasearch_django',
     'bootstrap4',
+    'dal',
+    'dal_select2',
     'mptt',
     'app',
 ]

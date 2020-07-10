@@ -9,6 +9,7 @@ import shortuuid
 from auth0.v3.authentication import Database
 from auth0.v3.authentication import Logout
 from auth0.v3.exceptions import Auth0Error
+from dal import autocomplete
 from django_rq import job
 
 from django.conf import settings
@@ -30,9 +31,6 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.urls import reverse_lazy
-
-# First-Party
-from dal import autocomplete
 
 # Local
 from .forms import AccountForm
@@ -333,6 +331,17 @@ def pending(request):
         'app/account/pending.html',
     )
 
+class SchoolAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        # Don't forget to filter out results depending on the visitor !
+        qs = Organization.objects.filter(kind__gt=500)
+
+        if self.q:
+            qs = qs.filter(slug__icontains=self.q)
+
+        return qs
+
+
 @login_required
 def welcome(request):
     user = request.user
@@ -344,17 +353,25 @@ def welcome(request):
         user.is_active = True
         user.save()
 
-    StudentFormSet = formset_factory(StudentForm)
+    StudentFormSet = formset_factory(StudentForm, extra=2)
     if request.method == "POST":
-        formset = StudentFormSet(request.POST)
+        formset = StudentFormSet(request.POST, request.FILES)
         if formset.is_valid():
-            formset.save()
+            for form in formset:
+                form.save()
             messages.success(
                 request,
                 "Saved!",
             )
+            redirect('account')
+        else:
+            print(formset.errors)
     else:
-        formset = StudentFormSet()
+        formset = StudentFormSet(
+            initial=[
+                {'user': user,}
+            ]
+        )
     return render(
         request,
         'app/account/welcome.html',

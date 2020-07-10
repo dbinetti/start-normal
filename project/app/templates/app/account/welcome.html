@@ -14,10 +14,10 @@
     Next, if you have children please select their schools so we can direct your message to the proper public officials
   </p>
   <p>
-    <form method='post' action='{% url "account" %}' class=' form-horizontal' role='form'>
+    <form method='post'>
       {% csrf_token %}
       {% bootstrap_formset_errors formset %}
-      {% bootstrap_formset formset %}
+      {% bootstrap_formset formset layout='horizontal'%}
       {% buttons %}
         <button type="submit" class="btn btn-primary btn-lg btn-block">
           Save Students
@@ -31,3 +31,6 @@
 
 </section>
 {% endblock content %}
+{% block scripts %}
+  {{formset.media}}
+{% endblock scripts %}
