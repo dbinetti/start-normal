@@ -34,13 +34,13 @@ class SignatureInline(admin.TabularInline):
     fields = [
         'is_approved',
         'message',
-        'account',
+        'user',
         'petition',
     ]
     readonly_fields = [
     ]
     ordering = (
-        'account',
+        'user',
     )
     show_change_link = True
     extra = 0

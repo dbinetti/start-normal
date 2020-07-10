@@ -712,6 +712,12 @@ class Signature(models.Model):
         on_delete=models.CASCADE,
         related_name='signatures',
     )
+    user = models.ForeignKey(
+        'app.User',
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name='signatures',
+    )
     petition = models.ForeignKey(
         'app.Petition',
         related_name='signatures',

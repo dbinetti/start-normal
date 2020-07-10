@@ -57,7 +57,7 @@ class SignatureForm(forms.ModelForm):
         fields = [
             'message',
             'petition',
-            'account',
+            'user',
         ]
         widgets = {
             'message': forms.Textarea(
@@ -68,7 +68,7 @@ class SignatureForm(forms.ModelForm):
                 }
             ),
             'petition': forms.HiddenInput(),
-            'account': forms.HiddenInput(),
+            'user': forms.HiddenInput(),
         }
 
 

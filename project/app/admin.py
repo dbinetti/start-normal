@@ -1,9 +1,9 @@
 # Django
+# Third-Party
+from mptt.admin import MPTTModelAdmin
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as UserAdminBase
-
-# First-Party
-from mptt.admin import MPTTModelAdmin
 
 # Local
 from .forms import UserChangeForm
@@ -161,13 +161,13 @@ class SignatureAdmin(admin.ModelAdmin):
         'status',
         'is_approved',
         'message',
-        'account',
+        'user',
         'petition',
     ]
     list_display = [
         'status',
         'is_approved',
-        'account',
+        'user',
         'petition',
         'created',
         'updated',
@@ -179,10 +179,10 @@ class SignatureAdmin(admin.ModelAdmin):
         'updated',
     ]
     search_fields = [
-        'account__user__name',
+        'user__name',
     ]
     autocomplete_fields = [
-        'account',
+        'user',
         'petition',
     ]
     actions = [

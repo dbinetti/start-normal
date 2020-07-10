@@ -95,17 +95,13 @@ def involved(request):
     )
 
 def petition(request, slug):
+    user = request.user
     petition = Petition.objects.get(slug=slug)
     try:
-        account = request.user.account
-    except AttributeError:
-        account = None
-    try:
-        signature = petition.signatures.get(account=account)
+        signature = petition.signatures.get(user=user)
     except Signature.DoesNotExist:
         signature = None
-
-    if account:
+    if user.is_authenticated:
         if signature:
             if request.method == "POST":
                 form = SignatureForm(request.POST, instance=signature)
@@ -132,7 +128,7 @@ def petition(request, slug):
             else:
                 form = SignatureForm(initial={
                     'petition': petition,
-                    'account': account,
+                    'user': user,
                 })
     else:
         # New Signup
@@ -174,7 +170,7 @@ def petition(request, slug):
             signature = Signature.objects.create(
                 status=Signature.STATUS.signed,
                 message=message,
-                account=account,
+                user=user,
                 petition=petition,
             )
             log_in(request, user)
@@ -290,7 +286,7 @@ def account(request):
             )
     else:
         form = AccountForm(instance=account)
-    signatures = account.signatures.order_by('created')
+    signatures = account.user.signatures.order_by('created')
     return render(
         request,
         'app/account/account.html', {

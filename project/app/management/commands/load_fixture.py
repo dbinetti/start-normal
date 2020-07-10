@@ -28,11 +28,9 @@ class Command(BaseCommand):
             is_active=True,
             is_admin=False,
         )
-        user.refresh_from_db()
-        account = user.account
         petition = PetitionFactory()
         SignatureFactory(
-            account=account,
+            user=user,
             petition=petition,
         )
         self.stdout.write("Complete.")

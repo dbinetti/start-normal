@@ -70,6 +70,6 @@ class SignatureFactory(DjangoModelFactory):
     is_approved = True
     message = "Foo to the Bar!"
     petition = RelatedFactory('app.factories.PetitionFactory', factory_related_name='petition')
-    account = RelatedFactory('app.factories.AccountFactory', factory_related_name='account')
+    user = RelatedFactory('app.factories.UserFactory', factory_related_name='user')
     class Meta:
         model = Signature
