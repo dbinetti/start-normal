@@ -77,9 +77,13 @@
         </tr>
       </thead>
       <tbody>
-        <td><a href='{% url "signature" signature.id %}'>{{signature.petition.name}}</a></td>
-        <td>{{signature.status}}</td>
-        <td>{{signature.created|date}}</td>
+        {% for signature in signatures %}
+          <tr>
+            <td><a href='{% url "signature" signature.id %}'>{{signature.petition.name}}</a></td>
+            <td>{{signature.status}}</td>
+            <td>{{signature.created|date}}</td>
+          </tr>
+        {% endfor %}
       </tbody>
       <tfoot>
       </tfoot>

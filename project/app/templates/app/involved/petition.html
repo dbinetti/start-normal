@@ -31,11 +31,9 @@
             <form method='post'>
               {% csrf_token %}
               {% bootstrap_form_errors form %}
-              {% bootstrap_field name show_label=False show_help=True placeholder='Name'  %}
-              {% bootstrap_field is_public show_label=False show_help=True%}
-              {% bootstrap_field message show_label=False show_help=True%}
-              {% bootstrap_field account %}
-              {% bootstrap_field petition %}
+              {% bootstrap_field form.message show_label=False show_help=True%}
+              {% bootstrap_field form.account %}
+              {% bootstrap_field form.petition %}
               {% buttons %}
                 <button type="submit" class="btn btn-primary btn-lg btn-block" id='id-button-signup'>
                   Sign

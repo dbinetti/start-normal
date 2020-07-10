@@ -1,13 +1,7 @@
 # Standard Library
 from operator import attrgetter
 
-# Django
-from django.contrib.auth.models import AbstractBaseUser
-from django.db import models
-from django.db.models.constraints import UniqueConstraint
-from django.utils.text import slugify
-
-# First-Party
+# Third-Party
 import shortuuid
 from autoslug import AutoSlugField
 from hashid_field import HashidAutoField
@@ -15,6 +9,12 @@ from model_utils import Choices
 from mptt.models import MPTTModel
 from mptt.models import TreeForeignKey
 from shortuuidfield import ShortUUIDField
+
+# Django
+from django.contrib.auth.models import AbstractBaseUser
+from django.db import models
+from django.db.models.constraints import UniqueConstraint
+from django.utils.text import slugify
 
 # Local
 from .managers import UserManager
@@ -690,20 +690,10 @@ class Signature(models.Model):
     )
     status = models.IntegerField(
         choices=STATUS,
-        default=STATUS.new,
-    )
-    name = models.CharField(
-        max_length=255,
-        null=False,
-        blank=False,
-        help_text="""Real name strongly encouraged.  However, if necessary use a descriptor like 'Concerned Parent' or 'Father of Two'. (Required)""",
+        default=STATUS.signed,
     )
     is_approved = models.BooleanField(
         default=False,
-    )
-    is_public = models.BooleanField(
-        default=False,
-        help_text="""List My Name on the Website.""",
     )
     message = models.TextField(
         max_length=512,

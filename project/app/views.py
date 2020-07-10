@@ -2,6 +2,14 @@
 # Standard Library
 import json
 
+# Third-Party
+import django_rq
+import requests
+import shortuuid
+from auth0.v3.authentication import Database
+from auth0.v3.authentication import Logout
+from django_rq import job
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
@@ -20,14 +28,6 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.urls import reverse_lazy
-
-# First-Party
-import django_rq
-import requests
-import shortuuid
-from auth0.v3.authentication import Database
-from auth0.v3.authentication import Logout
-from django_rq import job
 
 # Local
 from .forms import AccountForm
@@ -133,7 +133,6 @@ def petition(request, slug):
                 form = SignatureForm(initial={
                     'petition': petition,
                     'account': account,
-                    'name': account.name,
                 })
     else:
         # New Signup
@@ -169,8 +168,6 @@ def petition(request, slug):
             account = user.account
             account.is_public = is_public
             account.is_subscribe = is_subscribe
-            account.email = email
-            account.name = name
             account.save()
 
             # Create Signature
