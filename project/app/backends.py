@@ -22,7 +22,6 @@ class Auth0Backend(ModelBackend):
                 username=username,
                 email=email,
                 name=name,
-                is_active=True,
             )
             user.set_unusable_password()
             user.save()
