@@ -228,7 +228,7 @@ class AccountAdmin(admin.ModelAdmin):
         'user',
     ]
     inlines = [
-        SignatureInline,
+        # SignatureInline,
     ]
 
 

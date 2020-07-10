@@ -167,8 +167,7 @@ class Contact(models.Model):
     petition = models.ForeignKey(
         'app.Petition',
         related_name='contacts',
-        on_delete=models.SET_NULL,
-        null=True,
+        on_delete=models.CASCADE,
     )
 
     def __str__(self):
@@ -707,22 +706,15 @@ class Signature(models.Model):
     updated = models.DateTimeField(
         auto_now=True,
     )
-    account = models.ForeignKey(
-        'app.Account',
-        on_delete=models.CASCADE,
-        related_name='signatures',
-    )
     user = models.ForeignKey(
         'app.User',
-        on_delete=models.SET_NULL,
-        null=True,
+        on_delete=models.CASCADE,
         related_name='signatures',
     )
     petition = models.ForeignKey(
         'app.Petition',
         related_name='signatures',
-        on_delete=models.SET_NULL,
-        null=True,
+        on_delete=models.CASCADE,
     )
 
     def __str__(self):
