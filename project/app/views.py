@@ -12,6 +12,7 @@ from auth0.v3.exceptions import Auth0Error
 from dal import autocomplete
 from django_rq import job
 
+from django import forms
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
@@ -26,6 +27,7 @@ from django.db.models import Count
 from django.db.models import Sum
 from django.dispatch import receiver
 from django.forms import formset_factory
+from django.forms.models import inlineformset_factory
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
@@ -46,6 +48,7 @@ from .forms import UserCreationForm
 from .models import Account
 from .models import Affiliation
 from .models import Organization
+from .models import Student
 from .models import User
 from .tasks import build_email
 from .tasks import mailchimp_create_or_update_from_account
@@ -353,24 +356,37 @@ def welcome(request):
         user.is_active = True
         user.save()
 
-    StudentFormSet = formset_factory(StudentForm, extra=2)
+    StudentFormSet = inlineformset_factory(
+        User,
+        Student,
+        fields=[
+            'grade',
+            'organization',
+            # 'user',
+        ],
+        widgets = {
+            'organization': autocomplete.ModelSelect2(
+                url='school-search',
+            )
+        },
+        extra=5,
+    )
     if request.method == "POST":
-        formset = StudentFormSet(request.POST, request.FILES)
+        formset = StudentFormSet(
+            request.POST,
+            request.FILES,
+            instance=user,
+        )
         if formset.is_valid():
-            for form in formset:
-                form.save()
+            formset.save()
             messages.success(
                 request,
                 "Saved!",
             )
-            redirect('account')
-        else:
-            print(formset.errors)
+            return redirect('account')
     else:
         formset = StudentFormSet(
-            initial=[
-                {'user': user,}
-            ]
+            instance=user,
         )
     return render(
         request,
