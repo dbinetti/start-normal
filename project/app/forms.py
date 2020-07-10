@@ -7,6 +7,7 @@ from django.contrib.auth.forms import UserCreationForm as UserCreationFormBase
 # Local
 from .models import Account
 from .models import Affiliation
+from .models import Student
 from .models import User
 
 
@@ -99,6 +100,20 @@ class SignExistingForm(forms.ModelForm):
         }
 
 
+class StudentForm(forms.ModelForm):
+    class Meta:
+        model = Student
+        fields = [
+            'grade',
+            'organization',
+            'user',
+        ]
+        widgets = {
+            'organization': forms.HiddenInput(),
+            'user': forms.HiddenInput(),
+        }
+
+
 class SignupForm(forms.Form):
     name = forms.CharField(
         required=True,
@@ -126,7 +141,7 @@ class SignupForm(forms.Form):
         widget=forms.Textarea(
             attrs={
                 'class': 'form-control h-25',
-                'placeholder': 'Attach a Public Message to your Affiliation (Optional)',
+                'placeholder': 'Your Message with your Public Officials (Optional)',
                 'rows': 5,
             }
         )

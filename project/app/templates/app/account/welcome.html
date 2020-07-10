@@ -2,16 +2,29 @@
 
 {% load bootstrap4 %}
 
-{% block title %}Welcome!{% endblock title %}
-{% block header %}Welcome!{% endblock header %}
+{% block title %}Thank You!{% endblock title %}
+{% block header %}Thank You!{% endblock header %}
 
 {% block content %}
 <section>
   <p class='lead'>
-    Welcome to Start Normal!
+    Thank you for supporting our children!
   </p>
   <p>
-    We are so glad you have joined our effort to help our kids!
+    Next, if you have children please select their schools so we can direct your message to the proper public officials
+  </p>
+  <p>
+    <form method='post' action='{% url "account" %}' class=' form-horizontal' role='form'>
+      {% csrf_token %}
+      {% bootstrap_formset_errors formset %}
+      {% bootstrap_formset formset %}
+      {% buttons %}
+        <button type="submit" class="btn btn-primary btn-lg btn-block">
+          Save Students
+        </button>
+      {% endbuttons %}
+    </form>
+
   </p>
   <p>
     You can always reach out to me at dbinetti@startnormal.com with any questions, or make changes to your <a href='{% url "account" %}'>account</a> anytime.</p>

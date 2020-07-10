@@ -1,98 +1,45 @@
 {% extends 'app/base.html' %}
 
-{% block title %}Get Involved{% endblock title %}
-{% block header %}Get Involved{% endblock header %}
+{% load bootstrap4 %}
+{% load humanize %}
+{% load location %}
+
+{% block title %}Get Involved!{% endblock title %}
+{% block header %}Get Involved!{% endblock header %}
 
 {% block content %}
 
   <section>
     <p class='lead'>
-      Search below for your school to see how you can get involved.
+      Send a message that you want school to start as normal as possible &mdash; meaning full-time, in-person instruction with safety requirements balanced against children's developmental needs.
     </p>
   </section>
-
-  <section>
-    <div id="searchbox" class='my-5'>
-    </div>
-    {# <div id="refine" class='my-5'> #}
-    {# </div> #}
-    <div id="hits" class='my-5'>
+  <section class='mt-2 mt-5'>
+    <div class='card'>
+      <div class="card-body">
+        <div class='card-text'>
+          <form method='post'>
+            {% csrf_token %}
+            {% bootstrap_form_errors form %}
+            {% bootstrap_field form.name show_label=False show_help=True placeholder='Name'  %}
+            {% bootstrap_field form.email show_label=False show_help=True placeholder='Email'  %}
+            {% bootstrap_field form.password show_label=False show_help=True placeholder='Password'  %}
+            {% bootstrap_field form.message show_label=False show_help=True%}
+            {% bootstrap_field form.is_public form_group_class='form-group form-check form-check-inline' show_label=True show_help=True %}
+            {% bootstrap_field form.is_subscribe form_group_class='form-group form-check form-check-inline' show_label=True show_help=True%}
+            {% buttons %}
+              <button type="submit" class="btn btn-primary btn-lg btn-block" id='id-button-signup'>
+                Sign
+              </button>
+            {% endbuttons %}
+          </form>
+        </div>
+      </div>
+      <div class='card-footer'>
+        <p class="card-text"><small>
+          <span class='text-muted'>Your information isn't shared with anyone and all data will be deleted when this project is over.  Learn more <a href='{% url "about" %}'>about me</a>.</span></small>
+        </p>
+      </div>
     </div>
   </section>
-
 {% endblock content %}
-
-{% block scripts %}
-  <script>
-
-    const searchClient = algoliasearch(
-      "{{app_id}}",
-      "{{search_key}}",
-    );
-
-    let search = instantsearch({
-      indexName: "{{index}}",
-      searchClient,
-    });
-
-    search.addWidgets([
-      instantsearch.widgets.searchBox({
-        container: '#searchbox',
-        placeholder: 'Search Schools...',
-        autofocus: true,
-        showReset: false,
-        showSubmit: false,
-        cssClasses: {
-          root: 'root',
-          form: 'form',
-          input: 'input form-control form-control-large',
-        },
-      }),
-    ]);
-
-    search.addWidgets([
-      instantsearch.widgets.infiniteHits({
-        container: '#hits',
-        templates: {
-          item(item) {
-            return `
-              <strong><a href='organization/${item.slug}'>${item.name}</a></strong><br>
-              ${item.address}  ${item.city}, ${item.state}
-            `;
-          }
-        },
-        cssClasses: {
-          list: 'list',
-          item: 'my-3',
-          loadPrevious: 'btn btn-primary mt-5',
-          loadMore: 'btn btn-primary mt-5',
-          disabledLoadPrevious: 'btn btn-primary mt-5',
-          disabledLoadMore: 'btn btn-primary mt-5',
-        },
-      }),
-    ]);
-
-    // search.addWidgets([
-    //   instantsearch.widgets.refinementList({
-    //     container: '#refine',
-    //     attribute: 'get_doc_display',
-    //     // Optional parameters
-    //     operator: string,
-    //     limit: number,
-    //     showMore: boolean,
-    //     showMoreLimit: number,
-    //     searchable: boolean,
-    //     searchablePlaceholder: string,
-    //     searchableIsAlwaysActive: boolean,
-    //     searchableEscapeFacetValues: boolean,
-    //     sortBy: string[]|function,
-    //     templates: object,
-    //     cssClasses: object,
-    //     transformItems: function,
-    //   })
-    // ]);
-
-    search.start();
-
-  </script>
-{% endblock scripts %}

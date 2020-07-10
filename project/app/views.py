@@ -24,11 +24,15 @@ from django.core.mail import EmailMessage
 from django.db.models import Count
 from django.db.models import Sum
 from django.dispatch import receiver
+from django.forms import formset_factory
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.urls import reverse_lazy
+
+# First-Party
+from dal import autocomplete
 
 # Local
 from .forms import AccountForm
@@ -38,6 +42,7 @@ from .forms import RemoveForm
 from .forms import SignExistingForm
 from .forms import SignForm
 from .forms import SignupForm
+from .forms import StudentForm
 from .forms import SubscribeForm
 from .forms import UserCreationForm
 from .models import Account
@@ -72,12 +77,56 @@ def robots(request):
 
 # Involved
 def involved(request):
+    # New Signup
+    form = SignupForm(request.POST or None)
+    if form.is_valid():
+        # Instantiate Variables
+        name = form.cleaned_data['name']
+        email = form.cleaned_data['email']
+        password = form.cleaned_data['password']
+        is_public = form.cleaned_data['is_public']
+        is_subscribe = form.cleaned_data['is_subscribe']
+        message = form.cleaned_data['message']
+
+        # Auth0 Signup
+        auth0_client = Database(settings.AUTH0_DOMAIN)
+        try:
+            auth0_user = auth0_client.signup(
+                client_id=settings.AUTH0_CLIENT_ID,
+                name=name,
+                email=email,
+                password=password,
+                connection='Username-Password-Authentication',
+            )
+        except Auth0Error as e:
+            if e.error_code == 'user_exists':
+                messages.warning(
+                    request,
+                    "That email is in use.  Try to login (upper right corner) or pick a different email.",
+                )
+                return redirect('involved')
+        # Create User
+        username = "auth0|{0}".format(auth0_user['_id'])
+
+        user = authenticate(
+            request,
+            username=username,
+            email=email,
+            name=name,
+        )
+        user.refresh_from_db()
+        account = user.account
+        account.is_public = is_public
+        account.is_subscribe = is_subscribe
+        account.message = message
+        account.save()
+        log_in(request, user)
+        return redirect('pending')
     return render(
         request,
-        'app/involved/involved.html', {
-            'app_id': settings.ALGOLIA['APPLICATION_ID'],
-            'search_key': settings.ALGOLIA['SEARCH_KEY'],
-            'index': "Organization_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
+        'app/involved/involved.html',
+        context={
+            'form': form,
         },
     )
 
@@ -287,13 +336,42 @@ def pending(request):
 @login_required
 def welcome(request):
     user = request.user
-    success = request.GET.__getitem__('success')
+    try:
+        success = request.GET.__getitem__('success')
+    except:
+        success = ''
     if success == 'true':
         user.is_active = True
         user.save()
+
+    StudentFormSet = formset_factory(StudentForm)
+    if request.method == "POST":
+        formset = StudentFormSet(request.POST)
+        if formset.is_valid():
+            formset.save()
+            messages.success(
+                request,
+                "Saved!",
+            )
+    else:
+        formset = StudentFormSet()
     return render(
         request,
         'app/account/welcome.html',
+        context = {
+            'formset': formset,
+        },
+    )
+
+
+
+
+    return render(
+        request,
+        'app/account/welcome.html',
+        context = {
+            'formset': formset,
+        }
     )
 
 @login_required
