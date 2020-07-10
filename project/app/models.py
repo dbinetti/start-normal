@@ -750,7 +750,7 @@ class User(AbstractBaseUser):
         blank=False,
     )
     is_active = models.BooleanField(
-        default=True,
+        default=False,
     )
     is_admin = models.BooleanField(
         default=False,

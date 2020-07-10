@@ -325,14 +325,13 @@ def pending(request):
 @login_required
 def welcome(request):
     user = request.user
-
+    success = request.GET.__getitem__('success')
+    if success == 'true':
+        user.is_active = True
+        user.save()
     return render(
         request,
         'app/account/welcome.html',
-        context={
-            'get': request.GET,
-            'post': request.POST,
-        }
     )
 
 @login_required
