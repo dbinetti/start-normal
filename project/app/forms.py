@@ -78,6 +78,26 @@ class SignatureForm(forms.ModelForm):
             'user': forms.HiddenInput(),
         }
 
+class SignExistingForm(forms.ModelForm):
+    class Meta:
+        model = Signature
+        fields = [
+            'message',
+            'petition',
+            'user',
+        ]
+        widgets = {
+            'message': forms.Textarea(
+                attrs={
+                    'class': 'form-control h-25',
+                    'placeholder': 'Public Message (Optional)',
+                    'rows': 5,
+                }
+            ),
+            'petition': forms.HiddenInput(),
+            'user': forms.HiddenInput(),
+        }
+
 
 class SignupForm(forms.Form):
     name = forms.CharField(

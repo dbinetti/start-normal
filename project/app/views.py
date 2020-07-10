@@ -2,15 +2,6 @@
 # Standard Library
 import json
 
-# Third-Party
-import django_rq
-import requests
-import shortuuid
-from auth0.v3.authentication import Database
-from auth0.v3.authentication import Logout
-from auth0.v3.exceptions import Auth0Error
-from django_rq import job
-
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.admin.views.decorators import staff_member_required
@@ -30,11 +21,21 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.urls import reverse_lazy
 
+# First-Party
+import django_rq
+import requests
+import shortuuid
+from auth0.v3.authentication import Database
+from auth0.v3.authentication import Logout
+from auth0.v3.exceptions import Auth0Error
+from django_rq import job
+
 # Local
 from .forms import AccountForm
 from .forms import DeleteForm
 from .forms import RemoveForm
 from .forms import SignatureForm
+from .forms import SignExistingForm
 from .forms import SignForm
 from .forms import SignupForm
 from .forms import SubscribeForm
@@ -99,29 +100,22 @@ def involved(request):
 def petition(request, slug):
     user = request.user
     petition = Petition.objects.get(slug=slug)
+    signatures = petition.signatures.filter(
+        status=Signature.STATUS.signed,
+    ).order_by('-created')
     try:
         signature = petition.signatures.get(user=user)
-    except TypeError:
+    except Exception:
         # Anonymous
         signature = None
     except Signature.DoesNotExist:
         signature = None
     if user.is_authenticated:
         if signature:
-            if request.method == "POST":
-                form = SignatureForm(request.POST, instance=signature)
-                if form.is_valid():
-                    form.save()
-                    messages.success(
-                        request,
-                        "Your Signature has been Saved!",
-                    )
-                    return redirect('account')
-            else:
-                form = SignatureForm(instance=signature)
+            form = None
         else:
             if request.method == "POST":
-                form = SignatureForm(request.POST)
+                form = SignExistingForm(request.POST)
                 if form.is_valid():
                     form.status = Signature.STATUS.signed
                     form.save()
@@ -131,7 +125,7 @@ def petition(request, slug):
                     )
                     return redirect('account')
             else:
-                form = SignatureForm(initial={
+                form = SignExistingForm(initial={
                     'petition': petition,
                     'user': user,
                 })
@@ -199,13 +193,15 @@ def petition(request, slug):
                 "Your Signature has Been Added to the Petition!",
             )
             return redirect('pending')
-
+    signatures.count = 100
     return render(
         request,
         'app/involved/petition.html',
         context={
             'petition': petition,
             'form': form,
+            'signature': signature,
+            'signatures': signatures,
         },
     )
 
