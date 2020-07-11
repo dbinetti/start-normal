@@ -14,8 +14,24 @@
     Next, if you have children please select their schools so we can direct your message to the proper public officials
   </p>
   <p>
-    <form method='post'>
-      {% csrf_token %}
+    <form method="post">
+        {{ formset.management_form }}
+        {% csrf_token %}
+        <table class='table'>
+          {% for form in formset %}
+            <tr>
+            <li>{{ form.title }}</li>
+            <li>{{ form.pub_date }}</li>
+            {% if formset.can_delete %}
+                <li>{{ form.DELETE }}</li>
+            {% endif %}
+
+          {% endfor %}
+        </table>
+    </form>
+
+
+
       {% bootstrap_formset_errors formset %}
       {% bootstrap_formset formset layout='horizontal'%}
       {% buttons %}

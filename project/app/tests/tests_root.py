@@ -9,6 +9,9 @@ from django.urls import reverse
 # First-Party
 from app.forms import AffiliationForm
 
+
+def test_wip():
+    assert False
 # def test_index_anon(anon_client):
 #     path = reverse('index')
 #     response = anon_client.get(path)
