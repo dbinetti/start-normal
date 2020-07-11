@@ -389,7 +389,7 @@ def welcome(request):
                 request,
                 "Saved!",
             )
-            return redirect('account')
+            return redirect('share')
     else:
         formset = StudentFormSet(
             instance=user,
@@ -411,6 +411,13 @@ def welcome(request):
         context = {
             'formset': formset,
         }
+    )
+
+@login_required
+def share(request):
+    return render(
+        request,
+        'app/account/share.html',
     )
 
 @login_required
