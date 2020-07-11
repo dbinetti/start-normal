@@ -15,36 +15,40 @@
   </p>
   <p>
     <form method="post">
-        {{ formset.management_form }}
-        {% csrf_token %}
-        <table class='table'>
+      {{formset.management_form}}
+      {% csrf_token %}
+      {% bootstrap_formset_errors formset %}
+      <table class='table table-sm'>
+        <thead>
+          <tr>
+            <th>
+              School
+            </th>
+            <th>
+              Grade
+            </th>
+          </tr>
+        </thead>
+        <tbody>
           {% for form in formset %}
             <tr>
-            <li>{{ form.title }}</li>
-            <li>{{ form.pub_date }}</li>
-            {% if formset.can_delete %}
-                <li>{{ form.DELETE }}</li>
-            {% endif %}
-
+              <td>{% bootstrap_field form.organization show_help=False show_label=False size='small'%}</td>
+              <td>{% bootstrap_field form.grade show_help=False show_label=False size='small'%}</td>
+            </tr>
+            {{form.id}}
           {% endfor %}
-        </table>
-    </form>
-
-
-
-      {% bootstrap_formset_errors formset %}
-      {% bootstrap_formset formset layout='horizontal'%}
+        </tbody>
+      </table>
       {% buttons %}
         <button type="submit" class="btn btn-primary btn-lg btn-block">
           Save Students
         </button>
       {% endbuttons %}
     </form>
-
   </p>
   <p>
-    You can always reach out to me at dbinetti@startnormal.com with any questions, or make changes to your <a href='{% url "account" %}'>account</a> anytime.</p>
-
+    You can always reach out to me at dbinetti@startnormal.com with any questions, or make changes to your <a href='{% url "account" %}'>account</a> anytime.
+  </p>
 </section>
 {% endblock content %}
 {% block scripts %}
