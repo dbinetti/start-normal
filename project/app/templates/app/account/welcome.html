@@ -6,49 +6,59 @@
 {% block header %}Thank You!{% endblock header %}
 
 {% block content %}
-<section>
+<section class='mb-5'>
   <p class='lead'>
-    Thank you for supporting our children!
-  </p>
-  <p>
     Next, if you have children please select their schools so we can direct your message to the proper public officials
   </p>
-  <p>
-    <form method="post">
-      {{formset.management_form}}
-      {% csrf_token %}
-      {% bootstrap_formset_errors formset %}
-      <table class='table table-sm'>
-        <thead>
-          <tr>
-            <th>
-              School
-            </th>
-            <th>
-              Grade
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for form in formset %}
-            <tr>
-              <td>{% bootstrap_field form.organization show_help=False show_label=False size='small'%}</td>
-              <td>{% bootstrap_field form.grade show_help=False show_label=False size='small'%}</td>
-            </tr>
-            {{form.id}}
-          {% endfor %}
-        </tbody>
-      </table>
-      {% buttons %}
-        <button type="submit" class="btn btn-primary btn-lg btn-block">
-          Save Students
-        </button>
-      {% endbuttons %}
-    </form>
-  </p>
-  <p>
-    You can always reach out to me at dbinetti@startnormal.com with any questions, or make changes to your <a href='{% url "account" %}'>account</a> anytime.
-  </p>
+</section>
+<section>
+  <div class='card'>
+    <div class='card-header'>
+      <h5>
+        Student Schools and Grades
+      </h5>
+    </div>
+    <div class='card-body'>
+      <p class='card-text'>
+        <form method="post">
+          {{formset.management_form}}
+          {% csrf_token %}
+          {% bootstrap_formset_errors formset %}
+          <table class='table table-sm'>
+            <thead>
+              <tr>
+                <th>
+                  School
+                </th>
+                <th>
+                  Grade
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for form in formset %}
+                <tr>
+                  <td>{% bootstrap_field form.organization show_help=False show_label=False size='small'%}</td>
+                  <td>{% bootstrap_field form.grade show_help=False show_label=False size='small'%}</td>
+                </tr>
+                {{form.id}}
+              {% endfor %}
+            </tbody>
+          </table>
+          {% buttons %}
+            <button type="submit" class="btn btn-primary btn-lg btn-block">
+              Save Students
+            </button>
+          {% endbuttons %}
+        </form>
+      </p>
+    </div>
+    <div class='card-footer'>
+      <p>
+        You can always reach out to me at dbinetti@startnormal.com with any questions, or make changes to your <a href='{% url "account" %}'>account</a> anytime.
+      </p>
+    </div>
+  </div>
 </section>
 {% endblock content %}
 {% block scripts %}
