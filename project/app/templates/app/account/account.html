@@ -17,7 +17,9 @@
       <div class='card-body'>
         <p>
           <form method='post' action='{% url "account" %}' class=' form-horizontal' role='form'>
+            {{formset.management_form}}
             {% csrf_token %}
+            {% bootstrap_formset_errors formset %}
             {% bootstrap_form_errors form %}
             <div class='form-group'>
               <input disabled='true' type="text" name="name" value="{{user.name}}" class="form-control" id="id_name">
@@ -47,6 +49,34 @@
                 {% bootstrap_field form.is_doctor show_help=False show_label=False size='large'%}
               </div>
             </div>
+            <div class='card-title'>
+              <h6>
+                Student Schools and Grades
+              </h6>
+            </div>
+            <div>
+              <table class='table table-sm'>
+                <thead>
+                  <tr>
+                    <th>
+                      School
+                    </th>
+                    <th>
+                      Grade
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for form in formset %}
+                    <tr>
+                      <td>{% bootstrap_field form.organization show_help=False show_label=False size='small'%}</td>
+                      <td>{% bootstrap_field form.grade show_help=False show_label=False size='small'%}</td>
+                    </tr>
+                    {{form.id}}
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
             {% buttons %}
               <button type="submit" class="btn btn-primary btn-lg btn-block">
                 Save Account Details
@@ -55,7 +85,6 @@
           </form>
         </p>
       </div>
-
       <div class='card-footer'>
         <p class="card-text">
           <small class='text-muted'>
@@ -63,39 +92,12 @@
           </small>
         </p>
       </div>
-
     </div>
   </section>
   <section class='mt-2 ml-2'>
     <a href='{% url "delete" %}'><span class='text-danger'>Delete Account</span></a>
   </section>
-
-  <section class='my-5'>
-    <div class='card'>
-      <div class='card-header'>
-        <h4>Students</h4>
-      </div>
-      <div class='card-body'>
-        <table class='table'>
-          <thead>
-            <tr>
-              <th>School</th>
-              <th>Grade</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for student in students %}
-              <tr>
-                <td>{{student.organization.name}}</td>
-                <td>{{student.get_grade_display}}</td>
-              </tr>
-            {% endfor %}
-          </tbody>
-          <tfoot>
-          </tfoot>
-        </table>
-      </div>
-    </div>
-  </section>
-
 {% endblock content %}
+{% block scripts %}
+  {{formset.media}}
+{% endblock scripts %}

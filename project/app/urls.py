@@ -24,6 +24,9 @@ urlpatterns = [
     path('pending', views.pending, name='pending',),
     path('welcome', views.welcome, name='welcome',),
     path('delete', views.delete, name='delete',),
+    path('student/<id>', views.student, name='student',),
+    path('student/<id>/remove', views.student_remove, name='student-remove',),
+    path('student/add', views.student_add, name='student-add',),
 
     # Authentication
     path('login', views.login, name='login'),

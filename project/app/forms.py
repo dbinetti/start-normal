@@ -1,11 +1,11 @@
 # Django
-# Third-Party
-from dal import autocomplete
-
 from django import forms
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.forms import UserChangeForm as UserChangeFormBase
 from django.contrib.auth.forms import UserCreationForm as UserCreationFormBase
+
+# First-Party
+from dal import autocomplete
 
 # Local
 from .models import Account
@@ -82,6 +82,7 @@ class AffiliationForm(forms.ModelForm):
             'user': forms.HiddenInput(),
         }
 
+
 class SignExistingForm(forms.ModelForm):
     class Meta:
         model = Affiliation
@@ -112,10 +113,16 @@ class StudentForm(forms.ModelForm):
             'user',
         ]
         widgets = {
-            'organization': autocomplete.ModelSelect2(url='school-search'),
+            'organization': autocomplete.ModelSelect2(
+                url='school-search',
+                attrs={
+                    'data-container-css-class': '',
+                    'data-close-on-select': 'false',
+                    'data-scroll-after-select': 'true',
+                },
+            ),
             'user': forms.HiddenInput(),
         }
-
 
 class SignupForm(forms.Form):
     name = forms.CharField(

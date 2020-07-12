@@ -2,6 +2,16 @@
 # Standard Library
 import json
 
+# Third-Party
+import django_rq
+import requests
+import shortuuid
+from auth0.v3.authentication import Database
+from auth0.v3.authentication import Logout
+from auth0.v3.exceptions import Auth0Error
+from dal import autocomplete
+from django_rq import job
+
 from django import forms
 from django.conf import settings
 from django.contrib import messages
@@ -23,16 +33,6 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.urls import reverse_lazy
-
-# First-Party
-import django_rq
-import requests
-import shortuuid
-from auth0.v3.authentication import Database
-from auth0.v3.authentication import Logout
-from auth0.v3.exceptions import Auth0Error
-from dal import autocomplete
-from django_rq import job
 
 # Local
 from .forms import AccountForm
@@ -307,25 +307,69 @@ def account(request):
     account = Account.objects.get(
         user=user,
     )
+    students = user.students.order_by('grade')
+
+    StudentFormSet = inlineformset_factory(
+        User,
+        Student,
+        fields=[
+            'grade',
+            'organization',
+            'user',
+        ],
+        widgets = {
+            'organization': autocomplete.ModelSelect2(
+                url='school-search',
+                attrs={
+                    'data-container-css-class': '',
+                    'data-close-on-select': 'false',
+                    'data-scroll-after-select': 'true',
+                },
+            )
+        },
+        extra=5,
+        max_num=5,
+    )
+
     if request.method == "POST":
-        form = AccountForm(request.POST, instance=account)
-        if form.is_valid():
+        form = AccountForm(
+            request.POST,
+            instance=account,
+            prefix='account',
+        )
+        formset = StudentFormSet(
+            request.POST,
+            request.FILES,
+            instance=user,
+            prefix='students',
+        )
+        if form.is_valid() and formset.is_valid():
             form.save()
+            formset.save()
             messages.success(
                 request,
                 "Saved!",
             )
+            return redirect('account')
     else:
-        form = AccountForm(instance=account)
-    students = user.students.order_by('grade')
+        form = AccountForm(
+            instance=account,
+            prefix='account',
+        )
+        formset = StudentFormSet(
+            instance=user,
+            prefix='students',
+        )
     return render(
         request,
         'app/account/account.html', {
             'user': user,
             'form': form,
+            'formset': formset,
             'students': students,
         },
     )
+
 
 @login_required
 def pending(request):
@@ -344,6 +388,65 @@ class SchoolAutocomplete(autocomplete.Select2QuerySetView):
 
         return qs
 
+@login_required
+def student(request, id):
+    student = Student.objects.get(id=id)
+    if request.method == "POST":
+        form = StudentForm(request.POST, instance=student)
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                'Student detail saved!',
+            )
+            return redirect('account')
+    else:
+        form = StudentForm(instance=student)
+    return render(
+        request,
+        'app/account/student.html',
+        {'form': form,},
+    )
+
+
+@login_required
+def student_add(request):
+    if request.method == "POST":
+        form = StudentForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                'Student added!',
+            )
+            return redirect('account')
+    else:
+        form = StudentForm()
+    return render(
+        request,
+        'app/account/student.html',
+        {'form': form,},
+    )
+
+@login_required
+def student_remove(request, id):
+    student = Student.objects.get(id=id)
+    if request.method == "POST":
+        form = StudentForm(request.POST, instance=student)
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                'Student detail saved!',
+            )
+            return redirect('account')
+    else:
+        form = StudentForm(instance=student)
+    return render(
+        request,
+        'app/account/student_remove.html',
+        {'form': form,},
+    )
 
 @login_required
 def welcome(request):
@@ -402,17 +505,6 @@ def welcome(request):
         },
     )
 
-
-
-
-    return render(
-        request,
-        'app/account/welcome.html',
-        context = {
-            'formset': formset,
-        }
-    )
-
 @login_required
 def share(request):
     return render(
@@ -439,6 +531,7 @@ def delete(request):
         'app/account/delete.html',
         {'form': form,},
     )
+
 
 
 # Authentication
