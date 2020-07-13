@@ -387,12 +387,12 @@ class SchoolAutocomplete(autocomplete.Select2QuerySetView):
         )
 
         if self.q:
-            qs = qs.filter(slug__icontains=self.q)
-            # qs = qs.filter(
-            #     Q(name__icontains=self.q)|
-            #     Q(city__icontains=self.q) |
-            #     Q(state__icontains=self.q)
-            # )
+            # qs = qs.filter(slug__icontains=self.q)
+            qs = qs.filter(
+                Q(name__icontains=self.q)|
+                Q(city__icontains=self.q) |
+                Q(state__icontains=self.q)
+            )
 
         return qs
 
