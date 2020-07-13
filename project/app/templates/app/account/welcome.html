@@ -40,8 +40,8 @@
                 <tr>
                   <td>{% bootstrap_field form.organization show_help=False show_label=False size='small'%}</td>
                   <td>{% bootstrap_field form.grade show_help=False show_label=False size='small'%}</td>
+                  {{form.id}}
                 </tr>
-                {{form.id}}
               {% endfor %}
             </tbody>
           </table>
@@ -55,7 +55,7 @@
     </div>
     <div class='card-footer'>
       <p>
-        You can always reach out to me at dbinetti@startnormal.com with any questions, or make changes to your <a href='{% url "account" %}'>account</a> anytime.
+        If you have more than five students, or wish to fill it out later, just click "Save Students" to continue to the next page.
       </p>
     </div>
   </div>

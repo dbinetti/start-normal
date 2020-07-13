@@ -85,14 +85,14 @@
                 </tbody>
               </table>
               <div id="empty_form" style="display:none">
-                  <table class='no_error table table-sm'>
-                      <tr>
-                      <td>{% bootstrap_field formset.empty_form.organization show_help=False show_label=False size='small' placeholder='Search Schools....'%}</td>
-                      <td>{% bootstrap_field formset.empty_form.grade show_help=False show_label=False size='small'%}</td>
-                      <td>{{formset.empty_form.DELETE}}</td>
-                      {{formset.empty_form.id}}
-                      </tr>
-                  </table>
+                <table class='no_error table table-sm'>
+                  <tr>
+                    <td>{% bootstrap_field formset.empty_form.organization show_help=False show_label=False size='small' placeholder='Search Schools....'%}</td>
+                    <td>{% bootstrap_field formset.empty_form.grade show_help=False show_label=False size='small'%}</td>
+                    <td>{{formset.empty_form.DELETE}}</td>
+                    {{formset.empty_form.id}}
+                  </tr>
+                </table>
               </div>
             </div>
             {% buttons %}
@@ -121,7 +121,6 @@
   <script>
     $('#add_more').click(function() {
       var form_idx = $('#id_students-TOTAL_FORMS').val();
-      console.log(form_idx);
       $('#form_set').prepend($('#empty_form').html().replace(/__prefix__/g, form_idx));
       $('#id_students-TOTAL_FORMS').val(parseInt(form_idx) + 1);
     });
