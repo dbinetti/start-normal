@@ -24,6 +24,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.views import PasswordResetConfirmView
 from django.core.mail import EmailMessage
 from django.db.models import Count
+from django.db.models import Q
 from django.db.models import Sum
 from django.dispatch import receiver
 from django.forms import formset_factory
@@ -381,11 +382,17 @@ def pending(request):
 
 class SchoolAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
-        # Don't forget to filter out results depending on the visitor !
-        qs = Organization.objects.filter(kind__gt=500)
+        qs = Organization.objects.filter(
+            kind__gte=500, # Shools only
+        )
 
         if self.q:
             qs = qs.filter(slug__icontains=self.q)
+            # qs = qs.filter(
+            #     Q(name__icontains=self.q)|
+            #     Q(city__icontains=self.q) |
+            #     Q(state__icontains=self.q)
+            # )
 
         return qs
 

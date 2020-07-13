@@ -355,7 +355,11 @@ class Organization(MPTTModel):
     )
 
     def __str__(self):
-        return str(self.name)
+        return "{0} - {1}, {2}".format(
+            self.name,
+            self.city,
+            self.state,
+        )
 
     def location(self):
         return(self.lat, self.lon)
