@@ -349,6 +349,11 @@ class Organization(MPTTModel):
         related_name='children',
     )
 
+    nomen = models.CharField(
+        max_length=512,
+        blank=True,
+    )
+
     def __str__(self):
         return str(self.name)
 
