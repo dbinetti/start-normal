@@ -54,6 +54,8 @@
                 Student Schools and Grades
               </h6>
             </div>
+            <input type="button" value="Add Another Student" id="add_more" class='btn btn-sm btn-success my-3'>
+
             <div>
               <table class='table table-sm'>
                 <thead>
@@ -65,7 +67,7 @@
                       Grade
                     </th>
                     <th>
-                      Delete?
+                      Remove?
                     </th>
                   </tr>
                 </thead>
@@ -73,7 +75,7 @@
                   <div id="form_set">
                     {% for form in formset %}
                       <tr>
-                        <td>{% bootstrap_field form.organization show_help=False show_label=False size='small'%}</td>
+                        <td>{% bootstrap_field form.organization show_help=False show_label=False size='small' placeholder='Search Schools....'%}</td>
                         <td>{% bootstrap_field form.grade show_help=False show_label=False size='small'%}</td>
                         <td>{{form.DELETE}}</td>
                       </tr>
@@ -82,10 +84,14 @@
                   </div>
                 </tbody>
               </table>
-              <input type="button" value="Add More" id="add_more" class='btn btn-sm btn-success'>
               <div id="empty_form" style="display:none">
-                  <table class='no_error'>
-                      {{ formset.empty_form }}
+                  <table class='no_error table table-sm'>
+                      <tr>
+                      <td>{% bootstrap_field formset.empty_form.organization show_help=False show_label=False size='small' placeholder='Search Schools....'%}</td>
+                      <td>{% bootstrap_field formset.empty_form.grade show_help=False show_label=False size='small'%}</td>
+                      <td>{{formset.empty_form.DELETE}}</td>
+                      {{formset.empty_form.id}}
+                      </tr>
                   </table>
               </div>
             </div>
@@ -116,7 +122,7 @@
     $('#add_more').click(function() {
       var form_idx = $('#id_students-TOTAL_FORMS').val();
       console.log(form_idx);
-      $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
+      $('#form_set').prepend($('#empty_form').html().replace(/__prefix__/g, form_idx));
       $('#id_students-TOTAL_FORMS').val(parseInt(form_idx) + 1);
     });
   </script>
