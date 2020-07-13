@@ -18,113 +18,34 @@
     </p>
   </section>
 
-  {% if affiliation %}
-    <section class='mt-2 mt-5'>
-      <div class='card'>
-        <div class='card-header'>
-          <h5>
-            Your Status
-          </h5>
-        </div>
-        <div class="card-body">
-          <div class='card-title'>
-            Your affiliation status on this organization is <strong>{{affiliation.get_status_display}}</strong> with this message:<br>
-            <em>{{affiliation.message|default:"(No message)"}}</em>
-          </div>
-          <div class='card-text'>
-            <a href='{% url "affiliation" affiliation.id %}'>Update Affiliation</a>
-          </div>
-        </div>
+  <section class='my-5'>
+    <div class='card'>
+      <div class='card-header'>
+        <h5>Status Reports</h5>
       </div>
-    </section>
+      <div class='card-body'>
+        {% for report in reports %}
+          <ul class='list-unstyled'>
+            <li>{{report.name}} - {{report.text}}</li>
+          </ul>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  <section class='my-5'>
+    <div class='card'>
+      <div class='card-header'>
+        <h5>Parent Signatures</h5>
+      </div>
+      <div class='card-body'>
+        {% for student in students %}
+          <ul class='list-unstyled'>
+            <li>{% if student.user.account.is_public %}{{student.user.name}}{% else %}Concerned Parent{% endif %}&nbsp;&mdash;&nbsp;{{student.get_grade_display}}</li>
+          </ul>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
 
-  {% else %}
-    <section class='mt-2 mt-5'>
-      <div class='card'>
-        <div class='card-header'>
-          <h5>
-            Sign Organization
-          </h5>
-        </div>
-        <div class="card-body">
-          <div class='card-text'>
-            {% if request.user.is_authenticated %}
-                <form method='post'>
-                  {% csrf_token %}
-                  {% bootstrap_form_errors form %}
-                  {% bootstrap_field form.message show_label=False show_help=True%}
-                  {% bootstrap_field form.user %}
-                  {% bootstrap_field form.organization %}
-                  {% buttons %}
-                    <button type="submit" class="btn btn-primary btn-lg btn-block" id='id-button-signup'>
-                      Sign
-                    </button>
-                  {% endbuttons %}
-                </form>
-            {% else %}
-                <form method='post'>
-                  {% csrf_token %}
-                  {% bootstrap_form_errors form %}
-                  {% bootstrap_field form.name show_label=False show_help=True placeholder='Name'  %}
-                  {% bootstrap_field form.email show_label=False show_help=True placeholder='Email'  %}
-                  {% bootstrap_field form.password show_label=False show_help=True placeholder='Password'  %}
-                  {% bootstrap_field form.message show_label=False show_help=True%}
-                  {% bootstrap_field form.is_public form_group_class='form-group form-check form-check-inline' show_label=True show_help=True %}
-                  {% bootstrap_field form.is_subscribe form_group_class='form-group form-check form-check-inline' show_label=True show_help=True%}
-                  {% buttons %}
-                    <button type="submit" class="btn btn-primary btn-lg btn-block" id='id-button-signup'>
-                      Sign
-                    </button>
-                  {% endbuttons %}
-                </form>
-            {% endif %}
-          </div>
-        </div>
-        <div class='card-footer'>
-          <p class="card-text"><small>
-            <span class='text-muted'>Your information isn't shared with anyone and all data will be deleted when this project is over.  Learn more <a href='{% url "about" %}'>about me</a>.</span></small>
-          </p>
-        </div>
-      </div>
-    </section>
-  {% endif %}
-
-  {% if affiliations.count > 10 %}
-    <section class='my-5'>
-      <div class='card'>
-        <div class='card-header'>
-          <h5>
-            Affiliations
-          </h5>
-        </div>
-        <div class="card-body">
-          <table class='table'>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Message</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for affiliation in affiliations %}
-                <tr>
-                  <td>
-                    {% if affiliation.user.account.is_public %}
-                      {{affiliation.user.name}}
-                    {% else %}
-                      <em>Name Withheld</em>
-                    {% endif %}
-                  </td>
-                  <td>{{affiliation.message|truncatewords:5|default:"(No message)" }}</td>
-                </tr>
-              {% endfor %}
-            </tbody>
-            <tfoot>
-            </tfoot>
-          </table>
-        </div>
-      </div>
-    </section>
-  {% endif %}
 
 {% endblock content %}

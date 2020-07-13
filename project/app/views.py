@@ -133,110 +133,18 @@ def involved(request):
     )
 
 def organization(request, slug):
-    user = request.user
     organization = Organization.objects.get(slug=slug)
-    affiliations = organization.affiliations.filter(
-        status=Affiliation.STATUS.signed,
+    students = organization.students.filter(
+    ).order_by('-organization')
+    reports = organization.reports.filter(
     ).order_by('-created')
-    try:
-        affiliation = organization.affiliations.get(user=user)
-    except Exception:
-        # Anonymous
-        affiliation = None
-    except Affiliation.DoesNotExist:
-        affiliation = None
-    if user.is_authenticated:
-        if affiliation:
-            form = None
-        else:
-            if request.method == "POST":
-                form = SignExistingForm(request.POST)
-                if form.is_valid():
-                    form.status = Affiliation.STATUS.signed
-                    form.save()
-                    messages.success(
-                        request,
-                        "Your Affiliation has been Saved!",
-                    )
-                    return redirect('account')
-            else:
-                form = SignExistingForm(initial={
-                    'organization': organization,
-                    'user': user,
-                })
-    else:
-        # New Signup
-        form = SignupForm(request.POST or None)
-        if form.is_valid():
-            # Instantiate Variables
-            name = form.cleaned_data['name']
-            email = form.cleaned_data['email']
-            password = form.cleaned_data['password']
-            is_public = form.cleaned_data['is_public']
-            is_subscribe = form.cleaned_data['is_subscribe']
-            message = form.cleaned_data['message']
-
-            # Auth0 Signup
-            auth0_client = Database(settings.AUTH0_DOMAIN)
-            try:
-                auth0_user = auth0_client.signup(
-                    client_id=settings.AUTH0_CLIENT_ID,
-                    name=name,
-                    email=email,
-                    password=password,
-                    connection='Username-Password-Authentication',
-                )
-            except Auth0Error as e:
-                if e.error_code == 'user_exists':
-                    messages.warning(
-                        request,
-                        "That email is in use.  Try to login (upper right corner.)",
-                    )
-                    return render(
-                        request,
-                        'app/involved/organization.html',
-                        context={
-                            'organization': organization,
-                            'form': form,
-                        },
-                    )
-            # Create User
-            username = "auth0|{0}".format(auth0_user['_id'])
-
-            user = authenticate(
-                request,
-                username=username,
-                email=email,
-                name=name,
-            )
-            user.refresh_from_db()
-            account = user.account
-            account.is_public = is_public
-            account.is_subscribe = is_subscribe
-            account.save()
-
-            # Create Affiliation
-            affiliation = Affiliation.objects.create(
-                status=Affiliation.STATUS.signed,
-                message=message,
-                user=user,
-                organization=organization,
-            )
-            log_in(request, user)
-            messages.success(
-                request,
-                "Your Affiliation has Been Added to the Organization!",
-            )
-            return redirect('pending')
-    affiliations.count = 100
     return render(
         request,
         'app/involved/organization.html',
         context={
             'organization': organization,
-            'form': form,
-            'affiliation': affiliation,
-            'affiliations': affiliations,
+            'students': students,
+            'reports': reports,
         },
     )
 
