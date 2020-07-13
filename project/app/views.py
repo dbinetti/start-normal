@@ -327,8 +327,9 @@ def account(request):
                 },
             )
         },
-        extra=5,
-        max_num=5,
+        extra=0,
+        # max_num=5,
+        can_delete=True,
     )
 
     if request.method == "POST":
@@ -477,8 +478,8 @@ def welcome(request):
                 },
             )
         },
-        extra=5,
-        max_num=5,
+        # extra=0,
+        # max_num=5,
     )
     if request.method == "POST":
         formset = StudentFormSet(

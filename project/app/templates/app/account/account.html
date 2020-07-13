@@ -64,18 +64,30 @@
                     <th>
                       Grade
                     </th>
+                    <th>
+                      Delete?
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
-                  {% for form in formset %}
-                    <tr>
-                      <td>{% bootstrap_field form.organization show_help=False show_label=False size='small'%}</td>
-                      <td>{% bootstrap_field form.grade show_help=False show_label=False size='small'%}</td>
-                    </tr>
-                    {{form.id}}
-                  {% endfor %}
+                  <div id="form_set">
+                    {% for form in formset %}
+                      <tr>
+                        <td>{% bootstrap_field form.organization show_help=False show_label=False size='small'%}</td>
+                        <td>{% bootstrap_field form.grade show_help=False show_label=False size='small'%}</td>
+                        <td>{{form.DELETE}}</td>
+                      </tr>
+                      {{form.id}}
+                    {% endfor %}
+                  </div>
                 </tbody>
               </table>
+              <input type="button" value="Add More" id="add_more" class='btn btn-sm btn-success'>
+              <div id="empty_form" style="display:none">
+                  <table class='no_error'>
+                      {{ formset.empty_form }}
+                  </table>
+              </div>
             </div>
             {% buttons %}
               <button type="submit" class="btn btn-primary btn-lg btn-block">
@@ -100,4 +112,12 @@
 {% endblock content %}
 {% block scripts %}
   {{formset.media}}
+  <script>
+    $('#add_more').click(function() {
+      var form_idx = $('#id_students-TOTAL_FORMS').val();
+      console.log(form_idx);
+      $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
+      $('#id_students-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+    });
+  </script>
 {% endblock scripts %}
