@@ -39,11 +39,7 @@ from django.urls import reverse_lazy
 from .forms import AccountForm
 from .forms import AffiliationForm
 from .forms import DeleteForm
-from .forms import RemoveForm
-from .forms import SignExistingForm
-from .forms import SignForm
 from .forms import SignupForm
-from .forms import StudentForm
 from .forms import SubscribeForm
 from .forms import UserCreationForm
 from .models import Account
@@ -145,33 +141,6 @@ def organization(request, slug):
             'organization': organization,
             'students': students,
             'reports': reports,
-        },
-    )
-
-@login_required
-def affiliation(request, id):
-    affiliation = Affiliation.objects.get(
-        id=id,
-    )
-    organization = affiliation.organization
-    if request.method == "POST":
-        form = AffiliationForm(request.POST, instance=affiliation)
-        if form.is_valid():
-            affiliation.save()
-            messages.success(
-                request,
-                "Affiliation Saved!",
-            )
-            return redirect('account')
-    else:
-        form = AffiliationForm(instance=affiliation)
-    return render(
-        request,
-        'app/involved/affiliation.html',
-        context = {
-            'organization': organization,
-            'affiliation': affiliation,
-            'form': form,
         },
     )
 
@@ -280,7 +249,6 @@ def account(request):
         },
     )
 
-
 @login_required
 def pending(request):
     return render(
@@ -304,65 +272,6 @@ class SchoolAutocomplete(autocomplete.Select2QuerySetView):
 
         return qs
 
-@login_required
-def student(request, id):
-    student = Student.objects.get(id=id)
-    if request.method == "POST":
-        form = StudentForm(request.POST, instance=student)
-        if form.is_valid():
-            form.save()
-            messages.success(
-                request,
-                'Student detail saved!',
-            )
-            return redirect('account')
-    else:
-        form = StudentForm(instance=student)
-    return render(
-        request,
-        'app/account/student.html',
-        {'form': form,},
-    )
-
-
-@login_required
-def student_add(request):
-    if request.method == "POST":
-        form = StudentForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(
-                request,
-                'Student added!',
-            )
-            return redirect('account')
-    else:
-        form = StudentForm()
-    return render(
-        request,
-        'app/account/student.html',
-        {'form': form,},
-    )
-
-@login_required
-def student_remove(request, id):
-    student = Student.objects.get(id=id)
-    if request.method == "POST":
-        form = StudentForm(request.POST, instance=student)
-        if form.is_valid():
-            form.save()
-            messages.success(
-                request,
-                'Student detail saved!',
-            )
-            return redirect('account')
-    else:
-        form = StudentForm(instance=student)
-    return render(
-        request,
-        'app/account/student_remove.html',
-        {'form': form,},
-    )
 
 @login_required
 def welcome(request):

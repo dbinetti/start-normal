@@ -1,15 +1,14 @@
 # Django
+# Third-Party
+from dal import autocomplete
+
 from django import forms
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.forms import UserChangeForm as UserChangeFormBase
 from django.contrib.auth.forms import UserCreationForm as UserCreationFormBase
 
-# First-Party
-from dal import autocomplete
-
 # Local
 from .models import Account
-from .models import Affiliation
 from .models import Student
 from .models import User
 
@@ -48,81 +47,6 @@ class DeleteForm(forms.Form):
         required=True,
     )
 
-
-class RemoveForm(forms.Form):
-    confirm = forms.BooleanField(
-        required=True,
-    )
-
-
-class SignForm(forms.Form):
-    confirm = forms.BooleanField(
-        required=True,
-    )
-
-
-class AffiliationForm(forms.ModelForm):
-    class Meta:
-        model = Affiliation
-        fields = [
-            'status',
-            'message',
-            'organization',
-            'user',
-        ]
-        widgets = {
-            'message': forms.Textarea(
-                attrs={
-                    'class': 'form-control h-25',
-                    'placeholder': 'Public Message (Optional)',
-                    'rows': 5,
-                }
-            ),
-            'organization': forms.HiddenInput(),
-            'user': forms.HiddenInput(),
-        }
-
-
-class SignExistingForm(forms.ModelForm):
-    class Meta:
-        model = Affiliation
-        fields = [
-            'message',
-            'organization',
-            'user',
-        ]
-        widgets = {
-            'message': forms.Textarea(
-                attrs={
-                    'class': 'form-control h-25',
-                    'placeholder': 'Public Message (Optional)',
-                    'rows': 5,
-                }
-            ),
-            'organization': forms.HiddenInput(),
-            'user': forms.HiddenInput(),
-        }
-
-
-class StudentForm(forms.ModelForm):
-    class Meta:
-        model = Student
-        fields = [
-            'grade',
-            'organization',
-            'user',
-        ]
-        widgets = {
-            'organization': autocomplete.ModelSelect2(
-                url='school-search',
-                attrs={
-                    'data-container-css-class': '',
-                    'data-close-on-select': 'false',
-                    'data-scroll-after-select': 'true',
-                },
-            ),
-            'user': forms.HiddenInput(),
-        }
 
 class SignupForm(forms.Form):
     name = forms.CharField(
@@ -203,7 +127,6 @@ class UserCreationForm(UserCreationFormBase):
             'email',
             'name',
         ]
-
 
 
 class UserChangeForm(UserChangeFormBase):

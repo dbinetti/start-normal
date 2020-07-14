@@ -8,20 +8,13 @@ from django.contrib.auth.admin import UserAdmin as UserAdminBase
 # Local
 from .forms import UserChangeForm
 from .forms import UserCreationForm
-from .inlines import AffiliationInline
 from .inlines import ContactInline
 from .models import Account
-from .models import Affiliation
 from .models import Contact
 from .models import Organization
 from .models import Report
 from .models import User
 
-
-def approve_affiliation(modeladmin, request, queryset):
-    queryset.update(is_approved=True)
-
-approve_affiliation.short_description = "Approve Affiliations"
 
 @admin.register(Organization)
 class OrganizationAdmin(MPTTModelAdmin):
@@ -78,42 +71,6 @@ class ReportAdmin(admin.ModelAdmin):
 
 
 
-@admin.register(Affiliation)
-class AffiliationAdmin(admin.ModelAdmin):
-    save_on_top = True
-    fields = [
-        'status',
-        'is_approved',
-        'message',
-        'user',
-        'organization',
-    ]
-    list_display = [
-        'status',
-        'is_approved',
-        'user',
-        'organization',
-        'created',
-        'updated',
-    ]
-    list_filter = [
-        'status',
-        'is_approved',
-        'created',
-        'updated',
-    ]
-    search_fields = [
-        'user__name',
-    ]
-    autocomplete_fields = [
-        'user',
-        'organization',
-    ]
-    actions = [
-        approve_affiliation
-    ]
-
-
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):
     save_on_top = True
@@ -152,7 +109,6 @@ class AccountAdmin(admin.ModelAdmin):
         'user',
     ]
     inlines = [
-        # AffiliationInline,
     ]
 
 

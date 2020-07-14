@@ -6,9 +6,6 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
-# First-Party
-from app.forms import AffiliationForm
-
 
 def test_wip():
     assert True

@@ -43,7 +43,6 @@ def admin_client():
     return client
 
 @pytest.fixture
-# @disable_auto_indexing
 def organization():
     organization = OrganizationFactory()
     return organization

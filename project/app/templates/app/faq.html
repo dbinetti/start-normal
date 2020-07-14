@@ -5,26 +5,14 @@
 
 {% block content %}
 
-<section>
-  <div class='row'>
-    <div class='col-sm-9'>
-      {% for faq in faqs %}
-        <div class='my-5'>
-          <h4>
-            <a data-toggle="collapse" href="#faq_{{faq.id}}" aria-expanded="false" aria-controls="collapseExample">{{faq.question|safe}}</a>
-          </h4>
-        </div>
-        <div class="collapse" id="faq_{{faq.id}}">
-          {# <div class='card'> #}
-            {# <div class='card-body'> #}
-              <p>
-                {{faq.answer|safe}}
-              </p>
-            {# </div> #}
-          {# </div> #}
-        </div>
-      {% endfor %}
-    </div>
+<section class='my-3'>
+  <div class='col-lg-9'>
+    <p class='lead'>
+      Where are all the Frequently Asked Questions?
+    </p>
+    <p>
+      The answers to the FAQs will be here &mdash; as soon as I finish writing them!
+    </p>
   </div>
 </section>
 

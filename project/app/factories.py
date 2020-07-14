@@ -20,7 +20,6 @@ from django.db.models.signals import post_save
 
 # Local
 from .models import Account
-from .models import Affiliation
 from .models import Contact
 from .models import Organization
 from .models import Report
@@ -81,20 +80,6 @@ class OrganizationFactory(DjangoModelFactory):
     class Meta:
         model = Organization
 
-
-class AffiliationFactory(DjangoModelFactory):
-    is_approved = True
-    message = "Foo to the Bar!"
-    # organization = RelatedFactory(
-    #     'app.factories.OrganizationFactory',
-    #     factory_related_name='organization',
-    # )
-    # user = RelatedFactory(
-    #     'app.factories.UserFactory',
-    #     factory_related_name='user',
-    # )
-    class Meta:
-        model = Affiliation
 
 
 @mute_signals(post_delete, post_save)
