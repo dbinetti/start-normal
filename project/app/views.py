@@ -127,16 +127,19 @@ def involved(request):
 
 def organization(request, slug):
     organization = Organization.objects.get(slug=slug)
-    students = organization.students.filter(
-    ).order_by('-organization')
+    parents = User.objects.filter(students__organization=organization)
+    for parent in parents:
+        parent.grades = ", ".join([x.get_grade_display() for x in parent.students.filter(
+        organization=organization).order_by('grade')])
     reports = organization.reports.filter(
     ).order_by('-created')
+    reports = None
     return render(
         request,
         'app/involved/organization.html',
         context={
             'organization': organization,
-            'students': students,
+            'parents': parents,
             'reports': reports,
         },
     )

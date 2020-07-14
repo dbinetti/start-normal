@@ -18,9 +18,34 @@
       </div>
       <div class='card-body'>
         {% for report in reports %}
-          <ul class='list-unstyled'>
-            <li>{{report.name}} - {{report.text}}</li>
-          </ul>
+          {% if reports.count == 1 %}
+            <p>
+              <strong>{{report.name}}</strong><br>
+              <small class='text-muted'>Reported by {{report.user.name}} on {{report.created|date}}</small><br>
+              {{report.text}}
+            </p>
+          {% else %}
+            {% if forloop.first %}
+              <p>
+                <strong>{{report.name}}</strong><br>
+                <small class='text-muted'>Reported by {{report.user.name}} on {{report.created|date}}</small><br>
+                {{report.text}}
+              </p>
+              <span class="badge badge-success" data-toggle="collapse" data-toggle="collapse" data-target="#moreReports" role='button'>Show All</span>
+            {% else %}
+              <div class='collapse' id='moreReports'>
+                <p>
+                  <strong>{{report.name}}</strong><br>
+                  <small class='text-muted'>Reported by {{report.user.name}} on {{report.created|date}}</small><br>
+                  {{report.text}}
+                </p>
+              </div>
+            {% endif %}
+          {% endif %}
+        {% empty %}
+          <p>
+            No Current Reports.
+          </p>
         {% endfor %}
       </div>
     </div>
@@ -28,14 +53,37 @@
   <section class='my-5'>
     <div class='card'>
       <div class='card-header'>
-        <h5>Parent Signatures</h5>
+        <h5>Parents Who Want to Start Normal</h5>
       </div>
       <div class='card-body'>
-        {% for student in students %}
-          <ul class='list-unstyled'>
-            <li>{% if student.user.account.is_public %}{{student.user.name}}{% else %}Concerned Parent{% endif %}&nbsp;&mdash;&nbsp;{{student.get_grade_display}}</li>
-          </ul>
-        {% endfor %}
+        <table class='table'>
+          <thead>
+            <th>
+              Name
+            </th>
+            <th>
+              Student Grade(s)
+            </th>
+            <th>
+              Message
+            </th>
+          </thead>
+          <tbody>
+            {% for parent in parents %}
+              <tr>
+                <td>
+                  {% if parent.account.is_public %}{{parent.name}}{% else %}Concerned Parent{% endif %}
+                </td>
+                <td>
+                  {{parent.grades}}
+                </td>
+                <td>
+                  {{parent.account.message|default:"(No message)"}}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     </div>
   </section>

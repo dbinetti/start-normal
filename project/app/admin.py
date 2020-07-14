@@ -9,6 +9,7 @@ from django.contrib.auth.admin import UserAdmin as UserAdminBase
 from .forms import UserChangeForm
 from .forms import UserCreationForm
 from .inlines import ContactInline
+from .inlines import StudentInline
 from .models import Account
 from .models import Contact
 from .models import Organization
@@ -36,7 +37,7 @@ class OrganizationAdmin(MPTTModelAdmin):
         'nces_id',
     ]
     inlines = [
-        # ContactInline,
+        StudentInline,
     ]
     autocomplete_fields = [
         'parent',
