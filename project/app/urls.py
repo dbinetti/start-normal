@@ -12,6 +12,7 @@ urlpatterns = [
     # Involved
     path('involved', views.involved, name='involved'),
     path('organization/<slug>', views.organization, name='organization'),
+    path('organization', views.organizations, name='organizations'),
 
     # Informed
     path('informed', views.informed, name='informed',),

@@ -141,6 +141,30 @@ def organization(request, slug):
         },
     )
 
+def organizations(request):
+    user = request.user
+    if user.is_authenticated:
+        organizations = user.students.order_by(
+            'grade',
+            'organization',
+        ).values_list(
+            'organization',
+            flat=True,
+        ).distinct()
+    else:
+        organizations = None
+
+    return render(
+        request,
+        'app/involved/organizations.html',
+        context={
+            'organizations': organizations,
+            'app_id': settings.ALGOLIA['APPLICATION_ID'],
+            'search_key': settings.ALGOLIA['SEARCH_KEY'],
+            'index_name': "Organization_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
+        },
+    )
+
 
 # Informed
 def informed(request):
@@ -224,12 +248,14 @@ def account(request):
         },
     )
 
+
 @login_required
 def pending(request):
     return render(
         request,
         'app/account/pending.html',
     )
+
 
 class SchoolAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
