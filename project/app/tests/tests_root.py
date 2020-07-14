@@ -8,7 +8,9 @@ from django.urls import reverse
 
 
 def test_wip():
-    assert True
+    assert False
+
+
 def test_index_anon(anon_client):
     path = reverse('index')
     response = anon_client.get(path)
