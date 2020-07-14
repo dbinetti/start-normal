@@ -2,7 +2,6 @@
 
 {% load bootstrap4 %}
 {% load humanize %}
-{% load location %}
 
 {% block title %}Your Account{% endblock title %}
 {% block header %}Your Account{% endblock header %}
@@ -49,14 +48,13 @@
                 {% bootstrap_field form.is_doctor show_help=False show_label=False size='large'%}
               </div>
             </div>
-            <div class='card-title'>
-              <h6>
-                Student Schools and Grades
-              </h6>
+            <div class='mt-5'>
+              <h5>
+                Student Schools and Grades&nbsp;&nbsp;<span role='button' id="add_more" class='badge badge-success'>Add Another Student</span>
+              </h5>
             </div>
-            <input type="button" value="Add Another Student" id="add_more" class='btn btn-sm btn-success my-3'>
 
-            <div>
+            <div class='table-responsive-lg mb-5'>
               <table class='table table-sm'>
                 <thead>
                   <tr>

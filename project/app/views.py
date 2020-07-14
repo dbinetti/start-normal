@@ -27,8 +27,6 @@ from django.db.models import Count
 from django.db.models import Q
 from django.db.models import Sum
 from django.dispatch import receiver
-from django.forms import formset_factory
-from django.forms.models import inlineformset_factory
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
@@ -37,13 +35,12 @@ from django.urls import reverse_lazy
 
 # Local
 from .forms import AccountForm
-from .forms import AffiliationForm
 from .forms import DeleteForm
 from .forms import SignupForm
+from .forms import StudentFormSet
 from .forms import SubscribeForm
 from .forms import UserCreationForm
 from .models import Account
-from .models import Affiliation
 from .models import Organization
 from .models import Student
 from .models import User
@@ -181,34 +178,12 @@ def thomas(request):
 # Account
 @login_required
 def account(request):
+    StudentFormSet.extra = 0
     user = request.user
     account = Account.objects.get(
         user=user,
     )
     students = user.students.order_by('grade')
-
-    StudentFormSet = inlineformset_factory(
-        User,
-        Student,
-        fields=[
-            'grade',
-            'organization',
-            'user',
-        ],
-        widgets = {
-            'organization': autocomplete.ModelSelect2(
-                url='school-search',
-                attrs={
-                    'data-container-css-class': '',
-                    'data-close-on-select': 'false',
-                    'data-scroll-after-select': 'true',
-                },
-            )
-        },
-        extra=0,
-        # max_num=5,
-        can_delete=True,
-    )
 
     if request.method == "POST":
         form = AccountForm(
@@ -275,6 +250,7 @@ class SchoolAutocomplete(autocomplete.Select2QuerySetView):
 
 @login_required
 def welcome(request):
+    StudentFormSet.extra = 5
     user = request.user
     try:
         success = request.GET.__getitem__('success')
@@ -284,27 +260,6 @@ def welcome(request):
         user.is_active = True
         user.save()
 
-    StudentFormSet = inlineformset_factory(
-        User,
-        Student,
-        fields=[
-            'grade',
-            'organization',
-            'user',
-        ],
-        widgets = {
-            'organization': autocomplete.ModelSelect2(
-                url='school-search',
-                attrs={
-                    'data-container-css-class': '',
-                    'data-close-on-select': 'false',
-                    'data-scroll-after-select': 'true',
-                },
-            )
-        },
-        extra=5,
-        # max_num=5,
-    )
     if request.method == "POST":
         formset = StudentFormSet(
             request.POST,
@@ -429,21 +384,21 @@ def logout(request):
     )
     return redirect(logout_url)
 
-# Admin
-@staff_member_required
-def report(request):
-    report = Affiliation.objects.order_by(
-        'organization',
-    ).values(
-        'organization',
-    ).annotate(
-        c=Count('id'),
-    )
-    total = Affiliation.objects.aggregate(
-        c=Count('id'),
-    )['c']
-    return render(
-        request,
-        'app/admin/report.html',
-        {'report': report, 'total': total},
-    )
+# # Admin
+# @staff_member_required
+# def report(request):
+#     report = Affiliation.objects.order_by(
+#         'organization',
+#     ).values(
+#         'organization',
+#     ).annotate(
+#         c=Count('id'),
+#     )
+#     total = Affiliation.objects.aggregate(
+#         c=Count('id'),
+#     )['c']
+#     return render(
+#         request,
+#         'app/admin/report.html',
+#         {'report': report, 'total': total},
+#     )

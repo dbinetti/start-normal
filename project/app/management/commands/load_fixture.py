@@ -5,7 +5,6 @@ from django.core.management.base import BaseCommand
 
 # First-Party
 from app.models import Account
-from app.models import Affiliation
 from app.models import Contact
 from app.models import Organization
 from app.models import Report

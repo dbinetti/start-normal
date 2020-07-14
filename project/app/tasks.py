@@ -98,35 +98,6 @@ def mailchimp_delete_email(email):
     return result
 
 
-# @job
-# def mailchimp_add_tag(affiliation):
-#     client = get_mailchimp_client()
-#     email = affiliation.email
-#     location = affiliation.get_location_display()
-#     list_id = settings.MAILCHIMP_AUDIENCE_ID
-#     subscriber_hash = get_subscriber_hash(email)
-#     data = {
-#         'tags': [
-#             {'name': location, 'status': 'active'},
-#         ]
-#     }
-#     try:
-#         result =  client.lists.members.tags.update(
-#             list_id=list_id,
-#             subscriber_hash=subscriber_hash,
-#             data=data,
-#         )
-#     except MailChimpError as e:
-#         error = json.loads(str(e).replace("\'", "\""))
-#         if error['title'] == 'Resource Not Found':
-#             result =  "Resource Not Found"
-#         else:
-#             raise e # Invalid Resource
-#     except Exception as e:
-#         result = e
-#     return result
-
-
 @job
 def mailchimp_create_or_update_from_account(account):
     client = get_mailchimp_client()

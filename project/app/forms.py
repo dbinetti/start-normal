@@ -6,11 +6,35 @@ from django import forms
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.forms import UserChangeForm as UserChangeFormBase
 from django.contrib.auth.forms import UserCreationForm as UserCreationFormBase
+from django.forms.models import inlineformset_factory
 
 # Local
 from .models import Account
 from .models import Student
 from .models import User
+
+StudentFormSet = inlineformset_factory(
+    User,
+    Student,
+    fields=[
+        'grade',
+        'organization',
+        'user',
+    ],
+    widgets = {
+        'organization': autocomplete.ModelSelect2(
+            url='school-search',
+            attrs={
+                'data-container-css-class': '',
+                'data-close-on-select': 'false',
+                'data-scroll-after-select': 'true',
+            },
+        )
+    },
+    extra=0,
+    # max_num=5,
+    can_delete=True,
+)
 
 
 class AccountForm(forms.ModelForm):

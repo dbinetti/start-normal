@@ -373,60 +373,6 @@ class Organization(MPTTModel):
         order_insertion_by = ['name']
 
 
-class Affiliation(models.Model):
-    STATUS = Choices(
-        (0, 'new', 'New'),
-        (10, 'signed', 'Signed'),
-        (20, 'removed', 'Removed'),
-    )
-    id = HashidAutoField(
-        primary_key=True,
-    )
-    status = models.IntegerField(
-        choices=STATUS,
-        default=STATUS.signed,
-    )
-    is_approved = models.BooleanField(
-        default=False,
-    )
-    message = models.TextField(
-        max_length=512,
-        blank=True,
-        default='',
-        help_text="""Feel free to include a public message attached to your affiliation.""",
-    )
-    created = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated = models.DateTimeField(
-        auto_now=True,
-    )
-    user = models.ForeignKey(
-        'app.User',
-        on_delete=models.CASCADE,
-        related_name='affiliations',
-    )
-    organization = models.ForeignKey(
-        'app.Organization',
-        related_name='affiliations',
-        on_delete=models.CASCADE,
-    )
-
-    def __str__(self):
-        return str(self.name)
-
-    # class Meta:
-    #     constraints = [
-    #         UniqueConstraint(
-    #             fields=[
-    #                 'user',
-    #                 'organization',
-    #             ],
-    #             name='unique_affiliation',
-    #         )
-    #     ]
-
-
 class Student(models.Model):
     id = HashidAutoField(
         primary_key=True,
@@ -473,17 +419,6 @@ class Student(models.Model):
 
     def __str__(self):
         return str(self.id)
-
-    # class Meta:
-    #     constraints = [
-    #         UniqueConstraint(
-    #             fields=[
-    #                 'user',
-    #                 'organization',
-    #             ],
-    #             name='unique_affiliation',
-    #         )
-    #     ]
 
 
 class User(AbstractBaseUser):

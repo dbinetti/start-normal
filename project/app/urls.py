@@ -12,7 +12,6 @@ urlpatterns = [
     # Involved
     path('involved', views.involved, name='involved'),
     path('organization/<slug>', views.organization, name='organization'),
-    path('affiliation/<id>', views.affiliation, name='affiliation'),
 
     # Informed
     path('informed', views.informed, name='informed',),
@@ -35,5 +34,5 @@ urlpatterns = [
     path('school-search', views.SchoolAutocomplete.as_view(), name='school-search',),
 
     # Admin
-    path('report', views.report, name='report',),
+    # path('report', views.report, name='report',),
 ]
