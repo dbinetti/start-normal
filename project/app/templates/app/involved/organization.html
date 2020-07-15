@@ -46,7 +46,7 @@
         {% endfor %}
       </div>
       <div class='card-footer'>
-        <a href='{% url "report" organization.parent.slug %}' role='button' class='btn btn-success'>Make a Report</a>
+        {% if request.user.is_authenticated %}<a href='{% url "report" organization.slug %}' role='button' class='btn btn-success'>Make a Report</a>{%endif%}
       </div>
     </div>
   </section>
@@ -93,7 +93,7 @@
         </table>
       </div>
       <div class='card-footer'>
-        <a href='{% url "report" organization.parent.slug %}' role='button' class='btn btn-success'>Make a Report</a>
+        {% if request.user.is_authenticated %}<a href='{% url "contact" organization.slug %}' role='button' class='btn btn-success'>Add a Contact</a>{%endif%}
       </div>
     </div>
   </section>
@@ -134,7 +134,7 @@
         </table>
       </div>
       <div class='card-footer'>
-        <a href='{% url "report" organization.parent.slug %}' role='button' class='btn btn-success'>Make a Report</a>
+        {% if request.user.is_authenticated %}<a href='{% url "report" organization.parent.slug %}' role='button' class='btn btn-success'>Make a Report</a>{%endif%}
       </div>
     </div>
   </section>

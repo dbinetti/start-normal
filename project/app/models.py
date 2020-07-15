@@ -1,7 +1,13 @@
 # Standard Library
 from operator import attrgetter
 
-# Third-Party
+# Django
+from django.contrib.auth.models import AbstractBaseUser
+from django.db import models
+from django.db.models.constraints import UniqueConstraint
+from django.utils.text import slugify
+
+# First-Party
 import shortuuid
 from autoslug import AutoSlugField
 from hashid_field import HashidAutoField
@@ -9,12 +15,6 @@ from model_utils import Choices
 from mptt.models import MPTTModel
 from mptt.models import TreeForeignKey
 from shortuuidfield import ShortUUIDField
-
-# Django
-from django.contrib.auth.models import AbstractBaseUser
-from django.db import models
-from django.db.models.constraints import UniqueConstraint
-from django.utils.text import slugify
 
 # Local
 from .managers import UserManager
@@ -153,12 +153,11 @@ class Contact(models.Model):
     )
     role = models.IntegerField(
         null=True,
-        blank=True,
+        blank=False,
         choices=ROLE,
     )
-    email = models.CharField(
-        max_length=255,
-        blank=True,
+    email = models.EmailField(
+        blank=False,
         default='',
     )
     phone = models.CharField(

@@ -14,6 +14,7 @@ urlpatterns = [
     path('organization/<slug>', views.organization, name='organization'),
     path('organization', views.organizations, name='organizations'),
     path('organization/<slug>/report', views.report, name='report'),
+    path('organization/<slug>/contact', views.contact, name='contact'),
 
     # Informed
     path('informed', views.informed, name='informed',),

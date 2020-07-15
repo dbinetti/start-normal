@@ -35,6 +35,7 @@ from django_rq import job
 
 # Local
 from .forms import AccountForm
+from .forms import ContactForm
 from .forms import DeleteForm
 from .forms import ReportForm
 from .forms import SignupForm
@@ -185,7 +186,7 @@ def report(request, slug):
     form = ReportForm(request.POST or None)
     if form.is_valid():
         instance = form.save(commit=False)
-        instance.organization = organization
+        instance.organization = organization.parent
         instance.user = user
         instance.save()
         messages.success(
@@ -196,6 +197,26 @@ def report(request, slug):
     return render(
         request,
         'app/involved/report.html',
+        {'form': form,},
+    )
+
+@login_required
+def contact(request, slug):
+    user = request.user
+    organization = Organization.objects.get(slug=slug)
+    form = ContactForm(request.POST or None)
+    if form.is_valid():
+        instance = form.save(commit=False)
+        instance.organization = organization.parent
+        instance.save()
+        messages.success(
+            request,
+            "Contact Submitted!",
+        )
+        return redirect('organization', slug)
+    return render(
+        request,
+        'app/involved/contact.html',
         {'form': form,},
     )
 
