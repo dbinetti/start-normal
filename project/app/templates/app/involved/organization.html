@@ -20,23 +20,20 @@
         {% for report in reports %}
           {% if reports.count == 1 %}
             <p>
-              <strong>{{report.name}}</strong><br>
-              <small class='text-muted'>Reported by {{report.user.name}} on {{report.created|date}}</small><br>
+              <strong>{{report.title}}</strong>&nbsp;&nbsp;<small class='text-muted'>Reported by {{report.user.name}} on {{report.created|date}}</small><br>
               {{report.text}}
             </p>
           {% else %}
             {% if forloop.first %}
               <p>
-                <strong>{{report.name}}</strong><br>
-                <small class='text-muted'>Reported by {{report.user.name}} on {{report.created|date}}</small><br>
+                <strong>{{report.title}}</strong>&nbsp;&nbsp;<small class='text-muted'>Reported by {{report.user.name}} on {{report.created|date}}</small><br>
                 {{report.text}}
               </p>
-              <span class="badge badge-success" data-toggle="collapse" data-toggle="collapse" data-target="#moreReports" role='button'>Show All</span>
+              <span class="badge badge-warning" data-toggle="collapse" data-toggle="collapse" data-target="#moreReports" role='button'>Show All</span>
             {% else %}
               <div class='collapse' id='moreReports'>
                 <p>
-                  <strong>{{report.name}}</strong><br>
-                  <small class='text-muted'>Reported by {{report.user.name}} on {{report.created|date}}</small><br>
+                  <strong>{{report.title}}</strong>&nbsp;&nbsp;<small class='text-muted'>Reported by {{report.user.name}} on {{report.created|date}}</small><br>
                   {{report.text}}
                 </p>
               </div>
@@ -47,6 +44,9 @@
             No Current Reports.
           </p>
         {% endfor %}
+        <div class='my-5'>
+          <a href='{% url "report" organization.parent.slug %}' role='button' class='btn btn-success'>Make a Report</a>
+        </div>
       </div>
     </div>
   </section>

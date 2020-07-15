@@ -10,6 +10,8 @@ from django.forms.models import inlineformset_factory
 
 # Local
 from .models import Account
+from .models import Contact
+from .models import Report
 from .models import Student
 from .models import User
 
@@ -64,6 +66,35 @@ class AccountForm(forms.ModelForm):
                 }
             ),
         }
+
+
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = Contact
+        fields = [
+            'name',
+            'role',
+            'email',
+            'phone',
+            'organization',
+        ]
+
+
+class ReportForm(forms.ModelForm):
+    class Meta:
+        model = Report
+        fields = [
+            'title',
+            'text',
+            'is_district',
+        ]
+        labels = {
+            "is_district": "District Report",
+        }
+
+    def clean_title(self):
+        data = self.cleaned_data['title']
+        return data.title()
 
 
 class DeleteForm(forms.Form):

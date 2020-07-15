@@ -196,12 +196,18 @@ class Report(models.Model):
         choices=STATUS,
         default=STATUS.new,
     )
-    name = models.CharField(
+    title = models.CharField(
         max_length=100,
         blank=False,
+        help_text="""Give a brief title (ideally no more than five words.)""",
     )
     text = models.TextField(
         blank=False,
+        help_text="""Use your own voice, but please stick to the facts as much as possible; we want to be a credible source to all parents.""",
+    )
+    is_district = models.BooleanField(
+        default=True,
+        help_text="""Keep this checked if your update applies to the entire school district.  If unsure, keep it checked -- it probably does.""",
     )
     created = models.DateTimeField(
         auto_now_add=True,
@@ -221,7 +227,7 @@ class Report(models.Model):
     )
 
     def __str__(self):
-        return str(self.name)
+        return str(self.title)
 
 
 class Organization(MPTTModel):

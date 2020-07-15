@@ -17,6 +17,25 @@ from .models import Report
 from .models import User
 
 
+def approve_report(modeladmin, request, queryset):
+    for report in queryset:
+        report.status = Report.STATUS.approved
+        if report.is_district:
+            district = report.organization.parent
+            schools = district.children.exclude(
+                id=report.organization.id,
+            )
+            for school in schools:
+                school.reports.create(
+                    status=Report.STATUS.approved,
+                    title=report.title,
+                    text=report.text,
+                    user=report.user,
+                )
+    return
+
+
+
 @admin.register(Organization)
 class OrganizationAdmin(MPTTModelAdmin):
     exclude = [
@@ -48,13 +67,14 @@ class OrganizationAdmin(MPTTModelAdmin):
 @admin.register(Report)
 class ReportAdmin(admin.ModelAdmin):
     fields = [
-        'name',
+        'status',
+        'title',
         'text',
         'user',
         'organization',
     ]
     list_display = [
-        'name',
+        'title',
         'status',
         'user',
         'organization',
@@ -69,7 +89,9 @@ class ReportAdmin(admin.ModelAdmin):
         'user',
         'organization',
     ]
-
+    actions = [
+        approve_report,
+    ]
 
 
 @admin.register(Account)

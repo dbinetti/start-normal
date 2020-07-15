@@ -2,16 +2,6 @@
 # Standard Library
 import json
 
-# Third-Party
-import django_rq
-import requests
-import shortuuid
-from auth0.v3.authentication import Database
-from auth0.v3.authentication import Logout
-from auth0.v3.exceptions import Auth0Error
-from dal import autocomplete
-from django_rq import job
-
 from django import forms
 from django.conf import settings
 from django.contrib import messages
@@ -33,15 +23,27 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.urls import reverse_lazy
 
+# First-Party
+import django_rq
+import requests
+import shortuuid
+from auth0.v3.authentication import Database
+from auth0.v3.authentication import Logout
+from auth0.v3.exceptions import Auth0Error
+from dal import autocomplete
+from django_rq import job
+
 # Local
 from .forms import AccountForm
 from .forms import DeleteForm
+from .forms import ReportForm
 from .forms import SignupForm
 from .forms import StudentFormSet
 from .forms import SubscribeForm
 from .forms import UserCreationForm
 from .models import Account
 from .models import Organization
+from .models import Report
 from .models import Student
 from .models import User
 from .tasks import build_email
@@ -131,9 +133,10 @@ def organization(request, slug):
     for parent in parents:
         parent.grades = ", ".join([x.get_grade_display() for x in parent.students.filter(
         organization=organization).order_by('grade')])
-    reports = organization.reports.filter(
+    reports = Report.objects.filter(
+        status=Report.STATUS.approved,
+        organization=organization.parent,
     ).order_by('-created')
-    reports = None
     return render(
         request,
         'app/involved/organization.html',
@@ -166,6 +169,28 @@ def organizations(request):
             'search_key': settings.ALGOLIA['SEARCH_KEY'],
             'index_name': "Organization_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
         },
+    )
+
+
+@login_required
+def report(request, slug):
+    user = request.user
+    organization = Organization.objects.get(slug=slug)
+    form = ReportForm(request.POST or None)
+    if form.is_valid():
+        instance = form.save(commit=False)
+        instance.organization = organization
+        instance.user = user
+        instance.save()
+        messages.success(
+            request,
+            "Report Submitted!",
+        )
+        return redirect('organization', slug)
+    return render(
+        request,
+        'app/involved/report.html',
+        {'form': form,},
     )
 
 

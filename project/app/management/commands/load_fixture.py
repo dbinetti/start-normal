@@ -47,7 +47,7 @@ class Command(BaseCommand):
             is_active=True,
             name='Central Middle',
             status=Organization.STATUS.active,
-            kind=Organization.KIND.hs,
+            kind=Organization.KIND.intmidjr,
             nces_id=5405,
             address='123 Main St',
             city='San Carlos',
@@ -98,10 +98,10 @@ class Command(BaseCommand):
             organization=central,
         )
         Report.objects.create(
-            name='Bad news',
+            title='Bad news',
             status=Report.STATUS.approved,
             text="Now is the time for all good men to come to the aid of their schools!",
-            organization=central,
+            organization=scsd,
             user=user,
         )
         self.stdout.write("Complete.")
