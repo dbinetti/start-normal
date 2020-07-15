@@ -114,7 +114,7 @@ class SignupForm(forms.Form):
     password = forms.CharField(
         required=True,
         widget=forms.PasswordInput(attrs={'class': 'form-control'}),
-        help_text="""A password is required to manage preferences. (Required)""",
+        help_text="""A password is necessary to manage preferences. (Required)""",
     )
     is_public = forms.BooleanField(
         initial=True,
@@ -126,10 +126,11 @@ class SignupForm(forms.Form):
     )
     message = forms.CharField(
         required=False,
+        help_text="""Please keep your message civil.  I won't post messages that are vulgar, profane, or otherwise inappropriate.""",
         widget=forms.Textarea(
             attrs={
                 'class': 'form-control h-25',
-                'placeholder': 'Your Message with your Public Officials (Optional)',
+                'placeholder': 'Your Message to your Public Officials (Optional)',
                 'rows': 5,
             }
         )

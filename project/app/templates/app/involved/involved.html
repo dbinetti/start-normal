@@ -8,37 +8,97 @@
 
 {% block content %}
 
-  <section>
-    <p class='lead'>
-      Send a message that you want school to start as normal as possible &mdash; meaning full-time, in-person instruction with safety requirements balanced against children's developmental needs.
-    </p>
-  </section>
-  <section class='mt-2 mt-5'>
-    <div class='card'>
-      <div class="card-body">
-        <div class='card-text'>
-          <form method='post'>
-            {% csrf_token %}
-            {% bootstrap_form_errors form %}
-            {% bootstrap_field form.name show_label=False show_help=True placeholder='Name'  %}
-            {% bootstrap_field form.email show_label=False show_help=True placeholder='Email'  %}
-            {% bootstrap_field form.password show_label=False show_help=True placeholder='Password'  %}
-            {% bootstrap_field form.message show_label=False show_help=True%}
-            {% bootstrap_field form.is_public form_group_class='form-group form-check form-check-inline' show_label=True show_help=True %}
-            {% bootstrap_field form.is_subscribe form_group_class='form-group form-check form-check-inline' show_label=True show_help=True%}
-            {% buttons %}
-              <button type="submit" class="btn btn-primary btn-lg btn-block" id='id-button-signup'>
-                Sign
-              </button>
-            {% endbuttons %}
-          </form>
+  {% if request.user.is_authenticated %}
+    <section class='my-5'>
+      <p class='lead'>
+        Thank you for taking a stand for our kids!
+      </p>
+    </section>
+    <section>
+      <div>
+        <div>
+          <h4>District Updates</h4>
+        </div>
+        {% for district in districts %}
+          <div class='card'>
+            <div class='card-header'>
+              <h5>{{district.name}}</h5>
+            </div>
+            <div class='card-body'>
+              {% for report in district.reports.all %}
+                {% if district.reports.count == 1 %}
+                  <p>
+                    <strong>{{report.title}}</strong>&nbsp;&nbsp;<small class='text-muted'>Reported by {{report.user.name}} on {{report.created|date}}</small><br>
+                    {{report.text}}
+                  </p>
+                {% else %}
+                  {% if forloop.first %}
+                    <p>
+                      <strong>{{report.title}}</strong>&nbsp;&nbsp;<small class='text-muted'>Reported by {{report.user.name}} on {{report.created|date}}</small><br>
+                      {{report.text}}
+                    </p>
+                    <span class="badge badge-warning" data-toggle="collapse" data-toggle="collapse" data-target="#moreReports" role='button'>Show All</span>
+                  {% else %}
+                    <div class='collapse' id='moreReports'>
+                      <p>
+                        <strong>{{report.title}}</strong>&nbsp;&nbsp;<small class='text-muted'>Reported by {{report.user.name}} on {{report.created|date}}</small><br>
+                        {{report.text}}
+                      </p>
+                    </div>
+                  {% endif %}
+                {% endif %}
+              {% empty %}
+                <p>
+                  No Current Reports.
+                </p>
+              {% endfor %}
+            </div>
+            <div class='card-footer'>
+              {# {% if request.user.is_authenticated %}<a href='{% url "report" organization.slug %}' role='button' class='btn btn-success'>Make a Report</a>{%endif%} #}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </section>
+
+  {% else %}
+    <section class='my-5'>
+      <p class='lead'>
+        Send a message that you want school to start as normal as possible &mdash; meaning full-time, in-person instruction with safety requirements balanced against children's developmental needs.
+      </p>
+    </section>
+    <section class='mt-2 mt-5'>
+      <div class='card'>
+        <div class="card-header">
+          <h5>
+            Add My Name
+          </h5>
+        </div>
+        <div class="card-body">
+          <div class='card-text'>
+            <form method='post'>
+              {% csrf_token %}
+              {% bootstrap_form_errors form %}
+              {% bootstrap_field form.name show_label=False show_help=True placeholder='Name'  %}
+              {% bootstrap_field form.email show_label=False show_help=True placeholder='Email'  %}
+              {% bootstrap_field form.password show_label=False show_help=True placeholder='Password'  %}
+              {% bootstrap_field form.message show_label=False show_help=True%}
+              {% bootstrap_field form.is_public form_group_class='form-group form-check form-check-inline' show_label=True show_help=True %}
+              {% bootstrap_field form.is_subscribe form_group_class='form-group form-check form-check-inline' show_label=True show_help=True%}
+              {% buttons %}
+                <button type="submit" class="btn btn-primary btn-lg btn-block" id='id-button-signup'>
+                  Sign
+                </button>
+              {% endbuttons %}
+            </form>
+          </div>
+        </div>
+        <div class='card-footer'>
+          <p class="card-text"><small>
+            <span class='text-muted'>Your information isn't shared with anyone and all data will be deleted when this project is over.  Learn more <a href='{% url "about" %}'>about me</a>.</span></small>
+          </p>
         </div>
       </div>
-      <div class='card-footer'>
-        <p class="card-text"><small>
-          <span class='text-muted'>Your information isn't shared with anyone and all data will be deleted when this project is over.  Learn more <a href='{% url "about" %}'>about me</a>.</span></small>
-        </p>
-      </div>
-    </div>
-  </section>
+    </section>
+  {% endif %}
 {% endblock content %}

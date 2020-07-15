@@ -77,57 +77,75 @@ def robots(request):
 # Involved
 def involved(request):
     # New Signup
-    form = SignupForm(request.POST or None)
-    if form.is_valid():
-        # Instantiate Variables
-        name = form.cleaned_data['name']
-        email = form.cleaned_data['email']
-        password = form.cleaned_data['password']
-        is_public = form.cleaned_data['is_public']
-        is_subscribe = form.cleaned_data['is_subscribe']
-        message = form.cleaned_data['message']
-
-        # Auth0 Signup
-        auth0_client = Database(settings.AUTH0_DOMAIN)
-        try:
-            auth0_user = auth0_client.signup(
-                client_id=settings.AUTH0_CLIENT_ID,
-                name=name,
-                email=email,
-                password=password,
-                connection='Username-Password-Authentication',
-            )
-        except Auth0Error as e:
-            if e.error_code == 'user_exists':
-                messages.warning(
-                    request,
-                    "That email is in use.  Try to login (upper right corner) or pick a different email.",
-                )
-                return redirect('involved')
-        # Create User
-        username = "auth0|{0}".format(auth0_user['_id'])
-
-        user = authenticate(
+    user = request.user
+    if user.is_authenticated:
+        district_ids = user.students.values_list(
+            'organization__parent',
+            flat=True,
+        ).distinct()
+        districts = Organization.objects.filter(
+            id__in=district_ids,
+        ).distinct()
+        return render(
             request,
-            username=username,
-            email=email,
-            name=name,
+            'app/involved/involved.html',
+            context={
+                'districts': districts,
+            },
         )
-        user.refresh_from_db()
-        account = user.account
-        account.is_public = is_public
-        account.is_subscribe = is_subscribe
-        account.message = message
-        account.save()
-        log_in(request, user)
-        return redirect('pending')
-    return render(
-        request,
-        'app/involved/involved.html',
-        context={
-            'form': form,
-        },
-    )
+    else:
+        form = SignupForm(request.POST or None)
+        if form.is_valid():
+            # Instantiate Variables
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            is_public = form.cleaned_data['is_public']
+            is_subscribe = form.cleaned_data['is_subscribe']
+            message = form.cleaned_data['message']
+
+            # Auth0 Signup
+            auth0_client = Database(settings.AUTH0_DOMAIN)
+            try:
+                auth0_user = auth0_client.signup(
+                    client_id=settings.AUTH0_CLIENT_ID,
+                    name=name,
+                    email=email,
+                    password=password,
+                    connection='Username-Password-Authentication',
+                )
+            except Auth0Error as e:
+                if e.error_code == 'user_exists':
+                    messages.warning(
+                        request,
+                        "That email is in use.  Try to login (upper right corner) or pick a different email.",
+                    )
+                    return redirect('involved')
+            # Create User
+            username = "auth0|{0}".format(auth0_user['_id'])
+
+            user = authenticate(
+                request,
+                username=username,
+                email=email,
+                name=name,
+            )
+            user.refresh_from_db()
+            account = user.account
+            account.is_public = is_public
+            account.is_subscribe = is_subscribe
+            account.message = message
+            account.save()
+            log_in(request, user)
+            return redirect('pending')
+        return render(
+            request,
+            'app/involved/involved.html',
+            context={
+                'form': form,
+            },
+        )
+
 
 def organization(request, slug):
     organization = Organization.objects.get(slug=slug)
