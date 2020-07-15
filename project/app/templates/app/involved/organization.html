@@ -44,12 +44,60 @@
             No Current Reports.
           </p>
         {% endfor %}
-        <div class='my-5'>
-          <a href='{% url "report" organization.parent.slug %}' role='button' class='btn btn-success'>Make a Report</a>
-        </div>
+      </div>
+      <div class='card-footer'>
+        <a href='{% url "report" organization.parent.slug %}' role='button' class='btn btn-success'>Make a Report</a>
       </div>
     </div>
   </section>
+
+  <section class='my-5'>
+    <div class='card'>
+      <div class='card-header'>
+        <h5>District/Administration Contacts</h5>
+      </div>
+      <div class='card-body'>
+        <table class='table'>
+          <thead>
+            <th>
+              Name
+            </th>
+            <th>
+              Role
+            </th>
+            <th>
+              Email
+            </th>
+            <th>
+              Phone
+            </th>
+          </thead>
+          <tbody>
+            {% for contact in contacts %}
+              <tr>
+                <td>
+                  {{contact.name}}
+                </td>
+                <td>
+                  {{contact.get_role_display}}
+                </td>
+                <td>
+                  <a href='mailto:{{contact.email}}'>{{contact.email}}</a>
+                </td>
+                <td>
+                  <a href='tel:{{contact.phone}}'>{{contact.phone}}</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class='card-footer'>
+        <a href='{% url "report" organization.parent.slug %}' role='button' class='btn btn-success'>Make a Report</a>
+      </div>
+    </div>
+  </section>
+
   <section class='my-5'>
     <div class='card'>
       <div class='card-header'>
@@ -84,6 +132,9 @@
             {% endfor %}
           </tbody>
         </table>
+      </div>
+      <div class='card-footer'>
+        <a href='{% url "report" organization.parent.slug %}' role='button' class='btn btn-success'>Make a Report</a>
       </div>
     </div>
   </section>

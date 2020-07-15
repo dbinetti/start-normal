@@ -42,6 +42,7 @@ from .forms import StudentFormSet
 from .forms import SubscribeForm
 from .forms import UserCreationForm
 from .models import Account
+from .models import Contact
 from .models import Organization
 from .models import Report
 from .models import Student
@@ -137,13 +138,18 @@ def organization(request, slug):
         status=Report.STATUS.approved,
         organization=organization.parent,
     ).order_by('-created')
+    contacts = Contact.objects.filter(
+        is_active=True,
+        organization=organization.parent,
+    ).order_by('role')
     return render(
         request,
         'app/involved/organization.html',
         context={
             'organization': organization,
-            'parents': parents,
             'reports': reports,
+            'contacts': contacts,
+            'parents': parents,
         },
     )
 
