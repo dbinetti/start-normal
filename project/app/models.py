@@ -682,6 +682,12 @@ class Student(models.Model):
         on_delete=models.SET_NULL,
         null=True,
     )
+    school = models.ForeignKey(
+        'app.School',
+        related_name='students',
+        on_delete=models.SET_NULL,
+        null=True,
+    )
 
     def __str__(self):
         return str(self.id)
