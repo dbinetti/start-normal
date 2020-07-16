@@ -73,7 +73,7 @@
                   <div id="form_set">
                     {% for form in formset %}
                       <tr>
-                        <td>{% bootstrap_field form.organization show_help=False show_label=False size='small' placeholder='Search Schools....'%}</td>
+                        <td>{% bootstrap_field form.school show_help=False show_label=False size='small' placeholder='Search Schools....'%}</td>
                         <td>{% bootstrap_field form.grade show_help=False show_label=False size='small'%}</td>
                         <td>{{form.DELETE}}</td>
                       </tr>
@@ -85,7 +85,7 @@
               <div id="empty_form" style="display:none">
                 <table class='no_error table table-sm'>
                   <tr>
-                    <td>{% bootstrap_field formset.empty_form.organization show_help=False show_label=False size='small' placeholder='Search Schools....'%}</td>
+                    <td>{% bootstrap_field formset.empty_form.school show_help=False show_label=False size='small' placeholder='Search Schools....'%}</td>
                     <td>{% bootstrap_field formset.empty_form.grade show_help=False show_label=False size='small'%}</td>
                     <td>{{formset.empty_form.DELETE}}</td>
                     {{formset.empty_form.id}}
