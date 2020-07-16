@@ -1,11 +1,9 @@
 # Django
-# Third-Party
-import pytest
-from algoliasearch_django.decorators import disable_auto_indexing
-
 from django.test.client import Client
 
 # First-Party
+import pytest
+from algoliasearch_django.decorators import disable_auto_indexing
 from app.factories import UserFactory
 
 
@@ -42,7 +40,13 @@ def admin_client():
     client.force_login(admin)
     return client
 
+
 @pytest.fixture
-def organization():
-    organization = OrganizationFactory()
-    return organization
+def school():
+    school = SchoolFactory()
+    return school
+
+@pytest.fixture
+def district():
+    district = DistrictFactory()
+    return district

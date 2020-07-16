@@ -1,7 +1,12 @@
 # Standard Library
 import datetime
 
-# Third-Party
+# Django
+from django.db.models.signals import m2m_changed
+from django.db.models.signals import post_delete
+from django.db.models.signals import post_save
+
+# First-Party
 from factory import Faker  # post_generation,
 from factory import Iterator
 from factory import LazyAttribute
@@ -13,16 +18,12 @@ from factory.django import DjangoModelFactory
 from factory.django import mute_signals
 from factory.fuzzy import FuzzyInteger
 
-# Django
-from django.db.models.signals import m2m_changed
-from django.db.models.signals import post_delete
-from django.db.models.signals import post_save
-
 # Local
 from .models import Account
 from .models import Contact
-from .models import Organization
+from .models import District
 from .models import Report
+from .models import School
 from .models import User
 
 
@@ -65,11 +66,11 @@ class ReportFactory(DjangoModelFactory):
         model = Report
 
 
-class OrganizationFactory(DjangoModelFactory):
+class SchoolFactory(DjangoModelFactory):
     is_active = True
     name = 'Central Middle'
-    status = Organization.STATUS.active
-    kind = Organization.KIND.intmidjr
+    status = School.STATUS.active
+    kind = School.KIND.intmidjr
     nces_id = 5401
     address = '123 Main St'
     city = 'San Carlos'
@@ -78,7 +79,22 @@ class OrganizationFactory(DjangoModelFactory):
     lon = 32.0
     lat = -122.0
     class Meta:
-        model = Organization
+        model = School
+
+class DistrictFactory(DjangoModelFactory):
+    is_active = True
+    name = 'San Carlos School District'
+    status = District.STATUS.active
+    kind = District.KIND.elementary
+    nces_id = 605401
+    address = '123 Foo St'
+    city = 'San Carlos'
+    state = 'CA'
+    website = Faker('url')
+    lon = 32.0
+    lat = -122.0
+    class Meta:
+        model = District
 
 
 
