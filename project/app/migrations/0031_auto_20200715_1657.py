@@ -8,7 +8,7 @@ def forward(apps, schema_editor):
     School = apps.get_model('app.school')
     Organization = apps.get_model('app.organization')
     olds = Organization.objects.filter(
-        kind__range=[400,500],
+        kind__gte=500,
     )
     for o in olds:
         district = District.objects.get(
