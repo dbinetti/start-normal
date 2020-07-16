@@ -676,8 +676,8 @@ class Student(models.Model):
         related_name='students',
         on_delete=models.CASCADE,
     )
-    school = models.ForeignKey(
-        'app.School',
+    district = models.ForeignKey(
+        'app.District',
         related_name='students',
         on_delete=models.SET_NULL,
         null=True,
