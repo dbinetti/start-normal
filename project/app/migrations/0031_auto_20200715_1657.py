@@ -13,7 +13,7 @@ def forward(apps, schema_editor):
     for o in olds:
         try:
             district = District.objects.get(
-                nces_id=o.nces_id,
+                nces_id=o.parent.nces_id,
             )
         except District.DoesNotExist:
             district = None

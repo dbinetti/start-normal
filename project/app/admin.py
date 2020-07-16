@@ -9,6 +9,7 @@ from mptt.admin import MPTTModelAdmin
 from .forms import UserChangeForm
 from .forms import UserCreationForm
 from .inlines import ContactInline
+from .inlines import SchoolInline
 from .inlines import StudentInline
 from .models import Account
 from .models import Contact
@@ -79,13 +80,15 @@ class DistrictAdmin(admin.ModelAdmin):
         'is_active',
         'kind',
         'status',
+        'county',
+        'state',
     ]
     search_fields = [
         'name',
         'nces_id',
     ]
     inlines = [
-        # StudentInline,
+        SchoolInline,
     ]
     autocomplete_fields = [
         # 'parent',

@@ -5,6 +5,7 @@ from django.contrib import admin
 
 # Local
 from .models import Contact
+from .models import School
 from .models import Student
 
 
@@ -40,6 +41,25 @@ class StudentInline(admin.TabularInline):
     ]
     ordering = (
         'grade',
+    )
+    show_change_link = True
+    extra = 0
+    classes = [
+        # 'collapse',
+    ]
+
+
+class SchoolInline(admin.TabularInline):
+    model = School
+    fields = [
+        'name',
+        'kind',
+        'district',
+    ]
+    readonly_fields = [
+    ]
+    ordering = (
+        'name',
     )
     show_change_link = True
     extra = 0
