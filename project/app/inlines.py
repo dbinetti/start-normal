@@ -34,7 +34,7 @@ class StudentInline(admin.TabularInline):
     model = Student
     fields = [
         'user',
-        'organization',
+        'school',
         'grade',
     ]
     readonly_fields = [

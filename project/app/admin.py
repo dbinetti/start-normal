@@ -59,7 +59,7 @@ class OrganizationAdmin(MPTTModelAdmin):
         'nces_id',
     ]
     inlines = [
-        StudentInline,
+        # StudentInline,
     ]
     autocomplete_fields = [
         'parent',
@@ -129,13 +129,13 @@ class ReportAdmin(admin.ModelAdmin):
         'title',
         'text',
         'user',
-        'organization',
+        'district',
     ]
     list_display = [
         'title',
         'status',
         'user',
-        'organization',
+        'district',
     ]
     list_filter = [
         'status',
@@ -145,7 +145,7 @@ class ReportAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = [
         'user',
-        'organization',
+        'district',
     ]
     actions = [
         approve_report,

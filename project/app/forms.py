@@ -20,11 +20,11 @@ StudentFormSet = inlineformset_factory(
     Student,
     fields=[
         'grade',
-        'organization',
+        'school',
         'user',
     ],
     widgets = {
-        'organization': autocomplete.ModelSelect2(
+        'school': autocomplete.ModelSelect2(
             url='school-search',
             attrs={
                 'data-container-css-class': '',

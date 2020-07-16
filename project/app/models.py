@@ -171,11 +171,6 @@ class Contact(models.Model):
     updated = models.DateTimeField(
         auto_now=True,
     )
-    organization = models.ForeignKey(
-        'app.Organization',
-        on_delete=models.CASCADE,
-        related_name='contacts',
-    )
     district = models.ForeignKey(
         'app.District',
         on_delete=models.CASCADE,
@@ -219,18 +214,13 @@ class Report(models.Model):
     updated = models.DateTimeField(
         auto_now=True,
     )
-    organization = models.ForeignKey(
-        'app.Organization',
+    user = models.ForeignKey(
+        'app.User',
         related_name='reports',
         on_delete=models.CASCADE,
     )
     district = models.ForeignKey(
         'app.District',
-        related_name='reports',
-        on_delete=models.CASCADE,
-    )
-    user = models.ForeignKey(
-        'app.User',
         related_name='reports',
         on_delete=models.CASCADE,
     )
@@ -664,16 +654,6 @@ class Student(models.Model):
     )
     user = models.ForeignKey(
         'app.User',
-        on_delete=models.CASCADE,
-        related_name='students',
-    )
-    organization = models.ForeignKey(
-        'app.Organization',
-        on_delete=models.CASCADE,
-        related_name='students',
-    )
-    district = models.ForeignKey(
-        'app.District',
         on_delete=models.CASCADE,
         related_name='students',
     )
