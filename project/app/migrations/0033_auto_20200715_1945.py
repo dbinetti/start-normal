@@ -16,7 +16,7 @@ def forward(apps, schema_editor):
         contact.district = district
         contact.save()
 
-    reports = Contact.objects.all()
+    reports = Report.objects.all()
     for report in reports:
         district = District.objects.get(
             nces_id=report.organization.nces_id,
@@ -24,7 +24,7 @@ def forward(apps, schema_editor):
         report.district = district
         report.save()
 
-    students = Contact.objects.all()
+    students = Student.objects.all()
     for student in students:
         district = District.objects.get(
             nces_id=student.organization.nces_id,
