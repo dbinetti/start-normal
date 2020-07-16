@@ -134,7 +134,7 @@
         </table>
       </div>
       <div class='card-footer'>
-        {% if request.user.is_authenticated %}<a href='{% url "report" organization.parent.slug %}' role='button' class='btn btn-success'>Make a Report</a>{%endif%}
+        {% if request.user.is_authenticated %}<a href='{% url "report" school.district.slug %}' role='button' class='btn btn-success'>Make a Report</a>{%endif%}
       </div>
     </div>
   </section>

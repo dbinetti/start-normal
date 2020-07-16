@@ -41,8 +41,3 @@ def admin_client():
     client = Client()
     client.force_login(admin)
     return client
-
-@pytest.fixture
-def organization():
-    organization = OrganizationFactory()
-    return organization

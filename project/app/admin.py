@@ -14,7 +14,6 @@ from .inlines import StudentInline
 from .models import Account
 from .models import Contact
 from .models import District
-from .models import Organization
 from .models import Report
 from .models import School
 from .models import User
@@ -37,33 +36,6 @@ def approve_report(modeladmin, request, queryset):
                 )
     return
 
-
-
-@admin.register(Organization)
-class OrganizationAdmin(MPTTModelAdmin):
-    exclude = [
-        'slug',
-    ]
-    list_display = [
-        'name',
-        'kind',
-        'website',
-    ]
-    list_filter = [
-        'is_active',
-        'kind',
-        'status',
-    ]
-    search_fields = [
-        'name',
-        'nces_id',
-    ]
-    inlines = [
-        # StudentInline,
-    ]
-    autocomplete_fields = [
-        'parent',
-    ]
 
 
 @admin.register(District)
