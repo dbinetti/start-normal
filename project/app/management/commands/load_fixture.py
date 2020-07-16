@@ -6,8 +6,9 @@ from django.core.management.base import BaseCommand
 # First-Party
 from app.models import Account
 from app.models import Contact
-from app.models import Organization
+from app.models import District
 from app.models import Report
+from app.models import School
 from app.models import Student
 from app.models import User
 
@@ -29,13 +30,13 @@ class Command(BaseCommand):
             is_active=True,
             is_admin=False,
         )
-        scsd = Organization.objects.create(
+        scsd = District.objects.create(
             is_active=True,
             name='San Carlos School District',
-            status=Organization.STATUS.active,
-            kind=Organization.KIND.elementary,
+            status=District.STATUS.active,
+            kind=District.KIND.elementary,
             nces_id=5400,
-            address='123 Main St',
+            address='123 Foo St',
             city='San Carlos',
             state='CA',
             website='https://foobar.com',
@@ -43,11 +44,11 @@ class Command(BaseCommand):
             lat=-122.0,
         )
 
-        central = Organization.objects.create(
+        central = School.objects.create(
             is_active=True,
             name='Central Middle',
-            status=Organization.STATUS.active,
-            kind=Organization.KIND.intmidjr,
+            status=School.STATUS.active,
+            kind=School.KIND.intmidjr,
             nces_id=5405,
             address='123 Main St',
             city='San Carlos',
@@ -55,14 +56,14 @@ class Command(BaseCommand):
             website='https://www.foobar.com',
             lon=32.0,
             lat=-122.0,
-            parent=scsd,
+            district=scsd,
         )
 
-        ba = Organization.objects.create(
+        ba = School.objects.create(
             is_active=True,
             name='Brittan Acres',
-            status=Organization.STATUS.active,
-            kind=Organization.KIND.elem,
+            status=School.STATUS.active,
+            kind=School.KIND.elem,
             nces_id=5402,
             address='123 Main St',
             city='San Carlos',
@@ -70,38 +71,28 @@ class Command(BaseCommand):
             website='https://www.foobar.com',
             lon=32.0,
             lat=-122.0,
-            parent=scsd,
+            district=scsd,
         )
         Student.objects.create(
             grade=Student.GRADE.sixth,
             user=user,
-            organization=central,
+            school=central,
         )
         Student.objects.create(
             grade=Student.GRADE.third,
             user=user,
-            organization=ba,
+            school=ba,
         )
         Contact.objects.create(
             name='Mao Harmeier',
             role=Contact.ROLE.super,
-            organization=scsd,
-        )
-        Contact.objects.create(
-            name='Suzanne Fast',
-            role=Contact.ROLE.principal,
-            organization=ba,
-        )
-        Contact.objects.create(
-            name='Tom Domer',
-            role=Contact.ROLE.principal,
-            organization=central,
+            district=scsd,
         )
         Report.objects.create(
             title='Bad news',
             status=Report.STATUS.approved,
             text="Now is the time for all good men to come to the aid of their schools!",
-            organization=scsd,
+            district=scsd,
             user=user,
         )
         self.stdout.write("Complete.")

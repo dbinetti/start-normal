@@ -11,10 +11,10 @@ urlpatterns = [
 
     # Involved
     path('involved', views.involved, name='involved'),
-    path('school/<slug>', views.organization, name='organization'),
+    path('school/<slug>', views.school, name='school'),
     path('school/<slug>/report', views.report, name='report'),
     path('school/<slug>/contact', views.contact, name='contact'),
-    path('school', views.organizations, name='organizations'),
+    path('school', views.schools, name='schools'),
 
     # Informed
     path('informed', views.informed, name='informed',),

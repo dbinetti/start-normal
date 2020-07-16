@@ -2,16 +2,6 @@
 # Standard Library
 import json
 
-# Third-Party
-import django_rq
-import requests
-import shortuuid
-from auth0.v3.authentication import Database
-from auth0.v3.authentication import Logout
-from auth0.v3.exceptions import Auth0Error
-from dal import autocomplete
-from django_rq import job
-
 from django import forms
 from django.conf import settings
 from django.contrib import messages
@@ -33,6 +23,16 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.urls import reverse_lazy
 
+# First-Party
+import django_rq
+import requests
+import shortuuid
+from auth0.v3.authentication import Database
+from auth0.v3.authentication import Logout
+from auth0.v3.exceptions import Auth0Error
+from dal import autocomplete
+from django_rq import job
+
 # Local
 from .forms import AccountForm
 from .forms import ContactForm
@@ -44,7 +44,9 @@ from .forms import SubscribeForm
 from .forms import UserCreationForm
 from .models import Account
 from .models import Contact
+from .models import District
 from .models import Report
+from .models import School
 from .models import Student
 from .models import User
 from .tasks import build_email
@@ -79,10 +81,10 @@ def involved(request):
     user = request.user
     if user.is_authenticated:
         district_ids = user.students.values_list(
-            'organization__parent',
+            'school__district',
             flat=True,
         ).distinct()
-        districts = Organization.objects.filter(
+        districts = District.objects.filter(
             id__in=district_ids,
         ).distinct()
         return render(
@@ -146,52 +148,52 @@ def involved(request):
         )
 
 
-def organization(request, slug):
-    organization = Organization.objects.get(slug=slug)
-    parents = User.objects.filter(students__organization=organization)
+def school(request, slug):
+    school = School.objects.get(slug=slug)
+    parents = User.objects.filter(students__school=school)
     for parent in parents:
         parent.grades = ", ".join([x.get_grade_display() for x in parent.students.filter(
-        organization=organization).order_by('grade')])
+        school=school).order_by('grade')])
     reports = Report.objects.filter(
         status=Report.STATUS.approved,
-        organization=organization.parent,
+        school=school.district,
     ).order_by('-created')
     contacts = Contact.objects.filter(
         is_active=True,
-        organization=organization.parent,
+        school=school.district,
     ).order_by('role')
     return render(
         request,
-        'app/involved/organization.html',
+        'app/involved/school.html',
         context={
-            'organization': organization,
+            'school': school,
             'reports': reports,
             'contacts': contacts,
             'parents': parents,
         },
     )
 
-def organizations(request):
+def schools(request):
     user = request.user
     if user.is_authenticated:
-        organizations = user.students.order_by(
+        schools = user.students.order_by(
             'grade',
-            'organization',
+            'school',
         ).values_list(
-            'organization',
+            'school',
             flat=True,
         ).distinct()
     else:
-        organizations = None
+        schools = None
 
     return render(
         request,
-        'app/involved/organizations.html',
+        'app/involved/schools.html',
         context={
-            'organizations': organizations,
+            'schools': schools,
             'app_id': settings.ALGOLIA['APPLICATION_ID'],
             'search_key': settings.ALGOLIA['SEARCH_KEY'],
-            'index_name': "Organization_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
+            'index_name': "School_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
         },
     )
 
@@ -199,18 +201,18 @@ def organizations(request):
 @login_required
 def report(request, slug):
     user = request.user
-    organization = Organization.objects.get(slug=slug)
+    school = School.objects.get(slug=slug)
     form = ReportForm(request.POST or None)
     if form.is_valid():
         instance = form.save(commit=False)
-        instance.organization = organization.parent
+        instance.school = school.district
         instance.user = user
         instance.save()
         messages.success(
             request,
             "Report Submitted!",
         )
-        return redirect('organization', slug)
+        return redirect('school', slug)
     return render(
         request,
         'app/involved/report.html',
@@ -220,17 +222,17 @@ def report(request, slug):
 @login_required
 def contact(request, slug):
     user = request.user
-    organization = Organization.objects.get(slug=slug)
+    district = District.objects.get(slug=slug)
     form = ContactForm(request.POST or None)
     if form.is_valid():
         instance = form.save(commit=False)
-        instance.organization = organization.parent
+        instance.district = district
         instance.save()
         messages.success(
             request,
             "Contact Submitted!",
         )
-        return redirect('organization', slug)
+        return redirect('district', slug)
     return render(
         request,
         'app/involved/contact.html',
@@ -331,8 +333,7 @@ def pending(request):
 
 class SchoolAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
-        qs = Organization.objects.filter(
-            kind__gte=500, # Shools only
+        qs = School.objects.filter(
         )
 
         if self.q:

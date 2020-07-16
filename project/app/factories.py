@@ -21,7 +21,9 @@ from factory.fuzzy import FuzzyInteger
 # Local
 from .models import Account
 from .models import Contact
+from .models import District
 from .models import Report
+from .models import School
 from .models import User
 
 
@@ -64,22 +66,6 @@ class ReportFactory(DjangoModelFactory):
         model = Report
 
 
-class DistrictFactory(DjangoModelFactory):
-    is_active = True
-    name = 'Central Middle'
-    status = District.STATUS.active
-    kind = District.KIND.intmidjr
-    nces_id = 5401
-    address = '123 Main St'
-    city = 'San Carlos'
-    state = 'CA'
-    website = Faker('url')
-    lon = 32.0
-    lat = -122.0
-    class Meta:
-        model = District
-
-
 class SchoolFactory(DjangoModelFactory):
     is_active = True
     name = 'Central Middle'
@@ -94,6 +80,21 @@ class SchoolFactory(DjangoModelFactory):
     lat = -122.0
     class Meta:
         model = School
+
+class DistrictFactory(DjangoModelFactory):
+    is_active = True
+    name = 'San Carlos School District'
+    status = District.STATUS.active
+    kind = District.KIND.elementary
+    nces_id = 605401
+    address = '123 Foo St'
+    city = 'San Carlos'
+    state = 'CA'
+    website = Faker('url')
+    lon = 32.0
+    lat = -122.0
+    class Meta:
+        model = District
 
 
 
