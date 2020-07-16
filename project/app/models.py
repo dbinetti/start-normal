@@ -1,13 +1,7 @@
 # Standard Library
 from operator import attrgetter
 
-# Django
-from django.contrib.auth.models import AbstractBaseUser
-from django.db import models
-from django.db.models.constraints import UniqueConstraint
-from django.utils.text import slugify
-
-# First-Party
+# Third-Party
 import shortuuid
 from autoslug import AutoSlugField
 from hashid_field import HashidAutoField
@@ -15,6 +9,12 @@ from model_utils import Choices
 from mptt.models import MPTTModel
 from mptt.models import TreeForeignKey
 from shortuuidfield import ShortUUIDField
+
+# Django
+from django.contrib.auth.models import AbstractBaseUser
+from django.db import models
+from django.db.models.constraints import UniqueConstraint
+from django.utils.text import slugify
 
 # Local
 from .managers import UserManager
@@ -371,6 +371,254 @@ class Organization(MPTTModel):
 
     class MPTTMeta:
         order_insertion_by = ['name']
+
+
+class District(models.Model):
+
+    STATUS = Choices(
+        (10, 'active', "Active"),
+        (20, 'closed', "Closed"),
+        (30, 'merged', "Merged"),
+    )
+    KIND = Choices(
+        (400, 'county', 'County Office of Education'),
+        (402, 'state', 'State Board of Education'),
+        (403, 'charter', 'Statewide Benefit Charter'),
+        (431, 'special', 'State Special Schools'),
+        (434, 'non', 'Non-school Location*'),
+        (442, 'jpa', 'Joint Powers Authority (JPA)'),
+        (452, 'elementary', 'Elementary School District'),
+        (454, 'unified', 'Unified School District'),
+        (456, 'high', 'High School District'),
+        (458, 'ccd', 'Community College District'),
+        (498, 'roc', 'Regional Occupational Center/Program (ROC/P)'),
+        (499, 'admin', 'Administration Only'),
+    )
+    id = HashidAutoField(
+        primary_key=True,
+    )
+    is_active = models.BooleanField(
+        default=False,
+    )
+    name = models.CharField(
+        max_length=255,
+        blank=False,
+    )
+    description = models.TextField(
+        blank=True,
+    )
+    slug = AutoSlugField(
+        max_length=255,
+        always_update=True,
+        populate_from=get_populate_from,
+        unique=True,
+    )
+    status = models.IntegerField(
+        blank=False,
+        choices=STATUS,
+        default=STATUS.active,
+    )
+    kind = models.IntegerField(
+        blank=True,
+        null=True,
+        choices=KIND,
+    )
+    nces_id = models.IntegerField(
+        blank=True,
+        null=True,
+        unique=True,
+    )
+    address = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    city = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    state = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    zipcode = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    county = models.CharField(
+        max_length=255,
+        blank=True,
+    )
+    phone = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    website = models.URLField(
+        blank=True,
+        default='',
+    )
+    lat = models.DecimalField(
+        max_digits=10,
+        decimal_places=6,
+        null=True,
+        blank=True,
+    )
+    lon = models.DecimalField(
+        max_digits=10,
+        decimal_places=6,
+        null=True,
+        blank=True,
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+
+    def __str__(self):
+        return "{0} - {1}, {2}".format(
+            self.name,
+            self.city,
+            self.state,
+        )
+
+    def location(self):
+        return(self.lat, self.lon)
+
+    def should_index(self):
+        # if self.is_active:
+        #     return True
+        return False
+
+
+class School(models.Model):
+
+    STATUS = Choices(
+        (10, 'active', "Active"),
+        (20, 'closed', "Closed"),
+        (30, 'merged', "Merged"),
+    )
+    KIND = Choices(
+        (510, 'ps', 'Preschool'),
+        (520, 'elem', 'Elementary'),
+        (530, 'intmidjr', 'Intermediate/Middle/Junior High'),
+        (540, 'hs', 'High School'),
+        (550, 'elemhigh', 'Elementary-High Combination'),
+        (560, 'a', 'Adult'),
+        (570, 'ug', 'Ungraded'),
+    )
+    id = HashidAutoField(
+        primary_key=True,
+    )
+    is_active = models.BooleanField(
+        default=False,
+    )
+    name = models.CharField(
+        max_length=255,
+        blank=False,
+    )
+    description = models.TextField(
+        blank=True,
+    )
+    slug = AutoSlugField(
+        max_length=255,
+        always_update=True,
+        populate_from=get_populate_from,
+        unique=True,
+    )
+    status = models.IntegerField(
+        blank=False,
+        choices=STATUS,
+        default=STATUS.active,
+    )
+    kind = models.IntegerField(
+        blank=True,
+        null=True,
+        choices=KIND,
+    )
+    nces_id = models.IntegerField(
+        blank=True,
+        null=True,
+        unique=True,
+    )
+    address = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    city = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    state = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    zipcode = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    county = models.CharField(
+        max_length=255,
+        blank=True,
+    )
+    phone = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    website = models.URLField(
+        blank=True,
+        default='',
+    )
+    lat = models.DecimalField(
+        max_digits=10,
+        decimal_places=6,
+        null=True,
+        blank=True,
+    )
+    lon = models.DecimalField(
+        max_digits=10,
+        decimal_places=6,
+        null=True,
+        blank=True,
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+    district = models.ForeignKey(
+        'District',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='schools',
+    )
+
+    def __str__(self):
+        return "{0} - {1}, {2}".format(
+            self.name,
+            self.city,
+            self.state,
+        )
+
+    def location(self):
+        return(self.lat, self.lon)
+
+    def should_index(self):
+        # if self.is_active:
+        #     return True
+        return False
 
 
 class Student(models.Model):

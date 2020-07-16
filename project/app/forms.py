@@ -61,7 +61,7 @@ class AccountForm(forms.ModelForm):
             'message': forms.Textarea(
                 attrs={
                     'class': 'form-control',
-                    'placeholder': 'Share a Message with your Public Officials (Optional)',
+                    'placeholder': 'Your Message to your Public Officials (Optional)',
                     'rows': 5,
                 }
             ),
