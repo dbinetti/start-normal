@@ -68,12 +68,6 @@ def about(request):
         'app/about.html',
     )
 
-def robots(request):
-    return render(
-        request,
-        'app/robots.txt',
-    )
-
 
 # Involved
 def involved(request):
@@ -147,7 +141,6 @@ def involved(request):
             },
         )
 
-
 def school(request, slug):
     school = School.objects.get(slug=slug)
     parents = User.objects.filter(students__school=school)
@@ -156,11 +149,11 @@ def school(request, slug):
         school=school).order_by('grade')])
     reports = Report.objects.filter(
         status=Report.STATUS.approved,
-        school=school.district,
+        district=school.district,
     ).order_by('-created')
     contacts = Contact.objects.filter(
         is_active=True,
-        school=school.district,
+        district=school.district,
     ).order_by('role')
     return render(
         request,
@@ -176,16 +169,14 @@ def school(request, slug):
 def schools(request):
     user = request.user
     if user.is_authenticated:
-        schools = user.students.order_by(
+        schools = School.objects.filter(
+            students__user=user,
+        ).order_by(
             'grade',
             'school',
-        ).values_list(
-            'school',
-            flat=True,
         ).distinct()
     else:
         schools = None
-
     return render(
         request,
         'app/involved/schools.html',
@@ -198,21 +189,72 @@ def schools(request):
     )
 
 
-@login_required
-def report(request, slug):
+def district(request, slug):
+    distict = District.objects.get(slug=slug)
+    parents = User.objects.filter(
+        student__school__district=district,
+    ).annotate(
+        cnt=Count('student__school__id'),
+    ).distinct()
+    # for parent in parents:
+    #     parent.schools = ", ".join(
+    #         [x.get__display() for x in parent.students.filter(
+    #             school__district=district,
+    #         ).order_by('school')]
+    #     )
+    reports = district.reports.filter(
+        status=Report.STATUS.approved,
+    ).order_by('-created')
+    contacts = Contact.objects.filter(
+        is_active=True,
+        district=district,
+    ).order_by('role')
+    return render(
+        request,
+        'app/involved/school.html',
+        context={
+            'school': school,
+            'reports': reports,
+            'contacts': contacts,
+            'parents': parents,
+        },
+    )
+
+def districts(request):
     user = request.user
-    school = School.objects.get(slug=slug)
+    if user.is_authenticated:
+        districts = District.objects.filter(
+            school__students__user=user,
+        ).distinct()
+    else:
+        districts = None
+    return render(
+        request,
+        'app/involved/districts.html',
+        context={
+            'districts': districts,
+            'app_id': settings.ALGOLIA['APPLICATION_ID'],
+            'search_key': settings.ALGOLIA['SEARCH_KEY'],
+            'index_name': "District_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
+        },
+    )
+
+
+@login_required
+def district_report(request, slug):
+    user = request.user
+    district = District.objects.get(slug=slug)
     form = ReportForm(request.POST or None)
     if form.is_valid():
         instance = form.save(commit=False)
-        instance.school = school.district
+        instance.district = district
         instance.user = user
         instance.save()
         messages.success(
             request,
             "Report Submitted!",
         )
-        return redirect('school', slug)
+        return redirect('district', slug)
     return render(
         request,
         'app/involved/report.html',
@@ -220,7 +262,7 @@ def report(request, slug):
     )
 
 @login_required
-def contact(request, slug):
+def district_contact(request, slug):
     user = request.user
     district = District.objects.get(slug=slug)
     form = ContactForm(request.POST or None)
@@ -322,30 +364,12 @@ def account(request):
         },
     )
 
-
 @login_required
 def pending(request):
     return render(
         request,
         'app/account/pending.html',
     )
-
-
-class SchoolAutocomplete(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        qs = School.objects.filter(
-        )
-
-        if self.q:
-            # qs = qs.filter(slug__icontains=self.q)
-            qs = qs.filter(
-                Q(name__icontains=self.q)|
-                Q(city__icontains=self.q) |
-                Q(state__icontains=self.q)
-            )
-
-        return qs
-
 
 @login_required
 def welcome(request):
@@ -385,13 +409,6 @@ def welcome(request):
     )
 
 @login_required
-def share(request):
-    return render(
-        request,
-        'app/account/share.html',
-    )
-
-@login_required
 def delete(request):
     if request.method == "POST":
         form = DeleteForm(request.POST)
@@ -409,6 +426,13 @@ def delete(request):
         request,
         'app/account/delete.html',
         {'form': form,},
+    )
+
+@login_required
+def share(request):
+    return render(
+        request,
+        'app/account/share.html',
     )
 
 
@@ -482,6 +506,24 @@ def logout(request):
         "You Have Been Logged Out!",
     )
     return redirect(logout_url)
+
+
+# Autocomplete
+class SchoolAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = School.objects.filter(
+        )
+
+        if self.q:
+            # qs = qs.filter(slug__icontains=self.q)
+            qs = qs.filter(
+                Q(name__icontains=self.q)|
+                Q(city__icontains=self.q) |
+                Q(state__icontains=self.q)
+            )
+
+        return qs
+
 
 # # Admin
 # @staff_member_required

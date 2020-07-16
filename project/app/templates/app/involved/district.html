@@ -3,18 +3,19 @@
 {% load bootstrap4 %}
 {% load humanize %}
 
-{% block title %}{{school.name}}{% endblock title %}
-{% block header %}{{school.name}}{% endblock header %}
+{% block title %}{{district.name}}{% endblock title %}
+{% block header %}{{district.name}}{% endblock header %}
 {% block subheader %}
-  {{school.address}}, {{school.city}}, {{school.state}}&nbsp;&nbsp;<a href='tel:{{school.phone}}'>{{school.phone}}</a>&nbsp;<a href='{{school.website}}'>{{school.website}}</a>
+  {{district.address}}, {{district.city}}, {{district.state}}&nbsp;&nbsp;<a href='tel:{{district.phone}}'>{{district.phone}}</a>&nbsp;<a href='{{district.website}}'>{{district.website}}</a>
 {% endblock subheader %}
+
 
 {% block content %}
 
   <section class='my-5'>
     <div class='card'>
       <div class='card-header'>
-        <h5>Latest District Status Report</h5>
+        <h5>Latest Status Report</h5>
       </div>
       <div class='card-body'>
         {% for report in reports %}
@@ -46,7 +47,7 @@
         {% endfor %}
       </div>
       <div class='card-footer'>
-        {% if request.user.is_authenticated %}<a href='{% url "district-report" school.district.slug %}' role='button' class='btn btn-success'>Make a Report</a>{%endif%}
+        {% if request.user.is_authenticated %}<a href='{% url "district-report" district.slug %}' role='button' class='btn btn-success'>Make a Report</a>{%endif%}
       </div>
     </div>
   </section>
@@ -95,7 +96,7 @@
         </table>
       </div>
       <div class='card-footer'>
-        {% if request.user.is_authenticated %}<a href='{% url "district=contact" school.district.slug %}' role='button' class='btn btn-success'>Add a Contact</a>{%endif%}
+        {% if request.user.is_authenticated %}<a href='{% url "district-contact" district.slug %}' role='button' class='btn btn-success'>Add a Contact</a>{%endif%}
       </div>
     </div>
   </section>
@@ -112,7 +113,7 @@
               Name
             </th>
             <th>
-              Student Grade(s)
+              School(s)
             </th>
             <th>
               Message
@@ -125,7 +126,7 @@
                   {% if parent.account.is_public %}{{parent.name}}{% else %}Concerned Parent{% endif %}
                 </td>
                 <td>
-                  {{parent.grades}}
+                  {{parent.schools}}
                 </td>
                 <td>
                   {{parent.account.message|default:"(No message)"}}
@@ -136,7 +137,7 @@
         </table>
       </div>
       <div class='card-footer'>
-        {% if request.user.is_authenticated %}<a href='{% url "district-report" school.district.slug %}' role='button' class='btn btn-success'>Make a Report</a>{%endif%}
+        {% if request.user.is_authenticated %}<a href='{% url "district-report" district.slug %}' role='button' class='btn btn-success'>Make a Report</a>{%endif%}
       </div>
     </div>
   </section>
