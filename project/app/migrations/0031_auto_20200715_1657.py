@@ -11,9 +11,12 @@ def forward(apps, schema_editor):
         kind__gte=500,
     )
     for o in olds:
-        district = District.objects.get(
-            nces_id=o.nces_id,
-        )
+        try:
+            district = District.objects.get(
+                nces_id=o.nces_id,
+            )
+        except District.DoesNotExist:
+            district = None
         School.objects.create(
             is_active=o.is_active,
             name=o.name,
