@@ -173,14 +173,13 @@ class Contact(models.Model):
     )
     organization = models.ForeignKey(
         'app.Organization',
-        related_name='contacts',
         on_delete=models.CASCADE,
+        related_name='contacts',
     )
     district = models.ForeignKey(
         'app.District',
+        on_delete=models.CASCADE,
         related_name='contacts',
-        on_delete=models.SET_NULL,
-        null=True,
     )
 
     def __str__(self):
@@ -228,8 +227,7 @@ class Report(models.Model):
     district = models.ForeignKey(
         'app.District',
         related_name='reports',
-        on_delete=models.SET_NULL,
-        null=True,
+        on_delete=models.CASCADE,
     )
     user = models.ForeignKey(
         'app.User',
@@ -611,9 +609,7 @@ class School(models.Model):
     )
     district = models.ForeignKey(
         'District',
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
+        on_delete=models.CASCADE,
         related_name='schools',
     )
 
@@ -673,20 +669,18 @@ class Student(models.Model):
     )
     organization = models.ForeignKey(
         'app.Organization',
-        related_name='students',
         on_delete=models.CASCADE,
+        related_name='students',
     )
     district = models.ForeignKey(
         'app.District',
+        on_delete=models.CASCADE,
         related_name='students',
-        on_delete=models.SET_NULL,
-        null=True,
     )
     school = models.ForeignKey(
         'app.School',
         related_name='students',
-        on_delete=models.SET_NULL,
-        null=True,
+        on_delete=models.CASCADE,
     )
 
     def __str__(self):
