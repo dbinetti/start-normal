@@ -8,7 +8,7 @@ def forward(apps, schema_editor):
     Student = apps.get_model('app.student')
     District = apps.get_model('app.district')
 
-    contacts = Contact.objects.all()
+    contacts = Contact.objects.exclude(role=Contact.ROLE.principal)
     for contact in contacts:
         district = District.objects.get(
             nces_id=contact.organization.nces_id,
