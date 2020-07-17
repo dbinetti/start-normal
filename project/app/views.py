@@ -76,23 +76,48 @@ def about(request):
 
 # Involved
 def involved(request):
-    # New Signup
     user = request.user
+    # Account Holder
     if user.is_authenticated:
-        district_ids = user.students.values_list(
-            'school__district',
-            flat=True,
-        ).distinct()
         districts = District.objects.filter(
-            id__in=district_ids,
+            schools__students__user=user,
         ).distinct()
-        return render(
-            request,
-            'app/involved/involved.html',
-            context={
-                'districts': districts,
-            },
-        )
+        # If they have selected students
+        if districts:
+            return render(
+                request,
+                'app/involved/involved.html',
+                context={
+                    'districts': districts,
+                },
+            )
+        # Otherwise, pick students
+        else:
+            StudentFormSet.extra = 5
+            if request.method == "POST":
+                formset = StudentFormSet(
+                    request.POST,
+                    request.FILES,
+                    instance=user,
+                )
+                if formset.is_valid():
+                    formset.save()
+                    messages.success(
+                        request,
+                        "Saved!",
+                    )
+                    return redirect('involved')
+            else:
+                formset = StudentFormSet(
+                    instance=user,
+                )
+            return render(
+                request,
+                'app/involved/involved.html',
+                context = {
+                    'formset': formset,
+                },
+            )
     else:
         form = SignupForm(request.POST or None)
         if form.is_valid():

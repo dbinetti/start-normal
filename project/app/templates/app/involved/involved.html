@@ -9,11 +9,6 @@
 {% block content %}
 
   {% if request.user.is_authenticated %}
-    <section class='my-5'>
-      <p class='lead'>
-        Thank you for taking a stand for our kids!
-      </p>
-    </section>
     <section>
       <div>
         <div>
@@ -61,6 +56,62 @@
               {%endif%}
             </div>
           </div>
+        {% empty %}
+
+          <section class='mb-5'>
+            <p class='lead'>
+              To see District Updates, please select the schools your children attend.
+            </p>
+          </section>
+          <section>
+            <div class='card'>
+              <div class='card-header'>
+                <h5>
+                  Student Schools and Grades
+                </h5>
+              </div>
+              <div class='card-body'>
+                <p class='card-text'>
+                  <form method="post">
+                    {{formset.management_form}}
+                    {% csrf_token %}
+                    {% bootstrap_formset_errors formset %}
+                    <table class='table table-sm'>
+                      <thead>
+                        <tr>
+                          <th>
+                            School
+                          </th>
+                          <th>
+                            Grade
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for form in formset %}
+                          <tr>
+                            <td>{% bootstrap_field form.school show_help=False show_label=False size='small'%}</td>
+                            <td>{% bootstrap_field form.grade show_help=False show_label=False size='small'%}</td>
+                            {{form.id}}
+                          </tr>
+                        {% endfor %}
+                      </tbody>
+                    </table>
+                    {% buttons %}
+                      <button type="submit" class="btn btn-primary btn-lg btn-block">
+                        Save Students
+                      </button>
+                    {% endbuttons %}
+                  </form>
+                </p>
+              </div>
+              <div class='card-footer'>
+                <p>
+                  You must select at least one school to receive district updates.
+                </p>
+              </div>
+            </div>
+          </section>
         {% endfor %}
       </div>
     </section>
@@ -106,3 +157,7 @@
     </section>
   {% endif %}
 {% endblock content %}
+
+{% block scripts %}
+  {{formset.media}}
+{% endblock scripts %}
