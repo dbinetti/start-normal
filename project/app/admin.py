@@ -17,24 +17,14 @@ from .models import Contact
 from .models import District
 from .models import Report
 from .models import School
+from .models import Student
 from .models import User
 
 
 def approve_report(modeladmin, request, queryset):
     for report in queryset:
         report.status = Report.STATUS.approved
-        if report.is_district:
-            district = report.organization.parent
-            schools = district.children.exclude(
-                id=report.organization.id,
-            )
-            for school in schools:
-                school.reports.create(
-                    status=Report.STATUS.approved,
-                    title=report.title,
-                    text=report.text,
-                    user=report.user,
-                )
+        report.save()
     return
 
 
@@ -64,6 +54,55 @@ class DistrictAdmin(admin.ModelAdmin):
         SchoolInline,
         ReportInline,
         ContactInline,
+    ]
+    autocomplete_fields = [
+        # 'parent',
+    ]
+
+
+
+@admin.register(Student)
+class StudentAdmin(admin.ModelAdmin):
+    list_display = [
+        'user',
+        'school',
+        'grade',
+    ]
+    list_filter = [
+        'grade',
+        'created',
+        'updated',
+    ]
+    search_fields = [
+        'user__name',
+    ]
+    inlines = [
+    ]
+    autocomplete_fields = [
+        # 'parent',
+    ]
+
+
+@admin.register(Contact)
+class ContactAdmin(admin.ModelAdmin):
+    list_display = [
+        'name',
+        'role',
+        'email',
+        'phone',
+        'district',
+        'is_active',
+    ]
+    list_filter = [
+        'is_active',
+        'role',
+        'created',
+        'updated',
+    ]
+    search_fields = [
+        'name',
+    ]
+    inlines = [
     ]
     autocomplete_fields = [
         # 'parent',
