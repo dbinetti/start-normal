@@ -40,7 +40,7 @@
   <section class='my-5 col-lg-9'>
     <div class='card'>
       <div class='card-header'>
-        <h4>Search Schools</h4>
+        <h4>Search California Schools</h4>
       </div>
       <div class='card-body'>
         <p class='card-title'>
@@ -100,12 +100,21 @@
     let search = instantsearch({
       indexName: "{{index_name}}",
       searchClient,
+      searchFunction: function(helper) {
+        var searchResults = $('.search-results');
+        if (helper.state.query === '') {
+          searchResults.hide();
+          return;
+        }
+        helper.search();
+        searchResults.show();
+      }
     });
 
     search.addWidgets([
       instantsearch.widgets.searchBox({
         container: '#searchbox',
-        placeholder: 'Search Schools...',
+        placeholder: 'Search California Schools...',
         autofocus: true,
         showReset: false,
         showSubmit: false,

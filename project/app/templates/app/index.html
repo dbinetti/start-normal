@@ -12,22 +12,118 @@
   </div> <!-- end wistia -->
 
   <div class='jumbotron'>
-    <h2>
-      Modify the Four Pillars
-    </h2>
-    <p class='lead my-5'>
-      The <a href='{% url "morrow"%}'>San Mateo Public Health Officer</a> has called to modify the "Four Pillars" in light of child development needs, and clarified the districts must decide on their own reopening policies.
-      {# To advocate for your children, go to your <a href='{% url "involved" %}'>District</a>. #}
-    </p>
+
+    <section>
+      <h2 class='mb-3'>
+        <strong>Start Normal</strong> is a group of parents putting kids first.
+      </h2>
+      <p class='lead'>
+        If you believe that that risks of our children falling behind outweigh the risks from Covid-19, then <a href='{% url "involved" %}'>you should join our movement</a>!
+      </p>
+    </section>
+    <section>
+      <div id="searchbox" class='my-5'>
+      </div>
+      {# <div id="refine" class='my-5'> #}
+      {# </div> #}
+      <div id="hits" class='my-5'>
+      </div>
+    </section>
+
+
     <p class='my-5'>
-      {# <a href='{% url "involved" %}' role='button' class="btn btn-primary btn-lg"> #}
-        {# Get Involved #}
-      {# </a> #}
+      <a href='{% url "involved" %}' role='button' class="btn btn-primary btn-lg">
+        Get Involved!
+      </a>
       <a href='{% url "informed" %}' role='button' class='btn btn-light btn-lg mx-2'>
-        Get Informed
+        Get Informed!
       </a>
     </p>
     <br><br>
   </div>
 </section>
 {% endblock content %}
+
+{% block scripts %}
+  <script>
+
+    const searchClient = algoliasearch(
+      "{{app_id}}",
+      "{{search_key}}",
+    );
+
+    let search = instantsearch({
+      indexName: "{{index_name}}",
+      searchClient,
+      searchFunction: function(helper) {
+        var searchResults = $('.search-results');
+        if (helper.state.query === '') {
+          searchResults.hide();
+          return;
+        }
+        helper.search();
+        searchResults.show();
+      }
+    });
+
+    search.addWidgets([
+      instantsearch.widgets.searchBox({
+        container: '#searchbox',
+        placeholder: 'Search California Schools...',
+        autofocus: true,
+        showReset: false,
+        showSubmit: false,
+        cssClasses: {
+          root: 'root',
+          form: 'form',
+          input: 'input form-control form-control-large',
+        },
+      }),
+    ]);
+
+    search.addWidgets([
+      instantsearch.widgets.infiniteHits({
+        container: '#hits',
+        templates: {
+          item(item) {
+            return `
+              <strong><a href='school/${item.slug}'>${item.name}</a></strong><br>
+              ${item.address}  ${item.city}, ${item.state}
+            `;
+          }
+        },
+        cssClasses: {
+          list: 'list',
+          item: 'my-3',
+          loadPrevious: 'btn btn-primary mt-5',
+          loadMore: 'btn btn-primary mt-5',
+          disabledLoadPrevious: 'btn btn-primary mt-5',
+          disabledLoadMore: 'btn btn-primary mt-5',
+        },
+      }),
+    ]);
+
+    // search.addWidgets([
+    //   instantsearch.widgets.refinementList({
+    //     container: '#refine',
+    //     attribute: 'get_doc_display',
+    //     // Optional parameters
+    //     operator: string,
+    //     limit: number,
+    //     showMore: boolean,
+    //     showMoreLimit: number,
+    //     searchable: boolean,
+    //     searchablePlaceholder: string,
+    //     searchableIsAlwaysActive: boolean,
+    //     searchableEscapeFacetValues: boolean,
+    //     sortBy: string[]|function,
+    //     templates: object,
+    //     cssClasses: object,
+    //     transformItems: function,
+    //   })
+    // ]);
+
+    search.start();
+
+  </script>
+{% endblock scripts %}

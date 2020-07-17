@@ -1,12 +1,12 @@
 # Django
+# Third-Party
+from dal import autocomplete
+
 from django import forms
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.forms import UserChangeForm as UserChangeFormBase
 from django.contrib.auth.forms import UserCreationForm as UserCreationFormBase
 from django.forms.models import inlineformset_factory
-
-# First-Party
-from dal import autocomplete
 
 # Local
 from .models import Account
@@ -61,7 +61,7 @@ class AccountForm(forms.ModelForm):
             'message': forms.Textarea(
                 attrs={
                     'class': 'form-control',
-                    'placeholder': 'Your Message to your Public Officials (Optional)',
+                    'placeholder': 'Your Message to your Public Officials',
                     'rows': 5,
                 }
             ),
@@ -126,11 +126,11 @@ class SignupForm(forms.Form):
     )
     message = forms.CharField(
         required=False,
-        help_text="""Please keep your message civil.  I won't post messages that are vulgar, profane, or otherwise inappropriate.""",
+        help_text="""Please keep your message civil.  I won't post messages that are vulgar, profane, or otherwise inappropriate. (Optional)""",
         widget=forms.Textarea(
             attrs={
                 'class': 'form-control h-25',
-                'placeholder': 'Your Message to your Public Officials (Optional)',
+                'placeholder': 'Your Message to your Public Officials',
                 'rows': 5,
             }
         )

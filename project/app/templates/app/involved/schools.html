@@ -32,12 +32,21 @@
     let search = instantsearch({
       indexName: "{{index_name}}",
       searchClient,
+      searchFunction: function(helper) {
+        var searchResults = $('.search-results');
+        if (helper.state.query === '') {
+          searchResults.hide();
+          return;
+        }
+        helper.search();
+        searchResults.show();
+      }
     });
 
     search.addWidgets([
       instantsearch.widgets.searchBox({
         container: '#searchbox',
-        placeholder: 'Search Schools...',
+        placeholder: 'Search California Schools...',
         autofocus: true,
         showReset: false,
         showSubmit: false,

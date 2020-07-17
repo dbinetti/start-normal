@@ -2,6 +2,16 @@
 # Standard Library
 import json
 
+# Third-Party
+import django_rq
+import requests
+import shortuuid
+from auth0.v3.authentication import Database
+from auth0.v3.authentication import Logout
+from auth0.v3.exceptions import Auth0Error
+from dal import autocomplete
+from django_rq import job
+
 from django import forms
 from django.conf import settings
 from django.contrib import messages
@@ -22,16 +32,6 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.urls import reverse_lazy
-
-# First-Party
-import django_rq
-import requests
-import shortuuid
-from auth0.v3.authentication import Database
-from auth0.v3.authentication import Logout
-from auth0.v3.exceptions import Auth0Error
-from dal import autocomplete
-from django_rq import job
 
 # Local
 from .forms import AccountForm
@@ -60,6 +60,11 @@ def index(request):
     return render(
         request,
         'app/index.html',
+        context = {
+            'app_id': settings.ALGOLIA['APPLICATION_ID'],
+            'search_key': settings.ALGOLIA['SEARCH_KEY'],
+            'index_name': "School_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
+        }
     )
 
 def about(request):
