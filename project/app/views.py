@@ -2,16 +2,6 @@
 # Standard Library
 import json
 
-# Third-Party
-import django_rq
-import requests
-import shortuuid
-from auth0.v3.authentication import Database
-from auth0.v3.authentication import Logout
-from auth0.v3.exceptions import Auth0Error
-from dal import autocomplete
-from django_rq import job
-
 from django import forms
 from django.conf import settings
 from django.contrib import messages
@@ -32,6 +22,16 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.urls import reverse_lazy
+
+# First-Party
+import django_rq
+import requests
+import shortuuid
+from auth0.v3.authentication import Database
+from auth0.v3.authentication import Logout
+from auth0.v3.exceptions import Auth0Error
+from dal import autocomplete
+from django_rq import job
 
 # Local
 from .forms import AccountForm
@@ -143,7 +143,7 @@ def involved(request):
 
 def school(request, slug):
     school = School.objects.get(slug=slug)
-    parents = User.objects.filter(students__school=school)
+    parents = User.objects.filter(students__school=school).distinct()
     for parent in parents:
         parent.grades = ", ".join([x.get_grade_display() for x in parent.students.filter(
         school=school).order_by('grade')])
@@ -188,21 +188,19 @@ def schools(request):
         },
     )
 
-
 def district(request, slug):
-    distict = District.objects.get(slug=slug)
+    district = District.objects.get(slug=slug)
     parents = User.objects.filter(
-        student__school__district=district,
-    ).annotate(
-        cnt=Count('student__school__id'),
+        students__school__isnull=False,
     ).distinct()
-    # for parent in parents:
-    #     parent.schools = ", ".join(
-    #         [x.get__display() for x in parent.students.filter(
-    #             school__district=district,
-    #         ).order_by('school')]
-    #     )
-    reports = district.reports.filter(
+    for parent in parents:
+        parent.schools = ", ".join(
+            ["{0} {1}".format(x.school.name, x.get_grade_display()) for x in parent.students.filter(
+                school__district=district,
+            ).order_by('grade')]
+        )
+    reports = Report.objects.filter(
+        district=district,
         status=Report.STATUS.approved,
     ).order_by('-created')
     contacts = Contact.objects.filter(
@@ -211,9 +209,9 @@ def district(request, slug):
     ).order_by('role')
     return render(
         request,
-        'app/involved/school.html',
+        'app/involved/district.html',
         context={
-            'school': school,
+            'district': district,
             'reports': reports,
             'contacts': contacts,
             'parents': parents,
@@ -299,7 +297,12 @@ def informed(request):
     return render(
         request,
         'app/informed/informed.html',
-        {'form': form,},
+        context = {
+            'form': form,
+            'app_id': settings.ALGOLIA['APPLICATION_ID'],
+            'search_key': settings.ALGOLIA['SEARCH_KEY'],
+            'index_name': "School_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
+        },
     )
 
 def morrow(request):
@@ -487,7 +490,7 @@ def callback(request):
     user = authenticate(request, **payload)
     if user:
         log_in(request, user)
-        return redirect('account')
+        return redirect('involved')
     return HttpResponse(status=400)
 
 def logout(request):

@@ -1,11 +1,11 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "103f0b634b3514b6429b87cf7021d2329cdeab75f2351ae94c6ef12d4255e19f"
+            "sha256": "f1a9155c13bea2b2ee0b0c6cd412f6864953ae94efcb6031ae3c5ec7aaaa0b28"
         },
         "pipfile-spec": 6,
         "requires": {
-            "python_full_version": "3.8.3"
+            "python_full_version": "3.8.4"
         },
         "sources": [
             {
@@ -48,8 +48,12 @@
             "version": "==3.2.10"
         },
         "auth0-python": {
-            "git": "https://github.com/auth0/auth0-python.git",
-            "ref": "967168d080710c88f370e8bca2a4ddcad585feae"
+            "hashes": [
+                "sha256:07d803cf46df6f750748a3e23bead0860d84b95e3f074ff43fcfcb5ee08f0419",
+                "sha256:fbc54a231ca787ae0917223028269582abbd963cfa9d53ba822a601dd9cd2215"
+            ],
+            "index": "pypi",
+            "version": "==3.12.0"
         },
         "backcall": {
             "hashes": [

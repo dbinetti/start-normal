@@ -5,6 +5,7 @@ from django.contrib import admin
 
 # Local
 from .models import Contact
+from .models import Report
 from .models import School
 from .models import Student
 
@@ -23,6 +24,24 @@ class ContactInline(admin.TabularInline):
     ordering = (
         'role',
     )
+    show_change_link = True
+    extra = 0
+    classes = [
+        # 'collapse',
+    ]
+
+
+class ReportInline(admin.TabularInline):
+    model = Report
+    fields = [
+        'status',
+        'title',
+    ]
+    readonly_fields = [
+    ]
+    ordering = [
+        'created',
+    ]
     show_change_link = True
     extra = 0
     classes = [

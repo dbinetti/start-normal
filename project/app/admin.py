@@ -1,14 +1,15 @@
 # Django
-# Third-Party
-from mptt.admin import MPTTModelAdmin
-
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as UserAdminBase
+
+# First-Party
+from mptt.admin import MPTTModelAdmin
 
 # Local
 from .forms import UserChangeForm
 from .forms import UserCreationForm
 from .inlines import ContactInline
+from .inlines import ReportInline
 from .inlines import SchoolInline
 from .inlines import StudentInline
 from .models import Account
@@ -61,6 +62,8 @@ class DistrictAdmin(admin.ModelAdmin):
     ]
     inlines = [
         SchoolInline,
+        ReportInline,
+        ContactInline,
     ]
     autocomplete_fields = [
         # 'parent',
@@ -136,7 +139,7 @@ class AccountAdmin(admin.ModelAdmin):
         'is_volunteer',
         'is_teacher',
         'is_doctor',
-        'notes',
+        'message',
     ]
     list_display = [
         'user',
@@ -218,3 +221,6 @@ class UserAdmin(UserAdminBase):
         ),
     )
     filter_horizontal = ()
+    inlines = [
+        StudentInline,
+    ]

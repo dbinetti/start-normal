@@ -24,7 +24,7 @@ class Command(BaseCommand):
             is_admin=True,
         )
         user = User.objects.create(
-            username='auth0|5f086f442eb3030019c85c54',
+            username='auth0|5f119d98de3b59001924ead8',
             name='Foo Bar',
             email='foo@startnormal.com',
             is_active=True,

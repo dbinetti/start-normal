@@ -25,7 +25,7 @@
               <h5>{{district.name}}</h5>
             </div>
             <div class='card-body'>
-              {% for report in district.reports.all %}
+              {% for report in district.reports.all reversed%}
                 {% if district.reports.count == 1 %}
                   <p>
                     <strong>{{report.title}}</strong>&nbsp;&nbsp;<small class='text-muted'>Reported by {{report.user.name}} on {{report.created|date}}</small><br>
@@ -54,7 +54,7 @@
               {% endfor %}
             </div>
             <div class='card-footer'>
-              {% if request.user.is_authenticated %}<a href='{% url "district" district.slug %}' role='button' class='btn btn-success'>Make a Report</a>{%endif%}
+              {% if request.user.is_authenticated %}<a href='{% url "district-report" district.slug %}' role='button' class='btn btn-success'>Make a Report</a>{%endif%}
             </div>
           </div>
         {% endfor %}

@@ -9,32 +9,53 @@
 
   <section>
     <p class='lead'>
-      If you're not ready to take action but want to stay infomed here are some resources to help you!
+      If you're not ready to take action but want to stay informed here are some resources to help you!
     </p>
   </section>
 
-  <section class='mt-2 col-lg-9'>
+  {% if not request.user.is_authenticated %}
+    <section class='mt-2 col-lg-9'>
+      <div class='card'>
+        <div class='card-header'>
+          <h4>Email Updates</h4>
+        </div>
+        <div class='card-body'>
+          <p class='card-title'>
+            I send infrequent updates (generally once a few days, never more than once a day) with the latest video, interview, or update.  This does not signify any position, your information remains private, and you can unsubscribe anytime.
+          </p>
+          <form method='post' class='form-horizontal' role='form'>
+            {% csrf_token %}
+            {% bootstrap_form_errors form %}
+            {% bootstrap_form form show_label=False%}
+            {% buttons %}
+              <button type="submit" class="btn btn-primary btn-lg btn-block">
+                Subscribe
+              </button>
+            {% endbuttons %}
+          </form>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+  <section class='my-5 col-lg-9'>
     <div class='card'>
       <div class='card-header'>
-        <h4>Email Updates</h4>
+        <h4>Search Schools</h4>
       </div>
       <div class='card-body'>
         <p class='card-title'>
-          I send infrequent updates (generally once a few days, never more than once a day) with the latest video, interview, or update.  This does not signify any position, your information remains private, and you can unsubscribe anytime.
+          Search for updates on your local school/district.
         </p>
-        <form method='post' class='form-horizontal' role='form'>
-          {% csrf_token %}
-          {% bootstrap_form_errors form %}
-          {% bootstrap_form form show_label=False%}
-          {% buttons %}
-            <button type="submit" class="btn btn-primary btn-lg btn-block">
-              Subscribe
-            </button>
-          {% endbuttons %}
-        </form>
+        <div id="searchbox" class='my-5'>
+        </div>
+        {# <div id="refine" class='my-5'> #}
+        {# </div> #}
+        <div id="hits" class='my-5'>
+        </div>
       </div>
     </div>
   </section>
+
 
   <section class='my-5 col-lg-9'>
     <div class='card'>
@@ -68,3 +89,77 @@
     </div>
   </section>
 {% endblock content %}
+{% block scripts %}
+  <script>
+
+    const searchClient = algoliasearch(
+      "{{app_id}}",
+      "{{search_key}}",
+    );
+
+    let search = instantsearch({
+      indexName: "{{index_name}}",
+      searchClient,
+    });
+
+    search.addWidgets([
+      instantsearch.widgets.searchBox({
+        container: '#searchbox',
+        placeholder: 'Search Schools...',
+        autofocus: true,
+        showReset: false,
+        showSubmit: false,
+        cssClasses: {
+          root: 'root',
+          form: 'form',
+          input: 'input form-control form-control-large',
+        },
+      }),
+    ]);
+
+    search.addWidgets([
+      instantsearch.widgets.infiniteHits({
+        container: '#hits',
+        templates: {
+          item(item) {
+            return `
+              <strong><a href='school/${item.slug}'>${item.name}</a></strong><br>
+              ${item.address}  ${item.city}, ${item.state}
+            `;
+          }
+        },
+        cssClasses: {
+          list: 'list',
+          item: 'my-3',
+          loadPrevious: 'btn btn-primary mt-5',
+          loadMore: 'btn btn-primary mt-5',
+          disabledLoadPrevious: 'btn btn-primary mt-5',
+          disabledLoadMore: 'btn btn-primary mt-5',
+        },
+      }),
+    ]);
+
+    // search.addWidgets([
+    //   instantsearch.widgets.refinementList({
+    //     container: '#refine',
+    //     attribute: 'get_doc_display',
+    //     // Optional parameters
+    //     operator: string,
+    //     limit: number,
+    //     showMore: boolean,
+    //     showMoreLimit: number,
+    //     searchable: boolean,
+    //     searchablePlaceholder: string,
+    //     searchableIsAlwaysActive: boolean,
+    //     searchableEscapeFacetValues: boolean,
+    //     sortBy: string[]|function,
+    //     templates: object,
+    //     cssClasses: object,
+    //     transformItems: function,
+    //   })
+    // ]);
+
+    search.start();
+
+  </script>
+{% endblock scripts %}

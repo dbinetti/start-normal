@@ -29,8 +29,7 @@ sendgrid = "*"
 django-sendgrid-v5 = "*"
 django-model-utils = "*"
 sentry-sdk = "*"
-# auth0-python = "*"
-auth0-python = {git = "https://github.com/auth0/auth0-python.git"}
+auth0-python = "*"
 django-hashid-field = "*"
 algoliasearch-django = "*"
 django-autoslug = "*"
@@ -38,4 +37,4 @@ django-mptt = "*"
 django-autocomplete-light = "*"
 
 [requires]
-python_full_version = "3.8.3"
+python_full_version = "3.8.4"
