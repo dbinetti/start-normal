@@ -1,13 +1,7 @@
 # Standard Library
 from operator import attrgetter
 
-# Django
-from django.contrib.auth.models import AbstractBaseUser
-from django.db import models
-from django.db.models.constraints import UniqueConstraint
-from django.utils.text import slugify
-
-# First-Party
+# Third-Party
 import shortuuid
 from autoslug import AutoSlugField
 from hashid_field import HashidAutoField
@@ -15,6 +9,12 @@ from model_utils import Choices
 from mptt.models import MPTTModel
 from mptt.models import TreeForeignKey
 from shortuuidfield import ShortUUIDField
+
+# Django
+from django.contrib.auth.models import AbstractBaseUser
+from django.db import models
+from django.db.models.constraints import UniqueConstraint
+from django.utils.text import slugify
 
 # Local
 from .managers import UserManager
@@ -261,6 +261,7 @@ class District(models.Model):
         (454, 'unified', 'Unified School District'),
         (456, 'high', 'High School District'),
         (458, 'ccd', 'Community College District'),
+        (470, 'private', 'Private'),
         (498, 'roc', 'Regional Occupational Center/Program (ROC/P)'),
         (499, 'admin', 'Administration Only'),
     )
@@ -292,6 +293,11 @@ class District(models.Model):
         blank=True,
         null=True,
         choices=KIND,
+    )
+    cd_id = models.BigIntegerField(
+        blank=True,
+        null=True,
+        unique=True,
     )
     nces_id = models.IntegerField(
         blank=True,
@@ -361,8 +367,8 @@ class District(models.Model):
         return(self.lat, self.lon)
 
     def should_index(self):
-        # if self.is_active:
-        #     return True
+        if self.status == self.STATUS.active:
+            return True
         return False
 
 
@@ -410,6 +416,11 @@ class School(models.Model):
         blank=True,
         null=True,
         choices=KIND,
+    )
+    cd_id = models.BigIntegerField(
+        blank=True,
+        null=True,
+        unique=True,
     )
     nces_id = models.IntegerField(
         blank=True,
@@ -469,8 +480,9 @@ class School(models.Model):
     )
     district = models.ForeignKey(
         'District',
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         related_name='schools',
+        null=True,
     )
 
     def __str__(self):
@@ -484,8 +496,8 @@ class School(models.Model):
         return(self.lat, self.lon)
 
     def should_index(self):
-        # if self.is_active:
-        #     return True
+        if self.status == self.STATUS.active:
+            return True
         return False
 
 

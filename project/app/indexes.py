@@ -35,7 +35,7 @@ class SchoolIndex(AlgoliaIndex):
             'get_kind_display',
         ],
     }
-    should_index = 'is_active'
+    should_index = 'should_index'
 
 class DistrictIndex(AlgoliaIndex):
     fields = [
@@ -68,4 +68,4 @@ class DistrictIndex(AlgoliaIndex):
             'get_kind_display',
         ],
     }
-    should_index = 'is_active'
+    should_index = 'should_index'

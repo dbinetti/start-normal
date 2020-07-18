@@ -11,9 +11,51 @@ from dal import autocomplete
 # Local
 from .models import Account
 from .models import Contact
+from .models import District
 from .models import Report
+from .models import School
 from .models import Student
 from .models import User
+
+
+class SchoolForm(forms.ModelForm):
+    class Meta:
+        model = School
+        fields = [
+            'kind',
+            'name',
+            'kind',
+            'nces_id',
+            'address',
+            'city',
+            'state',
+            'zipcode',
+            'county',
+            'phone',
+            'website',
+            'lat',
+            'lon',
+        ]
+
+class DistrictForm(forms.ModelForm):
+    class Meta:
+        model = District
+        fields = [
+            'kind',
+            'name',
+            'kind',
+            'nces_id',
+            'address',
+            'city',
+            'state',
+            'zipcode',
+            'county',
+            'phone',
+            'website',
+            'lat',
+            'lon',
+        ]
+
 
 StudentFormSet = inlineformset_factory(
     User,

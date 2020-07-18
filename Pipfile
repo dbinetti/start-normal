@@ -35,6 +35,7 @@ algoliasearch-django = "*"
 django-autoslug = "*"
 django-mptt = "*"
 django-autocomplete-light = "*"
+nameparser = "*"
 
 [requires]
 python_full_version = "3.8.4"
