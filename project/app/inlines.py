@@ -66,7 +66,9 @@ class StudentInline(admin.TabularInline):
     classes = [
         # 'collapse',
     ]
-
+    autocomplete_fields = [
+        'school',
+    ]
 
 class SchoolInline(admin.TabularInline):
     model = School
@@ -84,4 +86,7 @@ class SchoolInline(admin.TabularInline):
     extra = 0
     classes = [
         # 'collapse',
+    ]
+    autocomplete_fields = [
+        'district',
     ]
