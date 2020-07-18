@@ -8,6 +8,7 @@ urlpatterns = [
     # Root
     path('', views.index, name='index',),
     path('about', views.about, name='about',),
+    path('privacy', views.privacy, name='privacy',),
 
     # Involved
     path('involved', views.involved, name='involved'),

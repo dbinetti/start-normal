@@ -73,6 +73,12 @@ def about(request):
         'app/about.html',
     )
 
+def privacy(request):
+    return render(
+        request,
+        'app/privacy.html',
+    )
+
 
 # Involved
 def involved(request):
