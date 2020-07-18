@@ -1,6 +1,7 @@
 {% extends 'app/base.html' %}
 
 {% block title %}Home{% endblock title%}
+{% block topnav %}{% endblock topnav%}
 
 {% block content %}
 
@@ -14,13 +15,23 @@
   <div class='jumbotron'>
 
     <section>
-      <h2 class='mb-3'>
-        <strong>Start Normal</strong> is a group of parents putting kids first.
+      <h2 class='my-3'>
+        <strong>Start Normal</strong> is the alternative to distance learning.
       </h2>
-      <p class='lead'>
-        If you believe that that risks of our children falling behind outweigh the risks from Covid-19, then <a href='{% url "involved" %}'>you should join our movement</a>!  Not only will this send a message to our public officials, it will add you to our network of parents and teachers seeking in-person instruction.
+      <p class='my-3'>
+        Start Normal began as a group of thousands of parents advocating for normal start to the school year.  However, with that looking increasingly unlikely we have begun creating our own network of parents and teachers seeking to connect for full-time, in-person instruction.
+      </p>
+      <p class='lead my-3'>
+        There is no cost, no obligation, no politics &mdash; we're only looking to educate our kids so they don't fall behind.
       </p>
     </section>
+    <section class='my-5'>
+      <a href='{% url "login" %}' role='button' class="btn btn-primary btn-block btn-lg">
+        Join Us!
+      </a>
+    </section>
+
+{% comment %}
     <section>
       <div id="searchbox" class='my-5'>
       </div>
@@ -29,7 +40,6 @@
       <div id="hits" class='my-5'>
       </div>
     </section>
-
 
     <p class='my-5'>
       <a href='{% url "involved" %}' role='button' class="btn btn-primary btn-lg">
@@ -42,88 +52,6 @@
     <br><br>
   </div>
 </section>
+{% endcomment %}
 {% endblock content %}
 
-{% block scripts %}
-  <script>
-
-    const searchClient = algoliasearch(
-      "{{app_id}}",
-      "{{search_key}}",
-    );
-
-    let search = instantsearch({
-      indexName: "{{index_name}}",
-      searchClient,
-      searchFunction: function(helper) {
-        var searchResults = $('.search-results');
-        if (helper.state.query === '') {
-          searchResults.hide();
-          return;
-        }
-        helper.search();
-        searchResults.show();
-      }
-    });
-
-    search.addWidgets([
-      instantsearch.widgets.searchBox({
-        container: '#searchbox',
-        placeholder: 'Search California Schools...',
-        autofocus: true,
-        showReset: false,
-        showSubmit: false,
-        cssClasses: {
-          root: 'root',
-          form: 'form',
-          input: 'input form-control form-control-large',
-        },
-      }),
-    ]);
-
-    search.addWidgets([
-      instantsearch.widgets.infiniteHits({
-        container: '#hits',
-        templates: {
-          item(item) {
-            return `
-              <strong><a href='school/${item.slug}'>${item.name}</a></strong><br>
-              ${item.address}  ${item.city}, ${item.state}
-            `;
-          }
-        },
-        cssClasses: {
-          list: 'list',
-          item: 'my-3',
-          loadPrevious: 'btn btn-primary mt-5',
-          loadMore: 'btn btn-primary mt-5',
-          disabledLoadPrevious: 'btn btn-primary mt-5',
-          disabledLoadMore: 'btn btn-primary mt-5',
-        },
-      }),
-    ]);
-
-    // search.addWidgets([
-    //   instantsearch.widgets.refinementList({
-    //     container: '#refine',
-    //     attribute: 'get_doc_display',
-    //     // Optional parameters
-    //     operator: string,
-    //     limit: number,
-    //     showMore: boolean,
-    //     showMoreLimit: number,
-    //     searchable: boolean,
-    //     searchablePlaceholder: string,
-    //     searchableIsAlwaysActive: boolean,
-    //     searchableEscapeFacetValues: boolean,
-    //     sortBy: string[]|function,
-    //     templates: object,
-    //     cssClasses: object,
-    //     transformItems: function,
-    //   })
-    // ]);
-
-    search.start();
-
-  </script>
-{% endblock scripts %}

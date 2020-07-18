@@ -3,11 +3,12 @@
 # Standard Library
 import os
 
-from environ import Env
-from environ import Path
-
 # Django
 from django.contrib.messages import constants as messages
+
+# First-Party
+from environ import Env
+from environ import Path
 
 # Set Environment
 env = Env(
@@ -47,7 +48,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'involved'
+LOGIN_REDIRECT_URL = 'welcome'
 LOGOUT_REDIRECT_URL = 'index'
 
 #Auth0

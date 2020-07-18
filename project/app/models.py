@@ -41,6 +41,15 @@ def get_populate_from(instance):
     return slugify("-".join(values))
 
 class Account(models.Model):
+    TEACHER = Choices(
+        (510, 'ps', 'Preschool'),
+        (520, 'elem', 'Elementary'),
+        (530, 'intmidjr', 'Intermediate/Middle/Junior High'),
+        (540, 'hs', 'High School'),
+        (550, 'elemhigh', 'Elementary-High Combination'),
+        (560, 'a', 'Adult'),
+        (570, 'ug', 'Ungraded'),
+    )
 
     id = HashidAutoField(
         primary_key=True,
@@ -69,6 +78,11 @@ class Account(models.Model):
     is_doctor = models.BooleanField(
         default=False,
         help_text="""If you're a physician please check this box.""",
+    )
+    teacher = models.IntegerField(
+        blank=True,
+        null=True,
+        choices=TEACHER,
     )
     message = models.TextField(
         max_length=512,

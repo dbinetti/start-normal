@@ -1,12 +1,12 @@
 # Django
-# Third-Party
-from dal import autocomplete
-
 from django import forms
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.forms import UserChangeForm as UserChangeFormBase
 from django.contrib.auth.forms import UserCreationForm as UserCreationFormBase
 from django.forms.models import inlineformset_factory
+
+# First-Party
+from dal import autocomplete
 
 # Local
 from .models import Account
@@ -44,6 +44,7 @@ class AccountForm(forms.ModelForm):
         model = Account
         fields = [
             'message',
+            'teacher',
             'is_public',
             'is_subscribe',
             'is_volunteer',

@@ -11,7 +11,7 @@ urlpatterns = [
     path('privacy', views.privacy, name='privacy',),
 
     # Involved
-    path('involved', views.involved, name='involved'),
+    # path('involved', views.involved, name='involved'),
 
     path('school/<slug>', views.school, name='school'),
     path('school', views.schools, name='schools'),

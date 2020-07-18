@@ -26,6 +26,7 @@
             <div class='form-group'>
               <input disabled='true' type="text" name="email" value="{{user.email}}" class="form-control" id="id_email">
             </div>
+            {% comment %}
             <div class="form-group">
               {% bootstrap_field form.message show_help=False show_label=False%}
             </div>
@@ -48,6 +49,7 @@
                 {% bootstrap_field form.is_doctor show_help=False show_label=False size='large'%}
               </div>
             </div>
+            {% endcomment %}
             <div class='mt-5'>
               <h5>
                 Student Schools and Grades&nbsp;&nbsp;<span role='button' id="add_more" class='badge badge-success'>Add Another Student</span>
@@ -91,6 +93,17 @@
                     {{formset.empty_form.id}}
                   </tr>
                 </table>
+              </div>
+            </div>
+            <div class='my-5'>
+              <h4>
+                  Teachers:
+              </h4>
+              <p>
+                  At what level do you prefer to teach?
+              </p>
+              <div class='form-group'>
+                {% bootstrap_field form.teacher show_help=False show_label=False%}
               </div>
             </div>
             {% buttons %}

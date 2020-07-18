@@ -19,38 +19,39 @@
     </style>
   </head>
   <body>
-    {% block topnav %}
-      <nav class="navbar navbar-expand-sm navbar-light">
-        <a class="navbar-brand" href="{% url 'index' %}"><img class="d-inline-block mr-1" src='{% static "app/logo.png" %}'></a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
+    <nav class="navbar navbar-expand-sm navbar-light">
+      <a class="navbar-brand" href="{% url 'index' %}"><img class="d-inline-block mr-1" src='{% static "app/logo.png" %}'></a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        {% block topnav %}
           <ul class="navbar-nav mr-auto">
             <li class="nav-item ml-3">
-              <a href='{% url "involved" %}'>Get Involved!</a>
+              {# <a href='{% url "involved" %}'>Get Involved!</a> #}
             </li>
             <li class="nav-item ml-3">
               <a href='{% url "informed" %}'>Get Informed!</a>
             </li>
           </ul>
-          <ul class="navbar-nav ml-auto">
-            {% if request.user.is_authenticated %}
-              <li class='nav-item'>
-                <a href="{% url 'account' %}" class='align-bottom fas fa-cog'></a>
-              </li>
-              <li class='nav-item'>
-                <a href="{% url 'logout' %}" role='button' class='btn btn-sm btn-light ml-3'>Logout</a>
-              </li>
-            {% else %}
-              <li class='nav-item'>
-                <a href="{% url 'login' %}" role='button' class='btn btn-sm btn-light ml-3'>Login</a>
-              </li>
-            {% endif %}
-          </ul>
-        </div>
-      </nav>
-    {% endblock topnav %}
+        {% endblock topnav %}
+        <ul class="navbar-nav ml-auto">
+          {% if request.user.is_authenticated %}
+            <li class='nav-item'>
+              <a href="{% url 'account' %}" class='align-bottom fas fa-cog'></a>
+            </li>
+            <li class='nav-item'>
+              <a href="{% url 'logout' %}" role='button' class='btn btn-sm btn-light ml-3'>Logout</a>
+            </li>
+          {% else %}
+            <li class='nav-item'>
+              <a href="{% url 'login' %}" role='button' class='btn btn-sm btn-light ml-3'>Login</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
 
     <div id="content" class='container'>
       {% bootstrap_messages %}

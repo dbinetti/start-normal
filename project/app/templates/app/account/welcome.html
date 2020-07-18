@@ -2,23 +2,26 @@
 
 {% load bootstrap4 %}
 
-{% block title %}Thank You!{% endblock title %}
-{% block header %}Thank You!{% endblock header %}
+{% block title %}Thank You and Next Steps{% endblock title %}
+{% block header %}Thank You and Next Steps{% endblock header %}
+{% block topnav %}{% endblock topnav %}
 
 {% block content %}
 <section class='mb-5'>
   <p class='lead'>
-    Next, if you have children please select their schools so we can direct your message to the proper public officials
+    If you're a <strong>Parent</strong>, please select the school and grade your student(s) will be entering in the Fall.<br>  If you're a <strong>Teacher</strong>, please indicate the school level at which you prefer to teach.
   </p>
 </section>
 <section>
   <div class='card'>
     <div class='card-header'>
-      <h5>
-        Student Schools and Grades
-      </h5>
     </div>
     <div class='card-body'>
+      <h4>
+        Parents:
+      </h4>
+
+
       <p class='card-text'>
         <form method="post">
           {{formset.management_form}}
@@ -45,9 +48,21 @@
               {% endfor %}
             </tbody>
           </table>
+          <div class='my-5'>
+            <h4>
+                Teachers:
+            </h4>
+            <p>
+                At what level do you prefer to teach?
+            </p>
+            {% bootstrap_form_errors form %}
+            <div class='form-group'>
+              {% bootstrap_field form.teacher show_help=False show_label=False%}
+            </div>
+          </div>
           {% buttons %}
             <button type="submit" class="btn btn-primary btn-lg btn-block">
-              Save Students
+              Save
             </button>
           {% endbuttons %}
         </form>
@@ -55,7 +70,7 @@
     </div>
     <div class='card-footer'>
       <p>
-        If you have more than five students, or wish to fill it out later, just click "Save Students" to continue to the next page.
+        If you have more than five students, can't find your school, or otherwise have questions or need help, email me at <a href='mailto:dbinetti@startnormal.com'>dbinetti@startnormal.com</a> and I'll do whatever I can to assist you.
       </p>
     </div>
   </div>
