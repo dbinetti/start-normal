@@ -484,7 +484,6 @@ def login(request):
         'client_id': settings.AUTH0_CLIENT_ID,
         'scope': 'openid profile email',
         'redirect_uri': redirect_uri,
-        'initial_screen': 'sign_up',
     }
     url = requests.Request(
         'GET',
