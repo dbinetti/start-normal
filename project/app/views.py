@@ -2,16 +2,6 @@
 # Standard Library
 import json
 
-# Third-Party
-import django_rq
-import requests
-import shortuuid
-from auth0.v3.authentication import Database
-from auth0.v3.authentication import Logout
-from auth0.v3.exceptions import Auth0Error
-from dal import autocomplete
-from django_rq import job
-
 from django import forms
 from django.conf import settings
 from django.contrib import messages
@@ -32,6 +22,16 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.urls import reverse_lazy
+
+# First-Party
+import django_rq
+import requests
+import shortuuid
+from auth0.v3.authentication import Database
+from auth0.v3.authentication import Logout
+from auth0.v3.exceptions import Auth0Error
+from dal import autocomplete
+from django_rq import job
 
 # Local
 from .forms import AccountForm
@@ -478,6 +478,7 @@ def login(request):
         'client_id': settings.AUTH0_CLIENT_ID,
         'scope': 'openid profile email',
         'redirect_uri': redirect_uri,
+        'initial_screen': 'sign_up',
     }
     url = requests.Request(
         'GET',
