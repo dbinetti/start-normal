@@ -543,7 +543,7 @@ def callback(request):
     user = authenticate(request, **payload)
     if user:
         log_in(request, user)
-        return redirect('involved')
+        return redirect('welcome')
     return HttpResponse(status=400)
 
 def logout(request):
