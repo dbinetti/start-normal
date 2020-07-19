@@ -5,6 +5,7 @@ from django.dispatch import receiver
 
 # First-Party
 from app.models import Account
+from app.models import Parent
 from app.models import Teacher
 from app.models import User
 from app.tasks import auth0_delete_user
