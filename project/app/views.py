@@ -490,9 +490,11 @@ def informed(request):
 
 def school(request, slug):
     school = School.objects.get(slug=slug)
-    parents = User.objects.filter(students__school=school).distinct()
+    parents = User.objects.filter(
+        parent__students__school=school,
+    ).distinct()
     for parent in parents:
-        parent.grades = ", ".join([x.get_grade_display() for x in parent.students.filter(
+        parent.grades = ", ".join([x.get_grade_display() for x in parent.parent.students.filter(
         school=school).order_by('grade')])
     reports = Report.objects.filter(
         status=Report.STATUS.approved,
@@ -517,7 +519,7 @@ def schools(request):
     user = request.user
     if user.is_authenticated:
         schools = School.objects.filter(
-            students__user=user,
+            students__parent__user=user,
         ).order_by(
             'grade',
             'school',
