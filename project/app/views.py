@@ -95,6 +95,302 @@ def privacy(request):
     )
 
 
+# Account
+@login_required
+def account(request):
+    StudentFormSet.extra = 0
+    user = request.user
+    account = Account.objects.get(
+        user=user,
+    )
+    parent = getattr(user, 'parent', None)
+    teacher = getattr(user, 'teacher', None)
+    if request.method == "POST":
+        form = AccountForm(
+            request.POST,
+            instance=account,
+            prefix='account',
+        )
+        formset = StudentFormSet(
+            request.POST,
+            request.FILES,
+            instance=parent,
+            prefix='students',
+        )
+        if form.is_valid() and formset.is_valid():
+            form.save()
+            formset.save()
+            messages.success(
+                request,
+                "Saved!",
+            )
+            return redirect('account')
+    else:
+        form = AccountForm(
+            instance=account,
+            prefix='account',
+        )
+        formset = StudentFormSet(
+            instance=parent,
+            prefix='students',
+        )
+    return render(
+        request,
+        'app/account/account.html', {
+            'user': user,
+            'form': form,
+            'formset': formset,
+        },
+    )
+
+@login_required
+def pending(request):
+    return render(
+        request,
+        'app/account/pending.html',
+    )
+
+@login_required
+def split(request):
+    return render(
+        request,
+        'app/account/split.html',
+    )
+
+@login_required
+def welcome_teacher(request):
+    user = request.user
+    teacher, created = Teacher.objects.get_or_create(
+        user=user,
+    )
+    if request.method == "POST":
+        form = TeacherForm(
+            request.POST,
+            instance=teacher,
+        )
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                "Saved!",
+            )
+            return redirect('share')
+    else:
+        form = TeacherForm(
+            instance=teacher,
+        )
+    return render(
+        request,
+        'app/account/welcome_teacher.html',
+        context = {
+            'form': form,
+        }
+    )
+
+@login_required
+def welcome_parent(request):
+    StudentFormSet.extra = 5
+    user = request.user
+    try:
+        success = request.GET.__getitem__('success')
+    except:
+        success = ''
+    if success == 'true':
+        user.is_active = True
+        user.save()
+
+    parent, created = Parent.objects.get_or_create(
+        user=user,
+    )
+    account = user.account
+
+    if request.method == "POST":
+        formset = StudentFormSet(
+            request.POST,
+            request.FILES,
+            instance=parent,
+        )
+        if formset.is_valid():
+            formset.save()
+            messages.success(
+                request,
+                "Saved!",
+            )
+            return redirect('share')
+    else:
+        formset = StudentFormSet(
+            instance=parent,
+        )
+    return render(
+        request,
+        'app/account/welcome_parent.html',
+        context = {
+            'formset': formset,
+        },
+    )
+
+@login_required
+def share(request):
+    return render(
+        request,
+        'app/account/share.html',
+    )
+
+@login_required
+def delete(request):
+    if request.method == "POST":
+        form = DeleteForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            user.delete()
+            messages.error(
+                request,
+                "Account Deleted!",
+            )
+            return redirect('index')
+    else:
+        form = DeleteForm()
+    return render(
+        request,
+        'app/account/delete.html',
+        {'form': form,},
+    )
+
+
+
+# Authentication
+def login(request):
+    redirect_uri = request.build_absolute_uri('callback')
+    params = {
+        'response_type': 'code',
+        'client_id': settings.AUTH0_CLIENT_ID,
+        'scope': 'openid profile email',
+        'redirect_uri': redirect_uri,
+    }
+    url = requests.Request(
+        'GET',
+        'https://{0}/authorize'.format(settings.AUTH0_DOMAIN),
+        params=params,
+    ).prepare().url
+    return redirect(url)
+
+def callback(request):
+    code = request.GET.get('code', '')
+    if not code:
+        return HttpResponse(status=400)
+    json_header = {
+        'content-type': 'application/json',
+    }
+    token_url = 'https://{0}/oauth/token'.format(
+        settings.AUTH0_DOMAIN,
+    )
+    redirect_uri = request.build_absolute_uri('callback')
+    token_payload = {
+        'client_id': settings.AUTH0_CLIENT_ID,
+        'client_secret': settings.AUTH0_CLIENT_SECRET,
+        'redirect_uri': redirect_uri,
+        'code': code,
+        'grant_type': 'authorization_code'
+    }
+    token_info = requests.post(
+        token_url,
+        data=json.dumps(token_payload),
+        headers=json_header
+    ).json()
+    user_url = 'https://{0}/userinfo?access_token={1}'.format(
+        settings.AUTH0_DOMAIN,
+        token_info.get('access_token', ''),
+    )
+    payload = requests.get(user_url).json()
+    # format payload key
+    payload['username'] = payload.pop('sub')
+    request.session['user'] = payload
+    user = authenticate(request, **payload)
+    if user:
+        log_in(request, user)
+        return redirect('split')
+    return HttpResponse(status=400)
+
+def logout(request):
+    log_out(request)
+    params = {
+        'client_id': settings.AUTH0_CLIENT_ID,
+        'return_to': request.build_absolute_uri('index'),
+    }
+    logout_url = requests.Request(
+        'GET',
+        'https://{0}/v2/logout'.format(settings.AUTH0_DOMAIN),
+        params=params,
+    ).prepare().url
+    messages.success(
+        request,
+        "You Have Been Logged Out!",
+    )
+    return redirect(logout_url)
+
+
+# Autocomplete
+class SchoolAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = School.objects.filter(
+        )
+
+        if self.q:
+            # qs = qs.filter(slug__icontains=self.q)
+            qs = qs.filter(
+                Q(name__icontains=self.q)|
+                Q(city__icontains=self.q) |
+                Q(state__icontains=self.q)
+            )
+
+        return qs
+
+# Informed
+def informed(request):
+    if request.method == "POST":
+        form = SubscribeForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get('email')
+            mailchimp_subscribe_email.delay(email=email)
+            messages.success(
+                request,
+                'You have been subscribed.',
+            )
+            return redirect('index')
+    else:
+        form = SubscribeForm()
+    return render(
+        request,
+        'app/informed/informed.html',
+        context = {
+            'form': form,
+            'app_id': settings.ALGOLIA['APPLICATION_ID'],
+            'search_key': settings.ALGOLIA['SEARCH_KEY'],
+            'index_name': "School_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
+        },
+    )
+
+# # Admin
+# @staff_member_required
+# def report(request):
+#     report = Affiliation.objects.order_by(
+#         'school',
+#     ).values(
+#         'school',
+#     ).annotate(
+#         c=Count('id'),
+#     )
+#     total = Affiliation.objects.aggregate(
+#         c=Count('id'),
+#     )['c']
+#     return render(
+#         request,
+#         'app/admin/report.html',
+#         {'report': report, 'total': total},
+#     )
+
+
+
 # Involved
 # def involved(request):a
 #     user = request.user
@@ -331,30 +627,9 @@ def district_contact(request, slug):
     )
 
 
-# Informed
-def informed(request):
-    if request.method == "POST":
-        form = SubscribeForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data.get('email')
-            mailchimp_subscribe_email.delay(email=email)
-            messages.success(
-                request,
-                'You have been subscribed.',
-            )
-            return redirect('index')
-    else:
-        form = SubscribeForm()
-    return render(
-        request,
-        'app/informed/informed.html',
-        context = {
-            'form': form,
-            'app_id': settings.ALGOLIA['APPLICATION_ID'],
-            'search_key': settings.ALGOLIA['SEARCH_KEY'],
-            'index_name': "School_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
-        },
-    )
+
+
+
 
 def morrow(request):
     return render(
@@ -367,323 +642,3 @@ def thomas(request):
         request,
         'app/informed/thomas.html',
     )
-
-
-# Account
-@login_required
-def account(request):
-    StudentFormSet.extra = 0
-    user = request.user
-    account = Account.objects.get(
-        user=user,
-    )
-    parent = getattr(user, 'parent', None)
-    teacher = getattr(user, 'teacher', None)
-    if request.method == "POST":
-        form = AccountForm(
-            request.POST,
-            instance=account,
-            prefix='account',
-        )
-        formset = StudentFormSet(
-            request.POST,
-            request.FILES,
-            instance=parent,
-            prefix='students',
-        )
-        if form.is_valid() and formset.is_valid():
-            form.save()
-            formset.save()
-            messages.success(
-                request,
-                "Saved!",
-            )
-            return redirect('account')
-    else:
-        form = AccountForm(
-            instance=account,
-            prefix='account',
-        )
-        formset = StudentFormSet(
-            instance=parent,
-            prefix='students',
-        )
-    return render(
-        request,
-        'app/account/account.html', {
-            'user': user,
-            'form': form,
-            'formset': formset,
-        },
-    )
-
-@login_required
-def teacher(request):
-    StudentFormSet.extra = 0
-    user = request.user
-    account = Account.objects.get(
-        user=user,
-    )
-    students = user.students.order_by('grade')
-
-    if request.method == "POST":
-        form = AccountForm(
-            request.POST,
-            instance=account,
-            prefix='account',
-        )
-        formset = StudentFormSet(
-            request.POST,
-            request.FILES,
-            instance=user,
-            prefix='students',
-        )
-        if form.is_valid() and formset.is_valid():
-            form.save()
-            formset.save()
-            messages.success(
-                request,
-                "Saved!",
-            )
-            return redirect('account')
-    else:
-        form = AccountForm(
-            instance=account,
-            prefix='account',
-        )
-        formset = StudentFormSet(
-            instance=user,
-            prefix='students',
-        )
-    return render(
-        request,
-        'app/account/account.html', {
-            'user': user,
-            'form': form,
-            'formset': formset,
-            'students': students,
-        },
-    )
-
-@login_required
-def pending(request):
-    return render(
-        request,
-        'app/account/pending.html',
-    )
-
-@login_required
-def split(request):
-    return render(
-        request,
-        'app/account/split.html',
-    )
-
-@login_required
-def welcome_teacher(request):
-    user = request.user
-    teacher, created = Teacher.objects.get_or_create(
-        user=user,
-    )
-    if request.method == "POST":
-        form = TeacherForm(
-            request.POST,
-            instance=teacher,
-        )
-        if form.is_valid():
-            form.save()
-            messages.success(
-                request,
-                "Saved!",
-            )
-            return redirect('share')
-    else:
-        form = TeacherForm(
-            instance=teacher,
-        )
-    return render(
-        request,
-        'app/account/welcome_teacher.html',
-        context = {
-            'form': form,
-        }
-    )
-
-
-@login_required
-def welcome_parent(request):
-    StudentFormSet.extra = 5
-    user = request.user
-    try:
-        success = request.GET.__getitem__('success')
-    except:
-        success = ''
-    if success == 'true':
-        user.is_active = True
-        user.save()
-
-    parent, created = Parent.objects.get_or_create(
-        user=user,
-    )
-    account = user.account
-
-    if request.method == "POST":
-        formset = StudentFormSet(
-            request.POST,
-            request.FILES,
-            instance=parent,
-        )
-        if formset.is_valid():
-            formset.save()
-            messages.success(
-                request,
-                "Saved!",
-            )
-            return redirect('share')
-    else:
-        formset = StudentFormSet(
-            instance=parent,
-        )
-    return render(
-        request,
-        'app/account/welcome_parent.html',
-        context = {
-            'formset': formset,
-        },
-    )
-
-@login_required
-def delete(request):
-    if request.method == "POST":
-        form = DeleteForm(request.POST)
-        if form.is_valid():
-            user = request.user
-            user.delete()
-            messages.error(
-                request,
-                "Account Deleted!",
-            )
-            return redirect('index')
-    else:
-        form = DeleteForm()
-    return render(
-        request,
-        'app/account/delete.html',
-        {'form': form,},
-    )
-
-@login_required
-def share(request):
-    return render(
-        request,
-        'app/account/share.html',
-    )
-
-
-
-# Authentication
-def login(request):
-    redirect_uri = request.build_absolute_uri('callback')
-    params = {
-        'response_type': 'code',
-        'client_id': settings.AUTH0_CLIENT_ID,
-        'scope': 'openid profile email',
-        'redirect_uri': redirect_uri,
-    }
-    url = requests.Request(
-        'GET',
-        'https://{0}/authorize'.format(settings.AUTH0_DOMAIN),
-        params=params,
-    ).prepare().url
-    return redirect(url)
-
-def callback(request):
-    code = request.GET.get('code', '')
-    if not code:
-        return HttpResponse(status=400)
-    json_header = {
-        'content-type': 'application/json',
-    }
-    token_url = 'https://{0}/oauth/token'.format(
-        settings.AUTH0_DOMAIN,
-    )
-    redirect_uri = request.build_absolute_uri('callback')
-    token_payload = {
-        'client_id': settings.AUTH0_CLIENT_ID,
-        'client_secret': settings.AUTH0_CLIENT_SECRET,
-        'redirect_uri': redirect_uri,
-        'code': code,
-        'grant_type': 'authorization_code'
-    }
-    token_info = requests.post(
-        token_url,
-        data=json.dumps(token_payload),
-        headers=json_header
-    ).json()
-    user_url = 'https://{0}/userinfo?access_token={1}'.format(
-        settings.AUTH0_DOMAIN,
-        token_info.get('access_token', ''),
-    )
-    payload = requests.get(user_url).json()
-    # format payload key
-    payload['username'] = payload.pop('sub')
-    request.session['user'] = payload
-    user = authenticate(request, **payload)
-    if user:
-        log_in(request, user)
-        return redirect('split')
-    return HttpResponse(status=400)
-
-def logout(request):
-    log_out(request)
-    params = {
-        'client_id': settings.AUTH0_CLIENT_ID,
-        'return_to': request.build_absolute_uri('index'),
-    }
-    logout_url = requests.Request(
-        'GET',
-        'https://{0}/v2/logout'.format(settings.AUTH0_DOMAIN),
-        params=params,
-    ).prepare().url
-    messages.success(
-        request,
-        "You Have Been Logged Out!",
-    )
-    return redirect(logout_url)
-
-
-# Autocomplete
-class SchoolAutocomplete(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        qs = School.objects.filter(
-        )
-
-        if self.q:
-            # qs = qs.filter(slug__icontains=self.q)
-            qs = qs.filter(
-                Q(name__icontains=self.q)|
-                Q(city__icontains=self.q) |
-                Q(state__icontains=self.q)
-            )
-
-        return qs
-
-
-# # Admin
-# @staff_member_required
-# def report(request):
-#     report = Affiliation.objects.order_by(
-#         'school',
-#     ).values(
-#         'school',
-#     ).annotate(
-#         c=Count('id'),
-#     )
-#     total = Affiliation.objects.aggregate(
-#         c=Count('id'),
-#     )['c']
-#     return render(
-#         request,
-#         'app/admin/report.html',
-#         {'report': report, 'total': total},
-#     )
