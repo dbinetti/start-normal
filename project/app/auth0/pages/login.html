@@ -53,6 +53,10 @@
       allowPasswordAutocomplete: true,
       allowShowPassword: true,
       allowSignUp: !config.extraParams.prevent_sign_up,
+      additionalSignUpFields: [{
+        name: "name",
+        storage: "root"
+      }],
       autoclose: true,
       autofocus: true,
       closable: false,
