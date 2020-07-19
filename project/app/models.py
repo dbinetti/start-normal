@@ -191,7 +191,7 @@ class Teacher(models.Model):
         max_length=512,
         blank=True,
         default='',
-        help_text="""Feel free to include private notes just for us.""",
+        help_text="""If you are a teacher please add some notes here...""",
     )
     def __str__(self):
         return str(self.user)

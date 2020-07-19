@@ -95,19 +95,18 @@
                 </table>
               </div>
             </div>
-            {% comment %}
+
             <div class='my-5'>
-              <h4>
-                  Teachers:
-              </h4>
+              <h5>
+                  Teacher Notes
+              </h5>
               <p>
-                  At what level do you prefer to teach?
               </p>
               <div class='form-group'>
-                {% bootstrap_field form.teacher show_help=False show_label=False%}
+                {% bootstrap_field teacher_form.notes show_help=False show_label=False placeholder="If you're a teacher please add some notes here..."%}
               </div>
             </div>
-            {% endcomment %}
+
             {% buttons %}
               <button type="submit" class="btn btn-primary btn-lg btn-block">
                 Save Account Details

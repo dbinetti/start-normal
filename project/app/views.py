@@ -113,14 +113,23 @@ def account(request):
             instance=account,
             prefix='account',
         )
+        teacher_form = TeacherForm(
+            request.POST,
+            instance=teacher,
+            prefix='teacher',
+        )
         formset = StudentFormSet(
             request.POST,
             request.FILES,
             instance=parent,
             prefix='students',
         )
-        if form.is_valid() and formset.is_valid():
+        if form.is_valid() and teacher_form.is_valid() and formset.is_valid():
             form.save()
+            if teacher_form.cleaned_data['notes']:
+                teacher_form.save(commit=False)
+                teacher_form.user = user
+                teacher_form.save()
             formset.save()
             messages.success(
                 request,
@@ -132,6 +141,10 @@ def account(request):
             instance=account,
             prefix='account',
         )
+        teacher_form = TeacherForm(
+            instance=teacher,
+            prefix='teacher',
+        )
         formset = StudentFormSet(
             instance=parent,
             prefix='students',
@@ -141,6 +154,7 @@ def account(request):
         'app/account/account.html', {
             'user': user,
             'form': form,
+            'teacher_form': teacher_form,
             'formset': formset,
         },
     )
