@@ -53,22 +53,26 @@ class StudentInline(admin.TabularInline):
     model = Student
     fields = [
         'user',
+        'parent',
         'school',
         'grade',
     ]
     readonly_fields = [
     ]
-    ordering = (
+    ordering = [
         'grade',
-    )
+    ]
     show_change_link = True
     extra = 0
     classes = [
         # 'collapse',
     ]
     autocomplete_fields = [
+        'user',
+        'parent',
         'school',
     ]
+
 
 class SchoolInline(admin.TabularInline):
     model = School

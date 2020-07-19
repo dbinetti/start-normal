@@ -37,4 +37,7 @@ def user_post_save(sender, instance, created, **kwargs):
         Teacher.objects.create(
             user=instance,
         )
+        Parent.objects.create(
+            user=instance,
+        )
     return

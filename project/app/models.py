@@ -1,13 +1,7 @@
 # Standard Library
 from operator import attrgetter
 
-# Django
-from django.contrib.auth.models import AbstractBaseUser
-from django.db import models
-from django.db.models.constraints import UniqueConstraint
-from django.utils.text import slugify
-
-# First-Party
+# Third-Party
 import shortuuid
 from autoslug import AutoSlugField
 from hashid_field import HashidAutoField
@@ -15,6 +9,12 @@ from model_utils import Choices
 from mptt.models import MPTTModel
 from mptt.models import TreeForeignKey
 from shortuuidfield import ShortUUIDField
+
+# Django
+from django.contrib.auth.models import AbstractBaseUser
+from django.db import models
+from django.db.models.constraints import UniqueConstraint
+from django.utils.text import slugify
 
 # Local
 from .managers import UserManager
@@ -39,6 +39,7 @@ def get_populate_from(instance):
         ]
     values = [getattr(instance, field) for field in fields]
     return slugify("-".join(values))
+
 
 class Account(models.Model):
     TEACHER = Choices(
@@ -145,39 +146,15 @@ class Account(models.Model):
         return str(self.user)
 
 
-class Contact(models.Model):
-    ROLE = Choices(
-        (410, 'super', 'Superintendent'),
-        (420, 'president', 'Board President'),
-        (430, 'vice', 'Board Vice-President'),
-        (440, 'clerk', 'Board Clerk'),
-        (450, 'trustee', 'Board Trustee'),
-        (510, 'principal', 'Principal'),
-    )
-
+class Parent(models.Model):
     id = HashidAutoField(
         primary_key=True,
     )
-    is_active = models.BooleanField(
-        default=True,
-    )
-    name = models.CharField(
-        max_length=255,
-        blank=False,
-    )
-    role = models.IntegerField(
-        null=True,
-        blank=False,
-        choices=ROLE,
-    )
-    email = models.EmailField(
-        blank=False,
-        default='',
-    )
-    phone = models.CharField(
-        max_length=255,
+    notes = models.TextField(
+        max_length=512,
         blank=True,
         default='',
+        help_text="""Feel free to include private notes just for us.""",
     )
     created = models.DateTimeField(
         auto_now_add=True,
@@ -185,14 +162,14 @@ class Contact(models.Model):
     updated = models.DateTimeField(
         auto_now=True,
     )
-    district = models.ForeignKey(
-        'app.District',
+    user = models.OneToOneField(
+        'app.User',
         on_delete=models.CASCADE,
-        related_name='contacts',
+        related_name='parent',
     )
 
     def __str__(self):
-        return str(self.name)
+        return str(self.user)
 
 
 class Teacher(models.Model):
@@ -218,80 +195,6 @@ class Teacher(models.Model):
     )
     def __str__(self):
         return str(self.user)
-
-
-class Parent(models.Model):
-    id = HashidAutoField(
-        primary_key=True,
-    )
-    created = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated = models.DateTimeField(
-        auto_now=True,
-    )
-    user = models.OneToOneField(
-        'app.User',
-        on_delete=models.CASCADE,
-        related_name='parent',
-    )
-    notes = models.TextField(
-        max_length=512,
-        blank=True,
-        default='',
-        help_text="""Feel free to include private notes just for us.""",
-    )
-
-    def __str__(self):
-        return str(self.user)
-
-
-class Report(models.Model):
-    STATUS = Choices(
-        (0, 'new', 'New'),
-        (10, 'approved', 'Approved'),
-        (20, 'rejected', 'Rejected'),
-    )
-    id = HashidAutoField(
-        primary_key=True,
-    )
-    status = models.IntegerField(
-        blank=False,
-        choices=STATUS,
-        default=STATUS.new,
-    )
-    title = models.CharField(
-        max_length=100,
-        blank=False,
-        help_text="""Give a brief title (ideally no more than five words.)""",
-    )
-    text = models.TextField(
-        blank=False,
-        help_text="""Use your own voice, but please stick to the facts as much as possible; we want to be a credible source to all parents.""",
-    )
-    is_district = models.BooleanField(
-        default=True,
-        help_text="""Keep this checked if your update applies to the entire school district.  If unsure, keep it checked -- it probably does.""",
-    )
-    created = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated = models.DateTimeField(
-        auto_now=True,
-    )
-    user = models.ForeignKey(
-        'app.User',
-        related_name='reports',
-        on_delete=models.CASCADE,
-    )
-    district = models.ForeignKey(
-        'app.District',
-        related_name='reports',
-        on_delete=models.CASCADE,
-    )
-
-    def __str__(self):
-        return str(self.title)
 
 
 class District(models.Model):
@@ -550,6 +453,104 @@ class School(models.Model):
         if self.status == self.STATUS.active:
             return True
         return False
+
+
+class Contact(models.Model):
+    ROLE = Choices(
+        (410, 'super', 'Superintendent'),
+        (420, 'president', 'Board President'),
+        (430, 'vice', 'Board Vice-President'),
+        (440, 'clerk', 'Board Clerk'),
+        (450, 'trustee', 'Board Trustee'),
+        (510, 'principal', 'Principal'),
+    )
+
+    id = HashidAutoField(
+        primary_key=True,
+    )
+    is_active = models.BooleanField(
+        default=True,
+    )
+    name = models.CharField(
+        max_length=255,
+        blank=False,
+    )
+    role = models.IntegerField(
+        null=True,
+        blank=False,
+        choices=ROLE,
+    )
+    email = models.EmailField(
+        blank=False,
+        default='',
+    )
+    phone = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+    district = models.ForeignKey(
+        'app.District',
+        on_delete=models.CASCADE,
+        related_name='contacts',
+    )
+
+    def __str__(self):
+        return str(self.name)
+
+
+class Report(models.Model):
+    STATUS = Choices(
+        (0, 'new', 'New'),
+        (10, 'approved', 'Approved'),
+        (20, 'rejected', 'Rejected'),
+    )
+    id = HashidAutoField(
+        primary_key=True,
+    )
+    status = models.IntegerField(
+        blank=False,
+        choices=STATUS,
+        default=STATUS.new,
+    )
+    title = models.CharField(
+        max_length=100,
+        blank=False,
+        help_text="""Give a brief title (ideally no more than five words.)""",
+    )
+    text = models.TextField(
+        blank=False,
+        help_text="""Use your own voice, but please stick to the facts as much as possible; we want to be a credible source to all parents.""",
+    )
+    is_district = models.BooleanField(
+        default=True,
+        help_text="""Keep this checked if your update applies to the entire school district.  If unsure, keep it checked -- it probably does.""",
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+    user = models.ForeignKey(
+        'app.User',
+        related_name='reports',
+        on_delete=models.CASCADE,
+    )
+    district = models.ForeignKey(
+        'app.District',
+        related_name='reports',
+        on_delete=models.CASCADE,
+    )
+
+    def __str__(self):
+        return str(self.title)
 
 
 class Student(models.Model):
