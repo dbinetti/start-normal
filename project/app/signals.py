@@ -35,10 +35,4 @@ def user_post_save(sender, instance, created, **kwargs):
         Account.objects.create(
             user=instance,
         )
-        Teacher.objects.create(
-            user=instance,
-        )
-        Parent.objects.create(
-            user=instance,
-        )
     return

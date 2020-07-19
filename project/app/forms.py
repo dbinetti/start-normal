@@ -1,24 +1,26 @@
 # Django
-# Third-Party
-from dal import autocomplete
-
 from django import forms
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.forms import UserChangeForm as UserChangeFormBase
 from django.contrib.auth.forms import UserCreationForm as UserCreationFormBase
 from django.forms.models import inlineformset_factory
 
+# First-Party
+from dal import autocomplete
+
 # Local
 from .models import Account
 from .models import Contact
 from .models import District
+from .models import Parent
 from .models import Report
 from .models import School
 from .models import Student
+from .models import Teacher
 from .models import User
 
 StudentFormSet = inlineformset_factory(
-    User,
+    Parent,
     Student,
     fields=[
         'grade',
