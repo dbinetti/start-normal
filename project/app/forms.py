@@ -141,11 +141,7 @@ class ReportForm(forms.ModelForm):
         fields = [
             'title',
             'text',
-            'is_district',
         ]
-        labels = {
-            "is_district": "District Report",
-        }
 
     def clean_title(self):
         data = self.cleaned_data['title']

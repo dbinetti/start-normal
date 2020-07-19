@@ -495,12 +495,12 @@ class Contact(models.Model):
     updated = models.DateTimeField(
         auto_now=True,
     )
-    district = models.ForeignKey(
-        'app.District',
-        on_delete=models.CASCADE,
+    user = models.ForeignKey(
+        'app.User',
         related_name='contacts',
+        on_delete=models.SET_NULL,
+        null=True,
     )
-
     def __str__(self):
         return str(self.name)
 
@@ -540,11 +540,6 @@ class Report(models.Model):
     )
     user = models.ForeignKey(
         'app.User',
-        related_name='reports',
-        on_delete=models.CASCADE,
-    )
-    district = models.ForeignKey(
-        'app.District',
         related_name='reports',
         on_delete=models.CASCADE,
     )

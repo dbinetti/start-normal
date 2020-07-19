@@ -29,6 +29,8 @@ urlpatterns = [
     # Schools
     path('school-autocomplete', views.SchoolAutocomplete.as_view(), name='school-autocomplete',),
     path('school/<slug>', views.school, name='school'),
+    path('school/<slug>/add-contact', views.add_contact, name='add-contact'),
+    path('school/<slug>/add-report', views.add_report, name='add-report'),
     path('search', views.search, name='search'),
 
     # Informed

@@ -46,11 +46,13 @@ from .forms import UserCreationForm
 from .models import Account
 from .models import Contact
 from .models import District
+from .models import Entry
 from .models import Parent
 from .models import Report
 from .models import School
 from .models import Student
 from .models import Teacher
+from .models import Transmission
 from .models import User
 from .tasks import build_email
 from .tasks import mailchimp_create_or_update_from_account
@@ -496,6 +498,11 @@ def school(request, slug):
     for parent in parents:
         parent.grades = ", ".join([x.get_grade_display() for x in parent.parent.students.filter(
         school=school).order_by('grade')])
+    user_reports = Report.objects.filter(
+        status=Report.STATUS.new,
+        transmissions__school=school,
+        user=request.user,
+    ).order_by('-created')
     reports = Report.objects.filter(
         status=Report.STATUS.approved,
         transmissions__school=school,
@@ -509,6 +516,7 @@ def school(request, slug):
         'app/involved/school.html',
         context={
             'school': school,
+            'user_reports': user_reports,
             'reports': reports,
             'contacts': contacts,
             'parents': parents,
@@ -526,71 +534,26 @@ def search(request):
         },
     )
 
-def district(request, slug):
-    district = District.objects.get(slug=slug)
-    parents = User.objects.filter(
-        students__school__isnull=False,
-    ).distinct()
-    for parent in parents:
-        parent.schools = ", ".join(
-            ["{0} {1}".format(x.school.name, x.get_grade_display()) for x in parent.students.filter(
-                school__district=district,
-            ).order_by('grade')]
-        )
-    reports = Report.objects.filter(
-        district=district,
-        status=Report.STATUS.approved,
-    ).order_by('-created')
-    contacts = Contact.objects.filter(
-        is_active=True,
-        district=district,
-    ).order_by('role')
-    return render(
-        request,
-        'app/involved/district.html',
-        context={
-            'district': district,
-            'reports': reports,
-            'contacts': contacts,
-            'parents': parents,
-        },
-    )
-
-def districts(request):
-    user = request.user
-    if user.is_authenticated:
-        districts = District.objects.filter(
-            school__students__user=user,
-        ).distinct()
-    else:
-        districts = None
-    return render(
-        request,
-        'app/involved/districts.html',
-        context={
-            'districts': districts,
-            'app_id': settings.ALGOLIA['APPLICATION_ID'],
-            'search_key': settings.ALGOLIA['SEARCH_KEY'],
-            'index_name': "District_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
-        },
-    )
 
 
 @login_required
-def district_report(request, slug):
+def add_report(request, slug):
     user = request.user
-    district = District.objects.get(slug=slug)
+    school = School.objects.get(slug=slug)
     form = ReportForm(request.POST or None)
     if form.is_valid():
-        instance = form.save(commit=False)
-        instance.district = district
-        instance.user = user
-        instance.save()
+        report = form.save(commit=False)
+        report.user = user
+        report.save()
+        transmission = Transmission.objects.create(
+            school=school,
+            report=report,
+        )
         messages.success(
             request,
             "Report Submitted!",
         )
-        return redirect('district', slug)
+        return redirect('school', slug)
     return render(
         request,
         'app/involved/report.html',
@@ -598,19 +561,23 @@ def district_report(request, slug):
     )
 
 @login_required
-def district_contact(request, slug):
+def add_contact(request, slug):
     user = request.user
-    district = District.objects.get(slug=slug)
+    school = School.objects.get(slug=slug)
     form = ContactForm(request.POST or None)
     if form.is_valid():
-        instance = form.save(commit=False)
-        instance.district = district
-        instance.save()
+        contact = form.save(commit=False)
+        contact.user = user
+        contact = form.save()
+        entry = Entry.objects.create(
+            school=school,
+            contact=contact,
+        )
         messages.success(
             request,
             "Contact Submitted!",
         )
-        return redirect('district', slug)
+        return redirect('school', slug)
     return render(
         request,
         'app/involved/contact.html',

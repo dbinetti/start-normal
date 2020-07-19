@@ -146,9 +146,9 @@ class DistrictAdmin(admin.ModelAdmin):
         'nces_id',
     ]
     inlines = [
-        SchoolInline,
-        ReportInline,
-        ContactInline,
+        # SchoolInline,
+        # ReportInline,
+        # ContactInline,
     ]
     autocomplete_fields = [
         # 'parent',
@@ -211,7 +211,6 @@ class ContactAdmin(admin.ModelAdmin):
         'role',
         'email',
         'phone',
-        'district',
         'is_active',
     ]
     list_filter = [
@@ -237,13 +236,11 @@ class ReportAdmin(admin.ModelAdmin):
         'title',
         'text',
         'user',
-        'district',
     ]
     list_display = [
         'title',
         'status',
         'user',
-        'district',
     ]
     list_filter = [
         'status',
@@ -253,7 +250,6 @@ class ReportAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = [
         'user',
-        'district',
     ]
     actions = [
         approve_report,
