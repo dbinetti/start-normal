@@ -7,7 +7,7 @@
 
   <section>
     <p class='lead'>
-      Search below for your school to see how you can get involved.
+      Search below for status updates and contacts for your school.
     </p>
   </section>
   <section>
@@ -80,26 +80,27 @@
       }),
     ]);
 
-    // search.addWidgets([
-    //   instantsearch.widgets.refinementList({
-    //     container: '#refine',
-    //     attribute: 'get_doc_display',
-    //     // Optional parameters
-    //     operator: string,
-    //     limit: number,
-    //     showMore: boolean,
-    //     showMoreLimit: number,
-    //     searchable: boolean,
-    //     searchablePlaceholder: string,
-    //     searchableIsAlwaysActive: boolean,
-    //     searchableEscapeFacetValues: boolean,
-    //     sortBy: string[]|function,
-    //     templates: object,
-    //     cssClasses: object,
-    //     transformItems: function,
-    //   })
-    // ]);
-
+    {% comment %}
+    search.addWidgets([
+      instantsearch.widgets.refinementList({
+        container: '#refine',
+        attribute: 'get_kind_display',
+        // Optional parameters
+        operator: string,
+        limit: number,
+        showMore: boolean,
+        showMoreLimit: number,
+        searchable: boolean,
+        searchablePlaceholder: string,
+        searchableIsAlwaysActive: boolean,
+        searchableEscapeFacetValues: boolean,
+        sortBy: string[]|function,
+        templates: object,
+        cssClasses: object,
+        transformItems: function,
+      })
+    ]);
+    {% endcomment %}
     search.start();
 
   </script>

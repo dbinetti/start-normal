@@ -462,7 +462,9 @@ class Contact(models.Model):
         (430, 'vice', 'Board Vice-President'),
         (440, 'clerk', 'Board Clerk'),
         (450, 'trustee', 'Board Trustee'),
+        (460, 'admin', 'Administrative'),
         (510, 'principal', 'Principal'),
+        (900, 'unknown', 'Unknown'),
     )
 
     id = HashidAutoField(

@@ -154,6 +154,9 @@ def pending(request):
 
 @login_required
 def split(request):
+    user = request.user
+    if hasattr(user, 'teacher') or hasattr(user, 'parent'):
+        return redirect('account')
     return render(
         request,
         'app/account/split.html',
@@ -498,11 +501,14 @@ def school(request, slug):
     for parent in parents:
         parent.grades = ", ".join([x.get_grade_display() for x in parent.parent.students.filter(
         school=school).order_by('grade')])
-    user_reports = Report.objects.filter(
-        status=Report.STATUS.new,
-        transmissions__school=school,
-        user=request.user,
-    ).order_by('-created')
+    if request.user.is_authenticated:
+        user_reports = Report.objects.filter(
+            status=Report.STATUS.new,
+            transmissions__school=school,
+            user=request.user,
+        ).order_by('-created')
+    else:
+        user_reports = None
     reports = Report.objects.filter(
         status=Report.STATUS.approved,
         transmissions__school=school,
