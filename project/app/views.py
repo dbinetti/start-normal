@@ -377,6 +377,7 @@ def account(request):
     account = Account.objects.get(
         user=user,
     )
+    parent = getattr(user, 'parent', None)
     students = user.students.order_by('grade')
 
     if request.method == "POST":
@@ -388,7 +389,7 @@ def account(request):
         formset = StudentFormSet(
             request.POST,
             request.FILES,
-            instance=user,
+            instance=parent,
             prefix='students',
         )
         if form.is_valid() and formset.is_valid():
@@ -405,7 +406,7 @@ def account(request):
             prefix='account',
         )
         formset = StudentFormSet(
-            instance=user,
+            instance=parent,
             prefix='students',
         )
     return render(
