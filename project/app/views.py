@@ -378,8 +378,7 @@ def account(request):
         user=user,
     )
     parent = getattr(user, 'parent', None)
-    students = user.students.order_by('grade')
-
+    teacher = getattr(user, 'teacher', None)
     if request.method == "POST":
         form = AccountForm(
             request.POST,
@@ -415,7 +414,6 @@ def account(request):
             'user': user,
             'form': form,
             'formset': formset,
-            'students': students,
         },
     )
 
