@@ -585,12 +585,6 @@ class Student(models.Model):
     updated = models.DateTimeField(
         auto_now=True,
     )
-    user = models.ForeignKey(
-        'app.User',
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name='students',
-    )
     parent = models.ForeignKey(
         'app.Parent',
         on_delete=models.CASCADE,

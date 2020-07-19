@@ -52,7 +52,6 @@ class ReportInline(admin.TabularInline):
 class StudentInline(admin.TabularInline):
     model = Student
     fields = [
-        'user',
         'parent',
         'school',
         'grade',
@@ -68,7 +67,6 @@ class StudentInline(admin.TabularInline):
         # 'collapse',
     ]
     autocomplete_fields = [
-        'user',
         'parent',
         'school',
     ]

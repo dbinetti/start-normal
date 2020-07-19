@@ -25,7 +25,7 @@ StudentFormSet = inlineformset_factory(
     fields=[
         'grade',
         'school',
-        'user',
+        'parent',
     ],
     widgets = {
         'school': autocomplete.ModelSelect2(
