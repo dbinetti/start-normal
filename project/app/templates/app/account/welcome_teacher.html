@@ -15,11 +15,35 @@
     Thank you for considering teaching under Start Normal!
   </p>
   <p>
-    I'm currently working on the right questions to ask here, and so there isn't much to do beyond simply registering you as a potential teacher.
+    I'm currently working on the right questions to ask here, and so there isn't much to do beyond simply registering you as a potential teacher.  Please feel free to over any notes that you believe are useful for me to know.
   </p>
-  <p>
-    However I am hard at work on this and would <strong>LOVE</strong> to hear from you on what you think the right questions are to ask here.  Feel free to just call/text me at 415.713.2126 or send me an email at <a href='mailto:dbinetti@startnormal.com'>dbinetti@startnormal.com</a>.
-  </p>
-</section>
+
+  <section class='mt-2 mt-5'>
+    <div class='card'>
+      <div class='card-header'>
+        <h4>Teacher Registration Form</h4>
+      </div>
+      <div class="card-body">
+        <div class='card-text'>
+          <form method='post'>
+            {% csrf_token %}
+            {% bootstrap_form_errors form %}
+            {% bootstrap_field form.notes show_label=False show_help=False placeholder='Notes (kept private)'  %}
+            {% buttons %}
+              <button type="submit" class="btn btn-primary btn-lg btn-block" >
+                Save
+              </button>
+            {% endbuttons %}
+          </form>
+        </div>
+      </div>
+      <div class='card-footer'>
+        <p class="card-text"><small>
+          I am hard at work on this project and would <strong>LOVE</strong> to hear from you on what you think the right questions are to ask here.  Feel free to just call/text me at 415.713.2126 or send me an email at <a href='mailto:dbinetti@startnormal.com'>dbinetti@startnormal.com</a>.
+        </p>
+      </div>
+
+    </div>
+  </section>
 
 {% endblock content %}

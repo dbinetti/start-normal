@@ -115,6 +115,15 @@ class AccountForm(forms.ModelForm):
         }
 
 
+class TeacherForm(forms.ModelForm):
+    class Meta:
+        model = Teacher
+        fields = [
+            'notes',
+        ]
+
+
+
 class ContactForm(forms.ModelForm):
     class Meta:
         model = Contact

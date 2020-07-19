@@ -41,6 +41,7 @@ from .forms import ReportForm
 from .forms import SignupForm
 from .forms import StudentFormSet
 from .forms import SubscribeForm
+from .forms import TeacherForm
 from .forms import UserCreationForm
 from .models import Account
 from .models import Contact
@@ -482,13 +483,33 @@ def split(request):
 @login_required
 def welcome_teacher(request):
     user = request.user
-    Teacher.objects.create(
+    teacher, created = Teacher.objects.get_or_create(
         user=user,
     )
+    if request.method == "POST":
+        form = TeacherForm(
+            request.POST,
+            instance=teacher,
+        )
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                "Saved!",
+            )
+            return redirect('share')
+    else:
+        form = TeacherForm(
+            instance=teacher,
+        )
     return render(
         request,
         'app/account/welcome_teacher.html',
+        context = {
+            'form': form,
+        }
     )
+
 
 @login_required
 def welcome_parent(request):
@@ -502,7 +523,7 @@ def welcome_parent(request):
         user.is_active = True
         user.save()
 
-    parent = Parent.objects.create(
+    parent, created = Parent.objects.get_or_create(
         user=user,
     )
     account = user.account
