@@ -593,8 +593,7 @@ class Student(models.Model):
     )
     parent = models.ForeignKey(
         'app.Parent',
-        on_delete=models.SET_NULL,
-        null=True,
+        on_delete=models.CASCADE,
         related_name='students',
     )
     school = models.ForeignKey(
