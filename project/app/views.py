@@ -73,6 +73,18 @@ def about(request):
         'app/about.html',
     )
 
+def faq(request):
+    return render(
+        request,
+        'app/faq.html',
+    )
+
+def team(request):
+    return render(
+        request,
+        'app/team.html',
+    )
+
 def privacy(request):
     return render(
         request,
