@@ -5,5 +5,5 @@
   "subject": "Start Normal - Please Verify Email",
   "urlLifetimeInSeconds": 432000,
   "template": "verify_email",
-  "enabled": true
+  "enabled": false
 }
