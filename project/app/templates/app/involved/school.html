@@ -47,7 +47,7 @@
       </div>
       <div class='card-footer'>
         {% if request.user.is_authenticated %}
-          <a href='{% url "district-report" school.district.slug %}' role='button' class='btn btn-success'>Make a Report</a>
+          {# <a href='{% url "district-report" school.district.slug %}' role='button' class='btn btn-success'>Make a Report</a> #}
         {% else %}
           {# <a href='{% url "involved" %}' role='button' class='btn btn-success'>Get Involved!</a> #}
         {%endif%}
@@ -105,7 +105,7 @@
       </div>
       <div class='card-footer'>
         {% if request.user.is_authenticated %}
-          <a href='{% url "district-contact" school.district.slug %}' role='button' class='btn btn-success'>Add a Contact</a>
+          {# <a href='{% url "district-contact" school.district.slug %}' role='button' class='btn btn-success'>Add a Contact</a> #}
         {% else %}
           {# <a href='{% url "involved" %}' role='button' class='btn btn-success'>Get Involved!</a> #}
         {%endif%}

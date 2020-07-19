@@ -606,6 +606,54 @@ class Student(models.Model):
         return str(self.id)
 
 
+class Transmission(models.Model):
+    id = HashidAutoField(
+        primary_key=True,
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+    report = models.ForeignKey(
+        'app.Report',
+        on_delete=models.CASCADE,
+        related_name='transmissions',
+    )
+    school = models.ForeignKey(
+        'app.School',
+        on_delete=models.CASCADE,
+        related_name='transmissions',
+    )
+    def __str__(self):
+        return str(self.id)
+
+
+class Entry(models.Model):
+    id = HashidAutoField(
+        primary_key=True,
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+    contact = models.ForeignKey(
+        'app.Contact',
+        on_delete=models.CASCADE,
+        related_name='entries',
+    )
+    school = models.ForeignKey(
+        'app.School',
+        on_delete=models.CASCADE,
+        related_name='entries',
+    )
+    def __str__(self):
+        return str(self.id)
+
+
 class User(AbstractBaseUser):
     id = HashidAutoField(
         primary_key=True,

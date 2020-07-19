@@ -50,7 +50,7 @@
             </div>
             <div class='card-footer'>
               {% if request.user.is_authenticated %}
-                <a href='{% url "district-report" district.slug %}' role='button' class='btn btn-success'>Make a Report</a>
+                {# <a href='{% url "district-report" district.slug %}' role='button' class='btn btn-success'>Make a Report</a> #}
               {% else %}
                 {# <a href='{% url "involved" %}' role='button' class='btn btn-success'>Get Involved!</a> #}
               {%endif%}

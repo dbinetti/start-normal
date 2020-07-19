@@ -20,7 +20,7 @@ urlpatterns = [
 
     path('district/<slug>', views.district, name='district'),
     path('district/<slug>/report', views.district_report, name='district-report'),
-    path('district/<slug>/contact', views.district_contact, name='district-contact'),
+    # path('district/<slug>/contact', views.district_contact, name='district-contact'),
     path('district', views.districts, name='districts'),
 
     # Informed
