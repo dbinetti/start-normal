@@ -1,0 +1,29 @@
+{% extends 'app/base.html' %}
+
+{% load bootstrap4 %}
+
+{% block title %}Parent or Teacher?{% endblock title %}
+{% block header %}Parent or Teacher?{% endblock header %}
+{% block topnav %}{% endblock topnav %}
+
+
+
+{% block content %}
+
+<section class='my-5 col-lg-6'>
+  <div class='row'>
+    <div class='col-lg-6'>
+      <a href='{% url "welcome-parent" %}' role='button' class='btn btn-lg btn-primary p-3 m-3'>I'm a Parent</a>
+    </div>
+    <div class='col-lg-6'>
+      <a href='{% url "welcome-teacher" %}' role='button' class='btn btn-lg btn-primary p-3 m-3'>I'm a Teacher</a>
+    </div>
+  </div>
+</section>
+<section class='my-5'>
+  <p>
+    (If you're both a parent and a teacher just pick one for now &mdash; you'll get a chance to add the other later.)
+  </p>
+</section>
+
+{% endblock content %}

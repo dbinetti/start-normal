@@ -1,7 +1,13 @@
 # Standard Library
 from operator import attrgetter
 
-# Third-Party
+# Django
+from django.contrib.auth.models import AbstractBaseUser
+from django.db import models
+from django.db.models.constraints import UniqueConstraint
+from django.utils.text import slugify
+
+# First-Party
 import shortuuid
 from autoslug import AutoSlugField
 from hashid_field import HashidAutoField
@@ -9,12 +15,6 @@ from model_utils import Choices
 from mptt.models import MPTTModel
 from mptt.models import TreeForeignKey
 from shortuuidfield import ShortUUIDField
-
-# Django
-from django.contrib.auth.models import AbstractBaseUser
-from django.db import models
-from django.db.models.constraints import UniqueConstraint
-from django.utils.text import slugify
 
 # Local
 from .managers import UserManager
@@ -193,6 +193,57 @@ class Contact(models.Model):
 
     def __str__(self):
         return str(self.name)
+
+
+class Teacher(models.Model):
+    id = HashidAutoField(
+        primary_key=True,
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+    user = models.OneToOneField(
+        'app.User',
+        on_delete=models.CASCADE,
+        related_name='teacher',
+    )
+    notes = models.TextField(
+        max_length=512,
+        blank=True,
+        default='',
+        help_text="""Feel free to include private notes just for us.""",
+    )
+    def __str__(self):
+        return str(self.user)
+
+
+class Parent(models.Model):
+    id = HashidAutoField(
+        primary_key=True,
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+    user = models.OneToOneField(
+        'app.User',
+        on_delete=models.CASCADE,
+        related_name='parent',
+    )
+    notes = models.TextField(
+        max_length=512,
+        blank=True,
+        default='',
+        help_text="""Feel free to include private notes just for us.""",
+    )
+
+    def __str__(self):
+        return str(self.user)
 
 
 class Report(models.Model):
@@ -506,7 +557,6 @@ class Student(models.Model):
         primary_key=True,
     )
     GRADE = Choices(
-        (0, 'decline', 'Decline to State'),
         (2, 'tk', 'Transitional Kindergarten'),
         (5, 'k', 'Kindergarten'),
         (10, 'first', 'First  Grade'),
@@ -537,6 +587,12 @@ class Student(models.Model):
     user = models.ForeignKey(
         'app.User',
         on_delete=models.CASCADE,
+        related_name='students',
+    )
+    parent = models.ForeignKey(
+        'app.Parent',
+        on_delete=models.SET_NULL,
+        null=True,
         related_name='students',
     )
     school = models.ForeignKey(

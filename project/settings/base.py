@@ -48,7 +48,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 LOGIN_URL = 'login'
-LOGIN_REDIRECT_URL = 'welcome'
+LOGIN_REDIRECT_URL = 'split'
 LOGOUT_REDIRECT_URL = 'index'
 
 #Auth0

@@ -9,18 +9,15 @@
 {% block content %}
 <section class='mb-5'>
   <p class='lead'>
-    If you're a <strong>Parent</strong>, please select the school and grade your student(s) will be entering in the Fall.<br>  If you're a <strong>Teacher</strong>, please indicate the school level at which you prefer to teach.
+    Next, please select the school and grade your student(s) will be entering in the Fall.
   </p>
 </section>
 <section>
   <div class='card'>
     <div class='card-header'>
+      <h4>Student Schools and Grade Levels</h4>
     </div>
     <div class='card-body'>
-      <h4>
-        Parents:
-      </h4>
-
 
       <p class='card-text'>
         <form method="post">
@@ -41,13 +38,14 @@
             <tbody>
               {% for form in formset %}
                 <tr>
-                  <td>{% bootstrap_field form.school show_help=False show_label=False size='small'%}</td>
+                  <td>{% bootstrap_field form.school show_help=False show_label=False size='small' placeholder='Type to search....' %}</td>
                   <td>{% bootstrap_field form.grade show_help=False show_label=False size='small'%}</td>
                   {{form.id}}
                 </tr>
               {% endfor %}
             </tbody>
           </table>
+          {% comment %}
           <div class='my-5'>
             <h4>
                 Teachers:
@@ -60,6 +58,7 @@
               {% bootstrap_field form.teacher show_help=False show_label=False%}
             </div>
           </div>
+          {% endcomment %}
           {% buttons %}
             <button type="submit" class="btn btn-primary btn-lg btn-block">
               Save

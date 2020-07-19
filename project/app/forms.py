@@ -72,6 +72,8 @@ StudentFormSet = inlineformset_factory(
                 'data-container-css-class': '',
                 'data-close-on-select': 'false',
                 'data-scroll-after-select': 'true',
+                'data-placeholder': 'Start typing to search....',
+                'data-minimum-input-length': 3,
             },
         )
     },

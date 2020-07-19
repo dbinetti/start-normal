@@ -29,9 +29,11 @@ urlpatterns = [
     # Account
     path('account', views.account, name='account',),
     path('pending', views.pending, name='pending',),
-    path('welcome', views.welcome, name='welcome',),
     path('delete', views.delete, name='delete',),
     path('share', views.share, name='share',),
+    path('split', views.split, name='split',),
+    path('welcome-teacher', views.welcome_teacher, name='welcome-teacher',),
+    path('welcome-parent', views.welcome_parent, name='welcome-parent',),
 
     # Authentication
     path('login', views.login, name='login'),

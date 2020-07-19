@@ -5,6 +5,7 @@ from django.dispatch import receiver
 
 # First-Party
 from app.models import Account
+from app.models import Teacher
 from app.models import User
 from app.tasks import auth0_delete_user
 from app.tasks import build_email
@@ -31,6 +32,9 @@ def user_post_delete(sender, instance, **kwargs):
 def user_post_save(sender, instance, created, **kwargs):
     if created:
         Account.objects.create(
+            user=instance,
+        )
+        Teacher.objects.create(
             user=instance,
         )
     return

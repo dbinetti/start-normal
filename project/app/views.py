@@ -404,6 +404,54 @@ def account(request):
     )
 
 @login_required
+def teacher(request):
+    StudentFormSet.extra = 0
+    user = request.user
+    account = Account.objects.get(
+        user=user,
+    )
+    students = user.students.order_by('grade')
+
+    if request.method == "POST":
+        form = AccountForm(
+            request.POST,
+            instance=account,
+            prefix='account',
+        )
+        formset = StudentFormSet(
+            request.POST,
+            request.FILES,
+            instance=user,
+            prefix='students',
+        )
+        if form.is_valid() and formset.is_valid():
+            form.save()
+            formset.save()
+            messages.success(
+                request,
+                "Saved!",
+            )
+            return redirect('account')
+    else:
+        form = AccountForm(
+            instance=account,
+            prefix='account',
+        )
+        formset = StudentFormSet(
+            instance=user,
+            prefix='students',
+        )
+    return render(
+        request,
+        'app/account/account.html', {
+            'user': user,
+            'form': form,
+            'formset': formset,
+            'students': students,
+        },
+    )
+
+@login_required
 def pending(request):
     return render(
         request,
@@ -411,7 +459,21 @@ def pending(request):
     )
 
 @login_required
-def welcome(request):
+def split(request):
+    return render(
+        request,
+        'app/account/split.html',
+    )
+
+@login_required
+def welcome_teacher(request):
+    return render(
+        request,
+        'app/account/welcome_teacher.html',
+    )
+
+@login_required
+def welcome_parent(request):
     StudentFormSet.extra = 5
     user = request.user
     try:
@@ -457,7 +519,7 @@ def welcome(request):
         )
     return render(
         request,
-        'app/account/welcome.html',
+        'app/account/welcome_parent.html',
         context = {
             'form': form,
             'formset': formset,
@@ -543,7 +605,7 @@ def callback(request):
     user = authenticate(request, **payload)
     if user:
         log_in(request, user)
-        return redirect('welcome')
+        return redirect('split')
     return HttpResponse(status=400)
 
 def logout(request):
