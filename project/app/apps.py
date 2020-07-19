@@ -11,6 +11,6 @@ class AppConfig(AppConfig):
         from .indexes import SchoolIndex
         School = self.get_model('school')
         algoliasearch.register(School, SchoolIndex)
-        from .indexes import DistrictIndex
-        District = self.get_model('district')
-        algoliasearch.register(District, DistrictIndex)
+        # from .indexes import DistrictIndex
+        # District = self.get_model('district')
+        # algoliasearch.register(District, DistrictIndex)

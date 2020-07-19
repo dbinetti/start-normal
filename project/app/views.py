@@ -515,22 +515,11 @@ def school(request, slug):
         },
     )
 
-def schools(request):
-    user = request.user
-    if user.is_authenticated:
-        schools = School.objects.filter(
-            students__parent__user=user,
-        ).order_by(
-            'grade',
-            'school',
-        ).distinct()
-    else:
-        schools = None
+def search(request):
     return render(
         request,
-        'app/involved/schools.html',
+        'app/involved/search.html',
         context={
-            'schools': schools,
             'app_id': settings.ALGOLIA['APPLICATION_ID'],
             'search_key': settings.ALGOLIA['SEARCH_KEY'],
             'index_name': "School_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),

@@ -12,6 +12,11 @@ urlpatterns = [
     path('team', views.team, name='team',),
     path('privacy', views.privacy, name='privacy',),
 
+    # Authentication
+    path('login', views.login, name='login'),
+    path('callback', views.callback, name='callback'),
+    path('logout', views.logout, name='logout'),
+
     # Account
     path('account', views.account, name='account',),
     path('pending', views.pending, name='pending',),
@@ -21,34 +26,13 @@ urlpatterns = [
     path('share', views.share, name='share',),
     path('delete', views.delete, name='delete',),
 
-    # Authentication
-    path('login', views.login, name='login'),
-    path('callback', views.callback, name='callback'),
-    path('logout', views.logout, name='logout'),
-
-
-    # Admin
-    # path('report', views.report, name='report',),
-
-    # Involved
-    # path('involved', views.involved, name='involved'),
-
-    # Autocomplete
-    path('school-search', views.SchoolAutocomplete.as_view(), name='school-search',),
-
+    # Schools
+    path('school-autocomplete', views.SchoolAutocomplete.as_view(), name='school-autocomplete',),
     path('school/<slug>', views.school, name='school'),
-    path('school', views.schools, name='schools'),
-
-    path('district/<slug>', views.district, name='district'),
-    # path('district/<slug>/report', views.district_report, name='district-report'),
-    # path('district/<slug>/contact', views.district_contact, name='district-contact'),
-    path('district', views.districts, name='districts'),
+    path('search', views.search, name='search'),
 
     # Informed
     path('informed', views.informed, name='informed',),
     path('morrow', views.morrow, name='morrow',),
     path('thomas', views.thomas, name='thomas',),
-
-
-
 ]

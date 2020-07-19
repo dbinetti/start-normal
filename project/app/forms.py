@@ -29,7 +29,7 @@ StudentFormSet = inlineformset_factory(
     ],
     widgets = {
         'school': autocomplete.ModelSelect2(
-            url='school-search',
+            url='school-autocomplete',
             attrs={
                 'data-container-css-class': '',
                 'data-close-on-select': 'false',
