@@ -329,6 +329,7 @@ class District(models.Model):
 class School(models.Model):
 
     STATUS = Choices(
+        (0, 'new', "New"),
         (10, 'active', "Active"),
         (20, 'closed', "Closed"),
         (30, 'merged', "Merged"),
@@ -364,7 +365,7 @@ class School(models.Model):
     status = models.IntegerField(
         blank=False,
         choices=STATUS,
-        default=STATUS.active,
+        default=STATUS.new,
     )
     kind = models.IntegerField(
         blank=True,
