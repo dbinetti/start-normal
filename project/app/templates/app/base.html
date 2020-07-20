@@ -29,7 +29,7 @@
         {% block topnav %}
           <ul class="navbar-nav mr-auto">
             <li class="nav-item ml-3">
-              {# <a href='{% url "involved" %}'>Get Involved!</a> #}
+              <a href="{% url 'faq' %}">FAQ</a>
             </li>
             <li class="nav-item ml-3">
               <a href='{% url "search" %}'>Search Schools</a>
@@ -74,9 +74,6 @@
         <ul class="nav nav-pills mr-auto">
           <li class="nav-item ml-3">
             <a href="{% url 'about' %}">About</a>
-          </li>
-          <li class="nav-item ml-3">
-            <a href="{% url 'faq' %}">FAQ</a>
           </li>
           <li class="nav-item ml-3">
             <a href="{% url 'privacy' %}">Privacy</a>
