@@ -34,6 +34,7 @@
     }
     var loginHint = config.extraParams.login_hint;
     var colors = config.colors || {};
+    var isSignup = config.extraParams.action === "signup";
 
     // Available Lock configuration options: https://auth0.com/docs/libraries/lock/v11/configuration
     var lock = new Auth0Lock(config.clientID, config.auth0Domain, {
@@ -49,10 +50,11 @@
         __tenant: config.auth0Tenant,
         __token_issuer: 'YOUR_CUSTOM_DOMAIN'
       }, */
-			allowAutocomplete: true,
+      allowAutocomplete: true,
       allowPasswordAutocomplete: true,
       allowShowPassword: true,
       allowSignUp: !config.extraParams.prevent_sign_up,
+      initialScreen: isSignup ? "signUp" : "login",
       additionalSignUpFields: [{
         name: "name",
         placeholder: "your full name",
@@ -66,7 +68,7 @@
       allowedConnections: connection ? [connection] : null,
       language: language,
       languageDictionary: {
-      	title: '',
+        title: '',
         signUpTitle: '',
       },
       theme: {
@@ -74,7 +76,7 @@
         primaryColor: "blue",
       },
       prefill: loginHint ? { email: loginHint, username: loginHint } : null,
-			showTerms: false,
+      showTerms: false,
       defaultADUsernameFromEmailPrefix: false
     });
 

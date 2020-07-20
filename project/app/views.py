@@ -293,6 +293,22 @@ def login(request):
     ).prepare().url
     return redirect(url)
 
+def signup(request):
+    redirect_uri = request.build_absolute_uri('callback')
+    params = {
+        'response_type': 'code',
+        'client_id': settings.AUTH0_CLIENT_ID,
+        'scope': 'openid profile email',
+        'redirect_uri': redirect_uri,
+        'action': 'signup',
+    }
+    url = requests.Request(
+        'GET',
+        'https://{0}/authorize'.format(settings.AUTH0_DOMAIN),
+        params=params,
+    ).prepare().url
+    return redirect(url)
+
 def callback(request):
     code = request.GET.get('code', '')
     if not code:
