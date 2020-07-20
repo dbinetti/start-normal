@@ -5,54 +5,24 @@
 
 {% block content %}
 
-<section class='py-3'>
+<section>
   <div id='id_wistia'>
-
-
     <script src="https://fast.wistia.com/embed/medias/n1tppt7z04.jsonp" async></script><script src="https://fast.wistia.com/assets/external/E-v1.js" async></script><div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;"><div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;"><span class="wistia_embed wistia_async_n1tppt7z04 popover=true popoverAnimateThumbnail=true videoFoam=true" style="display:inline-block;height:100%;position:relative;width:100%">&nbsp;</span></div></div>
-
   </div> <!-- end wistia -->
-
   <div class='jumbotron'>
-
     <section>
-      <h2>
-        <strong>Start Normal</strong> means in-person education.
-      </h2>
-      <p class='my-3 lead '>
-        We're connecting parents and teachers to form small, stable cohorts of children for at-home, in-person instruction with common-sense safety protocols appropriate for low-risk groups.
+      <p class='my-3 lead'>
+        <strong>Start Normal</strong> is a network of parents and teachers seeking in-person, at-home, small-group instruction for low-risk groups.  If you're looking for more than just Distance Learning, this is for you.
       </p>
       <p class='lead my-3'>
-        If you believe the science which clearly shows the risk of isolated distance-learning vastly outweighs the risk from Covid-19 then join us today and we'll Start Normal together.
+        Learn more on our <a href='{% url "faq" %}'>FAQ</a> &mdash; or sign up today and together we can Start Normal.
       </p>
     </section>
-    <section class='my-5'>
+    <section class='mt-5'>
       <a href='{% url "signup" %}' role='button' class="btn btn-primary btn-block btn-lg">
         Join Us!
       </a>
     </section>
-
-{% comment %}
-    <section>
-      <div id="searchbox" class='my-5'>
-      </div>
-      {# <div id="refine" class='my-5'> #}
-      {# </div> #}
-      <div id="hits" class='my-5'>
-      </div>
-    </section>
-
-    <p class='my-5'>
-      <a href='{% url "involved" %}' role='button' class="btn btn-primary btn-lg">
-        Get Involved!
-      </a>
-      <a href='{% url "informed" %}' role='button' class='btn btn-light btn-lg mx-2'>
-        Get Informed!
-      </a>
-    </p>
-    <br><br>
   </div>
 </section>
-{% endcomment %}
 {% endblock content %}
-
