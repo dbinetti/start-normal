@@ -281,7 +281,6 @@ class UserAdmin(UserAdminBase):
         'username',
     ]
     ordering = [
-        '-last_login',
         '-created',
     ]
     fieldsets = (
