@@ -101,6 +101,12 @@
                   <a href='tel:{{contact.phone}}'>{{contact.phone}}</a>
                 </td>
               </tr>
+            {% empty %}
+              <tr>
+                <td colspan=4>
+                  (No Contacts)
+                </td>
+              </tr>
             {% endfor %}
           </tbody>
           <tfoot class='mt-2'>

@@ -1,18 +1,19 @@
 # Standard Library
 import csv
 
-# Third-Party
-from algoliasearch_django.decorators import disable_auto_indexing
-from nameparser import HumanName
-
 # Django
 from django.db import IntegrityError
 
-# Local
-from .forms import DistrictForm
-from .forms import SchoolForm
-from .models import District
-from .models import School
+# First-Party
+from algoliasearch_django.decorators import disable_auto_indexing
+from app.forms import ContactForm
+from app.forms import DistrictForm
+from app.forms import SchoolForm
+from app.models import Contact
+from app.models import District
+from app.models import Entry
+from app.models import School
+from nameparser import HumanName
 
 
 # public
@@ -92,12 +93,13 @@ def import_districts(districts):
         except IntegrityError:
             continue
 
-def schools_list(filename):
+def schools_list(filename='publics.csv'):
     with open(filename) as f:
         reader = csv.reader(
             f,
             skipinitialspace=True,
         )
+        next(reader)
         rows = [row for row in reader]
         t = len(rows)
         i = 0
@@ -128,35 +130,35 @@ def schools_list(filename):
             except ValueError:
                 charter_number = None
             school = {
-                'schedule': 0,
-                'masks': 0,
-                'name': name,
-                'cd_status': cd_status,
-                'cd_id': int(row[0][-7:]) if row[0] != 'No Data' else None,
-                'nces_district_id': int(row[1]) if row[1] != 'No Data' else None,
+                # 'schedule': 0,
+                # 'masks': 0,
+                # 'name': name,
+                # 'cd_status': cd_status,
+                # 'cd_id': int(row[0][-7:]) if row[0] != 'No Data' else None,
+                # 'nces_district_id': int(row[1]) if row[1] != 'No Data' else None,
                 'nces_school_id': int(row[2]) if row[2] != 'No Data' else None,
-                'district_name': str(row[5]) if row[5] != 'No Data' else '',
-                'county': str(row[4]) if row[4] != 'No Data' else '',
-                'address': str(row[8]) if row[8] != 'No Data' else '',
-                'city': str(row[9]) if row[9] != 'No Data' else '',
-                'state': str(row[11]) if row[11] != 'No Data' else '',
-                'zipcode': str(row[10]) if row[10] != 'No Data' else '',
+                # 'district_name': str(row[5]) if row[5] != 'No Data' else '',
+                # 'county': str(row[4]) if row[4] != 'No Data' else '',
+                # 'address': str(row[8]) if row[8] != 'No Data' else '',
+                # 'city': str(row[9]) if row[9] != 'No Data' else '',
+                # 'state': str(row[11]) if row[11] != 'No Data' else '',
+                # 'zipcode': str(row[10]) if row[10] != 'No Data' else '',
                 'phone': str(row[17]) if row[17] != 'No Data' else '',
-                'website': str(row[21].replace(" ", "")) if row[21] != 'No Data' else '',
-                'soc': int(row[29]) if row[29] != 'No Data' else None,
+                # 'website': str(row[21].replace(" ", "")) if row[21] != 'No Data' else '',
+                # 'soc': int(row[29]) if row[29] != 'No Data' else None,
 
-                'is_charter': True if row[24]=='Y' else False,
-                'charter_number': charter_number,
-                'funding_type': funding_map[str(row[26])] if row[26] != 'No Data' else None,
-                'edops_type': getattr(School.EDOPS, str(row[31].strip().lower()), None),
-                'eil': getattr(School.EIL, str(row[33].strip().lower()), None),
-                'grade_span': str(row[35]) if row[35] != 'No Data' else '',
-                'virtual_type': getattr(School.VIRTUAL, str(row[37].strip().lower()), None),
-                'is_magnet': True if row[38]=='Y' else False,
-                'fed_nces_school_id': int(row[40]) if row[40] != 'No Data' else None,
+                # 'is_charter': True if row[24]=='Y' else False,
+                # 'charter_number': charter_number,
+                # 'funding_type': funding_map[str(row[26])] if row[26] != 'No Data' else None,
+                # 'edops_type': getattr(School.EDOPS, str(row[31].strip().lower()), None),
+                # 'eil': getattr(School.EIL, str(row[33].strip().lower()), None),
+                # 'grade_span': str(row[35]) if row[35] != 'No Data' else '',
+                # 'virtual_type': getattr(School.VIRTUAL, str(row[37].strip().lower()), None),
+                # 'is_magnet': True if row[38]=='Y' else False,
+                # 'fed_nces_school_id': int(row[40]) if row[40] != 'No Data' else None,
 
-                'latitude': float(row[41]) if row[41] != 'No Data' else None,
-                'longitude': float(row[42]) if row[42] != 'No Data' else None,
+                # 'latitude': float(row[41]) if row[41] != 'No Data' else None,
+                # 'longitude': float(row[42]) if row[42] != 'No Data' else None,
                 'admin_first_name': str(row[43]) if row[43] != 'No Data' else '',
                 'admin_last_name': str(row[44]) if row[44] != 'No Data' else '',
                 'admin_email': str(row[45].replace(
@@ -170,10 +172,10 @@ def schools_list(filename):
                     'No Data',
                 ] else '',
             }
-            form = SchoolForm(school)
-            if not form.is_valid():
-                errors.append((row, form))
-                break
+            # form = SchoolForm(school)
+            # if not form.is_valid():
+            #     errors.append((row, form))
+            #     break
             output.append(school)
         if not errors:
             return output
@@ -342,3 +344,98 @@ def import_private_schools(privates):
         if private['cd_id'] == 77764229999999:
             continue
         School.objects.create(**private)
+
+
+def private_contacts_list(filename='privates.csv'):
+    with open(filename) as f:
+        reader = csv.reader(
+            f,
+            skipinitialspace=True,
+        )
+        next(reader)
+        rows = [row for row in reader]
+        t = len(rows)
+        i = 0
+        errors = []
+        output = []
+        for row in rows:
+            i += 1
+            print(f"{i}/{t}")
+            cd_id = int(row[1]) if row[1] != 'No Data' else None
+            if cd_id == 77764229999999:
+                continue
+            try:
+                school = School.objects.get(cd_id=cd_id)
+            except School.DoesNotExist:
+                print(row)
+                break
+            contact = {
+                'name': str(row[6]) if row[6] != 'No Data' else '',
+                'phone': str(row[33]) if row[33] != 'No Data' else '',
+                'name': str(row[37]) if row[37] != 'No Data' else '',
+                'role': Contact.ROLE.admin,
+                'email': str(row[40]) if row[40] not in [
+                    'Information Not Available',
+                    'No Data',
+                ] else '',
+                'school': school.id,
+            }
+            form = ContactForm(contact)
+            if not form.is_valid():
+                continue
+            output.append(contact)
+        if not errors:
+            return output
+        else:
+            print('Error!')
+            return errors
+
+
+def import_private_contacts(privates):
+    t = len(privates)
+    i = 0
+
+    for private in privates:
+        i+=1
+        print(f"{i}/{t}")
+        school_id = private['school']
+        school = School.objects.get(id=school_id)
+        private.pop('school')
+        contact, created = Contact.objects.get_or_create(**private)
+        Entry.objects.create(
+            school=school,
+            contact=contact,
+        )
+
+
+def import_public_contacts(publics):
+    t = len(publics)
+    i = 0
+    errors = []
+    for public in publics:
+        i+=1
+        print(f"{i}/{t}")
+        try:
+            school = School.objects.get(nces_id=public['nces_school_id'])
+        except School.DoesNotExist:
+            continue
+        except School.MultipleObjectsReturned:
+            continue
+        name = " ".join([
+            public['admin_first_name'],
+            public['admin_last_name'],
+        ])
+        contact = {
+            'name': name,
+            'email': public['admin_email'],
+            'phone': public['phone'],
+            'role': Contact.ROLE.principal,
+        }
+        form = ContactForm(contact)
+        if form.is_valid():
+            contact = form.save()
+            Entry.objects.create(
+                school=school,
+                contact=contact,
+            )
+    return
