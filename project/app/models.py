@@ -368,7 +368,7 @@ class School(models.Model):
         default=STATUS.new,
     )
     kind = models.IntegerField(
-        blank=True,
+        blank=False,
         null=True,
         choices=KIND,
     )
@@ -389,12 +389,12 @@ class School(models.Model):
     )
     city = models.CharField(
         max_length=255,
-        blank=True,
+        blank=False,
         default='',
     )
     state = models.CharField(
         max_length=255,
-        blank=True,
+        blank=False,
         default='',
     )
     zipcode = models.CharField(

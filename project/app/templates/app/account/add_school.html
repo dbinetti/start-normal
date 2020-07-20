@@ -1,0 +1,47 @@
+{% extends 'app/base.html' %}
+
+{% load bootstrap4 %}
+{% load humanize %}
+
+{% block title %}Add School{% endblock title %}
+{% block header %}Add School{% endblock header %}
+
+{% block content %}
+
+  <section>
+    <p class='lead'>
+      Please provide information related to your school.
+    </p>
+  </section>
+  <section class='mt-2 mt-5'>
+    <div class='card'>
+      <div class='card-header'>
+        <h4>School Form</h4>
+      </div>
+      <div class="card-body">
+        <div class='card-text'>
+          <form method='post'>
+            {% csrf_token %}
+            {% bootstrap_form_errors form %}
+            {% bootstrap_field form.kind show_label=False show_help=False  %}
+            {% bootstrap_field form.name show_label=False show_help=False placeholder='School Name'  %}
+            {% bootstrap_field form.city show_label=False show_help=False placeholder='School City'  %}
+            {% bootstrap_field form.state show_label=False show_help=False placeholder='School State'  %}
+            {% buttons %}
+              <button type="submit" class="btn btn-primary btn-lg btn-block" >
+                Submit School
+              </button>
+            {% endbuttons %}
+          </form>
+        </div>
+      </div>
+
+      <div class='card-footer'>
+        <p class="card-text">
+          After your school is added you'll be redirected to the student selection page.
+        </p>
+      </div>
+
+    </div>
+  </section>
+{% endblock content %}

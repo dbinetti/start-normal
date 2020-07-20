@@ -38,6 +38,7 @@ from .forms import AccountForm
 from .forms import ContactForm
 from .forms import DeleteForm
 from .forms import ReportForm
+from .forms import SchoolForm
 from .forms import SignupForm
 from .forms import StudentFormSet
 from .forms import SubscribeForm
@@ -405,124 +406,6 @@ def informed(request):
         },
     )
 
-# # Admin
-# @staff_member_required
-# def report(request):
-#     report = Affiliation.objects.order_by(
-#         'school',
-#     ).values(
-#         'school',
-#     ).annotate(
-#         c=Count('id'),
-#     )
-#     total = Affiliation.objects.aggregate(
-#         c=Count('id'),
-#     )['c']
-#     return render(
-#         request,
-#         'app/admin/report.html',
-#         {'report': report, 'total': total},
-#     )
-
-
-
-# Involved
-# def involved(request):a
-#     user = request.user
-#     # Account Holder
-#     if user.is_authenticated:
-#         districts = District.objects.filter(
-#             schools__students__user=user,
-#         ).distinct()
-#         # If they have selected students
-#         if districts:
-#             return render(
-#                 request,
-#                 'app/involved/involved.html',
-#                 context={
-#                     'districts': districts,
-#                 },
-#             )
-#         # Otherwise, pick students
-#         else:
-#             StudentFormSet.extra = 5
-#             if request.method == "POST":
-#                 formset = StudentFormSet(
-#                     request.POST,
-#                     request.FILES,
-#                     instance=user,
-#                 )
-#                 if formset.is_valid():
-#                     formset.save()
-#                     messages.success(
-#                         request,
-#                         "Saved!",
-#                     )
-#                     return redirect('involved')
-#             else:
-#                 formset = StudentFormSet(
-#                     instance=user,
-#                 )
-#             return render(
-#                 request,
-#                 'app/involved/involved.html',
-#                 context = {
-#                     'formset': formset,
-#                 },
-#             )
-#     else:
-#         form = SignupForm(request.POST or None)
-#         if form.is_valid():
-#             # Instantiate Variables
-#             name = form.cleaned_data['name']
-#             email = form.cleaned_data['email']
-#             password = form.cleaned_data['password']
-#             is_public = form.cleaned_data['is_public']
-#             is_subscribe = form.cleaned_data['is_subscribe']
-#             message = form.cleaned_data['message']
-
-#             # Auth0 Signup
-#             auth0_client = Database(settings.AUTH0_DOMAIN)
-#             try:
-#                 auth0_user = auth0_client.signup(
-#                     client_id=settings.AUTH0_CLIENT_ID,
-#                     name=name,
-#                     email=email,
-#                     password=password,
-#                     connection='Username-Password-Authentication',
-#                 )
-#             except Auth0Error as e:
-#                 if e.error_code == 'user_exists':
-#                     messages.warning(
-#                         request,
-#                         "That email is in use.  Try to login (upper right corner) or pick a different email.",
-#                     )
-#                     return redirect('involved')
-#             # Create User
-#             username = "auth0|{0}".format(auth0_user['_id'])
-
-#             user = authenticate(
-#                 request,
-#                 username=username,
-#                 email=email,
-#                 name=name,
-#             )
-#             user.refresh_from_db()
-#             account = user.account
-#             account.is_public = is_public
-#             account.is_subscribe = is_subscribe
-#             account.message = message
-#             account.save()
-#             log_in(request, user)
-#             return redirect('pending')
-#         return render(
-#             request,
-#             'app/involved/involved.html',
-#             context={
-#                 'form': form,
-#             },
-#         )
-
 def school(request, slug):
     school = School.objects.get(slug=slug)
     parents = User.objects.filter(
@@ -573,6 +456,23 @@ def search(request):
 
 
 @login_required
+def add_school(request):
+    user = request.user
+    form = SchoolForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        messages.success(
+            request,
+            "School Submitted!",
+        )
+        return redirect('welcome-parent')
+    return render(
+        request,
+        'app/account/add_school.html',
+        {'form': form,},
+    )
+
+@login_required
 def add_report(request, slug):
     user = request.user
     school = School.objects.get(slug=slug)
@@ -619,8 +519,6 @@ def add_contact(request, slug):
         'app/involved/contact.html',
         {'form': form,},
     )
-
-
 
 
 
