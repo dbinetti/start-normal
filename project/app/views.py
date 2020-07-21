@@ -20,6 +20,7 @@ from django.dispatch import receiver
 from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.shortcuts import render
+from django.template.loader import render_to_string
 from django.urls import reverse
 from django.urls import reverse_lazy
 
@@ -97,6 +98,28 @@ def privacy(request):
         'app/privacy.html',
     )
 
+def robots(request):
+    rendered = render_to_string(
+        'app/robots.txt',
+    )
+    return HttpResponse(
+        rendered,
+        content_type="text/plain",
+    )
+
+
+def sitemap(request):
+    slugs = School.objects.values_list('slug', flat=True)
+    rendered = render_to_string(
+        'app/sitemap.txt',
+        context = {
+            'slugs': slugs,
+        }
+    )
+    return HttpResponse(
+        rendered,
+        content_type="text/plain",
+    )
 
 # Account
 @login_required

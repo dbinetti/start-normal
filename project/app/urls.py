@@ -11,6 +11,8 @@ urlpatterns = [
     path('faq', views.faq, name='faq',),
     path('team', views.team, name='team',),
     path('privacy', views.privacy, name='privacy',),
+    path('robots.txt', views.robots, name='robots',),
+    path('sitemap.txt', views.sitemap, name='sitemap',),
 
     # Authentication
     path('login', views.login, name='login'),
