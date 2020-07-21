@@ -43,6 +43,7 @@ def auth0_delete_user(username):
 # Utility
 def build_email(template, subject, context=None, to=[], cc=[], bcc=[], attachments=[], html_content=None):
     body = render_to_string(template, context)
+    html_rendered = render_to_string(html_content, context)
     email = EmailMultiAlternatives(
         subject=subject,
         body=body,
@@ -51,8 +52,8 @@ def build_email(template, subject, context=None, to=[], cc=[], bcc=[], attachmen
         cc=cc,
         bcc=bcc,
     )
-    if html_content:
-        email.attach_alternative(html_content, "text/html")
+    if html_rendered:
+        email.attach_alternative(html_rendered, "text/html")
     for attachment in attachments:
         with attachment[1].open() as f:
             email.attach(attachment[0], f.read(), attachment[2])

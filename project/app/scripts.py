@@ -13,6 +13,8 @@ from app.models import Contact
 from app.models import District
 from app.models import Entry
 from app.models import School
+from app.tasks import build_email
+from app.tasks import send_email
 from nameparser import HumanName
 
 
@@ -439,3 +441,14 @@ def import_public_contacts(publics):
                 contact=contact,
             )
     return
+
+
+def post_welcome(user):
+    email = build_email(
+        template='emails/welcome.txt',
+        subject='A Belated Welcome to Start Normal!',
+        to=[user.email],
+        bcc=['dbinetti@startnormal.com'],
+        html_content='emails/welcome.html',
+    )
+    send_email.delay(email)
