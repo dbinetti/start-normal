@@ -10,6 +10,7 @@ from app.models import Teacher
 from app.models import User
 from app.tasks import auth0_delete_user
 from app.tasks import build_email
+from app.tasks import mailchimp_create_or_update_from_user
 from app.tasks import mailchimp_delete_email
 from app.tasks import send_email
 

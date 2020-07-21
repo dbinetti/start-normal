@@ -57,7 +57,7 @@ from .models import Teacher
 from .models import Transmission
 from .models import User
 from .tasks import build_email
-from .tasks import mailchimp_create_or_update_from_account
+from .tasks import mailchimp_create_or_update_from_user
 from .tasks import mailchimp_subscribe_email
 from .tasks import send_email
 
