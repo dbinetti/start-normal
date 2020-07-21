@@ -3,20 +3,20 @@
 import json
 from textwrap import wrap
 
-# Third-Party
+# Django
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import PasswordResetForm
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+
+# First-Party
 from auth0.v3.authentication import GetToken
 from auth0.v3.management import Auth0
 from django_rq import job
 from mailchimp3 import MailChimp
 from mailchimp3.helpers import get_subscriber_hash
 from mailchimp3.mailchimpclient import MailChimpError
-
-# Django
-from django.conf import settings
-from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import PasswordResetForm
-from django.core.mail import EmailMessage
-from django.template.loader import render_to_string
 
 
 def auth0_get_client():
@@ -41,9 +41,9 @@ def auth0_delete_user(username):
 
 
 # Utility
-def build_email(template, subject, context=None, to=[], cc=[], bcc=[], attachments=[]):
+def build_email(template, subject, context=None, to=[], cc=[], bcc=[], attachments=[], html_content=None):
     body = render_to_string(template, context)
-    email = EmailMessage(
+    email = EmailMultiAlternatives(
         subject=subject,
         body=body,
         from_email='David Binetti <dbinetti@startnormal.com>',
@@ -51,6 +51,8 @@ def build_email(template, subject, context=None, to=[], cc=[], bcc=[], attachmen
         cc=cc,
         bcc=bcc,
     )
+    if html_content:
+        email.attach_alternative(html_content, "text/html")
     for attachment in attachments:
         with attachment[1].open() as f:
             email.attach(attachment[0], f.read(), attachment[2])
@@ -99,33 +101,20 @@ def mailchimp_delete_email(email):
 
 
 @job
-def mailchimp_create_or_update_from_account(account):
+def mailchimp_create_or_update_from_user(user):
     client = get_mailchimp_client()
     list_id = settings.MAILCHIMP_AUDIENCE_ID
-    subscriber_hash = get_subscriber_hash(account.email)
+    subscriber_hash = get_subscriber_hash(user.email)
     data = {
         'status_if_new': 'subscribed',
-        'email_address': account.email,
+        'email_address': user.email,
         'merge_fields': {
-            'NAME': account.name,
+            'NAME': user.name,
         }
     }
-    try:
-        result = client.lists.members.create_or_update(
-            list_id=list_id,
-            subscriber_hash=subscriber_hash,
-            data=data,
-        )
-    except MailChimpError as e:
-        error = json.loads(str(e).replace("\'", "\""))
-        if error['title'] == 'Invalid Resource':
-            User = get_user_model()
-            user = User.objects.get(
-                email=account.email,
-            )
-            user.is_active = False
-            user.save()
-            result = 'Invalid Resource'
-        else:
-            raise e
+    result = client.lists.members.create_or_update(
+        list_id=list_id,
+        subscriber_hash=subscriber_hash,
+        data=data,
+    )
     return result

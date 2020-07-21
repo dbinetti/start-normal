@@ -18,7 +18,7 @@ from app.tasks import send_email
 def user_post_delete(sender, instance, **kwargs):
     user = instance
     auth0_delete_user(user.username)
-    # result = mailchimp_delete_email.delay(user.email)
+    result = mailchimp_delete_email.delay(user.email)
     # email = build_email(
     #     to=[user.email],
     #     subject='Start Normal - Account Deleted',
@@ -35,4 +35,5 @@ def user_post_save(sender, instance, created, **kwargs):
         Account.objects.create(
             user=instance,
         )
+        mailchimp_create_or_update_from_user.delay(instance)
     return
