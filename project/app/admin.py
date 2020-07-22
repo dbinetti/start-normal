@@ -13,6 +13,8 @@ from .inlines import ReportInline
 from .inlines import SchoolInline
 from .inlines import StudentInline
 from .models import Account
+from .models import Classroom
+from .models import Cohort
 from .models import Contact
 from .models import District
 from .models import Parent
@@ -29,6 +31,88 @@ def approve_report(modeladmin, request, queryset):
         report.save()
     return
 
+
+@admin.register(Cohort)
+class CohortAdmin(admin.ModelAdmin):
+    save_on_top = True
+    fields = [
+        'name',
+        'description',
+        'status',
+        'grade',
+        'lat',
+        'lon',
+        'owner',
+    ]
+    list_display = [
+        'name',
+        'status',
+        'grade',
+        'owner',
+        'created',
+        'updated',
+    ]
+    list_filter = [
+        'status',
+        'created',
+        'updated',
+    ]
+    search_fields = [
+        'owner',
+    ]
+    autocomplete_fields = [
+        'owner',
+    ]
+    inlines = [
+        StudentInline,
+    ]
+
+
+@admin.register(Classroom)
+class ClassroomAdmin(admin.ModelAdmin):
+    save_on_top = True
+    fields = [
+        'name',
+        'description',
+        'status',
+        'subjects',
+        'venue',
+        'address',
+        'city',
+        'state',
+        'zipcode',
+        'phone',
+        'lat',
+        'lon',
+        'teacher',
+        'cohort',
+    ]
+    list_display = [
+        'name',
+        'status',
+        'subjects',
+        'venue',
+        'teacher',
+        'cohort',
+        'created',
+        'updated',
+    ]
+    list_filter = [
+        'status',
+        'subjects',
+        'teacher',
+        'cohort',
+    ]
+    search_fields = [
+        'name',
+    ]
+    autocomplete_fields = [
+        'teacher',
+        'cohort',
+    ]
+    inlines = [
+        # StudentInline,
+    ]
 
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):

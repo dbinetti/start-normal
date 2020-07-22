@@ -1,13 +1,7 @@
 # Standard Library
 from operator import attrgetter
 
-# Django
-from django.contrib.auth.models import AbstractBaseUser
-from django.db import models
-from django.db.models.constraints import UniqueConstraint
-from django.utils.text import slugify
-
-# First-Party
+# Third-Party
 import shortuuid
 from autoslug import AutoSlugField
 from hashid_field import HashidAutoField
@@ -17,27 +11,22 @@ from mptt.models import TreeForeignKey
 from multiselectfield import MultiSelectField
 from shortuuidfield import ShortUUIDField
 
+# Django
+from django.contrib.auth.models import AbstractBaseUser
+from django.db import models
+from django.db.models.constraints import UniqueConstraint
+from django.utils.text import slugify
+
 # Local
 from .managers import UserManager
 
 
 def get_populate_from(instance):
-    if instance.kind in range(400, 500):
-        fields = [
-            'name',
-            'county',
-            'state',
-        ]
-    elif instance.kind in range(500, 600):
-        fields = [
-            'name',
-            'city',
-            'state',
-        ]
-    else:
-        fields = [
-            'name',
-        ]
+    fields = [
+        'name',
+        'city',
+        'state',
+    ]
     values = [getattr(instance, field) for field in fields]
     return slugify("-".join(values))
 
@@ -494,6 +483,202 @@ class School(models.Model):
         return False
 
 
+class Cohort(models.Model):
+
+    STATUS = Choices(
+        (0, 'new', "New"),
+        (10, 'active', "Active"),
+    )
+    GRADE = Choices(
+        (2, 'tk', 'Transitional Kindergarten'),
+        (5, 'k', 'Kindergarten'),
+        (10, 'first', 'First  Grade'),
+        (20, 'second', 'Second  Grade'),
+        (30, 'third', 'Third  Grade'),
+        (40, 'fourth', 'Fourth  Grade'),
+        (50, 'fifth', 'Fifth  Grade'),
+        (60, 'sixth', 'Sixth  Grade'),
+        (70, 'seventh', 'Seventh Grade'),
+        (80, 'eighth', 'Eighth Grade'),
+        (90, 'ninth', 'Ninth Grade'),
+        (100, 'tenth', 'Tenth Grade'),
+        (110, 'eleventh', 'Eleventh Grade'),
+        (120, 'twelfth', 'Twelfth Grade'),
+        (130, 'fresh', 'Freshman'),
+        (140, 'soph', 'Sophomore'),
+    )
+    id = HashidAutoField(
+        primary_key=True,
+    )
+    name = models.CharField(
+        max_length=255,
+        blank=False,
+    )
+    description = models.TextField(
+        blank=True,
+    )
+    slug = AutoSlugField(
+        max_length=255,
+        always_update=True,
+        populate_from='name',
+        unique=True,
+    )
+    status = models.IntegerField(
+        blank=False,
+        choices=STATUS,
+        default=STATUS.new,
+    )
+    grade = models.IntegerField(
+        blank=False,
+        choices=GRADE,
+    )
+    lat = models.DecimalField(
+        max_digits=10,
+        decimal_places=6,
+        null=True,
+        blank=True,
+    )
+    lon = models.DecimalField(
+        max_digits=10,
+        decimal_places=6,
+        null=True,
+        blank=True,
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+    owner = models.ForeignKey(
+        'Parent',
+        on_delete=models.SET_NULL,
+        related_name='cohorts',
+        null=True,
+    )
+
+    def __str__(self):
+        return str(self.name)
+
+    def location(self):
+        return(self.lat, self.lon)
+
+
+class Classroom(models.Model):
+
+    STATUS = Choices(
+        (0, 'new', "New"),
+        (10, 'active', "Active"),
+    )
+    SUBJECT = Choices(
+        (110, 'ps', 'English'),
+        (120, 'ps', 'History'),
+        (130, 'ps', 'Mathematics'),
+        (140, 'ps', 'Science'),
+        (150, 'ps', 'Art'),
+        (160, 'ps', 'Music'),
+        (170, 'ps', 'PE'),
+        (180, 'ps', 'Other'),
+    )
+    id = HashidAutoField(
+        primary_key=True,
+    )
+    name = models.CharField(
+        max_length=255,
+        blank=False,
+    )
+    description = models.TextField(
+        blank=True,
+    )
+    status = models.IntegerField(
+        blank=False,
+        choices=STATUS,
+        default=STATUS.new,
+    )
+    subjects = MultiSelectField(
+        choices=SUBJECT,
+        null=True,
+    )
+    venue = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    address = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    city = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    state = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    zipcode = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    county = models.CharField(
+        max_length=255,
+        blank=True,
+    )
+    phone = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    lat = models.DecimalField(
+        max_digits=10,
+        decimal_places=6,
+        null=True,
+        blank=True,
+    )
+    lon = models.DecimalField(
+        max_digits=10,
+        decimal_places=6,
+        null=True,
+        blank=True,
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+    teacher = models.ForeignKey(
+        'Teacher',
+        on_delete=models.SET_NULL,
+        related_name='classrooms',
+        null=True,
+    )
+    cohort = models.ForeignKey(
+        'Cohort',
+        on_delete=models.SET_NULL,
+        related_name='classrooms',
+        null=True,
+    )
+
+    def __str__(self):
+        return "{0} - {1}".format(
+            self.teacher,
+            self.cohort,
+        )
+
+    def location(self):
+        return(self.lat, self.lon)
+
+    def should_index(self):
+        if self.status == self.STATUS.active:
+            return True
+        return False
+
+
 class Contact(models.Model):
     ROLE = Choices(
         (410, 'super', 'Superintendent'),
@@ -630,6 +815,12 @@ class Student(models.Model):
         'app.School',
         related_name='students',
         on_delete=models.CASCADE,
+    )
+    cohort = models.ForeignKey(
+        'Cohort',
+        related_name='students',
+        on_delete=models.SET_NULL,
+        null=True,
     )
 
     def __str__(self):
