@@ -21,6 +21,7 @@ urlpatterns = [
     path('logout', views.logout, name='logout'),
 
     # Account
+    path('dashboard', views.dashboard, name='dashboard',),
     path('account', views.account, name='account',),
     path('pending', views.pending, name='pending',),
     path('teacher', views.teacher, name='teacher',),

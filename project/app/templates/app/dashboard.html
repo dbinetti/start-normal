@@ -1,0 +1,84 @@
+{% extends 'app/base.html' %}
+
+{% load bootstrap4 %}
+{% load humanize %}
+
+{% block title %}Your Dashboard{% endblock title %}
+{% block header %}Your Dashboard{% endblock header %}
+
+{% block content %}
+
+  <section class='mt-2 mt-5'>
+    <div class='card'>
+      <div class='card-header'>
+        <h4>Dashboard</h4>
+      </div>
+      <div class='card-body'>
+        {% if parent %}
+          <section class='my-5'>
+            <h5>
+              Personal Information
+            </h5>
+            <ul class='list-unstyled'>
+              <li>{{user.name}}</li>
+              <li>{{user.email}}</li>
+            </ul>
+          </section>
+          <section class='my-5'>
+            <h5>
+              Parent Information
+            </h5>
+            <table class='table'>
+              <thead>
+                <tr>
+                  <th>
+                    School
+                  </th>
+                  <th>
+                    Grade
+                  </th>
+                  <th>
+                    Cohort
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for student in students %}
+                  <tr>
+                    <td>
+                      {{student.school}}
+                    </td>
+                    <td>
+                      {{student.get_grade_display}}
+                    </td>
+                    <td>
+                      {{student.cohort}}
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </section>
+        {% else %}
+        <p>(Not a Parent</p>
+        {% endif %}
+        <section class='my-5'>
+          <h5>
+            Teacher Information
+          </h5>
+          {% if teacher %}
+            <ul class='list-unstyled'>
+              <li>{{teacher.school.city}}</li>
+              <li>{{teacher.is_credential|yesno}}</li>
+              <li>{{teacher.kinds}}</li>
+              <li>{{teacher.subjects}}</li>
+              <li>{{teacher.notes}}</li>
+            </ul>
+          {% else %}
+            (Not a Teacher)
+          {% endif %}
+        </section>
+      </div>
+    </div>
+  </section>
+{% endblock content %}

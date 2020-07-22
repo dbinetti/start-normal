@@ -2,16 +2,6 @@
 # Standard Library
 import json
 
-# Third-Party
-import django_rq
-import requests
-import shortuuid
-from auth0.v3.authentication import Database
-from auth0.v3.authentication import Logout
-from auth0.v3.exceptions import Auth0Error
-from dal import autocomplete
-from django_rq import job
-
 from django import forms
 from django.conf import settings
 from django.contrib import messages
@@ -33,6 +23,16 @@ from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.urls import reverse_lazy
+
+# First-Party
+import django_rq
+import requests
+import shortuuid
+from auth0.v3.authentication import Database
+from auth0.v3.authentication import Logout
+from auth0.v3.exceptions import Auth0Error
+from dal import autocomplete
+from django_rq import job
 
 # Local
 from .forms import AccountForm
@@ -121,7 +121,32 @@ def sitemap(request):
         content_type="text/plain",
     )
 
+
 # Account
+@login_required
+def dashboard(request):
+    user = request.user
+    parent = getattr(user, 'parent', None)
+    teacher = getattr(user, 'teacher', None)
+    students = Student.objects.filter(
+        parent=parent,
+    )
+    # invitations = Invitation.objects.filter(
+    #     inviter=user,
+    # )
+    return render(
+        request,
+        'app/dashboard.html',
+        context={
+            'user': user,
+            'parent': parent,
+            'teacher': teacher,
+            'students': students,
+            # 'invitations': invitations,
+        }
+    )
+
+
 @login_required
 def account(request):
     StudentFormSet.extra = 0
