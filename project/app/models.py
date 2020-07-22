@@ -1,7 +1,13 @@
 # Standard Library
 from operator import attrgetter
 
-# Third-Party
+# Django
+from django.contrib.auth.models import AbstractBaseUser
+from django.db import models
+from django.db.models.constraints import UniqueConstraint
+from django.utils.text import slugify
+
+# First-Party
 import shortuuid
 from autoslug import AutoSlugField
 from hashid_field import HashidAutoField
@@ -10,12 +16,6 @@ from mptt.models import MPTTModel
 from mptt.models import TreeForeignKey
 from multiselectfield import MultiSelectField
 from shortuuidfield import ShortUUIDField
-
-# Django
-from django.contrib.auth.models import AbstractBaseUser
-from django.db import models
-from django.db.models.constraints import UniqueConstraint
-from django.utils.text import slugify
 
 # Local
 from .managers import UserManager
@@ -821,6 +821,7 @@ class Student(models.Model):
         related_name='students',
         on_delete=models.SET_NULL,
         null=True,
+        blank=True,
     )
 
     def __str__(self):

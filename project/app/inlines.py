@@ -53,6 +53,7 @@ class StudentInline(admin.TabularInline):
     model = Student
     fields = [
         'parent',
+        'cohort',
         'school',
         'grade',
     ]
@@ -67,6 +68,7 @@ class StudentInline(admin.TabularInline):
         # 'collapse',
     ]
     autocomplete_fields = [
+        'cohort',
         'parent',
         'school',
     ]
