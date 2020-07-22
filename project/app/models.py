@@ -14,6 +14,7 @@ from hashid_field import HashidAutoField
 from model_utils import Choices
 from mptt.models import MPTTModel
 from mptt.models import TreeForeignKey
+from multiselectfield import MultiSelectField
 from shortuuidfield import ShortUUIDField
 
 # Local
@@ -176,6 +177,49 @@ class Teacher(models.Model):
     id = HashidAutoField(
         primary_key=True,
     )
+    is_credential = models.BooleanField(
+        default=False,
+        help_text="""Are you credentialed?""",
+    )
+    KIND = Choices(
+        (510, 'ps', 'Preschool'),
+        (520, 'elem', 'Elementary'),
+        (530, 'intmidjr', 'Intermediate/Middle/Junior High'),
+        (540, 'hs', 'High School'),
+    )
+    kinds = MultiSelectField(
+        choices=KIND,
+        null=True,
+        help_text="""What levels do you teach?""",
+    )
+    SUBJECT = Choices(
+        (110, 'ps', 'English'),
+        (120, 'ps', 'History'),
+        (130, 'ps', 'Mathematics'),
+        (140, 'ps', 'Science'),
+        (150, 'ps', 'Art'),
+        (160, 'ps', 'Music'),
+        (170, 'ps', 'PE'),
+        (180, 'ps', 'Other'),
+    )
+    subjects = MultiSelectField(
+        choices=SUBJECT,
+        null=True,
+        help_text="""What subjects do you teach?""",
+    )
+    school = models.ForeignKey(
+        'app.School',
+        related_name='teachers',
+        on_delete=models.SET_NULL,
+        null=True,
+        help_text="""Pick a near where you'd like to teach (dosn't have to be your own school; this is just for location.)""",
+    )
+    notes = models.TextField(
+        max_length=512,
+        blank=True,
+        default='',
+        help_text="""Please add anything else you think we should know.""",
+    )
     created = models.DateTimeField(
         auto_now_add=True,
     )
@@ -186,12 +230,6 @@ class Teacher(models.Model):
         'app.User',
         on_delete=models.CASCADE,
         related_name='teacher',
-    )
-    notes = models.TextField(
-        max_length=512,
-        blank=True,
-        default='',
-        help_text="""If you are a teacher please add some notes here...""",
     )
     def __str__(self):
         return str(self.user)

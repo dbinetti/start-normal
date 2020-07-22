@@ -36,6 +36,7 @@ django-autoslug = "*"
 django-mptt = "*"
 django-autocomplete-light = "*"
 nameparser = "*"
+django-multiselectfield = "*"
 
 [requires]
 python_full_version = "3.8.4"

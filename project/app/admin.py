@@ -102,6 +102,10 @@ class TeacherAdmin(admin.ModelAdmin):
     save_on_top = True
     fields = [
         'user',
+        'is_credential',
+        'kinds',
+        'subjects',
+        'school',
         'notes',
     ]
     list_display = [

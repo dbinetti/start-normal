@@ -24,8 +24,8 @@ urlpatterns = [
     path('account', views.account, name='account',),
     path('pending', views.pending, name='pending',),
     path('split', views.split, name='split',),
-    path('teacher', views.welcome_teacher, name='welcome-teacher',),
-    path('parent', views.welcome_parent, name='welcome-parent',),
+    path('teacher', views.teacher, name='teacher',),
+    path('parent', views.parent, name='parent',),
     path('share', views.share, name='share',),
     path('delete', views.delete, name='delete',),
 

@@ -116,12 +116,39 @@ class AccountForm(forms.ModelForm):
 
 
 class TeacherForm(forms.ModelForm):
+
+    school = forms.ModelChoiceField(
+        queryset=School.objects.all(),
+        widget=autocomplete.ModelSelect2(
+            url='school-autocomplete',
+            attrs={
+                'data-container-css-class': '',
+                'data-close-on-select': 'false',
+                'data-scroll-after-select': 'true',
+                'data-placeholder': 'Nearby School',
+                'data-minimum-input-length': 3,
+            },
+        ),
+        help_text="Pick a school near where you'd like to teach (dosn't have to be your own school; this is just for location.)",
+    )
+
     class Meta:
         model = Teacher
         fields = [
+            'is_credential',
+            'kinds',
+            'subjects',
+            'school',
             'notes',
         ]
-
+        labels = {
+            "is_credential": "Credentialed?",
+            "kinds": "School Level",
+            "subjects": "School Subjects",
+        }
+        help_texts = {
+            "is_credential": "If you are credentialed please check the box.",
+        }
 
 
 class ContactForm(forms.ModelForm):

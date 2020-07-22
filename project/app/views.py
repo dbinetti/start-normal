@@ -201,7 +201,7 @@ def split(request):
     )
 
 @login_required
-def welcome_teacher(request):
+def teacher(request):
     user = request.user
     teacher, created = Teacher.objects.get_or_create(
         user=user,
@@ -224,14 +224,14 @@ def welcome_teacher(request):
         )
     return render(
         request,
-        'app/account/welcome_teacher.html',
+        'app/account/teacher.html',
         context = {
             'form': form,
         }
     )
 
 @login_required
-def welcome_parent(request):
+def parent(request):
     StudentFormSet.extra = 5
     user = request.user
     try:
@@ -266,7 +266,7 @@ def welcome_parent(request):
         )
     return render(
         request,
-        'app/account/welcome_parent.html',
+        'app/account/parent.html',
         context = {
             'formset': formset,
         },
@@ -488,7 +488,7 @@ def add_school(request):
             request,
             "School Submitted!",
         )
-        return redirect('welcome-parent')
+        return redirect('parent')
     return render(
         request,
         'app/account/add_school.html',
