@@ -15,6 +15,10 @@
       </div>
       <div class='card-body'>
         <p>
+          <h5>
+            Personal Information
+          </h5>
+
           <form method='post' action='{% url "account" %}' class=' form-horizontal' role='form'>
             {{formset.management_form}}
             {% csrf_token %}
@@ -26,87 +30,83 @@
             <div class='form-group'>
               <input disabled='true' type="text" name="email" value="{{user.email}}" class="form-control" id="id_email">
             </div>
-            {% comment %}
-            <div class="form-group">
-              {% bootstrap_field form.message show_help=False show_label=False%}
-            </div>
-            <div class='row'>
-              <div class="form-group form-check-inline">
-                {% bootstrap_field form.is_public show_help=False show_label=False size='large'%}
-              </div>
-              <div class="form-group form-check-inline">
-                {% bootstrap_field form.is_subscribe show_help=False show_label=False size='large'%}
-              </div>
-            </div>
-            <div class='row'>
-              <div class="form-group form-check-inline">
-                {% bootstrap_field form.is_volunteer show_help=False show_label=False size='large'%}
-              </div>
-              <div class="form-group form-check-inline">
-                {% bootstrap_field form.is_teacher show_help=False show_label=False size='large'%}
-              </div>
-              <div class="form-group form-check-inline">
-                {% bootstrap_field form.is_doctor show_help=False show_label=False size='large'%}
-              </div>
-            </div>
-            {% endcomment %}
-            <div class='mt-5'>
+            <div class='my-5'>
               <h5>
-                Student Schools and Grades&nbsp;&nbsp;<span role='button' id="add_more" class='badge badge-success'>Add Another Student</span>
+                Parent Information
               </h5>
-            </div>
-
-            <div class='table-responsive-lg mb-5'>
-              <table class='table table-sm'>
-                <thead>
-                  <tr>
-                    <th>
-                      School
-                    </th>
-                    <th>
-                      Grade
-                    </th>
-                    <th>
-                      Remove?
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <div id="form_set">
-                    {% for form in formset %}
+              {% if form %}
+                <div class='table-responsive-lg mb-5'>
+                  <table class='table table-sm'>
+                    <thead>
                       <tr>
-                        <td>{% bootstrap_field form.school show_help=False show_label=False size='small' placeholder='Search California Schools....'%}</td>
-                        <td>{% bootstrap_field form.grade show_help=False show_label=False size='small'%}</td>
-                        <td>{{form.DELETE}}</td>
+                        <th>
+                          School
+                        </th>
+                        <th>
+                          Grade
+                        </th>
+                        <th>
+                          Remove?
+                        </th>
                       </tr>
-                      {{form.id}}
-                    {% endfor %}
+                    </thead>
+                    <tbody>
+                      <div id="form_set">
+                        {% for form in formset %}
+                          <tr>
+                            <td>{% bootstrap_field form.school show_help=False show_label=False size='small' placeholder='Search California Schools....'%}</td>
+                            <td>{% bootstrap_field form.grade show_help=False show_label=False size='small'%}</td>
+                            <td>{{form.DELETE}}</td>
+                          </tr>
+                          {{form.id}}
+                        {% endfor %}
+                      </div>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <td colspan=3>
+                          <span role='button' id="add_more" class='badge badge-success'>Add Another Student</span>&nbsp;<small class='text-muted'>Don't forget to click "Save" below!</small>
+                        </td>
+                      </tr>
+                    </tfoot>
+                  </table>
+                  <div id="empty_form" style="display:none">
+                    <table class='no_error table table-sm'>
+                      <tr>
+                        <td>{% bootstrap_field formset.empty_form.school show_help=False show_label=False size='small' placeholder='Search California Schools....'%}</td>
+                        <td>{% bootstrap_field formset.empty_form.grade show_help=False show_label=False size='small'%}</td>
+                        {{formset.empty_form.id}}
+                      </tr>
+                    </table>
                   </div>
-                </tbody>
-              </table>
-              <div id="empty_form" style="display:none">
-                <table class='no_error table table-sm'>
-                  <tr>
-                    <td>{% bootstrap_field formset.empty_form.school show_help=False show_label=False size='small' placeholder='Search California Schools....'%}</td>
-                    <td>{% bootstrap_field formset.empty_form.grade show_help=False show_label=False size='small'%}</td>
-                    <td>{{formset.empty_form.DELETE}}</td>
-                    {{formset.empty_form.id}}
-                  </tr>
-                </table>
-              </div>
+                </div>
+              {% else %}
+                <div class='my-5'>
+                  <a href='{% url "create-parent" %}' class='btn btn-outline-success'>Add Me as Parent</a>
+                </div>
+              {% endif %}
             </div>
 
             <div class='my-5'>
               <h5>
-                  Teacher Notes
+                Teacher Information
               </h5>
-              <p>
-              </p>
-              <div class='form-group'>
-                {% bootstrap_field teacher_form.notes show_help=False show_label=False placeholder="If you're a teacher please add some notes here..."%}
-              </div>
+              {% if teacher_form %}
+                {% bootstrap_form_errors teacher_form %}
+                <strong>Location</strong>
+                {% bootstrap_field teacher_form.school show_help=True show_label=False size='large' placeholder='Type to search....' %}
+                {% bootstrap_field teacher_form.is_credential show_label=True show_help=True %}
+                <strong>School Level</strong>
+                {% bootstrap_field teacher_form.kinds show_label=False show_help=True %}
+                <strong>School Subjects</strong>
+                {% bootstrap_field teacher_form.subjects show_label=False show_help=True %}
+                {% bootstrap_field teacher_form.notes show_label=True show_help=True placeholder='Notes (kept private)'  %}
+              {% else %}
+                <div>
+                  <a href='{% url "create-teacher" %}' class='btn btn-outline-success'>Add Me as Teacher</a>
+                </div>
+              {% endif %}
             </div>
-
             {% buttons %}
               <button type="submit" class="btn btn-primary btn-lg btn-block">
                 Save Account Details

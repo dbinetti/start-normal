@@ -1,9 +1,9 @@
 # Django
+# Third-Party
+from mptt.admin import MPTTModelAdmin
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as UserAdminBase
-
-# First-Party
-from mptt.admin import MPTTModelAdmin
 
 # Local
 from .forms import UserChangeForm
@@ -122,6 +122,7 @@ class TeacherAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = [
         'user',
+        'school',
     ]
     inlines = [
         # StudentInline,
