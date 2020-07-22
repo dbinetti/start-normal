@@ -2,6 +2,16 @@
 # Standard Library
 import json
 
+# Third-Party
+import django_rq
+import requests
+import shortuuid
+from auth0.v3.authentication import Database
+from auth0.v3.authentication import Logout
+from auth0.v3.exceptions import Auth0Error
+from dal import autocomplete
+from django_rq import job
+
 from django import forms
 from django.conf import settings
 from django.contrib import messages
@@ -23,16 +33,6 @@ from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.urls import reverse_lazy
-
-# First-Party
-import django_rq
-import requests
-import shortuuid
-from auth0.v3.authentication import Database
-from auth0.v3.authentication import Logout
-from auth0.v3.exceptions import Auth0Error
-from dal import autocomplete
-from django_rq import job
 
 # Local
 from .forms import AccountForm
@@ -175,7 +175,7 @@ def account(request):
         )
     return render(
         request,
-        'app/account/account.html', {
+        'app/account.html', {
             'user': user,
             'form': form,
             'teacher_form': teacher_form,
@@ -187,17 +187,7 @@ def account(request):
 def pending(request):
     return render(
         request,
-        'app/account/pending.html',
-    )
-
-@login_required
-def split(request):
-    user = request.user
-    if hasattr(user, 'teacher') or hasattr(user, 'parent'):
-        return redirect('account')
-    return render(
-        request,
-        'app/account/split.html',
+        'app/pending.html',
     )
 
 @login_required
@@ -224,7 +214,7 @@ def teacher(request):
         )
     return render(
         request,
-        'app/account/teacher.html',
+        'app/teacher.html',
         context = {
             'form': form,
         }
@@ -266,7 +256,7 @@ def parent(request):
         )
     return render(
         request,
-        'app/account/parent.html',
+        'app/parent.html',
         context = {
             'formset': formset,
         },
@@ -276,7 +266,7 @@ def parent(request):
 def share(request):
     return render(
         request,
-        'app/account/share.html',
+        'app/share.html',
     )
 
 @login_required
@@ -295,7 +285,7 @@ def delete(request):
         form = DeleteForm()
     return render(
         request,
-        'app/account/delete.html',
+        'app/delete.html',
         {'form': form,},
     )
 
@@ -303,12 +293,15 @@ def delete(request):
 
 # Authentication
 def login(request):
-    redirect_uri = request.build_absolute_uri('callback')
+    redirect_uri = request.build_absolute_uri(reverse('callback'))
+    state = "{0}".format(shortuuid.uuid())
+    request.session['state'] = state
     params = {
         'response_type': 'code',
         'client_id': settings.AUTH0_CLIENT_ID,
         'scope': 'openid profile email',
         'redirect_uri': redirect_uri,
+        'state': state,
     }
     url = requests.Request(
         'GET',
@@ -317,13 +310,19 @@ def login(request):
     ).prepare().url
     return redirect(url)
 
-def signup(request):
-    redirect_uri = request.build_absolute_uri('callback')
+def signup(request, kind):
+    redirect_uri = request.build_absolute_uri(reverse('callback'))
+    state = "{0}{1}".format(
+        kind,
+        shortuuid.uuid()
+    )
+    request.session['state'] = state
     params = {
         'response_type': 'code',
         'client_id': settings.AUTH0_CLIENT_ID,
         'scope': 'openid profile email',
         'redirect_uri': redirect_uri,
+        'state': state,
         'action': 'signup',
     }
     url = requests.Request(
@@ -334,16 +333,24 @@ def signup(request):
     return redirect(url)
 
 def callback(request):
-    code = request.GET.get('code', '')
+    # Reject if state doesn't match
+    browser_state = request.session.get('state', None)
+    server_state = request.GET.get('state', None)
+    if browser_state != server_state:
+        return HttpResponse(status=400)
+    if server_state.startswith('teacher'):
+        destination = 'teacher'
+    elif server_state.startswith('parent'):
+        destination = 'parent'
+    else:
+        destination = 'account'
+    code = request.GET.get('code', None)
     if not code:
         return HttpResponse(status=400)
-    json_header = {
-        'content-type': 'application/json',
-    }
     token_url = 'https://{0}/oauth/token'.format(
         settings.AUTH0_DOMAIN,
     )
-    redirect_uri = request.build_absolute_uri('callback')
+    redirect_uri = request.build_absolute_uri(reverse('callback'))
     token_payload = {
         'client_id': settings.AUTH0_CLIENT_ID,
         'client_secret': settings.AUTH0_CLIENT_SECRET,
@@ -354,7 +361,9 @@ def callback(request):
     token_info = requests.post(
         token_url,
         data=json.dumps(token_payload),
-        headers=json_header
+        headers={
+            'content-type': 'application/json',
+        }
     ).json()
     user_url = 'https://{0}/userinfo?access_token={1}'.format(
         settings.AUTH0_DOMAIN,
@@ -367,14 +376,14 @@ def callback(request):
     user = authenticate(request, **payload)
     if user:
         log_in(request, user)
-        return redirect('split')
+        return redirect(destination)
     return HttpResponse(status=400)
 
 def logout(request):
     log_out(request)
     params = {
         'client_id': settings.AUTH0_CLIENT_ID,
-        'return_to': request.build_absolute_uri('index'),
+        'return_to': request.build_absolute_uri(reverse('index')),
     }
     logout_url = requests.Request(
         'GET',
@@ -420,7 +429,7 @@ def informed(request):
         form = SubscribeForm()
     return render(
         request,
-        'app/informed/informed.html',
+        'app/informed.html',
         context = {
             'form': form,
             'app_id': settings.ALGOLIA['APPLICATION_ID'],
@@ -455,7 +464,7 @@ def school(request, slug):
     ).order_by('role')
     return render(
         request,
-        'app/involved/school.html',
+        'app/school.html',
         context={
             'school': school,
             'user_reports': user_reports,
@@ -468,7 +477,7 @@ def school(request, slug):
 def search(request):
     return render(
         request,
-        'app/involved/search.html',
+        'app/search.html',
         context={
             'app_id': settings.ALGOLIA['APPLICATION_ID'],
             'search_key': settings.ALGOLIA['SEARCH_KEY'],
@@ -491,7 +500,7 @@ def add_school(request):
         return redirect('parent')
     return render(
         request,
-        'app/account/add_school.html',
+        'app/add_school.html',
         {'form': form,},
     )
 
@@ -515,7 +524,7 @@ def add_report(request, slug):
         return redirect('school', slug)
     return render(
         request,
-        'app/involved/report.html',
+        'app/report.html',
         {'form': form,},
     )
 
@@ -539,7 +548,7 @@ def add_contact(request, slug):
         return redirect('school', slug)
     return render(
         request,
-        'app/involved/contact.html',
+        'app/contact.html',
         {'form': form,},
     )
 
@@ -549,11 +558,11 @@ def add_contact(request, slug):
 def morrow(request):
     return render(
         request,
-        'app/informed/morrow.html',
+        'app/morrow.html',
     )
 
 def thomas(request):
     return render(
         request,
-        'app/informed/thomas.html',
+        'app/thomas.html',
     )

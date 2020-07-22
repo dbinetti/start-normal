@@ -13,11 +13,6 @@ class Auth0Backend(ModelBackend):
         username = kwargs.get('username', None)
         email = kwargs.get('email', None)
         name = kwargs.get('name', None)
-        # TODO CSRF attack mitigation
-        # browser_state = kwargs.get('state', None)
-        # session_state = request.session.get('state', None)
-        # if browser_state != session_state:
-        #     return None
         try:
             user = User.objects.get(
                 username=username,

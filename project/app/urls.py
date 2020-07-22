@@ -16,14 +16,13 @@ urlpatterns = [
 
     # Authentication
     path('login', views.login, name='login'),
-    path('signup', views.signup, name='signup'),
+    path('signup/<kind>', views.signup, name='signup'),
     path('callback', views.callback, name='callback'),
     path('logout', views.logout, name='logout'),
 
     # Account
     path('account', views.account, name='account',),
     path('pending', views.pending, name='pending',),
-    path('split', views.split, name='split',),
     path('teacher', views.teacher, name='teacher',),
     path('parent', views.parent, name='parent',),
     path('share', views.share, name='share',),
