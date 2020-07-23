@@ -292,28 +292,15 @@ def create_homeroom(request, student_id):
     if created:
         student = Student.objects.get(id=student_id)
         homeroom.grade = student.grade
+        homeroom.name = "{0} {1} Homeroom".format(
+            student.school.name,
+            student.get_grade_display(),
+        )
         homeroom.save()
         student.homeroom = homeroom
         student.save()
-    if request.method ==  'POST':
-        form = HomeroomForm(
-            request.POST,
-            instance=homeroom,
-        )
-        if form.is_valid():
-            form.save()
-            return redirect('homeroom', homeroom.id)
-    else:
-        form = HomeroomForm(
-            instance=homeroom,
-        )
-    return render(
-        request,
-        'app/homeroom.html',
-        context = {
-            'form': form,
-        }
-    )
+        return redirect('homeroom', homeroom.id)
+
 
 @login_required
 def parent(request):

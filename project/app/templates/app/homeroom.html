@@ -9,18 +9,23 @@
 {% block content %}
   {% if request.user.is_authenticated %}
   <section class='my-5'>
-    <p class='lead'>
-      The Homeroom is a stable cohort of students you choose.
+    <p class='lead mb-5'>
+      The Homeroom is a stable cohort of students you choose to learn with your child.
     </p>
     <p>
-      Invite other parents to have their children join your Homeroom by sending them this link:
+      You can change the name, description, and max size of your Homeroom below.
+    </p>
+    <p>
+      Your student is automatically a member of this Homeroom; invite other students by sending them this private invite-only link:
     </p>
     <p>
       <a href='{{homeroom_link}}'>{{homeroom_link}}</a>
     </p>
     <p>
-      We'll keep you updated as they join, and you can adjust your Homeroom at any time.  When you get to five students, we'll find a teacher to provide instruction to your Homeroom.
+      If they decide to join, we'll add them to the Homeroom. Once you get to five students, we'll find a teacher to provide instruction to this group and arrange the final details of how and when instruction will begin.
     </p>
+    <p>
+      I'm building out functionality on an hourly basis, so please don't hestitate to reach out with questions, concerns, ideas or any other needs and I'll do my best to help as best I can.  Call/text my cell at 415.713.2126 or email me at <a href='mailto:dbinetti@startnormal.com'>dbinetti@startnormal.com</a>.
   </section>
   <section class='mt-2 mt-5'>
     <div class='card'>
@@ -82,7 +87,7 @@
                     {{student.parent}}
                   </td>
                   <td>
-                    {{student.parent.user.email}}
+                    <a href='mailto:{{student.parent.user.email}}'>{{student.parent.user.email}}</a>
                   </td>
                   <td>
                     {{student.get_grade_display}}
