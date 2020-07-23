@@ -1,0 +1,38 @@
+{% extends 'app/base.html' %}
+
+{% load bootstrap4 %}
+{% load humanize %}
+
+{% block title %}Cohort{% endblock title %}
+{% block header %}Cohort{% endblock header %}
+
+{% block content %}
+
+  <section class='mt-2 mt-5'>
+    <div class='card'>
+      <div class='card-header'>
+        <h4>Cohort</h4>
+      </div>
+      <div class='card-body'>
+        <h5>
+          Cohort Details
+        </h5>
+        <p>
+          <form method='post' role='form'>
+            {% csrf_token %}
+            {% bootstrap_form_errors form %}
+            {% bootstrap_field form.name %}
+            {% bootstrap_field form.grade %}
+            {% buttons %}
+              <button type="submit" class="btn btn-primary btn-lg btn-block">
+                Save Cohort Details
+            {% endbuttons %}
+          </form>
+        </p>
+      </div>
+    </div>
+  </section>
+  <section class='mt-2 ml-2'>
+    {# <a href='{% url "delete" %}'><span class='text-danger'>Delete Account</span></a> #}
+  </section>
+{% endblock content %}

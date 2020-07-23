@@ -731,6 +731,77 @@ class Contact(models.Model):
         return str(self.name)
 
 
+class Invitation(models.Model):
+    id = HashidAutoField(
+        primary_key=True,
+    )
+    STATUS = Choices(
+        (0, 'new', 'New'),
+        (10, 'sent', 'Sent'),
+        (20, 'accepted', 'Accepted'),
+    )
+    GRADE = Choices(
+        (2, 'tk', 'Transitional Kindergarten'),
+        (5, 'k', 'Kindergarten'),
+        (10, 'first', 'First  Grade'),
+        (20, 'second', 'Second  Grade'),
+        (30, 'third', 'Third  Grade'),
+        (40, 'fourth', 'Fourth  Grade'),
+        (50, 'fifth', 'Fifth  Grade'),
+        (60, 'sixth', 'Sixth  Grade'),
+        (70, 'seventh', 'Seventh Grade'),
+        (80, 'eighth', 'Eighth Grade'),
+        (90, 'ninth', 'Ninth Grade'),
+        (100, 'tenth', 'Tenth Grade'),
+        (110, 'eleventh', 'Eleventh Grade'),
+        (120, 'twelfth', 'Twelfth Grade'),
+        (130, 'fresh', 'Freshman'),
+        (140, 'soph', 'Sophomore'),
+    )
+    grade = models.IntegerField(
+        blank=False,
+        choices=GRADE,
+    )
+    status = models.IntegerField(
+        blank=False,
+        choices=STATUS,
+        default=STATUS.new,
+    )
+    parent_name = models.CharField(
+        max_length=255,
+        blank=False,
+    )
+    parent_email = models.EmailField(
+        blank=False,
+    )
+    student_name = models.CharField(
+        max_length=255,
+        blank=False,
+    )
+    phone = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+    inviter = models.ForeignKey(
+        'User',
+        on_delete=models.CASCADE,
+        related_name='invitations',
+    )
+    cohort = models.ForeignKey(
+        'Cohort',
+        related_name='invitations',
+        on_delete=models.CASCADE,
+    )
+    def __str__(self):
+        return str(self.id)
+
 class Report(models.Model):
     STATUS = Choices(
         (0, 'new', 'New'),

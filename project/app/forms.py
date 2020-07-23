@@ -10,6 +10,7 @@ from dal import autocomplete
 
 # Local
 from .models import Account
+from .models import Cohort
 from .models import Contact
 from .models import District
 from .models import Parent
@@ -149,6 +150,16 @@ class TeacherForm(forms.ModelForm):
         help_texts = {
             "is_credential": "If you are credentialed please check the box.",
         }
+
+
+class CohortForm(forms.ModelForm):
+    class Meta:
+        model = Cohort
+        fields = [
+            'name',
+            'description',
+            'grade',
+        ]
 
 
 class ContactForm(forms.ModelForm):

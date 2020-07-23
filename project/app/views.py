@@ -36,6 +36,7 @@ from django_rq import job
 
 # Local
 from .forms import AccountForm
+from .forms import CohortForm
 from .forms import ContactForm
 from .forms import DeleteForm
 from .forms import ReportForm
@@ -46,6 +47,7 @@ from .forms import SubscribeForm
 from .forms import TeacherForm
 from .forms import UserCreationForm
 from .models import Account
+from .models import Cohort
 from .models import Contact
 from .models import District
 from .models import Entry
@@ -317,6 +319,20 @@ def parent(request):
         'app/parent.html',
         context = {
             'formset': formset,
+        },
+    )
+
+@login_required
+def cohort(request, slug):
+    cohort = Cohort.objects.get(slug=slug)
+    is_editable = cohort.owner == request.user
+    form = CohortForm(instance=cohort)
+    return render(
+        request,
+        'app/cohort.html', {
+            'cohort': cohort,
+            'form': form,
+            'is_editable': is_editable,
         },
     )
 
