@@ -20,8 +20,8 @@
           </h5>
 
           <form method='post' action='{% url "account" %}' class=' form-horizontal' role='form'>
-            {{formset.management_form}}
             {% csrf_token %}
+            {{formset.management_form}}
             {% bootstrap_formset_errors formset %}
             {% bootstrap_form_errors form %}
             <div class='form-group'>

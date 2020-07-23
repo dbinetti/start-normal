@@ -731,7 +731,7 @@ class Contact(models.Model):
         return str(self.name)
 
 
-class Invitation(models.Model):
+class Invite(models.Model):
     id = HashidAutoField(
         primary_key=True,
     )
@@ -759,8 +759,9 @@ class Invitation(models.Model):
         (140, 'soph', 'Sophomore'),
     )
     grade = models.IntegerField(
-        blank=False,
+        blank=True,
         choices=GRADE,
+        null=True,
     )
     status = models.IntegerField(
         blank=False,
@@ -792,11 +793,11 @@ class Invitation(models.Model):
     inviter = models.ForeignKey(
         'User',
         on_delete=models.CASCADE,
-        related_name='invitations',
+        related_name='invites',
     )
     cohort = models.ForeignKey(
         'Cohort',
-        related_name='invitations',
+        related_name='invites',
         on_delete=models.CASCADE,
     )
     def __str__(self):

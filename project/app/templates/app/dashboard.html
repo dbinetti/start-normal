@@ -52,7 +52,11 @@
                       {{student.get_grade_display}}
                     </td>
                     <td>
-                      {{student.cohort}}
+                      {% if student.cohort %}
+                        <a href='{% url "cohort" student.cohort.id %}'>{{student.cohort}}</a>
+                      {% else %}
+                        <a href='{% url "create-cohort" student %}'>Create Cohort</a>
+                      {% endif %}
                     </td>
                   </tr>
                 {% endfor %}

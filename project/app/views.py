@@ -39,6 +39,7 @@ from .forms import AccountForm
 from .forms import CohortForm
 from .forms import ContactForm
 from .forms import DeleteForm
+from .forms import InviteFormSet
 from .forms import ReportForm
 from .forms import SchoolForm
 from .forms import SignupForm
@@ -133,7 +134,7 @@ def dashboard(request):
     students = Student.objects.filter(
         parent=parent,
     )
-    # invitations = Invitation.objects.filter(
+    # invites = Invite.objects.filter(
     #     inviter=user,
     # )
     return render(
@@ -144,7 +145,7 @@ def dashboard(request):
             'parent': parent,
             'teacher': teacher,
             'students': students,
-            # 'invitations': invitations,
+            # 'invites': invites,
         }
     )
 
@@ -281,6 +282,27 @@ def create_parent(request):
     return redirect('account')
 
 @login_required
+def create_cohort(request, student):
+    user = request.user
+    student = Student.objects.get(id=student)
+    if request.method == 'POST':
+
+        form  = CohortForm(request.POST or None)
+    if form.is_valid():
+        cohort = form.save(commit=False)
+        cohort.student = student
+        cohort.save()
+        return redirect('cohort', cohort.id)
+    return render(
+        request,
+        'app/cohort.html',
+        context = {
+            'form': form,
+            'student': student,
+        }
+    )
+
+@login_required
 def parent(request):
     StudentFormSet.extra = 5
     user = request.user
@@ -323,15 +345,53 @@ def parent(request):
     )
 
 @login_required
-def cohort(request, slug):
-    cohort = Cohort.objects.get(slug=slug)
+def cohort(request, id):
+    user = request.user
+    cohort = Cohort.objects.get(id=id)
     is_editable = cohort.owner == request.user
-    form = CohortForm(instance=cohort)
+    invites = cohort.invites.order_by('-created')
+    if request.method == "POST":
+        form = CohortForm(
+            request.POST,
+            instance=cohort,
+            prefix='cohort',
+        )
+        # formset = InviteFormSet(
+        #     request.POST,
+        #     request.FILES,
+        #     instance=cohort,
+        #     prefix='invites',
+        # )
+        # if form.is_valid() and formset.is_valid():
+            # form.save()
+            # for f in formset:
+            #     invite = f.save(commit=False)
+            #     invite.inviter = user
+            #     invite.save()
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                'Saved!',
+            )
+            return redirect('cohort', cohort.id)
+    else:
+        form = CohortForm(
+            instance=cohort,
+            prefix='cohort',
+        )
+        # formset = InviteFormSet(
+        #     instance=cohort,
+        #     prefix='invites',
+        # )
+
     return render(
         request,
         'app/cohort.html', {
             'cohort': cohort,
+            'invites': invites,
             'form': form,
+            # 'formset': formset,
             'is_editable': is_editable,
         },
     )

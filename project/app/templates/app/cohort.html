@@ -22,7 +22,66 @@
             {% csrf_token %}
             {% bootstrap_form_errors form %}
             {% bootstrap_field form.name %}
-            {% bootstrap_field form.grade %}
+
+            {% comment %}  #Formset
+            {{formset.management_form}}
+            {% bootstrap_formset_errors formset %}
+            <div class='my-5'>
+              <h5>
+                Cohort Invitations
+              </h5>
+              <div class='table-responsive-lg mb-5'>
+                <table class='table table-sm'>
+                  <thead>
+                    <tr>
+                      <th>
+                        Student Name
+                      </th>
+                      <th>
+                        Parent Name
+                      </th>
+                      <th>
+                        Parent Email
+                      </th>
+                      <th>
+                        Remove ?
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <div id="form_set">
+                      {% for form in formset %}
+                        <tr>
+                          <td>{% bootstrap_field form.student_name show_help=False show_label=False size='small' placeholder='Student Name'%}</td>
+                          <td>{% bootstrap_field form.parent_name show_help=False show_label=False size='small' placeholder='Parent Name'%}</td>
+                          <td>{% bootstrap_field form.parent_email show_help=False show_label=False size='small' placeholder='Parent Email'%}</td>
+                          <td>{{form.DELETE}}</td>
+                        </tr>
+                        {{form.id}}
+                      {% endfor %}
+                    </div>
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <td colspan=3>
+                        <span role='button' id="add_more" class='badge badge-success'>Add Another Student</span>
+                      </td>
+                    </tr>
+                  </tfoot>
+                </table>
+                <div id="empty_form" style="display:none">
+                  <table class='no_error table table-sm'>
+                    <tr>
+                      <td>{% bootstrap_field formset.empty_form.student_name show_help=False show_label=False size='small' placeholder='Student Name'%}</td>
+                      <td>{% bootstrap_field formset.empty_form.parent_name show_help=False show_label=False size='small' placeholder='Parent Name' %}</td>
+                      <td>{% bootstrap_field formset.empty_form.parent_email show_help=False show_label=False size='small' placeholder='Parent Email'%}</td>
+                      {{formset.empty_form.id}}
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+            {% endcomment %}
             {% buttons %}
               <button type="submit" class="btn btn-primary btn-lg btn-block">
                 Save Cohort Details

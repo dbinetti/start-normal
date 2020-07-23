@@ -13,6 +13,7 @@ from .models import Account
 from .models import Cohort
 from .models import Contact
 from .models import District
+from .models import Invite
 from .models import Parent
 from .models import Report
 from .models import School
@@ -42,6 +43,20 @@ StudentFormSet = inlineformset_factory(
     },
     extra=0,
     # max_num=5,
+    can_delete=True,
+)
+
+
+InviteFormSet = inlineformset_factory(
+    Cohort,
+    Invite,
+    fields=[
+        'parent_name',
+        'parent_email',
+        'student_name',
+    ],
+    extra=5,
+    max_num=5,
     can_delete=True,
 )
 
@@ -158,7 +173,6 @@ class CohortForm(forms.ModelForm):
         fields = [
             'name',
             'description',
-            'grade',
         ]
 
 
