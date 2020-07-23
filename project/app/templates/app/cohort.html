@@ -3,19 +3,19 @@
 {% load bootstrap4 %}
 {% load humanize %}
 
-{% block title %}Cohort{% endblock title %}
-{% block header %}Cohort{% endblock header %}
+{% block title %}Homeroom{% endblock title %}
+{% block header %}Homeroom{% endblock header %}
 
 {% block content %}
 
   <section class='mt-2 mt-5'>
     <div class='card'>
       <div class='card-header'>
-        <h4>Cohort</h4>
+        <h4>Homeroom</h4>
       </div>
       <div class='card-body'>
         <h5>
-          Cohort Details
+          Homeroom Details
         </h5>
         <p>
           <form method='post' role='form'>
@@ -28,7 +28,7 @@
             {% bootstrap_formset_errors formset %}
             <div class='my-5'>
               <h5>
-                Cohort Invitations
+                Homeroom Invitations
               </h5>
               <div class='table-responsive-lg mb-5'>
                 <table class='table table-sm'>
@@ -84,7 +84,7 @@
             {% endcomment %}
             {% buttons %}
               <button type="submit" class="btn btn-primary btn-lg btn-block">
-                Save Cohort Details
+                Save Homeroom Details
             {% endbuttons %}
           </form>
         </p>

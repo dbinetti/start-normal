@@ -10,9 +10,9 @@ from dal import autocomplete
 
 # Local
 from .models import Account
-from .models import Cohort
 from .models import Contact
 from .models import District
+from .models import Homeroom
 from .models import Invite
 from .models import Parent
 from .models import Report
@@ -48,7 +48,7 @@ StudentFormSet = inlineformset_factory(
 
 
 InviteFormSet = inlineformset_factory(
-    Cohort,
+    Homeroom,
     Invite,
     fields=[
         'parent_name',
@@ -167,9 +167,9 @@ class TeacherForm(forms.ModelForm):
         }
 
 
-class CohortForm(forms.ModelForm):
+class HomeroomForm(forms.ModelForm):
     class Meta:
-        model = Cohort
+        model = Homeroom
         fields = [
             'name',
             'description',

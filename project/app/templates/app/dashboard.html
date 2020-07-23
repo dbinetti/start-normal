@@ -38,7 +38,7 @@
                     Grade
                   </th>
                   <th>
-                    Cohort
+                    Homeroom
                   </th>
                 </tr>
               </thead>
@@ -52,10 +52,10 @@
                       {{student.get_grade_display}}
                     </td>
                     <td>
-                      {% if student.cohort %}
-                        <a href='{% url "cohort" student.cohort.id %}'>{{student.cohort}}</a>
+                      {% if student.homeroom %}
+                        <a href='{% url "homeroom" student.homeroom.id %}'>{{student.homeroom}}</a>
                       {% else %}
-                        <a href='{% url "create-cohort" student %}'>Create Cohort</a>
+                        <a href='{% url "create-homeroom" student %}'>Create Homeroom</a>
                       {% endif %}
                     </td>
                   </tr>

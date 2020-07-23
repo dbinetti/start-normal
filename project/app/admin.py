@@ -1,9 +1,9 @@
 # Django
-# Third-Party
-from mptt.admin import MPTTModelAdmin
-
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as UserAdminBase
+
+# First-Party
+from mptt.admin import MPTTModelAdmin
 
 # Local
 from .forms import UserChangeForm
@@ -14,9 +14,9 @@ from .inlines import SchoolInline
 from .inlines import StudentInline
 from .models import Account
 from .models import Classroom
-from .models import Cohort
 from .models import Contact
 from .models import District
+from .models import Homeroom
 from .models import Parent
 from .models import Report
 from .models import School
@@ -32,8 +32,8 @@ def approve_report(modeladmin, request, queryset):
     return
 
 
-@admin.register(Cohort)
-class CohortAdmin(admin.ModelAdmin):
+@admin.register(Homeroom)
+class HomeroomAdmin(admin.ModelAdmin):
     save_on_top = True
     fields = [
         'name',
@@ -85,7 +85,7 @@ class ClassroomAdmin(admin.ModelAdmin):
         'lat',
         'lon',
         'teacher',
-        'cohort',
+        'homeroom',
     ]
     list_display = [
         'name',
@@ -93,7 +93,7 @@ class ClassroomAdmin(admin.ModelAdmin):
         'subjects',
         'venue',
         'teacher',
-        'cohort',
+        'homeroom',
         'created',
         'updated',
     ]
@@ -101,14 +101,14 @@ class ClassroomAdmin(admin.ModelAdmin):
         'status',
         'subjects',
         'teacher',
-        'cohort',
+        'homeroom',
     ]
     search_fields = [
         'name',
     ]
     autocomplete_fields = [
         'teacher',
-        'cohort',
+        'homeroom',
     ]
     inlines = [
         # StudentInline,

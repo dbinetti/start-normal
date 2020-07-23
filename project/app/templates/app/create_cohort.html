@@ -3,24 +3,24 @@
 {% load bootstrap4 %}
 {% load humanize %}
 
-{% block title %}Create Cohort{% endblock title %}
-{% block header %}Create Cohort{% endblock header %}
+{% block title %}Create Homeroom{% endblock title %}
+{% block header %}Create Homeroom{% endblock header %}
 
 {% block content %}
   <section class='my-5'>
     <p class='lead'>
-      A cohort is a group of students instructed together.
+      A homeroom is a group of students instructed together.
     </p>
   </section>
 
   <section class='mt-2 mt-5'>
     <div class='card'>
       <div class='card-header'>
-        <h4>Create Cohort for {{student}}</h4>
+        <h4>Create Homeroom for {{student}}</h4>
       </div>
       <div class='card-body'>
         <p>
-          Please give your cohort a name and description.  Afterwards you'll be able to invite other students to join this cohort.  (Your child has automatically been added as to this cohort.)
+          Please give your homeroom a name and description.  Afterwards you'll be able to invite other students to join this homeroom.  (Your child has automatically been added as to this homeroom.)
         </p>
         <form method='post' role='form'>
           {% csrf_token %}
@@ -30,7 +30,7 @@
           {# {% bootstrap_field form.description %} #}
           {% buttons %}
             <button type="submit" class="btn btn-primary btn-lg btn-block">
-              Save Cohort</button>
+              Save Homeroom</button>
           {% endbuttons %}
         </form>
       </div>

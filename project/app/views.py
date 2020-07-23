@@ -36,9 +36,9 @@ from django_rq import job
 
 # Local
 from .forms import AccountForm
-from .forms import CohortForm
 from .forms import ContactForm
 from .forms import DeleteForm
+from .forms import HomeroomForm
 from .forms import InviteFormSet
 from .forms import ReportForm
 from .forms import SchoolForm
@@ -48,10 +48,10 @@ from .forms import SubscribeForm
 from .forms import TeacherForm
 from .forms import UserCreationForm
 from .models import Account
-from .models import Cohort
 from .models import Contact
 from .models import District
 from .models import Entry
+from .models import Homeroom
 from .models import Parent
 from .models import Report
 from .models import School
@@ -282,20 +282,20 @@ def create_parent(request):
     return redirect('account')
 
 @login_required
-def create_cohort(request, student):
+def create_homeroom(request, student):
     user = request.user
     student = Student.objects.get(id=student)
     if request.method == 'POST':
 
-        form  = CohortForm(request.POST or None)
+        form  = HomeroomForm(request.POST or None)
     if form.is_valid():
-        cohort = form.save(commit=False)
-        cohort.student = student
-        cohort.save()
-        return redirect('cohort', cohort.id)
+        homeroom = form.save(commit=False)
+        homeroom.student = student
+        homeroom.save()
+        return redirect('homeroom', homeroom.id)
     return render(
         request,
-        'app/cohort.html',
+        'app/homeroom.html',
         context = {
             'form': form,
             'student': student,
@@ -345,21 +345,21 @@ def parent(request):
     )
 
 @login_required
-def cohort(request, id):
+def homeroom(request, id):
     user = request.user
-    cohort = Cohort.objects.get(id=id)
-    is_editable = cohort.owner == request.user
-    invites = cohort.invites.order_by('-created')
+    homeroom = Homeroom.objects.get(id=id)
+    is_editable = homeroom.owner == request.user
+    invites = homeroom.invites.order_by('-created')
     if request.method == "POST":
-        form = CohortForm(
+        form = HomeroomForm(
             request.POST,
-            instance=cohort,
-            prefix='cohort',
+            instance=homeroom,
+            prefix='homeroom',
         )
         # formset = InviteFormSet(
         #     request.POST,
         #     request.FILES,
-        #     instance=cohort,
+        #     instance=homeroom,
         #     prefix='invites',
         # )
         # if form.is_valid() and formset.is_valid():
@@ -374,21 +374,21 @@ def cohort(request, id):
                 request,
                 'Saved!',
             )
-            return redirect('cohort', cohort.id)
+            return redirect('homeroom', homeroom.id)
     else:
-        form = CohortForm(
-            instance=cohort,
-            prefix='cohort',
+        form = HomeroomForm(
+            instance=homeroom,
+            prefix='homeroom',
         )
         # formset = InviteFormSet(
-        #     instance=cohort,
+        #     instance=homeroom,
         #     prefix='invites',
         # )
 
     return render(
         request,
-        'app/cohort.html', {
-            'cohort': cohort,
+        'app/homeroom.html', {
+            'homeroom': homeroom,
             'invites': invites,
             'form': form,
             # 'formset': formset,

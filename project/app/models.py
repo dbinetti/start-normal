@@ -483,7 +483,7 @@ class School(models.Model):
         return False
 
 
-class Cohort(models.Model):
+class Homeroom(models.Model):
 
     STATUS = Choices(
         (0, 'new', "New"),
@@ -553,7 +553,7 @@ class Cohort(models.Model):
     owner = models.ForeignKey(
         'Parent',
         on_delete=models.SET_NULL,
-        related_name='cohorts',
+        related_name='homerooms',
         null=True,
     )
 
@@ -657,8 +657,8 @@ class Classroom(models.Model):
         related_name='classrooms',
         null=True,
     )
-    cohort = models.ForeignKey(
-        'Cohort',
+    homeroom = models.ForeignKey(
+        'Homeroom',
         on_delete=models.SET_NULL,
         related_name='classrooms',
         null=True,
@@ -667,7 +667,7 @@ class Classroom(models.Model):
     def __str__(self):
         return "{0} - {1}".format(
             self.teacher,
-            self.cohort,
+            self.homeroom,
         )
 
     def location(self):
@@ -795,10 +795,11 @@ class Invite(models.Model):
         on_delete=models.CASCADE,
         related_name='invites',
     )
-    cohort = models.ForeignKey(
-        'Cohort',
+    homeroom = models.ForeignKey(
+        'Homeroom',
         related_name='invites',
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
+        null=True,
     )
     def __str__(self):
         return str(self.id)
@@ -888,8 +889,8 @@ class Student(models.Model):
         related_name='students',
         on_delete=models.CASCADE,
     )
-    cohort = models.ForeignKey(
-        'Cohort',
+    homeroom = models.ForeignKey(
+        'Homeroom',
         related_name='students',
         on_delete=models.SET_NULL,
         null=True,
