@@ -15,7 +15,7 @@ becomes a member when you create a Homeroom.
 Then, the page will generate a private link which you can use to
 send out to other parents' children you'd like in your Homeroom.
 If they accept, then they will also become part of the cohort.  Once
-we get to five students total, I'll find a teacher for you
+the Homeroom reaches five students total, I'll find a teacher for you
 to start discussions on how and when to begin instruction.
 
 Now I just built this functionality (literally, like ten minutes ago)
