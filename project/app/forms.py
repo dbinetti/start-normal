@@ -28,6 +28,7 @@ StudentFormSet = inlineformset_factory(
         'grade',
         'school',
         'parent',
+        'homeroom',
     ],
     widgets = {
         'school': autocomplete.ModelSelect2(
@@ -39,7 +40,8 @@ StudentFormSet = inlineformset_factory(
                 'data-placeholder': 'Start typing to search....',
                 'data-minimum-input-length': 3,
             },
-        )
+        ),
+        'homeroom': forms.TextInput()
     },
     extra=0,
     max_num=5,

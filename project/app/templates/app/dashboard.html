@@ -30,11 +30,11 @@
                 <th>
                   Student Grade
                 </th>
-                {% comment %}
+
                 <th>
                   Student Homeroom
                 </th>
-                {% endcomment %}
+
               </tr>
             </thead>
             <tbody>
@@ -46,7 +46,7 @@
                   <td>
                     {{student.get_grade_display}}
                   </td>
-                  {% comment %}
+
                   <td>
                     {% if student.homeroom %}
                       <a href='{% url "homeroom" student.homeroom.id %}'>{{student.homeroom}}</a>
@@ -54,13 +54,13 @@
                       <a href='{% url "create-homeroom" student.id %}'>Create Homeroom</a>
                     {% endif %}
                   </td>
-                  {% endcomment %}
+
                 </tr>
               {% endfor %}
             </tbody>
             <tfoot>
               <tr>
-                <td colspan=2>
+                <td colspan=3>
                   <a href='{% url "parent" %}'>Edit this Information</a>
                 </td>
               </tr>

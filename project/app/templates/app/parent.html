@@ -11,9 +11,17 @@
   <p class='lead'>
     Please select the school and grade your student(s) will be entering in the Fall.
   </p>
-  <p>
-    This will help us match you to other students and teachers of the same grade and location.
-  </p>
+  {%if homeroom %}
+    <p>
+      We see that you've been given a Homeroom code:<br>
+        <strong>{{homeroom.id}}</strong><br>
+          Enter this code for the student(s) that you want in that Homeroom and we'll slate your student in that group.  If you have multiple students to add you can just leave their Homeroom fields blank and you'll be able to create your own later!
+    </p>
+  {% else %}
+    <p>
+      This will help us match you to other students and teachers of the same grade and location.  If you have a Homeroom code enter it next to your student; otherwise leave that blank and you'll be able to create your own Homeroom.
+    </p>
+  {% endif %}
 </section>
 <section>
   <div class='card'>
@@ -37,6 +45,9 @@
                   Grade
                 </th>
                 <th>
+                  Homeroom
+                </th>
+                <th>
                   Remove?
                 </th>
               </tr>
@@ -46,6 +57,7 @@
                 <tr>
                   <td>{% bootstrap_field form.school show_help=False show_label=False size='small' placeholder='Type to search....' %}</td>
                   <td>{% bootstrap_field form.grade show_help=False show_label=False size='small'%}</td>
+                  <td>{% bootstrap_field form.homeroom show_help=False show_label=False size='small'%}</td>
                   <td>{{form.DELETE}}</td>
                   {{form.id}}
                 </tr>

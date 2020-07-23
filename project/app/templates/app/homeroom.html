@@ -7,6 +7,7 @@
 {% block header %}Homeroom{% endblock header %}
 
 {% block content %}
+  {% if request.user.is_authenticated %}
   <section class='my-5'>
     <p class='lead'>
       The Homeroom is a stable cohort of students you choose.
@@ -98,4 +99,43 @@
   <section class='mt-2 ml-2'>
     {# <a href='{% url "delete" %}'><span class='text-danger'>Delete Account</span></a> #}
   </section>
+  {% else %}
+    <section class='my-5'>
+      <p class='lead'>
+        A Start Normal Homeroom is a stable cohort of students searching for a teacher.
+      </p>
+    </section>
+    <section class='my-5'>
+      <div class='card'>
+        <div class='card-header'>
+          <h4>
+            Homeroom Details
+          </h4>
+        </div>
+        <div class='card-body'>
+          <h5>
+            Homeroom Parent: {{homeroom.owner}}<br>
+            School(s) Represented: {{schools}}<br>
+            Grade(s) Represented: {{grades}}<br>
+          </h5>
+        </div>
+      </div>
+    </section>
+
+    <section class='my-5'>
+      <h4>
+        "What is all this?"
+      </h4>
+      <p>
+        You probably came here as a result of another parent's invite.  If so, welcome!  <strong>Start Normal</strong> is a network of parents and teachers seeking in-person, at-home, small-group instruction for low-risk groups.  This Homeroom is one of those groups.
+      </p>
+      <p>
+        I encourage you to read the <a href='{% url "faq" %}'>FAQ</a> to get a better sense of what we're trying to do here, but the short answer is that if we get this Homeroom to five students we'll find a teacher for you.  When you're ready to join, click the button below.  Otherwise, feel free to give me at call/text on my cell phone at 415.713.2126 or email me at <a href='mailto:dbinetti@startnormal.com'>dbinetti@startnormal.com</a> and I'll do everything I can to answer your questions.
+      </p>
+      <p>
+        <a href='{% url "signup" homeroom.id %}' role='button' class='btn btn-success btn-lg mt-5'>Join This Homeroom</a>
+      </p>
+    </section>
+
+  {% endif %}
 {% endblock content %}
