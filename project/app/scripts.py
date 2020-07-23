@@ -452,3 +452,14 @@ def post_welcome(user):
         html_content='emails/welcome.html',
     )
     send_email.delay(email)
+
+
+def announce_homerooms(user):
+    email = build_email(
+        template='emails/homerooms.txt',
+        subject='[Start Normal] Introducting Homerooms',
+        to=[user.email],
+        bcc=['dbinetti@startnormal.com'],
+        # html_content='emails/homerooms.html',
+    )
+    send_email.delay(email)
