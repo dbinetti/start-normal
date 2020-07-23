@@ -172,8 +172,18 @@ class HomeroomForm(forms.ModelForm):
         model = Homeroom
         fields = [
             'name',
+            'max_size',
             'description',
         ]
+        widgets = {
+            'description': forms.Textarea(
+                attrs={
+                    'class': 'form-control h-25',
+                    'placeholder': 'Provide a brief description of your homeroom\'s character.',
+                    'rows': 5,
+                }
+            )
+        }
 
 
 class ContactForm(forms.ModelForm):

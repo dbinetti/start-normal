@@ -528,9 +528,13 @@ class Homeroom(models.Model):
         choices=STATUS,
         default=STATUS.new,
     )
+    max_size = models.IntegerField(
+        default=5,
+    )
     grade = models.IntegerField(
-        blank=False,
+        blank=True,
         choices=GRADE,
+        null=True,
     )
     lat = models.DecimalField(
         max_digits=10,

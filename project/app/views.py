@@ -282,23 +282,34 @@ def create_parent(request):
     return redirect('account')
 
 @login_required
-def create_homeroom(request, student):
+def create_homeroom(request, student_id):
     user = request.user
-    student = Student.objects.get(id=student)
-    if request.method == 'POST':
-
-        form  = HomeroomForm(request.POST or None)
-    if form.is_valid():
-        homeroom = form.save(commit=False)
-        homeroom.student = student
+    homeroom, created = Homeroom.objects.get_or_create(
+        owner=user.parent,
+    )
+    if created:
+        student = Student.objects.get(id=student_id)
+        homeroom.grade = student.grade
         homeroom.save()
-        return redirect('homeroom', homeroom.id)
+        student.homeroom = homeroom
+        student.save()
+    if request.method ==  'POST':
+        form = HomeroomForm(
+            request.POST,
+            instance=homeroom,
+        )
+        if form.is_valid():
+            form.save()
+            return redirect('homeroom', homeroom.id)
+    else:
+        form = HomeroomForm(
+            instance=homeroom,
+        )
     return render(
         request,
         'app/homeroom.html',
         context = {
             'form': form,
-            'student': student,
         }
     )
 
@@ -348,8 +359,23 @@ def parent(request):
 def homeroom(request, id):
     user = request.user
     homeroom = Homeroom.objects.get(id=id)
-    is_editable = homeroom.owner == request.user
+    homeroom_link = request.build_absolute_uri(reverse('homeroom', args=[homeroom.id]))
     invites = homeroom.invites.order_by('-created')
+    students = homeroom.students.order_by('-created')
+    schools = students.order_by(
+        'school__name',
+    ).values_list(
+        'school__name',
+        flat=True,
+    ).distinct()
+    schools = ", ".join(list(schools))
+    grades_raw = students.order_by(
+        'grade'
+    ).values_list(
+        'grade',
+        flat=True,
+    ).distinct()
+    grades = ", ".join([Student.GRADE[g] for g in grades_raw ])
     if request.method == "POST":
         form = HomeroomForm(
             request.POST,
@@ -389,10 +415,13 @@ def homeroom(request, id):
         request,
         'app/homeroom.html', {
             'homeroom': homeroom,
+            'homeroom_link': homeroom_link,
             'invites': invites,
             'form': form,
             # 'formset': formset,
-            'is_editable': is_editable,
+            'students': students,
+            'schools': schools,
+            'grades': grades,
         },
     )
 
