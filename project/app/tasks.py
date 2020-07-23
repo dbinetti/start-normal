@@ -94,10 +94,13 @@ def mailchimp_delete_email(email):
     client = get_mailchimp_client()
     subscriber_hash = get_subscriber_hash(email)
     client = MailChimp(mc_api=settings.MAILCHIMP_API_KEY)
-    result = client.lists.members.delete(
-        list_id=settings.MAILCHIMP_AUDIENCE_ID,
-        subscriber_hash=subscriber_hash,
-    )
+    try:
+        result = client.lists.members.delete(
+            list_id=settings.MAILCHIMP_AUDIENCE_ID,
+            subscriber_hash=subscriber_hash,
+        )
+    except Exception as e:
+        return str(e)
     return result
 
 

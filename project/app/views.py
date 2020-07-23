@@ -129,6 +129,8 @@ def sitemap(request):
 @login_required
 def dashboard(request):
     user = request.user
+    if not user.account.is_welcomed:
+        return redirect('share')
     parent = getattr(user, 'parent', None)
     teacher = getattr(user, 'teacher', None)
     students = Student.objects.filter(
@@ -427,6 +429,9 @@ def homeroom(request, id):
 
 @login_required
 def share(request):
+    account = request.user.account
+    account.is_welcomed = True
+    account.save()
     return render(
         request,
         'app/share.html',
@@ -506,7 +511,7 @@ def callback(request):
     elif server_state.startswith('parent'):
         destination = 'parent'
     else:
-        destination = 'account'
+        destination = 'dashboard'
     code = request.GET.get('code', None)
     if not code:
         return HttpResponse(status=400)

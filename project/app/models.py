@@ -50,6 +50,9 @@ class Account(models.Model):
         blank=True,
         help_text="""Your mobile phone. (Optional)""",
     )
+    is_welcomed = models.BooleanField(
+        default=False,
+    )
     is_public = models.BooleanField(
         default=True,
         help_text="""List name on website.""",
