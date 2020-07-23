@@ -252,7 +252,7 @@ def teacher(request):
                 request,
                 "Saved!",
             )
-            return redirect('share')
+            return redirect('dashboard')
     else:
         form = TeacherForm(
             instance=teacher,
@@ -342,7 +342,7 @@ def parent(request):
                 request,
                 "Saved!",
             )
-            return redirect('share')
+            return redirect('dashboard')
     else:
         formset = StudentFormSet(
             instance=parent,

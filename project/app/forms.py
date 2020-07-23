@@ -42,7 +42,7 @@ StudentFormSet = inlineformset_factory(
         )
     },
     extra=0,
-    # max_num=5,
+    max_num=5,
     can_delete=True,
 )
 

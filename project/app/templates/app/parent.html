@@ -2,14 +2,17 @@
 
 {% load bootstrap4 %}
 
-{% block title %}Thank You and Next Steps{% endblock title %}
-{% block header %}Thank You and Next Steps{% endblock header %}
+{% block title %}Parent Information{% endblock title %}
+{% block header %}Parent Information{% endblock header %}
 {% block topnav %}{% endblock topnav %}
 
 {% block content %}
 <section class='mb-5'>
   <p class='lead'>
-    Next, please select the school and grade your student(s) will be entering in the Fall.
+    Please select the school and grade your student(s) will be entering in the Fall.
+  </p>
+  <p>
+    This will help us match you to other students and teachers of the same grade and location.
   </p>
 </section>
 <section>
@@ -33,6 +36,9 @@
                 <th>
                   Grade
                 </th>
+                <th>
+                  Remove?
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -40,6 +46,7 @@
                 <tr>
                   <td>{% bootstrap_field form.school show_help=False show_label=False size='small' placeholder='Type to search....' %}</td>
                   <td>{% bootstrap_field form.grade show_help=False show_label=False size='small'%}</td>
+                  <td>{{form.DELETE}}</td>
                   {{form.id}}
                 </tr>
               {% endfor %}

@@ -21,45 +21,54 @@
       </div>
       <div class='card-body'>
         {% if parent %}
-          <section class='my-5'>
-            <table class='table'>
-              <thead>
+          <table class='table'>
+            <thead>
+              <tr>
+                <th>
+                  Student School
+                </th>
+                <th>
+                  Student Grade
+                </th>
+                {% comment %}
+                <th>
+                  Student Homeroom
+                </th>
+                {% endcomment %}
+              </tr>
+            </thead>
+            <tbody>
+              {% for student in students %}
                 <tr>
-                  <th>
-                    Student School
-                  </th>
-                  <th>
-                    Student Grade
-                  </th>
-                  <th>
-                    Student Homeroom
-                  </th>
+                  <td>
+                    {{student.school}}
+                  </td>
+                  <td>
+                    {{student.get_grade_display}}
+                  </td>
+                  {% comment %}
+                  <td>
+                    {% if student.homeroom %}
+                      <a href='{% url "homeroom" student.homeroom.id %}'>{{student.homeroom}}</a>
+                    {% else %}
+                      <a href='{% url "create-homeroom" student.id %}'>Create Homeroom</a>
+                    {% endif %}
+                  </td>
+                  {% endcomment %}
                 </tr>
-              </thead>
-              <tbody>
-                {% for student in students %}
-                  <tr>
-                    <td>
-                      {{student.school}}
-                    </td>
-                    <td>
-                      {{student.get_grade_display}}
-                    </td>
-                    <td>
-                      {% if student.homeroom %}
-                        <a href='{% url "homeroom" student.homeroom.id %}'>{{student.homeroom}}</a>
-                      {% else %}
-                        <a href='{% url "create-homeroom" student.id %}'>Create Homeroom</a>
-                      {% endif %}
-                    </td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </section>
+              {% endfor %}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan=2>
+                  <a href='{% url "parent" %}'>Edit this Information</a>
+                </td>
+              </tr>
+            </tfoot>
+          </table>
         {% else %}
           <p>
-            You are not currently registered as a parent.  Register as Parent
+            You are not currently registered as a parent.  <a href='{% url "parent" %}'>Register as Parent</a>
           </p>
         {% endif %}
       </div>
@@ -75,17 +84,22 @@
       <div class='card-body'>
         {% if teacher %}
           <ul class='list-unstyled'>
-            <li>{{teacher.school.city}}</li>
-            <li>{{teacher.is_credential|yesno}}</li>
-            <li>{{teacher.kinds}}</li>
-            <li>{{teacher.subjects}}</li>
-            <li>{{teacher.notes}}</li>
+            <li>Location: {{teacher.school.city}}</li>
+            <li>Credentialed? {{teacher.is_credential|yesno|title}}</li>
+            <li>Levels Taught: {{teacher.kinds}}</li>
+            <li>Subjects Taught: {{teacher.subjects}}</li>
+            <li>Notes: {{teacher.notes|default:"(No Notes)"}}</li>
           </ul>
+          <p>
+            <a href='{% url "teacher" %}'>Edit this information</a>
+          </p>
         {% else %}
-          You are not currently registered as a teacher.  Register as Teacher
+          You are not currently registered as a teacher.  <a href='{% url "teacher" %}'>Register as Teacher</a>
         {% endif %}
       </div>
     </div>
   </section>
-
+  <section class='my-5'>
+    If you have any questions, concerns, ideas or need support, please feel free to call/text me on my cell at 415.713.2126 or email me at <a href='mailto:dbinetti@startnormal.com'>dbinetti@startnormal.com</a>
+  </section>
 {% endblock content %}
