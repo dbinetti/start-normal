@@ -3,18 +3,17 @@ I've been working as hard as I can to make the site more
 useful to parents and recently finished some functionality
 that I'd love you to try out.
 
-I call it "Homerooms", and a way to create and manage
+I call it "Homerooms", and it's a way to create and manage
 your own stable cohort of students.  Here's how it works:
 
-On your dashboard (https://www.startnormal.com/dashboard)
-you'll now see a link to the right of each student
+On your dashboard you'll now see a link to the right of each student
 called "Create Homeroom".  This will take you to a new screen
 where you can enter a name, description and max size of your
-desired Homeroom (ie, stable cohort).  Your student automatically
-becomes a member when you click.
+desired Homeroom (ie, your stable cohort).  Your student automatically
+becomes a member when you create a Homeroom.
 
-The page will also generate a private link which you can use to
-send out to other parents, asking their child to join that Homeroom.
+Then, the page will generate a private link which you can use to
+send out to other parents' children you'd like in your Homeroom.
 If they accept, then they will also become part of the cohort.  Once
 we get to five students total, I'll find a teacher for you
 to start discussions on how and when to begin instruction.
@@ -22,8 +21,8 @@ to start discussions on how and when to begin instruction.
 Now I just built this functionality (literally, like ten minutes ago)
 and while I tested it out as best I can, I know I've forgotten things.
 That said, if you're willing to give it a try and perhaps even share the
-link with a few parents that would put you first in line in the teacher
-queue.  And if there is anything I've missed or is broken then I'll be
+link with a few parents that would put you at the top of the queue.
+And if there is anything I've missed or is broken then I'll be
 sure to fix it as fast as I can -- just let me know.
 
 So that's Homerooms.  Please give it a try, or if there's any questions

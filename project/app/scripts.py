@@ -457,7 +457,7 @@ def post_welcome(user):
 def announce_homerooms(user):
     email = build_email(
         template='emails/homerooms.txt',
-        subject='[Start Normal] Introducting Homerooms',
+        subject='[Start Normal] Introducing Homerooms',
         to=[user.email],
         bcc=['dbinetti@startnormal.com'],
         # html_content='emails/homerooms.html',
