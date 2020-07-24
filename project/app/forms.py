@@ -43,6 +43,11 @@ StudentFormSet = inlineformset_factory(
         ),
         'homeroom': forms.TextInput()
     },
+    error_messages = {
+        'homeroom': {
+            'invalid_choice': "Enter a homeroom code if you have one; otherwise leave blank",
+        },
+    },
     extra=0,
     max_num=5,
     can_delete=True,

@@ -532,7 +532,7 @@ class Homeroom(models.Model):
         default=STATUS.new,
     )
     max_size = models.IntegerField(
-        default=5,
+        default=10,
     )
     grade = models.IntegerField(
         blank=True,

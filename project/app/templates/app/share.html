@@ -2,19 +2,31 @@
 
 {% load bootstrap4 %}
 
-{% block title %}Registration Complete!{% endblock title %}
-{% block header %}Registration Complete!{% endblock header %}
+{% block title %}Thank You!{% endblock title %}
+{% block header %}Thank You!{% endblock header %}
 
 {% block content %}
 <section class='mb-5'>
   <p class='lead'>
-    Thank you!  Your registration is now complete.
+    Your registration is complete.  You now can do any of these three things:
   </p>
+  <h5>
+    One:
+  </h5>
   <p>
-    The next step will be to select other students to join your children in a stable cohort for instruction so that we can find you teacher.  I'm literally building that tool right now and intend to release it as fast as I absolutely can &mdash; and of course when I do you'll be the first to know. (The website is literally only a few days old :-)
+    You can create a Homeroom for your student and invite others to it.  A Homeroom is a stable cohort of children that you'd like to learn alongside your child.  To create a Homeroom, go to you account <a href='{% url "dashboard" %}'>Dashboard</a>.
   </p>
+  <h5>
+    Two:
+  </h5>
   <p>
-    In the meantime, please share the video &mdash; because this will only work if we get enough people willing to try it out.  Use the Twitter and Facebook buttons below, or click the share button on the bottom right of the video; it looks like this: <img height='20' src="/static/app/share_button.png">
+    Register as both a Parent and Teacher.  Again, you can do so from the <a href='{% url "dashboard" %}'>Dashboard</a>.
+  </p>
+  <h5>
+    Three:
+  </h5>
+  <p>
+    Share the video &mdash; to get others to join.  More students means more teachers means more students &mdash; and greater options for us all.  Use the Twitter and Facebook buttons below, or click the share button on the bottom right of the video; it looks like this: <img height='20' src="/static/app/share_button.png">
   </p>
   <ul class='list-inline'>
     <li class='list-inline-item'>
@@ -26,14 +38,15 @@
   </ul>
 </section>
 <section class='my-5'>
-  <div class='col-lg-6'>
+  <div class='col-md-6'>
     <script src="https://fast.wistia.com/embed/medias/n1tppt7z04.jsonp" async></script><script src="https://fast.wistia.com/assets/external/E-v1.js" async></script><div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;"><div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;"><div class="wistia_embed wistia_async_n1tppt7z04 videoFoam=true" style="height:100%;position:relative;width:100%"><div class="wistia_swatch" style="height:100%;left:0;opacity:0;overflow:hidden;position:absolute;top:0;transition:opacity 200ms;width:100%;"><img src="https://fast.wistia.com/embed/medias/n1tppt7z04/swatch" style="filter:blur(5px);height:100%;object-fit:contain;width:100%;" alt="" aria-hidden="true" onload="this.parentNode.style.opacity=1;" /></div></div></div></div>
   </div>
 </section>
 <section class='my-5'>
-  <p>
-    Also, you can visit your <a href='{% url "dashboard" %}'>dashboard</a> at any time to edit your information or delete your account.
-  </p>
+  Otherwise, I will continue to keep you updated as we add more teachers and parents to the system.  In the meantime considering recruiting others to your Homeroom &mdash; teachers like teaching more than tutoring, so establising a solid cohort of 5-10 students is the best way to get their attention.
+</section>
+
+<section class='my-5'>
   <p>
     Lastly, always feel free to reach out to me at <a href='mailto:dbinetti@startnormal.com'>dbinetti@startnormal.com</a> or via phone/text at 415.713.2126 and I'll do whatever I can to help.
   </p>
