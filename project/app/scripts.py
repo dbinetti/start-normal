@@ -132,35 +132,33 @@ def schools_list(filename='publics.csv'):
             except ValueError:
                 charter_number = None
             school = {
-                # 'schedule': 0,
-                # 'masks': 0,
-                # 'name': name,
-                # 'cd_status': cd_status,
-                # 'cd_id': int(row[0][-7:]) if row[0] != 'No Data' else None,
-                # 'nces_district_id': int(row[1]) if row[1] != 'No Data' else None,
+                'name': name,
+                'cd_status': cd_status,
+                'cd_id': int(row[0][-7:]) if row[0] != 'No Data' else None,
+                'nces_district_id': int(row[1]) if row[1] != 'No Data' else None,
                 'nces_school_id': int(row[2]) if row[2] != 'No Data' else None,
-                # 'district_name': str(row[5]) if row[5] != 'No Data' else '',
-                # 'county': str(row[4]) if row[4] != 'No Data' else '',
-                # 'address': str(row[8]) if row[8] != 'No Data' else '',
-                # 'city': str(row[9]) if row[9] != 'No Data' else '',
-                # 'state': str(row[11]) if row[11] != 'No Data' else '',
-                # 'zipcode': str(row[10]) if row[10] != 'No Data' else '',
+                'district_name': str(row[5]) if row[5] != 'No Data' else '',
+                'county': str(row[4]) if row[4] != 'No Data' else '',
+                'address': str(row[8]) if row[8] != 'No Data' else '',
+                'city': str(row[9]) if row[9] != 'No Data' else '',
+                'state': str(row[11]) if row[11] != 'No Data' else '',
+                'zipcode': str(row[10]) if row[10] != 'No Data' else '',
                 'phone': str(row[17]) if row[17] != 'No Data' else '',
-                # 'website': str(row[21].replace(" ", "")) if row[21] != 'No Data' else '',
+                'website': str(row[21].replace(" ", "")) if row[21] != 'No Data' else '',
                 # 'soc': int(row[29]) if row[29] != 'No Data' else None,
 
-                # 'is_charter': True if row[24]=='Y' else False,
-                # 'charter_number': charter_number,
-                # 'funding_type': funding_map[str(row[26])] if row[26] != 'No Data' else None,
+                'is_charter': True if row[24]=='Y' else False,
+                'charter_number': charter_number,
+                'funding_type': funding_map[str(row[26])] if row[26] != 'No Data' else None,
                 # 'edops_type': getattr(School.EDOPS, str(row[31].strip().lower()), None),
                 # 'eil': getattr(School.EIL, str(row[33].strip().lower()), None),
-                # 'grade_span': str(row[35]) if row[35] != 'No Data' else '',
+                'grade_span': str(row[35]) if row[35] != 'No Data' else '',
                 # 'virtual_type': getattr(School.VIRTUAL, str(row[37].strip().lower()), None),
-                # 'is_magnet': True if row[38]=='Y' else False,
-                # 'fed_nces_school_id': int(row[40]) if row[40] != 'No Data' else None,
+                'is_magnet': True if row[38]=='Y' else False,
+                'fed_nces_school_id': int(row[40]) if row[40] != 'No Data' else None,
 
-                # 'latitude': float(row[41]) if row[41] != 'No Data' else None,
-                # 'longitude': float(row[42]) if row[42] != 'No Data' else None,
+                'latitude': float(row[41]) if row[41] != 'No Data' else None,
+                'longitude': float(row[42]) if row[42] != 'No Data' else None,
                 'admin_first_name': str(row[43]) if row[43] != 'No Data' else '',
                 'admin_last_name': str(row[44]) if row[44] != 'No Data' else '',
                 'admin_email': str(row[45].replace(
@@ -463,3 +461,53 @@ def announce_homerooms(user):
         # html_content='emails/homerooms.html',
     )
     send_email.delay(email)
+
+
+def import_grades(s):
+    mapping = {
+        'P': 2,
+        'K': 5,
+        '1': 10,
+        '2': 20,
+        '3': 30,
+        '4': 40,
+        '5': 50,
+        '6': 60,
+        '7': 70,
+        '8': 80,
+        '9': 90,
+        '10':100,
+        '11': 110,
+        '12': 120,
+        '13': None,
+        'Post Secondary': None,
+        '': None,
+        'Adult': None,
+        None: None,
+    }
+
+
+    parts = s['grade_span'].partition('-')
+    low = parts[0].strip()
+    high = parts[2].strip()
+    if low == 'Adult' or high == 'Adult':
+        return
+    if not high:
+        high = low
+    high_grade = mapping[str(high)]
+    low_grade = mapping[str(low)]
+
+    if not high_grade and not low_grade:
+        print('none')
+        return
+    try:
+        c = School.objects.get(nces_id=s['nces_school_id'])
+    except School.DoesNotExist:
+        print('n')
+        return
+    except School.MultipleObjectsReturned:
+        return
+    c.high_grade = high_grade
+    c.low_grade = low_grade
+    c.save()
+    print('saved')

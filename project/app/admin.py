@@ -246,12 +246,18 @@ class DistrictAdmin(admin.ModelAdmin):
 
 @admin.register(School)
 class SchoolAdmin(admin.ModelAdmin):
-    exclude = [
-        'slug',
+    fields = [
+        'name',
+        'kind',
+        'low_grade',
+        'high_grade',
+        'website',
     ]
     list_display = [
         'name',
         'kind',
+        'low_grade',
+        'high_grade',
         'website',
     ]
     list_filter = [

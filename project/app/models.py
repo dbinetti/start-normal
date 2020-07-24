@@ -373,6 +373,24 @@ class School(models.Model):
         (560, 'a', 'Adult'),
         (570, 'ug', 'Ungraded'),
     )
+    GRADE = Choices(
+        (2, 'tk', 'Transitional Kindergarten'),
+        (5, 'k', 'Kindergarten'),
+        (10, 'first', 'First  Grade'),
+        (20, 'second', 'Second  Grade'),
+        (30, 'third', 'Third  Grade'),
+        (40, 'fourth', 'Fourth  Grade'),
+        (50, 'fifth', 'Fifth  Grade'),
+        (60, 'sixth', 'Sixth  Grade'),
+        (70, 'seventh', 'Seventh Grade'),
+        (80, 'eighth', 'Eighth Grade'),
+        (90, 'ninth', 'Ninth Grade'),
+        (100, 'tenth', 'Tenth Grade'),
+        (110, 'eleventh', 'Eleventh Grade'),
+        (120, 'twelfth', 'Twelfth Grade'),
+        (130, 'fresh', 'Freshman'),
+        (140, 'soph', 'Sophomore'),
+    )
     id = HashidAutoField(
         primary_key=True,
     )
@@ -411,6 +429,16 @@ class School(models.Model):
         blank=True,
         null=True,
         unique=True,
+    )
+    low_grade = models.IntegerField(
+        blank=True,
+        choices=GRADE,
+        null=True,
+    )
+    high_grade = models.IntegerField(
+        blank=True,
+        choices=GRADE,
+        null=True,
     )
     address = models.CharField(
         max_length=255,
@@ -810,6 +838,7 @@ class Invite(models.Model):
     )
     def __str__(self):
         return str(self.id)
+
 
 class Report(models.Model):
     STATUS = Choices(
