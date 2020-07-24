@@ -385,7 +385,7 @@ def homeroom(request, id):
                     request,
                     'Saved!',
                 )
-                return redirect('homeroom', homeroom.id)
+                return redirect('dashboard')
         else:
             form = HomeroomForm(
                 instance=homeroom,
