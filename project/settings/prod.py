@@ -31,7 +31,7 @@ sentry_sdk.init(
     ],
     send_default_pii=True,
     request_bodies='always',
-    release=env("HEROKU_SLUG_COMMIT"),
+    # release=env("HEROKU_SLUG_COMMIT"),
     # environment=env("HEROKU_APP_NAME"),
 )
 
