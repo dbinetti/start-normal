@@ -1,13 +1,11 @@
 # Local
-# Third-Party
+# First-Party
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.django import RedisIntegration
+from sentry_sdk.integrations.django import RqIntegration
 
 from .base import *
-
-# from sentry_sdk.integrations.django import RedisIntegration
-# from sentry_sdk.integrations.django import RqIntegration
-
 
 # Core
 SECURE_SSL_REDIRECT = True
@@ -28,10 +26,10 @@ sentry_sdk.init(
     dsn=env("SENTRY_DSN"),
     integrations=[
         DjangoIntegration(),
-        # RqIntegration(),
-        # RedisIntegration(),
+        RqIntegration(),
+        RedisIntegration(),
     ],
-    # send_default_pii=True,
+    send_default_pii=True,
     # request_bodies='always',
     # release=env("HEROKU_SLUG_COMMIT"),
     # environment=env("HEROKU_APP_NAME"),
