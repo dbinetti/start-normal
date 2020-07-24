@@ -249,7 +249,7 @@ def teacher(request):
             instance=teacher,
         )
         if form.is_valid():
-            form.save()
+            teacher = form.save(commit=False)
             messages.success(
                 request,
                 "Saved!",

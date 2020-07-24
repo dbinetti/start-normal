@@ -289,7 +289,8 @@ class StudentAdmin(admin.ModelAdmin):
     inlines = [
     ]
     autocomplete_fields = [
-        # 'parent',
+        'parent',
+        'school',
     ]
 
 
