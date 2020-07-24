@@ -207,10 +207,10 @@ class Teacher(models.Model):
         help_text="""Pick a near where you'd like to teach (dosn't have to be your own school; this is just for location.)""",
     )
     notes = models.TextField(
-        max_length=512,
+        max_length=2000,
         blank=True,
         default='',
-        help_text="""Please add anything else you think we should know.""",
+        help_text="""Please add any other notes you think we should know.""",
     )
     created = models.DateTimeField(
         auto_now_add=True,
