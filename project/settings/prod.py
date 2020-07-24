@@ -2,8 +2,8 @@
 # First-Party
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
-from sentry_sdk.integrations.django import RedisIntegration
-from sentry_sdk.integrations.django import RqIntegration
+from sentry_sdk.integrations.redis import RedisIntegration
+from sentry_sdk.integrations.rq import RqIntegration
 
 from .base import *
 
