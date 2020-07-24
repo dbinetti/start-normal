@@ -30,8 +30,8 @@ sentry_sdk.init(
         RedisIntegration(),
     ],
     send_default_pii=True,
-    # request_bodies='always',
-    # release=env("HEROKU_SLUG_COMMIT"),
+    request_bodies='always',
+    release=env("HEROKU_SLUG_COMMIT"),
     # environment=env("HEROKU_APP_NAME"),
 )
 
