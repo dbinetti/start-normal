@@ -882,6 +882,12 @@ class Student(models.Model):
         (130, 'fresh', 'Freshman'),
         (140, 'soph', 'Sophomore'),
     )
+    name = models.CharField(
+        max_length=100,
+        blank=True,
+        default='',
+        help_text="""Your Student's name will be shown to other parents on the private site; it will not appear on the public site.  """,
+    )
     grade = models.IntegerField(
         blank=False,
         choices=GRADE,
