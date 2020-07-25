@@ -532,24 +532,24 @@ def import_private_grades(s):
         '10':100,
         '11': 110,
         '12': 120,
-        '13': None,
-        'Post Secondary': None,
-        '': None,
-        'Adult': None,
-        None: None,
     }
 
 
     low = s['low']
     high = s['high']
-    high_grade = mapping[str(high)]
-    low_grade = mapping[str(low)]
-
-    if not high_grade and not low_grade:
-        print('none')
+    try:
+        high_grade = mapping[str(high)]
+    except KeyError:
+        print('skip high')
         return
     try:
-        c = School.objects.get(nces_id=s['nces_school_id'])
+        low_grade = mapping[str(low)]
+    except KeyError:
+        print('skip low')
+        return
+
+    try:
+        c = School.objects.get(cd_id=s['cd_id'])
     except School.DoesNotExist:
         print('n')
         return
@@ -567,6 +567,7 @@ def create_homerooms():
         low_grade__isnull=False,
         high_grade__isnull=False,
     )
+    errors = []
     for s in ss:
         i+=1
         grade = 0
@@ -574,13 +575,20 @@ def create_homerooms():
             grade += 1
             if grade not in [2,5,10,20,30,40,50,60,70,80,90,100,110,120]:
                 continue
-            name = "{0} {1} Homeroom".format(
-                s.name,
-                s.GRADE[grade],
+             name = "{0} {1}".format(
+                self.school,
+                self.get_grade_display(),
             )
-            h = Homeroom.objects.create(
-                name=name,
-                grade=grade,
-                school=s,
-            )
+            defaults = {
+                'name': name,
+            }
+            try:
+                h, _ = Homeroom.objects.update_or_create(
+                    grade=grade,
+                    school=s,
+                    defaults=defaults,
+                )
+            except Homeroom.MultipleObjectsReturned:
+                errors.append((s, grade))
+                continue
             print(i, grade, h)

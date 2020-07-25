@@ -358,7 +358,7 @@ class School(models.Model):
         (570, 'ug', 'Ungraded'),
     )
     GRADE = Choices(
-        (2, 'tk', 'Transitional Kindergarten'),
+        (2, 'tk', 'Preschool'),
         (5, 'k', 'Kindergarten'),
         (10, 'first', 'First Grade'),
         (20, 'second', 'Second Grade'),
@@ -505,7 +505,7 @@ class Homeroom(models.Model):
         (10, 'active', "Active"),
     )
     GRADE = Choices(
-        (2, 'tk', 'Transitional Kindergarten'),
+        (2, 'tk', 'Preschool'),
         (5, 'k', 'Kindergarten'),
         (10, 'first', 'First Grade'),
         (20, 'second', 'Second Grade'),
@@ -753,7 +753,7 @@ class Invite(models.Model):
         (20, 'accepted', 'Accepted'),
     )
     GRADE = Choices(
-        (2, 'tk', 'Transitional Kindergarten'),
+        (2, 'tk', 'Preschool'),
         (5, 'k', 'Kindergarten'),
         (10, 'first', 'First Grade'),
         (20, 'second', 'Second Grade'),
@@ -865,7 +865,7 @@ class Student(models.Model):
         primary_key=True,
     )
     GRADE = Choices(
-        (2, 'tk', 'Transitional Kindergarten'),
+        (2, 'tk', 'Preschool'),
         (5, 'k', 'Kindergarten'),
         (10, 'first', 'First Grade'),
         (20, 'second', 'Second Grade'),
