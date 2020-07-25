@@ -44,6 +44,7 @@ from .forms import InviteFormSet
 from .forms import ReportForm
 from .forms import SchoolForm
 from .forms import SignupForm
+from .forms import StudentForm
 from .forms import StudentFormSet
 from .forms import SubscribeForm
 from .forms import TeacherForm
@@ -285,6 +286,58 @@ def create_parent(request):
     return redirect('account')
 
 @login_required
+def create_student(request):
+    parent = request.user.parent
+    form = StudentForm(request.POST or None)
+    if form.is_valid():
+        school = form.cleaned_data['school']
+        grade = form.cleaned_data['grade']
+        homeroom = Homeroom.objects.get(
+            school=school,
+            grade=grade,
+        )
+        student = form.save(commit=False)
+        student.homeroom = homeroom
+        student.parent = parent
+        student.save()
+        messages.success(
+            request,
+            'Added!',
+        )
+        return redirect('dashboard')
+    return render(
+        request,
+        'app/create_student.html',
+        context = {
+            'form': form,
+        }
+    )
+
+@login_required
+def delete_student(request, id):
+    parent = request.user.parent
+    student = Student.objects.get(
+        id=id,
+    )
+    if request.method == "POST":
+        form = DeleteForm(request.POST)
+        if form.is_valid():
+            student.delete()
+            messages.error(
+                request,
+                "Student Deleted!",
+            )
+            return redirect('dashboard')
+    else:
+        form = DeleteForm()
+    return render(
+        request,
+        'app/delete_student.html',
+        {'form': form,},
+    )
+
+
+@login_required
 def parent(request):
     user = request.user
     StudentFormSet.extra = 5
@@ -304,15 +357,129 @@ def parent(request):
                 "Saved!",
             )
             return redirect('dashboard')
-    else:
-        formset = StudentFormSet(
-            instance=parent,
-        )
+    formset = StudentFormSet(
+        instance=parent,
+    )
     return render(
         request,
         'app/parent.html',
         context = {
             'formset': formset,
+        }
+    )
+
+
+@login_required
+def invite(request):
+    homeroom_id = request.session.get('homeroom', None)
+    if not homeroom_id:
+        return redirect('dashboard')
+    homeroom = Homeroom.objects.get(id=homeroom_id)
+    request.session['homeroom'] = None
+    user = request.user
+    parent, created = Parent.objects.get_or_create(
+        user=user,
+    )
+    student = Student.objects.create(
+        grade=homeroom.grade,
+        school=homeroom.school,
+        parent=parent,
+        homeroom=homeroom,
+    )
+    if request.method == 'POST':
+        form = StudentForm(
+            request.POST,
+            instance=student,
+        )
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                "Added to Homeroom!",
+            )
+            return redirect('dashboard')
+    form = StudentForm(
+        instance=student,
+    )
+    return render(
+        request,
+        'app/invite.html',
+        context = {
+            'form': form,
+        }
+    )
+
+
+@login_required
+def addme(request, homeroom_id):
+    homeroom = Homeroom.objects.get(id=homeroom_id)
+    user = request.user
+    parent, created = Parent.objects.get_or_create(
+        user=user,
+    )
+    student = Student.objects.create(
+        grade=homeroom.grade,
+        school=homeroom.school,
+        parent=parent,
+        homeroom=homeroom,
+    )
+    if request.method == 'POST':
+        form = StudentForm(
+            request.POST,
+            instance=student,
+        )
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                "Added to Homeroom!",
+            )
+            return redirect('dashboard')
+    form = StudentForm(
+        instance=student,
+    )
+    return render(
+        request,
+        'app/invite.html',
+        context = {
+            'form': form,
+        }
+    )
+
+
+@login_required
+def student(request, id):
+    user = request.user
+    student = Student.objects.get(
+        id=id,
+        parent=user.parent,
+    )
+    if request.method == 'POST':
+        form = StudentForm(request.POST, instance=student)
+        if form.is_valid():
+            school = form.cleaned_data['school']
+            grade = form.cleaned_data['grade']
+            homeroom = Homeroom.objects.get(
+                school=school,
+                grade=grade,
+            )
+            student = form.save(commit=False)
+            student.homeroom = homeroom
+            student.save()
+            messages.success(
+                request,
+                "Saved!",
+            )
+            return redirect('dashboard')
+    else:
+        form = StudentForm(instance=student)
+
+    return render(
+        request,
+        'app/student.html',
+        context = {
+            'form': form,
+            'student': student,
         },
     )
 
@@ -336,6 +503,7 @@ def homeroom(request, id):
     grades = ", ".join([Student.GRADE[g] for g in grades_raw ])
     user = request.user
     if user.is_authenticated:
+        request.session['homeroom'] = str(homeroom.id)
         homeroom = Homeroom.objects.get(id=id)
         homeroom_link = request.build_absolute_uri(reverse('homeroom', args=[homeroom.id]))
         # invites = homeroom.invites.order_by('-created')
@@ -475,7 +643,7 @@ def callback(request):
     else:
         try:
             homeroom = Homeroom.objects.get(id=kind)
-            destination = 'parent'
+            destination = 'invite'
             request.session['homeroom'] = str(homeroom.id)
         except Homeroom.DoesNotExist as e:
             logging.exception(e)
@@ -637,7 +805,9 @@ def add_school(request):
     return render(
         request,
         'app/add_school.html',
-        {'form': form,},
+        context = {
+            'form': form,
+        },
     )
 
 @login_required

@@ -40,8 +40,6 @@ class HomeroomAdmin(admin.ModelAdmin):
         'description',
         'status',
         'grade',
-        'lat',
-        'lon',
         'owner',
     ]
     list_display = [

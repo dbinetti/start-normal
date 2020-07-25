@@ -12,6 +12,9 @@
     <p class='lead'>
       Your Dashboard allows you to see and update details of your account, either as a Parent, Teacher, or both.
     </p>
+    <p>
+      Please note that your name, email, and student name are available to others in your Homeroom.
+    </p>
   </section>
 
   <section class='mt-2 mt-5'>
@@ -21,50 +24,44 @@
       </div>
       <div class='card-body'>
         {% if parent %}
+          <h6>Your Students</h6>
           <table class='table'>
             <thead>
               <tr>
                 <th>
-                  Student School
+                  Name
                 </th>
                 <th>
-                  Student Grade
+                  School
                 </th>
-                {% comment %}
                 <th>
-                  Student Homeroom
+                  Grade
                 </th>
-                {% endcomment %}
+                <th>
+                  Homeroom
+                </th>
               </tr>
             </thead>
             <tbody>
               {% for student in students %}
                 <tr>
                   <td>
+                    <a href='{% url "student" student.id %}'>{{student.name|default:"(Unknown)"}}</a>
+                  </td>
+                  <td>
                     {{student.school}}
                   </td>
                   <td>
                     {{student.get_grade_display}}
                   </td>
-                  {% comment %}
+
                   <td>
-                    {% if student.homeroom %}
-                      <a href='{% url "homeroom" student.homeroom.id %}'>{{student.homeroom}}</a>
-                    {% else %}
-                      <a href='{% url "create-homeroom" student.id %}'>Create Homeroom</a>
-                    {% endif %}
+                    <a href='{% url "homeroom" student.homeroom.id %}'>Homeroom</a>
                   </td>
-                  {% endcomment %}
+
                 </tr>
               {% endfor %}
             </tbody>
-            <tfoot>
-              <tr>
-                <td colspan=3>
-                  <a href='{% url "parent" %}'>Edit this Information</a>
-                </td>
-              </tr>
-            </tfoot>
           </table>
         {% else %}
           <p>
@@ -72,6 +69,11 @@
           </p>
         {% endif %}
       </div>
+      {% if parent %}
+      <div class='card-footer'>
+        <a href='{% url "create-student" %}' class='btn btn-success btn-large' role='button'>Add a Student</a>
+      </div>
+      {% endif %}
     </div>
   </section>
   <section class='my-5'>
@@ -98,6 +100,9 @@
         {% endif %}
       </div>
     </div>
+  </section>
+  <section class='ml-2'>
+    <a href='{% url "delete" %}'><span class='text-danger'>Delete Account</span></a>
   </section>
   <section class='my-5'>
     If you have any questions, concerns, ideas or need support, please feel free to call/text me on my cell at 415.713.2126 or email me at <a href='mailto:dbinetti@startnormal.com'>dbinetti@startnormal.com</a>

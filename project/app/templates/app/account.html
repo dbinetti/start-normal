@@ -19,7 +19,7 @@
             Personal Information
           </h5>
 
-          <form method='post' action='{% url "account" %}' class=' form-horizontal' role='form'>
+          <form method='post' class=' form-horizontal' role='form'>
             {% csrf_token %}
             {{formset.management_form}}
             {% bootstrap_formset_errors formset %}
