@@ -31,8 +31,8 @@ def user_post_delete(sender, instance, **kwargs):
 
 
 @receiver(post_save, sender=User)
-def user_post_save(sender, instance, created, **kwargs):
-    if created:
+def user_post_save(sender, instance, created, raw=False, **kwargs):
+    if created and not raw:
         Account.objects.create(
             user=instance,
         )
