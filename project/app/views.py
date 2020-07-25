@@ -65,7 +65,6 @@ from .tasks import mailchimp_create_or_update_from_user
 from .tasks import mailchimp_subscribe_email
 from .tasks import send_email
 
-log = logging.getLogger('app')
 
 # Root
 def index(request):
@@ -479,7 +478,7 @@ def callback(request):
             destination = 'parent'
             request.session['homeroom'] = str(homeroom.id)
         except Homeroom.DoesNotExist as e:
-            log.error(str(e))
+            logging.exception(e)
             destination = 'parent'
     code = request.GET.get('code', None)
     if not code:
