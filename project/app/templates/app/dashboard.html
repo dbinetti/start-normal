@@ -12,6 +12,9 @@
     <p class='lead'>
       Your Dashboard allows you to see and update details of your account, either as a Parent, Teacher, or both.
     </p>
+    <p>
+      Please note that your name, email, and student name are available to others in your Homeroom.
+    </p>
   </section>
 
   <section class='mt-2 mt-5'>
@@ -97,6 +100,9 @@
         {% endif %}
       </div>
     </div>
+  </section>
+  <section class='ml-2'>
+    <a href='{% url "delete" %}'><span class='text-danger'>Delete Account</span></a>
   </section>
   <section class='my-5'>
     If you have any questions, concerns, ideas or need support, please feel free to call/text me on my cell at 415.713.2126 or email me at <a href='mailto:dbinetti@startnormal.com'>dbinetti@startnormal.com</a>
