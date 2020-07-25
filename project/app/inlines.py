@@ -52,15 +52,14 @@ class ReportInline(admin.TabularInline):
 class StudentInline(admin.TabularInline):
     model = Student
     fields = [
+        'name',
         'parent',
         'homeroom',
-        'school',
-        'grade',
     ]
     readonly_fields = [
     ]
     ordering = [
-        'grade',
+        '-created',
     ]
     show_change_link = True
     extra = 0
@@ -68,9 +67,7 @@ class StudentInline(admin.TabularInline):
         # 'collapse',
     ]
     autocomplete_fields = [
-        'homeroom',
         'parent',
-        'school',
     ]
 
 

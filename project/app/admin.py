@@ -40,13 +40,13 @@ class HomeroomAdmin(admin.ModelAdmin):
         'description',
         'status',
         'grade',
-        'owner',
+        'school',
     ]
     list_display = [
         'name',
         'status',
         'grade',
-        'owner',
+        'school',
         'created',
         'updated',
     ]
@@ -56,10 +56,10 @@ class HomeroomAdmin(admin.ModelAdmin):
         'updated',
     ]
     search_fields = [
-        'owner',
+        'name',
     ]
     autocomplete_fields = [
-        'owner',
+        'school',
     ]
     inlines = [
         StudentInline,
