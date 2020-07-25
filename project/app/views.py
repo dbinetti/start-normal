@@ -284,46 +284,12 @@ def create_parent(request):
     return redirect('account')
 
 @login_required
-def create_homeroom(request, student_id):
-    user = request.user
-    homeroom, created = Homeroom.objects.get_or_create(
-        owner=user.parent,
-    )
-    if created:
-        student = Student.objects.get(id=student_id)
-        homeroom.grade = student.grade
-        homeroom.name = "{0} {1} Homeroom".format(
-            student.school.name,
-            student.get_grade_display(),
-        )
-        homeroom.save()
-        student.homeroom = homeroom
-        student.save()
-        return redirect('homeroom', homeroom.id)
-
-
-@login_required
 def parent(request):
-    StudentFormSet.extra = 5
-    homeroom_id = request.session.get('homeroom', None)
-    if homeroom_id:
-        homeroom = Homeroom.objects.get(id=homeroom_id)
-    else:
-        homeroom = None
     user = request.user
-    try:
-        success = request.GET.__getitem__('success')
-    except:
-        success = ''
-    if success == 'true':
-        user.is_active = True
-        user.save()
-
+    StudentFormSet.extra = 5
     parent, created = Parent.objects.get_or_create(
         user=user,
     )
-    account = user.account
-
     if request.method == "POST":
         formset = StudentFormSet(
             request.POST,
@@ -346,7 +312,6 @@ def parent(request):
         'app/parent.html',
         context = {
             'formset': formset,
-            'homeroom': homeroom,
         },
     )
 

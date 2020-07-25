@@ -26,11 +26,9 @@ urlpatterns = [
     path('pending', views.pending, name='pending',),
     path('teacher', views.teacher, name='teacher',),
     path('create-teacher', views.create_teacher, name='create-teacher',),
-    path('create-homeroom/<student_id>', views.create_homeroom, name='create-homeroom',),
     path('create-parent', views.create_parent, name='create-parent',),
     path('homeroom/<id>', views.homeroom, name='homeroom',),
     path('parent', views.parent, name='parent',),
-    path('create-parent', views.create_parent, name='create-parent',),
     path('share', views.share, name='share',),
     path('delete', views.delete, name='delete',),
 
