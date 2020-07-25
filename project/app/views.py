@@ -296,7 +296,7 @@ def create_student(request):
             request,
             'Added!',
         )
-        return redirect('parent')
+        return redirect('dashboard')
     return render(
         request,
         'app/create_student.html',
@@ -331,6 +331,11 @@ def delete_student(request, id):
 
 @login_required
 def parent(request):
+    homeroom_id = request.session.get('homeroom', None)
+    if homeroom_id:
+        homeroom = Homeroom.objects.get(id=homeroom_id)
+    else:
+        homeroom = None
     user = request.user
     StudentFormSet.extra = 5
     parent, created = Parent.objects.get_or_create(
@@ -344,6 +349,23 @@ def parent(request):
         )
         if formset.is_valid():
             formset.save()
+            messages.success(
+                request,
+                "Saved!",
+            )
+            return redirect('dashboard')
+    formset = StudentFormSet(
+        instance=parent,
+    )
+    return render(
+        request,
+        'app/parent.html',
+        context = {
+            'formset': formset,
+        }
+    )
+
+
 @login_required
 def student(request, id):
     user = request.user
@@ -359,7 +381,7 @@ def student(request, id):
                 request,
                 "Saved!",
             )
-            return redirect('parent')
+            return redirect('dashboard')
     form = StudentForm(instance=student)
 
     return render(

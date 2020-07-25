@@ -37,9 +37,6 @@
                 <th>
                   Grade
                 </th>
-                <th>
-                  Remove?
-                </th>
               </tr>
             </thead>
             <tbody>
@@ -47,7 +44,6 @@
                 <tr>
                   <td>{% bootstrap_field form.school show_help=False show_label=False size='small' placeholder='Type to search....' %}</td>
                   <td>{% bootstrap_field form.grade show_help=False show_label=False size='small'%}</td>
-                  <td>{{form.DELETE}}</td>
                   {{form.id}}
                 </tr>
               {% endfor %}

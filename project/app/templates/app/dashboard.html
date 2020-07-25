@@ -25,19 +25,17 @@
             <thead>
               <tr>
                 <th>
-                  Student Name
+                  Name
                 </th>
                 <th>
-                  Student School
+                  School
                 </th>
                 <th>
-                  Student Grade
+                  Grade
                 </th>
-                {% comment %}
                 <th>
-                  Student Homeroom
+                  Homeroom
                 </th>
-                {% endcomment %}
               </tr>
             </thead>
             <tbody>
@@ -52,25 +50,14 @@
                   <td>
                     {{student.get_grade_display}}
                   </td>
-                  {% comment %}
+
                   <td>
-                    {% if student.homeroom %}
-                      <a href='{% url "homeroom" student.homeroom.id %}'>{{student.homeroom}}</a>
-                    {% else %}
-                      <a href='{% url "create-homeroom" student.id %}'>Create Homeroom</a>
-                    {% endif %}
+                    <a href='{% url "homeroom" student.homeroom.id %}'>Homeroom</a>
                   </td>
-                  {% endcomment %}
+
                 </tr>
               {% endfor %}
             </tbody>
-            <tfoot>
-              <tr>
-                <td colspan=3>
-                  <a href='{% url "parent" %}'>Edit this Information</a>
-                </td>
-              </tr>
-            </tfoot>
           </table>
         {% else %}
           <p>
@@ -78,6 +65,11 @@
           </p>
         {% endif %}
       </div>
+      {% if parent %}
+      <div class='card-footer'>
+        <a href='{% url "create-student" %}' class='btn btn-success btn-large' role='button'>Add a Student</a>
+      </div>
+      {% endif %}
     </div>
   </section>
   <section class='my-5'>

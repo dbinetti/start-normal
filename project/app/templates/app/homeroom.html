@@ -7,16 +7,12 @@
 {% block header %}Homeroom{% endblock header %}
 
 {% block content %}
-  {% if request.user.is_authenticated %}
   <section class='my-5'>
-    <p class='lead mb-5'>
-      The Homeroom is a stable cohort of students selected from the same school and grade.
+    <p class='lead mb-5 col-lg-9'>
+      This Homeroom is a stable cohort of {{homeroom.get_grade_display}} students from {{homeroom.school.name}}, in {{homeroom.school.city}}, {{homeroom.school.state}}.
     </p>
     <p>
-      To invite others to this Homeroom please use the following link:
-    </p>
-    <p>
-      <a href='{{homeroom_link}}'>{{homeroom_link}}</a>
+      If you have a child in {{homeroom.get_grade_display}} from {{homeroom.school.name}} in {{homeroom.school.city}} (or nearby) then <a href='{% url "signup" homeroom.id %}'>Join This Homeroom</a>
     </p>
     <p>
       Once you get to five students, we'll find a teacher to provide instruction to this group and arrange the final details of how and when instruction will begin.
@@ -24,6 +20,7 @@
     <p>
       I'm building out functionality on an hourly basis, so please don't hestitate to reach out with questions, concerns, ideas or any other needs and I'll do my best to help as best I can.  Call/text my cell at 415.713.2126 or email me at <a href='mailto:dbinetti@startnormal.com'>dbinetti@startnormal.com</a>.
   </section>
+  {% comment %}
   <section class='mt-2 mt-5'>
     <div class='card'>
       <div class='card-header'>
@@ -49,31 +46,27 @@
       </div>
     </div>
   </section>
+  {% endcomment %}
 
+  {% if request.user.is_authenticated %}
   <section class='mt-2 mt-5'>
     <div class='card'>
       <div class='card-header'>
         <h4>Current Students</h4>
       </div>
       <div class='card-body'>
-        <div>
-          <p class='lead'>
-            Student School(s): {{schools}}<br>
-            Student Grade(s): {{grades}}
-          </p>
-        </div>
         <div class='table-responsive-lg mb-5'>
           <table class='table table-sm'>
             <thead>
               <tr>
                 <th>
+                  Student Name
+                </th>
+                <th>
                   Parent Name
                 </th>
                 <th>
                   Parent Email
-                </th>
-                <th>
-                  Student Grade
                 </th>
               </tr>
             </thead>
@@ -81,13 +74,13 @@
               {% for student in students %}
                 <tr>
                   <td>
+                    {{student.name|default:"(Unknown)"}}
+                  </td>
+                  <td>
                     {{student.parent}}
                   </td>
                   <td>
                     <a href='mailto:{{student.parent.user.email}}'>{{student.parent.user.email}}</a>
-                  </td>
-                  <td>
-                    {{student.get_grade_display}}
                   </td>
                 </tr>
               {% endfor %}
@@ -98,46 +91,9 @@
     </div>
   </section>
 
+  {% endif %}
+
   <section class='mt-2 ml-2'>
     {# <a href='{% url "delete" %}'><span class='text-danger'>Delete Account</span></a> #}
   </section>
-  {% else %}
-    <section class='my-5'>
-      <p class='lead'>
-        A Start Normal Homeroom is a stable cohort of students searching for a teacher.
-      </p>
-    </section>
-    <section class='my-5'>
-      <div class='card'>
-        <div class='card-header'>
-          <h4>
-            Homeroom Details
-          </h4>
-        </div>
-        <div class='card-body'>
-          <h5>
-            Homeroom Parent: {{homeroom.owner}}<br>
-            School(s) Represented: {{schools}}<br>
-            Grade(s) Represented: {{grades}}<br>
-          </h5>
-        </div>
-      </div>
-    </section>
-
-    <section class='my-5'>
-      <h4>
-        "What is all this?"
-      </h4>
-      <p>
-        You probably came here as a result of another parent's invite.  If so, welcome!  <strong>Start Normal</strong> is a network of parents and teachers seeking in-person, at-home, small-group instruction for low-risk groups.  This Homeroom is one of those groups.
-      </p>
-      <p>
-        I encourage you to read the <a href='{% url "faq" %}'>FAQ</a> to get a better sense of what we're trying to do here, but the short answer is that if we get this Homeroom to five students we'll find a teacher for you.  When you're ready to join, click the button below.  Otherwise, feel free to give me at call/text on my cell phone at 415.713.2126 or email me at <a href='mailto:dbinetti@startnormal.com'>dbinetti@startnormal.com</a> and I'll do everything I can to answer your questions.
-      </p>
-      <p>
-        <a href='{% url "signup" homeroom.id %}' role='button' class='btn btn-success btn-lg mt-5'>Join This Homeroom</a>
-      </p>
-    </section>
-
-  {% endif %}
 {% endblock content %}
