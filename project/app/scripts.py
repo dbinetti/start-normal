@@ -1,21 +1,25 @@
 # Standard Library
 import csv
 
+# Third-Party
+from algoliasearch_django.decorators import disable_auto_indexing
+from nameparser import HumanName
+
 # Django
 from django.db import IntegrityError
+from django.db.models import Q
 
 # First-Party
-from algoliasearch_django.decorators import disable_auto_indexing
 from app.forms import ContactForm
 from app.forms import DistrictForm
 from app.forms import SchoolForm
 from app.models import Contact
 from app.models import District
 from app.models import Entry
+from app.models import Homeroom
 from app.models import School
 from app.tasks import build_email
 from app.tasks import send_email
-from nameparser import HumanName
 
 
 # public
@@ -511,3 +515,28 @@ def import_grades(s):
     c.low_grade = low_grade
     c.save()
     print('saved')
+
+
+def create_homerooms():
+    i = 0
+    ss = School.objects.filter(
+        low_grade__isnull=False,
+        high_grade__isnull=False,
+    )
+    for s in ss:
+        i+=1
+        grade = 0
+        while grade <= s.high_grade:
+            grade += 1
+            if grade not in [2,5,10,20,30,40,50,60,70,80,90,100,110,120]:
+                continue
+            name = "{0} {1} Homeroom".format(
+                s.name,
+                s.GRADE[grade],
+            )
+            h = Homeroom.objects.create(
+                name=name,
+                grade=grade,
+                school=s,
+            )
+            print(i, grade, h)

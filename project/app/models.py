@@ -1,13 +1,7 @@
 # Standard Library
 from operator import attrgetter
 
-# Django
-from django.contrib.auth.models import AbstractBaseUser
-from django.db import models
-from django.db.models.constraints import UniqueConstraint
-from django.utils.text import slugify
-
-# First-Party
+# Third-Party
 import shortuuid
 from autoslug import AutoSlugField
 from hashid_field import HashidAutoField
@@ -16,6 +10,12 @@ from mptt.models import MPTTModel
 from mptt.models import TreeForeignKey
 from multiselectfield import MultiSelectField
 from shortuuidfield import ShortUUIDField
+
+# Django
+from django.contrib.auth.models import AbstractBaseUser
+from django.db import models
+from django.db.models.constraints import UniqueConstraint
+from django.utils.text import slugify
 
 # Local
 from .managers import UserManager
@@ -376,12 +376,12 @@ class School(models.Model):
     GRADE = Choices(
         (2, 'tk', 'Transitional Kindergarten'),
         (5, 'k', 'Kindergarten'),
-        (10, 'first', 'First  Grade'),
-        (20, 'second', 'Second  Grade'),
-        (30, 'third', 'Third  Grade'),
-        (40, 'fourth', 'Fourth  Grade'),
-        (50, 'fifth', 'Fifth  Grade'),
-        (60, 'sixth', 'Sixth  Grade'),
+        (10, 'first', 'First Grade'),
+        (20, 'second', 'Second Grade'),
+        (30, 'third', 'Third Grade'),
+        (40, 'fourth', 'Fourth Grade'),
+        (50, 'fifth', 'Fifth Grade'),
+        (60, 'sixth', 'Sixth Grade'),
         (70, 'seventh', 'Seventh Grade'),
         (80, 'eighth', 'Eighth Grade'),
         (90, 'ninth', 'Ninth Grade'),
@@ -523,12 +523,12 @@ class Homeroom(models.Model):
     GRADE = Choices(
         (2, 'tk', 'Transitional Kindergarten'),
         (5, 'k', 'Kindergarten'),
-        (10, 'first', 'First  Grade'),
-        (20, 'second', 'Second  Grade'),
-        (30, 'third', 'Third  Grade'),
-        (40, 'fourth', 'Fourth  Grade'),
-        (50, 'fifth', 'Fifth  Grade'),
-        (60, 'sixth', 'Sixth  Grade'),
+        (10, 'first', 'First Grade'),
+        (20, 'second', 'Second Grade'),
+        (30, 'third', 'Third Grade'),
+        (40, 'fourth', 'Fourth Grade'),
+        (50, 'fifth', 'Fifth Grade'),
+        (60, 'sixth', 'Sixth Grade'),
         (70, 'seventh', 'Seventh Grade'),
         (80, 'eighth', 'Eighth Grade'),
         (90, 'ninth', 'Ninth Grade'),
@@ -584,6 +584,12 @@ class Homeroom(models.Model):
     )
     updated = models.DateTimeField(
         auto_now=True,
+    )
+    school = models.ForeignKey(
+        'Parent',
+        on_delete=models.SET_NULL,
+        related_name='homerooms',
+        null=True,
     )
     owner = models.ForeignKey(
         'Parent',
@@ -778,12 +784,12 @@ class Invite(models.Model):
     GRADE = Choices(
         (2, 'tk', 'Transitional Kindergarten'),
         (5, 'k', 'Kindergarten'),
-        (10, 'first', 'First  Grade'),
-        (20, 'second', 'Second  Grade'),
-        (30, 'third', 'Third  Grade'),
-        (40, 'fourth', 'Fourth  Grade'),
-        (50, 'fifth', 'Fifth  Grade'),
-        (60, 'sixth', 'Sixth  Grade'),
+        (10, 'first', 'First Grade'),
+        (20, 'second', 'Second Grade'),
+        (30, 'third', 'Third Grade'),
+        (40, 'fourth', 'Fourth Grade'),
+        (50, 'fifth', 'Fifth Grade'),
+        (60, 'sixth', 'Sixth Grade'),
         (70, 'seventh', 'Seventh Grade'),
         (80, 'eighth', 'Eighth Grade'),
         (90, 'ninth', 'Ninth Grade'),
@@ -890,12 +896,12 @@ class Student(models.Model):
     GRADE = Choices(
         (2, 'tk', 'Transitional Kindergarten'),
         (5, 'k', 'Kindergarten'),
-        (10, 'first', 'First  Grade'),
-        (20, 'second', 'Second  Grade'),
-        (30, 'third', 'Third  Grade'),
-        (40, 'fourth', 'Fourth  Grade'),
-        (50, 'fifth', 'Fifth  Grade'),
-        (60, 'sixth', 'Sixth  Grade'),
+        (10, 'first', 'First Grade'),
+        (20, 'second', 'Second Grade'),
+        (30, 'third', 'Third Grade'),
+        (40, 'fourth', 'Fourth Grade'),
+        (50, 'fifth', 'Fifth Grade'),
+        (60, 'sixth', 'Sixth Grade'),
         (70, 'seventh', 'Seventh Grade'),
         (80, 'eighth', 'Eighth Grade'),
         (90, 'ninth', 'Ninth Grade'),
