@@ -586,7 +586,7 @@ class Homeroom(models.Model):
         auto_now=True,
     )
     school = models.ForeignKey(
-        'Parent',
+        'School',
         on_delete=models.SET_NULL,
         related_name='homerooms',
         null=True,
