@@ -39,4 +39,4 @@ nameparser = "*"
 django-multiselectfield = "*"
 
 [requires]
-python_full_version = "3.8.4"
+python_version = "3.8"
