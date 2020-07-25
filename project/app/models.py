@@ -574,6 +574,17 @@ class Homeroom(models.Model):
             self.school,
             self.get_grade_display(),
         )
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=[
+                    'grade',
+                    'school'
+                ],
+                name='unique_homeroom'
+            )
+        ]
+
 
 
 class Classroom(models.Model):
