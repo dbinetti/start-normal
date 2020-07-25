@@ -1,7 +1,13 @@
 # Standard Library
 from operator import attrgetter
 
-# Third-Party
+# Django
+from django.contrib.auth.models import AbstractBaseUser
+from django.db import models
+from django.db.models.constraints import UniqueConstraint
+from django.utils.text import slugify
+
+# First-Party
 import shortuuid
 from autoslug import AutoSlugField
 from hashid_field import HashidAutoField
@@ -11,24 +17,8 @@ from mptt.models import TreeForeignKey
 from multiselectfield import MultiSelectField
 from shortuuidfield import ShortUUIDField
 
-# Django
-from django.contrib.auth.models import AbstractBaseUser
-from django.db import models
-from django.db.models.constraints import UniqueConstraint
-from django.utils.text import slugify
-
 # Local
 from .managers import UserManager
-
-
-def get_populate_from(instance):
-    fields = [
-        'name',
-        'city',
-        'state',
-    ]
-    values = [getattr(instance, field) for field in fields]
-    return slugify("-".join(values))
 
 
 class Account(models.Model):
@@ -262,12 +252,6 @@ class District(models.Model):
     description = models.TextField(
         blank=True,
     )
-    slug = AutoSlugField(
-        max_length=255,
-        always_update=True,
-        populate_from=get_populate_from,
-        unique=True,
-    )
     status = models.IntegerField(
         blank=False,
         choices=STATUS,
@@ -407,7 +391,7 @@ class School(models.Model):
     slug = AutoSlugField(
         max_length=255,
         always_update=True,
-        populate_from=get_populate_from,
+        populate_from='__str__',
         unique=True,
     )
     status = models.IntegerField(
@@ -551,7 +535,7 @@ class Homeroom(models.Model):
     slug = AutoSlugField(
         max_length=255,
         always_update=True,
-        populate_from='name',
+        populate_from='__str__',
         unique=True,
     )
     status = models.IntegerField(
@@ -567,18 +551,6 @@ class Homeroom(models.Model):
         choices=GRADE,
         null=True,
     )
-    lat = models.DecimalField(
-        max_digits=10,
-        decimal_places=6,
-        null=True,
-        blank=True,
-    )
-    lon = models.DecimalField(
-        max_digits=10,
-        decimal_places=6,
-        null=True,
-        blank=True,
-    )
     created = models.DateTimeField(
         auto_now_add=True,
     )
@@ -587,9 +559,8 @@ class Homeroom(models.Model):
     )
     school = models.ForeignKey(
         'School',
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         related_name='homerooms',
-        null=True,
     )
     owner = models.ForeignKey(
         'Parent',
@@ -599,10 +570,10 @@ class Homeroom(models.Model):
     )
 
     def __str__(self):
-        return str(self.name)
-
-    def location(self):
-        return(self.lat, self.lon)
+        return "{0} {1}".format(
+            self.school,
+            self.get_grade_display(),
+        )
 
 
 class Classroom(models.Model):

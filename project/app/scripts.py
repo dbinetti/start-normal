@@ -1,15 +1,12 @@
 # Standard Library
 import csv
 
-# Third-Party
-from algoliasearch_django.decorators import disable_auto_indexing
-from nameparser import HumanName
-
 # Django
 from django.db import IntegrityError
 from django.db.models import Q
 
 # First-Party
+from algoliasearch_django.decorators import disable_auto_indexing
 from app.forms import ContactForm
 from app.forms import DistrictForm
 from app.forms import SchoolForm
@@ -20,6 +17,7 @@ from app.models import Homeroom
 from app.models import School
 from app.tasks import build_email
 from app.tasks import send_email
+from nameparser import HumanName
 
 
 # public
@@ -318,6 +316,8 @@ def private_schools_list(filename='privates.csv'):
                 'website': str(row[22].replace(" ", "")) if row[21] != 'No Data' else '',
                 'lat': float(row[23]) if row[23] != 'No Data' else None,
                 'lon': float(row[24]) if row[24] != 'No Data' else None,
+                'low': str(row[15]) if row[15] != 'No Data' else None,
+                'high': str(row[16]) if row[16] != 'No Data' else None,
 
                 # 'admin_first_name': humanname.first,
                 # 'admin_last_name': humanname.last,
@@ -498,6 +498,50 @@ def import_grades(s):
         return
     if not high:
         high = low
+    high_grade = mapping[str(high)]
+    low_grade = mapping[str(low)]
+
+    if not high_grade and not low_grade:
+        print('none')
+        return
+    try:
+        c = School.objects.get(nces_id=s['nces_school_id'])
+    except School.DoesNotExist:
+        print('n')
+        return
+    except School.MultipleObjectsReturned:
+        return
+    c.high_grade = high_grade
+    c.low_grade = low_grade
+    c.save()
+    print('saved')
+
+def import_private_grades(s):
+    mapping = {
+        'P': 2,
+        'K': 5,
+        '1': 10,
+        '2': 20,
+        '3': 30,
+        '4': 40,
+        '5': 50,
+        '6': 60,
+        '7': 70,
+        '8': 80,
+        '9': 90,
+        '10':100,
+        '11': 110,
+        '12': 120,
+        '13': None,
+        'Post Secondary': None,
+        '': None,
+        'Adult': None,
+        None: None,
+    }
+
+
+    low = s['low']
+    high = s['high']
     high_grade = mapping[str(high)]
     low_grade = mapping[str(low)]
 
