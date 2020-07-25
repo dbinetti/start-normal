@@ -570,25 +570,24 @@ def create_homerooms():
     errors = []
     for s in ss:
         i+=1
-        grade = 0
-        while grade <= s.high_grade:
-            grade += 1
-            if grade not in [2,5,10,20,30,40,50,60,70,80,90,100,110,120]:
-                continue
-            name = "{0} {1}".format(
-                self.school,
-                self.get_grade_display(),
-            )
-            defaults = {
-                'name': name,
-            }
-            try:
-                h, _ = Homeroom.objects.update_or_create(
-                    grade=grade,
-                    school=s,
-                    defaults=defaults,
+        grades = [2,5,10,20,30,40,50,60,70,80,90,100,110,120]
+        for grade in grades:
+            if grade >= s.low_grade and grade <= s.high_grade:
+                grade_name = School.GRADE[grade]
+                name = "{0} {1}".format(
+                    s.name,
+                    grade_name,
                 )
-            except Homeroom.MultipleObjectsReturned:
-                errors.append((s, grade))
-                continue
-            print(i, grade, h)
+                defaults = {
+                    'name': name,
+                }
+                try:
+                    h, _ = Homeroom.objects.update_or_create(
+                        grade=grade,
+                        school=s,
+                        defaults=defaults,
+                    )
+                except Homeroom.MultipleObjectsReturned:
+                    errors.append((s, grade))
+                    continue
+                print(i, grade, h)
