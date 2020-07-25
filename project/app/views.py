@@ -43,6 +43,7 @@ from .forms import InviteFormSet
 from .forms import ReportForm
 from .forms import SchoolForm
 from .forms import SignupForm
+from .forms import StudentForm
 from .forms import StudentFormSet
 from .forms import SubscribeForm
 from .forms import TeacherForm
@@ -284,6 +285,51 @@ def create_parent(request):
     return redirect('account')
 
 @login_required
+def create_student(request):
+    parent = request.user.parent
+    form = StudentForm(request.POST or None)
+    if form.is_valid():
+        student = form.save(commit=False)
+        student.parent = parent
+        student.save()
+        messages.success(
+            request,
+            'Added!',
+        )
+        return redirect('parent')
+    return render(
+        request,
+        'app/create_student.html',
+        context = {
+            'form': form,
+        }
+    )
+
+@login_required
+def delete_student(request, id):
+    parent = request.user.parent
+    student = Student.objects.get(
+        id=id,
+    )
+    if request.method == "POST":
+        form = DeleteForm(request.POST)
+        if form.is_valid():
+            student.delete()
+            messages.error(
+                request,
+                "Student Deleted!",
+            )
+            return redirect('dashboard')
+    else:
+        form = DeleteForm()
+    return render(
+        request,
+        'app/delete_student.html',
+        {'form': form,},
+    )
+
+
+@login_required
 def parent(request):
     user = request.user
     StudentFormSet.extra = 5
@@ -298,20 +344,30 @@ def parent(request):
         )
         if formset.is_valid():
             formset.save()
+@login_required
+def student(request, id):
+    user = request.user
+    student = Student.objects.get(
+        id=id,
+        parent=user.parent,
+    )
+    if request.method == 'POST':
+        form = StudentForm(request.POST, instance=student)
+        if form.is_valid():
+            form.save()
             messages.success(
                 request,
                 "Saved!",
             )
-            return redirect('dashboard')
-    else:
-        formset = StudentFormSet(
-            instance=parent,
-        )
+            return redirect('parent')
+    form = StudentForm(instance=student)
+
     return render(
         request,
-        'app/parent.html',
+        'app/student.html',
         context = {
-            'formset': formset,
+            'form': form,
+            'student': student,
         },
     )
 
@@ -635,7 +691,9 @@ def add_school(request):
     return render(
         request,
         'app/add_school.html',
-        {'form': form,},
+        context = {
+            'form': form,
+        },
     )
 
 @login_required

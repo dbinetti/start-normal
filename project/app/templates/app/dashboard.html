@@ -25,6 +25,9 @@
             <thead>
               <tr>
                 <th>
+                  Student Name
+                </th>
+                <th>
                   Student School
                 </th>
                 <th>
@@ -40,6 +43,9 @@
             <tbody>
               {% for student in students %}
                 <tr>
+                  <td>
+                    <a href='{% url "student" student.id %}'>{{student.name|default:"(Unknown)"}}</a>
+                  </td>
                   <td>
                     {{student.school}}
                   </td>

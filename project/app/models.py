@@ -133,11 +133,40 @@ class Parent(models.Model):
     id = HashidAutoField(
         primary_key=True,
     )
+    address = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    city = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    state = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    zipcode = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+    )
+    county = models.CharField(
+        max_length=255,
+        blank=True,
+    )
+    phone = models.CharField(
+        max_length=255,
+        blank=True,
+        default='',
+    )
     notes = models.TextField(
         max_length=512,
         blank=True,
         default='',
-        help_text="""Feel free to include private notes just for us.""",
+        help_text="""Notes.""",
     )
     created = models.DateTimeField(
         auto_now_add=True,
@@ -584,7 +613,6 @@ class Homeroom(models.Model):
                 name='unique_homeroom'
             )
         ]
-
 
 
 class Classroom(models.Model):

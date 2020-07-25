@@ -204,6 +204,41 @@ class ContactForm(forms.ModelForm):
         ]
 
 
+class ParentForm(forms.ModelForm):
+    class Meta:
+        model = Parent
+        fields = [
+            'address',
+            'city',
+            'state',
+            'phone',
+        ]
+
+
+class StudentForm(forms.ModelForm):
+    class Meta:
+        model = Student
+        fields = [
+            'name',
+            'school',
+            'grade',
+        ]
+    school = forms.ModelChoiceField(
+        queryset=School.objects.all(),
+        widget=autocomplete.ModelSelect2(
+            url='school-autocomplete',
+            attrs={
+                'data-container-css-class': '',
+                'data-close-on-select': 'false',
+                'data-scroll-after-select': 'false',
+                'data-placeholder': 'Search Schools',
+                'data-minimum-input-length': 3,
+            },
+        ),
+        help_text="Please select the school your student would be entering in the Fall.)",
+    )
+
+
 class ReportForm(forms.ModelForm):
     class Meta:
         model = Report

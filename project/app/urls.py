@@ -28,6 +28,7 @@ urlpatterns = [
     path('create-teacher', views.create_teacher, name='create-teacher',),
     path('create-parent', views.create_parent, name='create-parent',),
     path('homeroom/<id>', views.homeroom, name='homeroom',),
+    path('student/<id>', views.student, name='student',),
     path('parent', views.parent, name='parent',),
     path('share', views.share, name='share',),
     path('delete', views.delete, name='delete',),
@@ -39,6 +40,8 @@ urlpatterns = [
     path('school/<slug>/add-contact', views.add_contact, name='add-contact'),
     path('school/<slug>/add-report', views.add_report, name='add-report'),
     path('search', views.search, name='search'),
+    path('create-student', views.create_student, name='create-student'),
+    path('delete-student/<id>', views.delete_student, name='delete-student'),
 
     # Informed
     path('informed', views.informed, name='informed',),
