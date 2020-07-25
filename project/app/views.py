@@ -1,6 +1,7 @@
 # Django
 # Standard Library
 import json
+import logging
 
 from django import forms
 from django.conf import settings
@@ -64,6 +65,7 @@ from .tasks import mailchimp_create_or_update_from_user
 from .tasks import mailchimp_subscribe_email
 from .tasks import send_email
 
+log = logging.getLogger('app')
 
 # Root
 def index(request):
@@ -476,8 +478,9 @@ def callback(request):
             homeroom = Homeroom.objects.get(id=kind)
             destination = 'parent'
             request.session['homeroom'] = str(homeroom.id)
-        except Homeroom.DoesNotExist:
-            destination = 'dashboard'
+        except Homeroom.DoesNotExist as e:
+            log.error(str(e))
+            destination = 'parent'
     code = request.GET.get('code', None)
     if not code:
         return HttpResponse(status=400)

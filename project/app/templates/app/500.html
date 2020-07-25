@@ -1,0 +1,10 @@
+{% extends 'app/base.html' %}
+
+{% block scripts %}
+{% if sentry_event_id %}
+<script>
+  Sentry.init({ dsn: 'https://4d33c703fe3d4eac9375b3fa5808f5b1@o412551.ingest.sentry.io/5289500' });
+  Sentry.showReportDialog({ eventId: '{{ sentry_event_id }}' });
+</script>
+{% endif %}
+{% endblock scripts %}
