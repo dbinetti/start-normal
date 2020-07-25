@@ -289,7 +289,14 @@ def create_student(request):
     parent = request.user.parent
     form = StudentForm(request.POST or None)
     if form.is_valid():
+        school = form.cleaned_data['school']
+        grade = form.cleaned_data['grade']
+        homeroom = Homeroom.objects.get(
+            school=school,
+            grade=grade,
+        )
         student = form.save(commit=False)
+        student.homeroom = homeroom
         student.parent = parent
         student.save()
         messages.success(
@@ -331,11 +338,6 @@ def delete_student(request, id):
 
 @login_required
 def parent(request):
-    homeroom_id = request.session.get('homeroom', None)
-    if homeroom_id:
-        homeroom = Homeroom.objects.get(id=homeroom_id)
-    else:
-        homeroom = None
     user = request.user
     StudentFormSet.extra = 5
     parent, created = Parent.objects.get_or_create(
@@ -367,6 +369,84 @@ def parent(request):
 
 
 @login_required
+def invite(request):
+    homeroom_id = request.session.get('homeroom', None)
+    if not homeroom_id:
+        return redirect('dashboard')
+    homeroom = Homeroom.objects.get(id=homeroom_id)
+    request.session['homeroom'] = None
+    user = request.user
+    parent, created = Parent.objects.get_or_create(
+        user=user,
+    )
+    student = Student.objects.create(
+        grade=homeroom.grade,
+        school=homeroom.school,
+        parent=parent,
+        homeroom=homeroom,
+    )
+    if request.method == 'POST':
+        form = StudentForm(
+            request.POST,
+            instance=student,
+        )
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                "Added to Homeroom!",
+            )
+            return redirect('dashboard')
+    form = StudentForm(
+        instance=student,
+    )
+    return render(
+        request,
+        'app/invite.html',
+        context = {
+            'form': form,
+        }
+    )
+
+
+@login_required
+def addme(request, homeroom_id):
+    homeroom = Homeroom.objects.get(id=homeroom_id)
+    user = request.user
+    parent, created = Parent.objects.get_or_create(
+        user=user,
+    )
+    student = Student.objects.create(
+        grade=homeroom.grade,
+        school=homeroom.school,
+        parent=parent,
+        homeroom=homeroom,
+    )
+    if request.method == 'POST':
+        form = StudentForm(
+            request.POST,
+            instance=student,
+        )
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                "Added to Homeroom!",
+            )
+            return redirect('dashboard')
+    form = StudentForm(
+        instance=student,
+    )
+    return render(
+        request,
+        'app/invite.html',
+        context = {
+            'form': form,
+        }
+    )
+
+
+@login_required
 def student(request, id):
     user = request.user
     student = Student.objects.get(
@@ -376,13 +456,22 @@ def student(request, id):
     if request.method == 'POST':
         form = StudentForm(request.POST, instance=student)
         if form.is_valid():
-            form.save()
+            school = form.cleaned_data['school']
+            grade = form.cleaned_data['grade']
+            homeroom = Homeroom.objects.get(
+                school=school,
+                grade=grade,
+            )
+            student = form.save(commit=False)
+            student.homeroom = homeroom
+            student.save()
             messages.success(
                 request,
                 "Saved!",
             )
             return redirect('dashboard')
-    form = StudentForm(instance=student)
+    else:
+        form = StudentForm(instance=student)
 
     return render(
         request,
@@ -413,6 +502,7 @@ def homeroom(request, id):
     grades = ", ".join([Student.GRADE[g] for g in grades_raw ])
     user = request.user
     if user.is_authenticated:
+        request.session['homeroom'] = str(homeroom.id)
         homeroom = Homeroom.objects.get(id=id)
         homeroom_link = request.build_absolute_uri(reverse('homeroom', args=[homeroom.id]))
         # invites = homeroom.invites.order_by('-created')
@@ -552,10 +642,11 @@ def callback(request):
     else:
         try:
             homeroom = Homeroom.objects.get(id=kind)
-            destination = 'parent'
+            destination = 'invite'
             request.session['homeroom'] = str(homeroom.id)
-        except Homeroom.DoesNotExist:
-            destination = 'dashboard'
+        except Homeroom.DoesNotExist as e:
+            logging.exception(e)
+            destination = 'parent'
     code = request.GET.get('code', None)
     if not code:
         return HttpResponse(status=400)

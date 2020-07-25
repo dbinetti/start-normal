@@ -950,9 +950,7 @@ class Student(models.Model):
     homeroom = models.ForeignKey(
         'Homeroom',
         related_name='students',
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
+        on_delete=models.CASCADE,
     )
 
     def __str__(self):
