@@ -38,6 +38,7 @@ django-autocomplete-light = "*"
 nameparser = "*"
 django-multiselectfield = "*"
 logging-tree = "*"
+python-json-logging = "*"
 
 [requires]
 python_version = "3.8"

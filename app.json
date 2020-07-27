@@ -62,7 +62,7 @@
           "generator": "secret"
         },
         "LOGLEVEL": {
-          "generator": "INFO"
+          "value": "INFO",
         },
         "MAILCHIMP_API_KEY": {
           "generator": "secret"
