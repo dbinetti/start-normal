@@ -62,7 +62,46 @@
     </div>
   </section>
 
-
+  <section class='my-5'>
+    <div class='card'>
+      <div class='card-header'>
+        <h4>Homerooms</h4>
+      </div>
+      <div class='card-body'>
+        <table class='table'>
+          <thead>
+            <th>
+              Homeroom
+            </th>
+            <th>
+              Students
+            </th>
+          </thead>
+          <tbody>
+            {% for homeroom in homerooms %}
+              <tr>
+                <td>
+                  {{homeroom.name}}
+                </td>
+                <td>
+                  {{homeroom.students.count}}
+                </td>
+                <td>
+              </tr>
+            {% comment %}
+            {% empty %}
+              <tr>
+                <td colspan=2>
+                  Start a Homeroom!
+                </td>
+              </tr>
+            {% endcomment %}
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
 
   <section class='my-5'>
     <div class='card'>
@@ -127,52 +166,5 @@
       </div>
     </div>
   </section>
-
-  {% if parents.count >= 100000 %}
-  <section class='my-5'>
-    <div class='card'>
-      <div class='card-header'>
-        <h5>Parents Who Want to Start Normal</h5>
-      </div>
-      <div class='card-body'>
-        <table class='table'>
-          <thead>
-            <th>
-              Name
-            </th>
-            <th>
-              Student Grade(s)
-            </th>
-            <th>
-              Message
-            </th>
-          </thead>
-          <tbody>
-            {% for parent in parents %}
-              <tr>
-                <td>
-                  {% if parent.account.is_public %}{{parent.name}}{% else %}Concerned Parent{% endif %}
-                </td>
-                <td>
-                  {{parent.grades}}
-                </td>
-                <td>
-                  {{parent.account.message|default:"(No message)"}}
-                </td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-      <div class='card-footer'>
-        {% if request.user.is_authenticated %}
-          {# <a href='{% url "share" %}' role='button' class='btn btn-success'>Share with Others</a> #}
-        {% else %}
-          {# <a href='{% url "involved" %}' role='button' class='btn btn-success'>Get Involved!</a> #}
-        {%endif%}
-      </div>
-    </div>
-  </section>
-  {% endif %}
 
 {% endblock content %}
