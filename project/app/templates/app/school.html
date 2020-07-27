@@ -81,7 +81,7 @@
             {% for homeroom in homerooms %}
               <tr>
                 <td>
-                  {{homeroom.name}}
+                  <a href='{% url "homeroom" homeroom.id %}'>{{homeroom.name}}</a>
                 </td>
                 <td>
                   {{homeroom.students.count}}

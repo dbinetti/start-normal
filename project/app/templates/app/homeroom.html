@@ -16,7 +16,7 @@
         To add your student to this Homeroom, please visit your <a href='{% url "dashboard" %}'>Dashboard</a>.
       </p>
     {% else %}
-        This Homeroom currently has {{homeroom.students.count}} registered students.  If you have a child in {{homeroom.get_grade_display}} from {{homeroom.school.name}} in {{homeroom.school.city}} (or nearby) then you can <a href='{% url "signup" homeroom.id %}'>Join This Homeroom</a>.
+        This Homeroom currently has {{homeroom.students.count}} registered students.  If you have a child in {{homeroom.get_grade_display}} from {{homeroom.school.name}} in {{homeroom.school.city}} (or nearby) then you can <a href='{% url "signup" "parent" %}'>Join This Homeroom</a>.
     {% endif %}
     <p>
       Once the Homeroom reaches five students, we'll find a teacher to provide instruction to this group and arrange the final details of how and when instruction will begin.
@@ -24,83 +24,51 @@
     <p>
       I'm building out functionality on an hourly basis, so please don't hestitate to reach out with questions, concerns, ideas or any other needs and I'll do my best to help as best I can.  Call/text my cell at 415.713.2126 or email me at <a href='mailto:dbinetti@startnormal.com'>dbinetti@startnormal.com</a>.
   </section>
-  {% comment %}
-  <section class='mt-2 mt-5'>
-    <div class='card'>
-      <div class='card-header'>
-        <h4>
-          Details
-        </h4>
-      </div>
-      <div class='card-body'>
-        <p>
-          <form method='post' role='form'>
-            {% csrf_token %}
-            {% bootstrap_form_errors form %}
-            {% bootstrap_field form.name %}
-            {% bootstrap_field form.max_size %}
-            {% bootstrap_field form.description %}
-            {% buttons %}
-              <button type="submit" class="btn btn-primary btn-lg btn-block">
-                Save Homeroom Details
-              </button>
-            {% endbuttons %}
-          </form>
-        </p>
-      </div>
-    </div>
-  </section>
-  {% endcomment %}
 
   {% if request.user.is_authenticated %}
-  <section class='mt-2 mt-5'>
-    <div class='card'>
-      <div class='card-header'>
-        <h4>Current Students</h4>
-        <small class='text-muted'>
-          Note: this information is only available to registered users and is not publicly available.
-        </small>
-      </div>
-      <div class='card-body'>
-        <div class='table-responsive-lg mb-5'>
-          <table class='table table-sm'>
-            <thead>
-              <tr>
-                <th>
-                  Student Name
-                </th>
-                <th>
-                  Parent Name
-                </th>
-                <th>
-                  Parent Email
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for student in students %}
+    <section class='mt-2 mt-5'>
+      <div class='card'>
+        <div class='card-header'>
+          <h4>Current Students</h4>
+          <small class='text-muted'>
+            Note: this information is only available to registered users and is not publicly available.
+          </small>
+        </div>
+        <div class='card-body'>
+          <div class='table-responsive-lg mb-5'>
+            <table class='table table-sm'>
+              <thead>
                 <tr>
-                  <td>
-                    {{student.name|default:"(Unknown)"}}
-                  </td>
-                  <td>
-                    {{student.parent}}
-                  </td>
-                  <td>
-                    <a href='mailto:{{student.parent.user.email}}'>{{student.parent.user.email}}</a>
-                  </td>
+                  <th>
+                    Student Name
+                  </th>
+                  <th>
+                    Parent Name
+                  </th>
+                  <th>
+                    Parent Email
+                  </th>
                 </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {% for student in students %}
+                  <tr>
+                    <td>
+                      {{student.name|default:"(Unknown)"}}
+                    </td>
+                    <td>
+                      {{student.parent}}
+                    </td>
+                    <td>
+                      <a href='mailto:{{student.parent.user.email}}'>{{student.parent.user.email}}</a>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
-
+    </section>
   {% endif %}
-
-  <section class='mt-2 ml-2'>
-    {# <a href='{% url "delete" %}'><span class='text-danger'>Delete Account</span></a> #}
-  </section>
 {% endblock content %}
