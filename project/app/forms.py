@@ -1,12 +1,12 @@
 # Django
+# Third-Party
+from dal import autocomplete
+
 from django import forms
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.forms import UserChangeForm as UserChangeFormBase
 from django.contrib.auth.forms import UserCreationForm as UserCreationFormBase
 from django.forms.models import inlineformset_factory
-
-# First-Party
-from dal import autocomplete
 
 # Local
 from .models import Account
@@ -28,7 +28,6 @@ StudentFormSet = inlineformset_factory(
         'grade',
         'school',
         'parent',
-        'homeroom',
     ],
     widgets = {
         'school': autocomplete.ModelSelect2(
@@ -41,12 +40,6 @@ StudentFormSet = inlineformset_factory(
                 'data-minimum-input-length': 3,
             },
         ),
-        'homeroom': forms.TextInput()
-    },
-    error_messages = {
-        'homeroom': {
-            'invalid_choice': "Enter a homeroom code if you have one; otherwise leave blank",
-        },
     },
     extra=0,
     max_num=5,
