@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "59788b1f88794f5aaeea3cddc7e1c94e68211918f3e30d0970a9ac520994fd1a"
+            "sha256": "d3a0786355e79b35ee15155e3c719f43080a0c097105284927770f9692a62eeb"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -264,9 +264,11 @@
         },
         "hashids": {
             "hashes": [
-                "sha256:6539b892a426e75747a9c0ad69409e9566f9c21b79310fc3424b5b6726f28da6"
+                "sha256:6c3dc775e65efc2ce2c157a65acb776d634cb814598f406469abef00ae3f635c",
+                "sha256:8bddd1acba501bfc9306e7e5a99a1667f4f2cacdc20cbd70bcc5ddfa5147c94c"
             ],
-            "version": "==1.2.0"
+            "markers": "python_version >= '2.7'",
+            "version": "==1.3.1"
         },
         "idna": {
             "hashes": [
@@ -298,6 +300,14 @@
             ],
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'",
             "version": "==0.17.2"
+        },
+        "logging-tree": {
+            "hashes": [
+                "sha256:c2201ab13be5060bf6f0cf29d18516d9f1d9186c75913ffda2165a01d1c63f81",
+                "sha256:ff588623bfc8012c3f55c7a85d18c51db86b26f7feefbc6df3cdf9842a23cdfd"
+            ],
+            "index": "pypi",
+            "version": "==1.8.1"
         },
         "mailchimp3": {
             "hashes": [
@@ -412,11 +422,11 @@
         },
         "rq": {
             "hashes": [
-                "sha256:60509898c9ebc40e4155fde8bf88a204ed1914cc9e1cde3d19188b1c5bd5efbd",
-                "sha256:ee7fb24bc84dba87446264ca7162b2ed7d6d6af3cbd68f0b6b220ce7c23c8ae8"
+                "sha256:370fc800903c226b898a10174e069a23077b74b22297b4b20e925ca82fcd9471",
+                "sha256:3da8554f3ea2ee9e48d54063ebe1437c6aa743483c1f46d2ad65294ab4e38873"
             ],
-            "markers": "python_version >= '3.4'",
-            "version": "==1.4.3"
+            "markers": "python_version >= '3.5'",
+            "version": "==1.5.0"
         },
         "sendgrid": {
             "hashes": [
