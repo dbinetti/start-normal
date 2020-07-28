@@ -3,16 +3,6 @@
 import json
 import logging
 
-# Third-Party
-import django_rq
-import requests
-import shortuuid
-from auth0.v3.authentication import Database
-from auth0.v3.authentication import Logout
-from auth0.v3.exceptions import Auth0Error
-from dal import autocomplete
-from django_rq import job
-
 from django import forms
 from django.conf import settings
 from django.contrib import messages
@@ -29,11 +19,22 @@ from django.db.models import Q
 from django.db.models import Sum
 from django.dispatch import receiver
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.urls import reverse_lazy
+
+# First-Party
+import django_rq
+import requests
+import shortuuid
+from auth0.v3.authentication import Database
+from auth0.v3.authentication import Logout
+from auth0.v3.exceptions import Auth0Error
+from dal import autocomplete
+from django_rq import job
 
 # Local
 from .forms import AccountForm
@@ -352,14 +353,13 @@ def parent(request):
         )
         if formset.is_valid():
             for form in formset:
-                if form.cleaned_data:
-                    homeroom, _ = Homeroom.objects.get_or_create(
-                        school=form.cleaned_data['school'],
-                        grade=form.cleaned_data['grade'],
-                    )
-                    student = form.save(commit=False)
-                    student.homeroom = homeroom
-                    student.save()
+                homeroom, _ = Homeroom.objects.get_or_create(
+                    school=form.cleaned_data['school'],
+                    grade=form.cleaned_data['grade'],
+                )
+                student = form.save(commit=False)
+                student.homeroom = homeroom
+                student.save()
             messages.success(
                 request,
                 "Saved!",
@@ -493,70 +493,15 @@ def student(request, id):
 
 # @login_required
 def homeroom(request, id):
-    homeroom = Homeroom.objects.get(id=id)
+    homeroom = get_object_or_404(Homeroom, pk=id)
     students = homeroom.students.order_by('-created')
-    schools = students.order_by(
-        'school__name',
-    ).values_list(
-        'school__name',
-        flat=True,
-    ).distinct()
-    schools = ", ".join(list(schools))
-    grades_raw = students.order_by(
-        'grade'
-    ).values_list(
-        'grade',
-        flat=True,
-    ).distinct()
-    grades = ", ".join([Student.GRADE[g] for g in grades_raw ])
-    user = request.user
-    if user.is_authenticated:
-        request.session['homeroom'] = str(homeroom.id)
-        homeroom = Homeroom.objects.get(id=id)
-        homeroom_link = request.build_absolute_uri(reverse('homeroom', args=[homeroom.id]))
-        # invites = homeroom.invites.order_by('-created')
-        if request.method == "POST":
-            form = HomeroomForm(
-                request.POST,
-                instance=homeroom,
-                prefix='homeroom',
-            )
-            if form.is_valid():
-                form.save()
-                messages.success(
-                    request,
-                    'Saved!',
-                )
-                return redirect('dashboard')
-        else:
-            form = HomeroomForm(
-                instance=homeroom,
-                prefix='homeroom',
-            )
-
-        return render(
-            request,
-            'app/homeroom.html', {
-                'homeroom': homeroom,
-                'homeroom_link': homeroom_link,
-                # 'invites': invites,
-                'form': form,
-                # 'formset': formset,
-                'students': students,
-                'schools': schools,
-                'grades': grades,
-            },
-        )
-    else:
-        request.session['homeroom'] = str(homeroom.id)
-        return render(
-            request,
-            'app/homeroom.html', {
-                'homeroom': homeroom,
-                'schools': schools,
-                'grades': grades,
-            },
-        )
+    return render(
+        request,
+        'app/homeroom.html', {
+            'homeroom': homeroom,
+            'students': students,
+        },
+    )
 
 
 @login_required
@@ -641,21 +586,19 @@ def callback(request):
     server_state = request.GET.get('state', None)
     if browser_state != server_state:
         return HttpResponse(status=400)
+
+    # Parse referrer
     kind = server_state.partition("|")[0]
-    if kind == 'teacher':
-        destination = 'teacher'
-    elif kind == 'parent':
-        destination = 'parent'
-    elif kind == 'dashboard':
-        destination = 'dashboard'
-    else:
-        try:
-            homeroom = Homeroom.objects.get(id=kind)
-            destination = 'invite'
-            request.session['homeroom'] = str(homeroom.id)
-        except Homeroom.DoesNotExist as e:
-            logging.exception(e)
-            destination = 'parent'
+    if kind not in [
+        'dashboard',
+        'parent',
+        'teacher',
+        # 'homeroom',
+    ]:
+        logging.error("No Kind")
+        return HttpResponse(status=400)
+
+    # Get Auth0 Code
     code = request.GET.get('code', None)
     if not code:
         return HttpResponse(status=400)
@@ -688,7 +631,7 @@ def callback(request):
     user = authenticate(request, **payload)
     if user:
         log_in(request, user)
-        return redirect(destination)
+        return redirect(kind)
     return HttpResponse(status=400)
 
 def logout(request):

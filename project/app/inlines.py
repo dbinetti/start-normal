@@ -54,7 +54,9 @@ class StudentInline(admin.TabularInline):
     fields = [
         'name',
         'parent',
-        'homeroom',
+        'school',
+        'grade',
+        # 'homeroom',
     ]
     readonly_fields = [
     ]
@@ -67,6 +69,7 @@ class StudentInline(admin.TabularInline):
         # 'collapse',
     ]
     autocomplete_fields = [
+        'school',
         'parent',
     ]
 

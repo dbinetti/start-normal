@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "59788b1f88794f5aaeea3cddc7e1c94e68211918f3e30d0970a9ac520994fd1a"
+            "sha256": "d3a0786355e79b35ee15155e3c719f43080a0c097105284927770f9692a62eeb"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -300,6 +300,14 @@
             ],
             "markers": "python_version >= '2.7' and python_version not in '3.0, 3.1, 3.2, 3.3, 3.4'",
             "version": "==0.17.2"
+        },
+        "logging-tree": {
+            "hashes": [
+                "sha256:c2201ab13be5060bf6f0cf29d18516d9f1d9186c75913ffda2165a01d1c63f81",
+                "sha256:ff588623bfc8012c3f55c7a85d18c51db86b26f7feefbc6df3cdf9842a23cdfd"
+            ],
+            "index": "pypi",
+            "version": "==1.8.1"
         },
         "mailchimp3": {
             "hashes": [

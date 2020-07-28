@@ -1,10 +1,10 @@
-# Third-Party
-# Standard Libary
 # Standard Library
+import logging.config
 import os
 
 # Django
 from django.contrib.messages import constants as messages
+from django.utils.log import DEFAULT_LOGGING
 
 # First-Party
 from environ import Env
@@ -17,6 +17,7 @@ env = Env(
     TIME_ZONE=(str, 'US/Pacific'),
     EMAIL_URL=(str, 'smtp://localhost:1025'),
     REDIS_URL=(str, 'redis://localhost:6379/0'),
+    LOGLEVEL=(str, 'INFO'),
 )
 
 root = Path(__file__) - 2
@@ -188,6 +189,54 @@ TEMPLATES = [
         },
     },
 ]
+
+# Logging
+LOGGING_CONFIG = None
+LOGLEVEL = env("LOGLEVEL")
+logging.config.dictConfig({
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'default': {
+            'format': '%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+        },
+        'django.server': DEFAULT_LOGGING['formatters']['django.server'],
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'default',
+        },
+        'django.server': DEFAULT_LOGGING['handlers']['django.server'],
+    },
+    'loggers': {
+        # default for all undefined Python modules
+        '': {
+            'level': 'WARNING',
+            'handlers': [
+                'console',
+                # 'sentry',
+            ],
+        },
+        'app': {
+            'level': LOGLEVEL,
+            'handlers': [
+                'console',
+                # 'sentry',
+            ],
+            # Avoid double logging because of root logger
+            'propagate': False,
+        },
+        # Prevent noisy modules from logging to Sentry
+        # 'noisy_module': {
+        #     'level': 'ERROR',
+        #     'handlers': ['console'],
+        #     'propagate': False,
+        # },
+        # Default runserver request logging
+        'django.server': DEFAULT_LOGGING['loggers']['django.server'],
+    },
+})
 
 INSTALLED_APPS = [
     'django.contrib.admin',
