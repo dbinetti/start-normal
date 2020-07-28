@@ -17,6 +17,7 @@ urlpatterns = [
     # Authentication
     path('login', views.login, name='login'),
     path('signup/<kind>', views.signup, name='signup'),
+    path('join/<id>', views.join, name='join'),
     path('callback', views.callback, name='callback'),
     path('logout', views.logout, name='logout'),
 
@@ -29,7 +30,6 @@ urlpatterns = [
     path('create-parent', views.create_parent, name='create-parent',),
     path('homeroom/<id>', views.homeroom, name='homeroom',),
     path('addme/<id>', views.addme, name='addme',),
-    path('invite', views.invite, name='invite',),
     path('student/<id>', views.student, name='student',),
     path('parent', views.parent, name='parent',),
     path('share', views.share, name='share',),

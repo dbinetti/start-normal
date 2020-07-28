@@ -16,7 +16,12 @@
         To add your student to this Homeroom, please visit your <a href='{% url "dashboard" %}'>Dashboard</a>.
       </p>
     {% else %}
-        This Homeroom currently has {{homeroom.students.count}} registered students.  If you have a child in {{homeroom.get_grade_display}} from {{homeroom.school.name}} in {{homeroom.school.city}} (or nearby) then you can <a href='{% url "signup" "parent" %}'>Join This Homeroom</a>.
+        <p>
+        This Homeroom currently has {{homeroom.students.count}} registered students.  If you have a child in {{homeroom.get_grade_display}} from {{homeroom.school.name}} in {{homeroom.school.city}}.
+        </p>
+        <p>
+         <a href='{% url "signup" homeroom.id %}' role='button' class='btn btn-success btn-lg'>Join This Homeroom</a>.
+        </p>
     {% endif %}
     <p>
       Once the Homeroom reaches five students, we'll find a teacher to provide instruction to this group and arrange the final details of how and when instruction will begin.

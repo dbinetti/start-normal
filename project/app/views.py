@@ -379,12 +379,8 @@ def parent(request):
 
 
 @login_required
-def invite(request):
-    homeroom_id = request.session.get('homeroom', None)
-    if not homeroom_id:
-        return redirect('dashboard')
-    homeroom = Homeroom.objects.get(id=homeroom_id)
-    request.session['homeroom'] = None
+def join(request, id):
+    homeroom = Homeroom.objects.get(id=id)
     user = request.user
     parent, created = Parent.objects.get_or_create(
         user=user,
@@ -412,7 +408,7 @@ def invite(request):
     )
     return render(
         request,
-        'app/invite.html',
+        'app/join.html',
         context = {
             'form': form,
         }
@@ -590,15 +586,12 @@ def callback(request):
 
     # Parse referrer
     kind = server_state.partition("|")[0]
-    if kind not in [
-        'dashboard',
-        'parent',
-        'teacher',
-        # 'homeroom',
-    ]:
-        logging.error("No Kind")
-        return HttpResponse(status=400)
-
+    if kind not in ['dashboard', 'parent', 'teacher',]:
+        try:
+            homeroom = Homeroom.objects.get(id=kind)
+        except Homeroom.DoesNotExist:
+            homeroom = None
+            kind = 'parent'
     # Get Auth0 Code
     code = request.GET.get('code', None)
     if not code:
@@ -632,6 +625,8 @@ def callback(request):
     user = authenticate(request, **payload)
     if user:
         log_in(request, user)
+        if homeroom:
+            return redirect('join', homeroom.id)
         return redirect(kind)
     return HttpResponse(status=400)
 
