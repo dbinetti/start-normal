@@ -411,6 +411,7 @@ def join(request, id):
         'app/join.html',
         context = {
             'form': form,
+            'homeroom': homeroom,
         }
     )
 
@@ -592,6 +593,8 @@ def callback(request):
         except Homeroom.DoesNotExist:
             homeroom = None
             kind = 'parent'
+    else:
+        homeroom = None
     # Get Auth0 Code
     code = request.GET.get('code', None)
     if not code:

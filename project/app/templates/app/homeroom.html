@@ -16,16 +16,19 @@
         To add your student to this Homeroom, please visit your <a href='{% url "dashboard" %}'>Dashboard</a>.
       </p>
     {% else %}
-        <p>
-        This Homeroom currently has {{homeroom.students.count}} registered students.  If you have a child in {{homeroom.get_grade_display}} from {{homeroom.school.name}} in {{homeroom.school.city}}.
-        </p>
-        <p>
-         <a href='{% url "signup" homeroom.id %}' role='button' class='btn btn-success btn-lg'>Join This Homeroom</a>.
-        </p>
+      <p>
+        <a href='{% url "signup" homeroom.id %}' role='button' class='btn btn-success btn-lg'>Join This Homeroom</a>
+      </p><br>
     {% endif %}
-    <p>
-      Once the Homeroom reaches five students, we'll find a teacher to provide instruction to this group and arrange the final details of how and when instruction will begin.
-    </p>
+    {% if homeroom.students.count < 5 %}
+      <p>
+        This Homeroom has {{homeroom.students.count}} students.  Once the Homeroom reaches five students, we'll find a teacher to provide instruction to this group and arrange the final details of how and when instruction will begin.
+      </p>
+    {% else %}
+      <p>
+        This Homeroom has {{homeroom.students.count}} students registered and we are actively seeking teachers for it.  Please reach out to me at <a href='dbinetti@startnormal.com'>dbinetti@startnormal.com</a> or 415.713.2126 with any questions.
+      </p>
+    {% endif %}
     <p>
       I'm building out functionality on an hourly basis, so please don't hestitate to reach out with questions, concerns, ideas or any other needs and I'll do my best to help as best I can.  Call/text my cell at 415.713.2126 or email me at <a href='mailto:dbinetti@startnormal.com'>dbinetti@startnormal.com</a>.
   </section>

@@ -229,9 +229,8 @@ class StudentForm(forms.ModelForm):
                 'data-minimum-input-length': 3,
             },
         ),
-        help_text="Please select the school your student would be entering in the Fall.)",
+        help_text="Please select the school your student would be entering in the Fall.",
     )
-
 
 class ReportForm(forms.ModelForm):
     class Meta:

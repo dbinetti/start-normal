@@ -10,7 +10,10 @@
 
   <section>
     <p class='lead'>
-      Join {{homeroom}}
+      Add your Student to the {{homeroom}}.
+    </p>
+    <p>
+      Adding your student means that we'll connect you with the other parents seeking in-person instruction, and we'll start looking for a teacher for your kids.
     </p>
   </section>
   <section class='mt-2 mt-5'>
@@ -23,7 +26,9 @@
           <form method='post'>
             {% csrf_token %}
             {% bootstrap_form_errors form %}
-            {% bootstrap_form form %}
+            {% bootstrap_field form.name show_help=True show_label=False placeholder="Enter Student's First Name" %}
+            {% bootstrap_field form.school show_help=True show_label=false %}
+            {% bootstrap_field form.grade show_help=True show_label=False %}
             {% buttons %}
               <button type="submit" class="btn btn-primary btn-lg btn-block" >
                 Save
