@@ -353,13 +353,14 @@ def parent(request):
         )
         if formset.is_valid():
             for form in formset:
-                homeroom, _ = Homeroom.objects.get_or_create(
-                    school=form.cleaned_data['school'],
-                    grade=form.cleaned_data['grade'],
-                )
-                student = form.save(commit=False)
-                student.homeroom = homeroom
-                student.save()
+                if form.cleaned_data:
+                    homeroom, _ = Homeroom.objects.get_or_create(
+                        school=form.cleaned_data['school'],
+                        grade=form.cleaned_data['grade'],
+                    )
+                    student = form.save(commit=False)
+                    student.homeroom = homeroom
+                    student.save()
             messages.success(
                 request,
                 "Saved!",
