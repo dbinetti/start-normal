@@ -26,6 +26,7 @@ StudentFormSet = inlineformset_factory(
     Student,
     fields=[
         'grade',
+        'name',
         'school',
         'parent',
     ],

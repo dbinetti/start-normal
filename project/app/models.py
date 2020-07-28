@@ -1,13 +1,7 @@
 # Standard Library
 from operator import attrgetter
 
-# Django
-from django.contrib.auth.models import AbstractBaseUser
-from django.db import models
-from django.db.models.constraints import UniqueConstraint
-from django.utils.text import slugify
-
-# First-Party
+# Third-Party
 import shortuuid
 from autoslug import AutoSlugField
 from hashid_field import HashidAutoField
@@ -16,6 +10,12 @@ from mptt.models import MPTTModel
 from mptt.models import TreeForeignKey
 from multiselectfield import MultiSelectField
 from shortuuidfield import ShortUUIDField
+
+# Django
+from django.contrib.auth.models import AbstractBaseUser
+from django.db import models
+from django.db.models.constraints import UniqueConstraint
+from django.utils.text import slugify
 
 # Local
 from .managers import UserManager
@@ -924,7 +924,6 @@ class Student(models.Model):
     name = models.CharField(
         max_length=100,
         blank=False,
-        default="(Unknown)",
         help_text="""Your Student's name will be shown to other parents on the private site; it will not appear on the public site.  """,
     )
     grade = models.IntegerField(

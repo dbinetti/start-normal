@@ -18,7 +18,7 @@
 <section>
   <div class='card'>
     <div class='card-header'>
-      <h4>Student Schools and Grade Levels</h4>
+      <h4>Student Information</h4>
     </div>
     <div class='card-body'>
 
@@ -32,6 +32,9 @@
             <thead>
               <tr>
                 <th>
+                  First Name
+                </th>
+                <th>
                   School
                 </th>
                 <th>
@@ -42,6 +45,7 @@
             <tbody>
               {% for form in formset %}
                 <tr>
+                  <td>{% bootstrap_field form.name show_help=False show_label=False size='small' placeholder="Your Student's First Name" %}</td>
                   <td>{% bootstrap_field form.school show_help=False show_label=False size='small' placeholder='Type to search....' %}</td>
                   <td>{% bootstrap_field form.grade show_help=False show_label=False size='small'%}</td>
                   {{form.id}}
