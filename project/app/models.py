@@ -21,6 +21,31 @@ from django.utils.text import slugify
 from .managers import UserManager
 
 
+class Classmate(models.Model):
+    id = HashidAutoField(
+        primary_key=True,
+    )
+    STATUS = Choices(
+        (0, 'new', 'New'),
+        (10, 'invited', 'Invited'),
+        (20, 'accepted', 'Accepted'),
+    )
+    location = models.IntegerField(
+        blank=False,
+        choices=STATUS,
+        default=STATUS.new,
+    )
+    student = models.ForeignKey(
+        'Student',
+        on_delete=models.CASCADE,
+        related_name='classmates',
+    )
+    homeroom = models.ForeignKey(
+        'Homeroom',
+        on_delete=models.CASCADE,
+        related_name='classmates',
+    )
+
 class Account(models.Model):
     TEACHER = Choices(
         (510, 'ps', 'Preschool'),
