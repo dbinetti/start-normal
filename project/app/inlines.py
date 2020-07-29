@@ -5,6 +5,7 @@ from django.contrib import admin
 
 # Local
 from .models import Contact
+from .models import Homeroom
 from .models import Report
 from .models import School
 from .models import Student
@@ -46,6 +47,17 @@ class ReportInline(admin.TabularInline):
     extra = 0
     classes = [
         # 'collapse',
+    ]
+
+
+class HomeroomInline(admin.TabularInline):
+    model = Homeroom
+    fields = [
+        'name',
+        'parent',
+    ]
+    autocomplete_fields = [
+        'parent',
     ]
 
 

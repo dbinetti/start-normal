@@ -12,7 +12,7 @@
   </p>
 </section>
 <section class='my-5'>
-  <form method='post' action='{% url "delete" %}' role='form'>
+  <form method='post' role='form'>
     {% csrf_token %}
     {% bootstrap_form_errors form %}
     {% bootstrap_field form.confirm %}

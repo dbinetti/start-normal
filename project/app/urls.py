@@ -30,6 +30,7 @@ urlpatterns = [
     path('create-parent', views.create_parent, name='create-parent',),
     path('homeroom/<id>', views.homeroom, name='homeroom',),
     path('addme/<id>', views.addme, name='addme',),
+    path('invite/<student_id>', views.invite, name='invite',),
     path('student/<id>', views.student, name='student',),
     path('parent', views.parent, name='parent',),
     path('share', views.share, name='share',),

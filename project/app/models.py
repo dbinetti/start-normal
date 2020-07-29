@@ -1,7 +1,13 @@
 # Standard Library
 from operator import attrgetter
 
-# Third-Party
+# Django
+from django.contrib.auth.models import AbstractBaseUser
+from django.db import models
+from django.db.models.constraints import UniqueConstraint
+from django.utils.text import slugify
+
+# First-Party
 import shortuuid
 from autoslug import AutoSlugField
 from hashid_field import HashidAutoField
@@ -10,12 +16,6 @@ from mptt.models import MPTTModel
 from mptt.models import TreeForeignKey
 from multiselectfield import MultiSelectField
 from shortuuidfield import ShortUUIDField
-
-# Django
-from django.contrib.auth.models import AbstractBaseUser
-from django.db import models
-from django.db.models.constraints import UniqueConstraint
-from django.utils.text import slugify
 
 # Local
 from .managers import UserManager
@@ -30,7 +30,7 @@ class Classmate(models.Model):
         (10, 'invited', 'Invited'),
         (20, 'accepted', 'Accepted'),
     )
-    location = models.IntegerField(
+    status = models.IntegerField(
         blank=False,
         choices=STATUS,
         default=STATUS.new,
@@ -556,7 +556,8 @@ class Homeroom(models.Model):
 
     STATUS = Choices(
         (0, 'new', "New"),
-        (10, 'active', "Active"),
+        (10, 'active', "Open"),
+        (20, 'active', "Closed"),
     )
     GRADE = Choices(
         (2, 'tk', 'Preschool'),
@@ -616,18 +617,37 @@ class Homeroom(models.Model):
         on_delete=models.CASCADE,
         related_name='homerooms',
     )
-    owner = models.ForeignKey(
+    parent = models.ForeignKey(
         'Parent',
         on_delete=models.SET_NULL,
         related_name='homerooms',
         null=True,
     )
 
+    @property
+    def grades(self):
+        grades = self.students.values_list(
+            'grade', flat=True,
+        ).order_by(
+            'grade',
+        ).distinct()
+        return [self.GRADE[x] for x in grades]
+
+    @property
+    def schools(self):
+        schools = self.students.values_list(
+            'school__name', flat=True
+        ).order_by(
+            'name',
+        ).distinct()
+        return list(schools)
+
     def __str__(self):
         return "{0} {1}".format(
             self.school,
             self.get_grade_display(),
         )
+
     class Meta:
         constraints = [
             models.UniqueConstraint(

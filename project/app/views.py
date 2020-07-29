@@ -38,9 +38,11 @@ from django.urls import reverse_lazy
 
 # Local
 from .forms import AccountForm
+from .forms import ClassmateForm
 from .forms import ContactForm
 from .forms import DeleteForm
 from .forms import HomeroomForm
+from .forms import InviteForm
 from .forms import InviteFormSet
 from .forms import ReportForm
 from .forms import SchoolForm
@@ -51,6 +53,7 @@ from .forms import SubscribeForm
 from .forms import TeacherForm
 from .forms import UserCreationForm
 from .models import Account
+from .models import Classmate
 from .models import Contact
 from .models import District
 from .models import Entry
@@ -140,9 +143,9 @@ def dashboard(request):
     students = Student.objects.filter(
         parent=parent,
     )
-    # invites = Invite.objects.filter(
-    #     inviter=user,
-    # )
+    homerooms = Homeroom.objects.filter(
+        students__in=students,
+    )
     return render(
         request,
         'app/dashboard.html',
@@ -151,6 +154,7 @@ def dashboard(request):
             'parent': parent,
             'teacher': teacher,
             'students': students,
+            'homerooms': homerooms,
         }
     )
 
@@ -265,6 +269,37 @@ def teacher(request):
     return render(
         request,
         'app/teacher.html',
+        context = {
+            'form': form,
+        }
+    )
+
+@login_required
+def invite(request, student_id):
+    student = Student.objects.get(id=student_id)
+    parent = request.user.parent
+    if request.method == 'POST':
+        form = InviteForm(request.POST)
+        if form.is_valid():
+            homeroom = form.cleaned_data['homeroom']
+            classmate, created = Classmate.objects.get_or_create(
+                homeroom=homeroom,
+                student=student,
+            )
+            classmate.status = classmate.STATUS.accepted
+            classmate.save()
+            messages.success(
+                request,
+                "Classmate Added!",
+            )
+            return redirect('school', student.school.slug)
+    form = InviteForm()
+    form.fields['homeroom'].queryset = Homeroom.objects.filter(
+        parent=parent,
+    )
+    return render(
+        request,
+        'app/invite.html',
         context = {
             'form': form,
         }
@@ -693,6 +728,7 @@ def informed(request):
     )
 
 def school(request, slug):
+    user = request.user
     school = School.objects.get(slug=slug)
     parents = User.objects.filter(
         parent__students__school=school,
@@ -717,6 +753,7 @@ def school(request, slug):
         entries__school=school,
     ).order_by('role')
     homerooms = school.homerooms.order_by('grade')
+    students = school.students.select_related('parent').order_by('grade', 'name')
     return render(
         request,
         'app/school.html',
@@ -727,6 +764,7 @@ def school(request, slug):
             'contacts': contacts,
             'parents': parents,
             'homerooms': homerooms,
+            'students': students,
         },
     )
 

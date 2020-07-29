@@ -1,0 +1,27 @@
+{% extends 'app/base.html' %}
+
+{% load bootstrap4 %}
+
+{% block title %}Add Classmate{% endblock title %}
+{% block header %}Add Classmate{% endblock header %}
+
+{% block content %}
+<section>
+  <p class='lead'>
+    Add {{student}} to your Homeroom.
+  </p>
+</section>
+<section class='my-5'>
+  <form method='post' role='form'>
+    {% csrf_token %}
+    {% bootstrap_form_errors form %}
+    {% bootstrap_field form.homeroom %}
+    {% buttons %}
+      <button type="submit" class="btn btn-success btn-lg btn-block">
+        Add Classmate to my Homeroom
+      </button>
+    {% endbuttons %}
+  </form>
+</section>
+
+{% endblock content %}

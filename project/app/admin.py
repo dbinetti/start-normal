@@ -9,6 +9,7 @@ from mptt.admin import MPTTModelAdmin
 from .forms import UserChangeForm
 from .forms import UserCreationForm
 from .inlines import ContactInline
+from .inlines import HomeroomInline
 from .inlines import ReportInline
 from .inlines import SchoolInline
 from .inlines import StudentInline
@@ -41,6 +42,7 @@ class HomeroomAdmin(admin.ModelAdmin):
         'status',
         'grade',
         'school',
+        'parent',
     ]
     list_display = [
         'name',
@@ -51,6 +53,7 @@ class HomeroomAdmin(admin.ModelAdmin):
         'updated',
     ]
     list_filter = [
+        'grade',
         'status',
         'created',
         'updated',
@@ -60,6 +63,7 @@ class HomeroomAdmin(admin.ModelAdmin):
     ]
     autocomplete_fields = [
         'school',
+        'parent',
     ]
     inlines = [
         StudentInline,
@@ -176,6 +180,7 @@ class ParentAdmin(admin.ModelAdmin):
     ]
     inlines = [
         StudentInline,
+        HomeroomInline,
     ]
 
 

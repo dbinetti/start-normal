@@ -20,6 +20,63 @@
   <section class='mt-2 mt-5'>
     <div class='card'>
       <div class='card-header'>
+        <h4>Homeroom Information</h4>
+      </div>
+      <div class='card-body'>
+        {% if parent %}
+          <h6>Your Homerooms</h6>
+          <table class='table'>
+            <thead>
+              <tr>
+                <th>
+                  Homeroom
+                </th>
+                <th>
+                  Student
+                </th>
+                <th>
+                  Grade
+                </th>
+                <th>
+                  Status
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for homeroom in homerooms %}
+                <tr>
+                  <td>
+                    {# <a href='{% url "homeroom" homeroom.id %}'>{{homeroom.name}}</a> #}
+                  </td>
+                  <td>
+                    {# <a href='{% url "school" student.school.slug %}'>{{student.school}}</a> #}
+                  </td>
+                  <td>
+                    {{student.get_grade_display}}
+                  </td>
+                  <td>
+                    {# <a href='{% url "homeroom" student.homeroom.id %}'>Homeroom</a> #}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p>
+            You are not currently registered as a parent.  <a href='{% url "parent" %}'>Register as Parent</a>
+          </p>
+        {% endif %}
+      </div>
+      {% if parent %}
+      <div class='card-footer'>
+        <a href='{% url "create-student" %}' class='btn btn-success btn-large' role='button'>Add a Student</a>
+      </div>
+      {% endif %}
+    </div>
+  </section>
+  <section class='mt-2 mt-5'>
+    <div class='card'>
+      <div class='card-header'>
         <h4>Parent Information</h4>
       </div>
       <div class='card-body'>
@@ -49,16 +106,14 @@
                     <a href='{% url "student" student.id %}'>{{student.name|default:"(Unknown)"}}</a>
                   </td>
                   <td>
-                    {{student.school}}
+                    {# <a href='{% url "school" student.school.slug %}'>{{student.school}}</a> #}
                   </td>
                   <td>
                     {{student.get_grade_display}}
                   </td>
-
                   <td>
-                    <a href='{% url "homeroom" student.homeroom.id %}'>Homeroom</a>
+                    {# <a href='{% url "homeroom" student.homeroom.id %}'>Homeroom</a> #}
                   </td>
-
                 </tr>
               {% endfor %}
             </tbody>
@@ -86,7 +141,7 @@
       <div class='card-body'>
         {% if teacher %}
           <ul class='list-unstyled'>
-            <li>Location: {{teacher.school.city}}</li>
+            {# <li>Location: {{teacher.school.city}}</li> #}
             <li>Credentialed? {{teacher.is_credential|yesno|title}}</li>
             <li>Levels Taught: {{teacher.kinds}}</li>
             <li>Subjects Taught: {{teacher.subjects}}</li>

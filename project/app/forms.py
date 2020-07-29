@@ -10,6 +10,7 @@ from django.forms.models import inlineformset_factory
 
 # Local
 from .models import Account
+from .models import Classmate
 from .models import Contact
 from .models import District
 from .models import Homeroom
@@ -232,6 +233,7 @@ class StudentForm(forms.ModelForm):
         help_text="Please select the school your student would be entering in the Fall.",
     )
 
+
 class ReportForm(forms.ModelForm):
     class Meta:
         model = Report
@@ -245,10 +247,25 @@ class ReportForm(forms.ModelForm):
         return data.title()
 
 
+class ClassmateForm(forms.ModelForm):
+    class Meta:
+        model = Classmate
+        fields = [
+            'status',
+        ]
+
+
 class DeleteForm(forms.Form):
     confirm = forms.BooleanField(
         required=True,
     )
+
+
+class InviteForm(forms.Form):
+    homeroom = forms.ModelChoiceField(
+        queryset=Homeroom.objects.all(),
+    )
+
 
 
 class SignupForm(forms.Form):
