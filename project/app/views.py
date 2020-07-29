@@ -498,15 +498,7 @@ def student(request, id):
     if request.method == 'POST':
         form = StudentForm(request.POST, instance=student)
         if form.is_valid():
-            school = form.cleaned_data['school']
-            grade = form.cleaned_data['grade']
-            homeroom = Homeroom.objects.get(
-                school=school,
-                grade=grade,
-            )
-            student = form.save(commit=False)
-            student.homeroom = homeroom
-            student.save()
+            form.save()
             messages.success(
                 request,
                 "Saved!",
