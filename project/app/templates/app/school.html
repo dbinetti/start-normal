@@ -12,6 +12,7 @@
 
 {% block content %}
 
+  {% if not request.user.is_authenticated %}
   <section class='mt-3'>
     <div class='row'>
       <div class='col-lg-6 my-2'>
@@ -26,7 +27,7 @@
       </div>
     </div>
   </section>
-
+{% endif %}
   {% if request.user.is_authenticated %}
     <section class='my-5'>
       <div class='card'>
@@ -48,6 +49,9 @@
               <th>
                 Parent Email
               </th>
+              <th>
+                Action
+              </th>
             </thead>
             <tbody>
               {% for student in students %}
@@ -57,7 +61,7 @@
                   </td>
                   {% if user.is_authenticated %}
                     <td>
-                      <a href='{% url "invite" student.id %}'>{{student.name}}</a>
+                      {{student.name}}
                     </td>
                     <td>
                       {{student.parent.user.name}}
@@ -65,6 +69,10 @@
                     <td>
                       {{student.parent.user.email}}
                     </td>
+                    <td>
+                      <a href='{% url "invite" student.id %}'>Invite Student</a>
+                    </td>
+
                   {% else %}
                     <td>
                       {{student.name.0|upper}}.{{student.parent.user.name.0|upper}}.

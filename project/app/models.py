@@ -46,6 +46,31 @@ class Classmate(models.Model):
         related_name='classmates',
     )
 
+class Roomparent(models.Model):
+    id = HashidAutoField(
+        primary_key=True,
+    )
+    STATUS = Choices(
+        (0, 'new', 'New'),
+        (10, 'invited', 'Invited'),
+        (20, 'accepted', 'Accepted'),
+    )
+    status = models.IntegerField(
+        blank=False,
+        choices=STATUS,
+        default=STATUS.new,
+    )
+    parent = models.ForeignKey(
+        'Parent',
+        on_delete=models.CASCADE,
+        related_name='roomparents',
+    )
+    homeroom = models.ForeignKey(
+        'Homeroom',
+        on_delete=models.CASCADE,
+        related_name='roomparents',
+    )
+
 class Account(models.Model):
     TEACHER = Choices(
         (510, 'ps', 'Preschool'),
@@ -614,7 +639,8 @@ class Homeroom(models.Model):
     )
     school = models.ForeignKey(
         'School',
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
+        null=True,
         related_name='homerooms',
     )
     parent = models.ForeignKey(
@@ -631,7 +657,7 @@ class Homeroom(models.Model):
         ).order_by(
             'grade',
         ).distinct()
-        return [self.GRADE[x] for x in grades]
+        return list(set([self.GRADE[x] for x in grades]))
 
     @property
     def schools(self):
@@ -640,24 +666,23 @@ class Homeroom(models.Model):
         ).order_by(
             'name',
         ).distinct()
-        return list(schools)
+        return list(set(schools))
 
     def __str__(self):
-        return "{0} {1}".format(
-            self.school,
-            self.get_grade_display(),
+        return "{0}".format(
+            self.name,
         )
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=[
-                    'grade',
-                    'school'
-                ],
-                name='unique_homeroom'
-            )
-        ]
+    # class Meta:
+    #     constraints = [
+    #         models.UniqueConstraint(
+    #             fields=[
+    #                 'grade',
+    #                 'school'
+    #             ],
+    #             name='unique_homeroom'
+    #         )
+    #     ]
 
 
 class Classroom(models.Model):
@@ -994,7 +1019,8 @@ class Student(models.Model):
     homeroom = models.ForeignKey(
         'Homeroom',
         related_name='students',
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
+        null=True,
     )
 
     def __str__(self):

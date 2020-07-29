@@ -17,6 +17,7 @@
     </p>
   </section>
 
+  {% if homerooms %}
   <section class='mt-2 mt-5'>
     <div class='card'>
       <div class='card-header'>
@@ -32,10 +33,13 @@
                   Homeroom
                 </th>
                 <th>
-                  Student
+                  School(s)
                 </th>
                 <th>
-                  Grade
+                  Grade(s)
+                </th>
+                <th>
+                  Student(s)
                 </th>
                 <th>
                   Status
@@ -46,16 +50,19 @@
               {% for homeroom in homerooms %}
                 <tr>
                   <td>
-                    {# <a href='{% url "homeroom" homeroom.id %}'>{{homeroom.name}}</a> #}
+                    <a href='{% url "homeroom" homeroom.id %}'>{{homeroom.name}}</a>
                   </td>
                   <td>
-                    {# <a href='{% url "school" student.school.slug %}'>{{student.school}}</a> #}
+                    {{homeroom.schools|join:"<br>"|escape}}
                   </td>
                   <td>
-                    {{student.get_grade_display}}
+                    {{homeroom.grades|join:"<br>"|escape}}
                   </td>
                   <td>
-                    {# <a href='{% url "homeroom" student.homeroom.id %}'>Homeroom</a> #}
+                    {{homeroom.students.count}}
+                  </td>
+                  <td>
+                    {{homeroom.get_status_display}}
                   </td>
                 </tr>
               {% endfor %}
@@ -69,11 +76,12 @@
       </div>
       {% if parent %}
       <div class='card-footer'>
-        <a href='{% url "create-student" %}' class='btn btn-success btn-large' role='button'>Add a Student</a>
+        {# <a href='{% url "create-homeroom" %}' class='btn btn-success btn-large' role='button'>Create Homeroom</a> #}
       </div>
       {% endif %}
     </div>
   </section>
+  {% endif %}
   <section class='mt-2 mt-5'>
     <div class='card'>
       <div class='card-header'>
@@ -106,7 +114,7 @@
                     <a href='{% url "student" student.id %}'>{{student.name|default:"(Unknown)"}}</a>
                   </td>
                   <td>
-                    {# <a href='{% url "school" student.school.slug %}'>{{student.school}}</a> #}
+                    <a href='{% url "school" student.school.slug %}'>{{student.school}}</a>
                   </td>
                   <td>
                     {{student.get_grade_display}}

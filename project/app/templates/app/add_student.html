@@ -3,22 +3,16 @@
 {% load bootstrap4 %}
 {% load humanize %}
 
-{% block title %}Homeroom{% endblock title %}
-{% block header %}Homeroom{% endblock header %}
+{% block title %}Current Students{% endblock title %}
+{% block header %}Current Students{% endblock header %}
 
 {% block content %}
-  <section class='my-5'>
-    <p class='lead mb-5 col-lg-9'>
-      This Homeroom is a stable cohort of {{homeroom.students.count}} students from the following schools and grades: {{homeroom.schools|join:", "}}; {{homeroom.grades|join:", "}}.
+
+  <section>
+    <p class='lead'>
+      Here is a list of Current Students in nearby schools and grades.
     </p>
   </section>
-  <section>
-    <h4>
-      Current Status:  {{homeroom.get_status_display}}<br>
-      Homeroom Owner:  {{homeroom.parent.user.name}}
-    </h4>
-  </section>
-    {% if request.user.is_authenticated %}
       <section class='mt-2 mt-5'>
         <div class='card'>
           <div class='card-header'>
@@ -41,6 +35,9 @@
                     <th>
                       Parent Email
                     </th>
+                    <th>
+                      Action
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -55,32 +52,18 @@
                       <td>
                         <a href='mailto:{{student.parent.user.email}}'>{{student.parent.user.email}}</a>
                       </td>
+                      <td>
+                        <a href='{% url "add-classmate" homeroom.id student.id %}' role='button' class="btn btn-success btn-sm">Add Classmate</a>
+                      </td>
                     </tr>
                   {% endfor %}
                 </tbody>
               </table>
             </div>
           </div>
-          <div class='card-footer'>
-            <a href='{% url "add-student" homeroom.id %}' role='button' class="btn btn-success btn-block btn-lg">
-              Add a Student
-            </a>
-          </div>
         </div>
       </section>
-      {% else %}
-      <p>
-        To see the student names and request to join this homeroom, please register:
-      </p>
-      <section class='mt-3'>
-        <div class='row'>
-          <div class='col-lg-6 my-2'>
-            <a href='{% url "signup" "parent" %}' role='button' class="btn btn-success btn-block btn-lg">
-              Parent Signup
-            </a>
-          </div>
-        </div>
-      </section>
-    {% endif %}
-
 {% endblock content %}
+{% block scripts %}
+  {{form.media}}
+{% endblock scripts %}

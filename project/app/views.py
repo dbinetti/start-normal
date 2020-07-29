@@ -3,16 +3,6 @@
 import json
 import logging
 
-# Third-Party
-import django_rq
-import requests
-import shortuuid
-from auth0.v3.authentication import Database
-from auth0.v3.authentication import Logout
-from auth0.v3.exceptions import Auth0Error
-from dal import autocomplete
-from django_rq import job
-
 from django import forms
 from django.conf import settings
 from django.contrib import messages
@@ -35,6 +25,16 @@ from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.urls import reverse_lazy
+
+# First-Party
+import django_rq
+import requests
+import shortuuid
+from auth0.v3.authentication import Database
+from auth0.v3.authentication import Logout
+from auth0.v3.exceptions import Auth0Error
+from dal import autocomplete
+from django_rq import job
 
 # Local
 from .forms import AccountForm
@@ -387,15 +387,7 @@ def parent(request):
             instance=parent,
         )
         if formset.is_valid():
-            for form in formset:
-                if form.cleaned_data:
-                    homeroom, _ = Homeroom.objects.get_or_create(
-                        school=form.cleaned_data['school'],
-                        grade=form.cleaned_data['grade'],
-                    )
-                    student = form.save(commit=False)
-                    student.homeroom = homeroom
-                    student.save()
+            formset.save()
             messages.success(
                 request,
                 "Saved!",
@@ -424,7 +416,7 @@ def join(request, id):
         grade=homeroom.grade,
         school=homeroom.school,
         parent=parent,
-        homeroom=homeroom,
+        # homeroom=homeroom,
     )
     if request.method == 'POST':
         form = StudentForm(
@@ -462,7 +454,7 @@ def addme(request, homeroom_id):
         grade=homeroom.grade,
         school=homeroom.school,
         parent=parent,
-        homeroom=homeroom,
+        # homeroom=homeroom,
     )
     if request.method == 'POST':
         form = StudentForm(
@@ -535,6 +527,37 @@ def homeroom(request, id):
             'students': students,
         },
     )
+
+
+@login_required
+def add_student(request, homeroom_id):
+    homeroom = get_object_or_404(Homeroom, pk=homeroom_id)
+    students = Student.objects.filter(
+        school__students__homeroom=homeroom,
+    ).distinct('school__students')
+    return render(
+        request,
+        'app/add_student.html', {
+            'students': students,
+            'homeroom': homeroom,
+        },
+    )
+
+
+@login_required
+def add_classmate(request, homeroom_id, student_id):
+    homeroom = get_object_or_404(Homeroom, pk=homeroom_id)
+    student = get_object_or_404(Student, pk=student_id)
+    classmate, created = Classmate.objects.get_or_create(
+        homeroom=homeroom,
+        student=student,
+    )
+    if created:
+        messages.success(
+            request,
+            "Classmate Addded!",
+        )
+    return redirect('homeroom', homeroom.id)
 
 
 @login_required
