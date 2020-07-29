@@ -350,6 +350,14 @@ def create_student(request):
     )
 
 @login_required
+def join_homeroom(request):
+    return render(
+        request,
+        'app/join_homeroom.html',
+        # {'form': form,},
+    )
+
+@login_required
 def delete_student(request, id):
     parent = request.user.parent
     student = Student.objects.get(
@@ -519,12 +527,12 @@ def student(request, id):
 # @login_required
 def homeroom(request, id):
     homeroom = get_object_or_404(Homeroom, pk=id)
-    students = homeroom.students.order_by('-created')
+    classmates = homeroom.classmates.all()
     return render(
         request,
         'app/homeroom.html', {
             'homeroom': homeroom,
-            'students': students,
+            'classmates': classmates,
         },
     )
 

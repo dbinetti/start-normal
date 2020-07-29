@@ -16,7 +16,7 @@
       Please note that your name, email, and student name are available to others in your Homeroom.
     </p>
   </section>
-
+  {% comment %}
   {% if homerooms %}
   <section class='mt-2 mt-5'>
     <div class='card'>
@@ -82,6 +82,7 @@
     </div>
   </section>
   {% endif %}
+  {% endcomment %}
   <section class='mt-2 mt-5'>
     <div class='card'>
       <div class='card-header'>
@@ -120,7 +121,11 @@
                     {{student.get_grade_display}}
                   </td>
                   <td>
-                    {# <a href='{% url "homeroom" student.homeroom.id %}'>Homeroom</a> #}
+                    {% if student.classmates %}
+                      <a href='{% url "homeroom" student.classmates.first.homeroom.id %}'>Homeroom</a>
+                    {% else %}
+                      <a href='{% url "join-homeroom"%}'>Join Homeroom</a>
+                    {% endif %}
                   </td>
                 </tr>
               {% endfor %}

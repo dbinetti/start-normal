@@ -9,7 +9,7 @@
 {% block content %}
   <section class='my-5'>
     <p class='lead mb-5 col-lg-9'>
-      This Homeroom is a stable cohort of {{homeroom.students.count}} students from the following schools and grades: {{homeroom.schools|join:", "}}; {{homeroom.grades|join:", "}}.
+      This Homeroom is a stable cohort of {{homeroom.classmates.count}} students from the following schools and grades: {{homeroom.schools|join:", "}}; {{homeroom.grades|join:", "}}.
     </p>
   </section>
   <section>
@@ -44,16 +44,16 @@
                   </tr>
                 </thead>
                 <tbody>
-                  {% for student in students %}
+                  {% for classmate in classmates %}
                     <tr>
                       <td>
-                        {{student.name|default:"(Unknown)"}}
+                        {{classmate.student.name|default:"(Unknown)"}}
                       </td>
                       <td>
-                        {{student.parent}}
+                        {{classmate.student.parent}}
                       </td>
                       <td>
-                        <a href='mailto:{{student.parent.user.email}}'>{{student.parent.user.email}}</a>
+                        <a href='mailto:{{classmate.student.parent.user.email}}'>{{classmate.student.parent.user.email}}</a>
                       </td>
                     </tr>
                   {% endfor %}
@@ -62,9 +62,7 @@
             </div>
           </div>
           <div class='card-footer'>
-            <a href='{% url "add-student" homeroom.id %}' role='button' class="btn btn-success btn-block btn-lg">
-              Add a Student
-            </a>
+            To add or remove a student from this Homeroom, please send an email to <a href='mailto:dbinetti@startnormal.com'>dbinetti@startnormal.com</a> or call/text 415.713.2126
           </div>
         </div>
       </section>

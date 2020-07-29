@@ -33,6 +33,7 @@ urlpatterns = [
     path('homeroom/<homeroom_id>/<student_id>', views.add_classmate, name='add-classmate',),
     path('addme/<id>', views.addme, name='addme',),
     path('invite/<student_id>', views.invite, name='invite',),
+    path('joinhomeroom', views.join_homeroom, name='join-homeroom',),
     path('student/<id>', views.student, name='student',),
     path('parent', views.parent, name='parent',),
     path('share', views.share, name='share',),
