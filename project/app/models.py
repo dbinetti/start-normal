@@ -440,7 +440,7 @@ class School(models.Model):
         (570, 'ug', 'Ungraded'),
     )
     GRADE = Choices(
-        (2, 'tk', 'Preschool'),
+        (2, 'tk', 'Preschool/PreK/Transitional K'),
         (5, 'k', 'Kindergarten'),
         (10, 'first', 'First Grade'),
         (20, 'second', 'Second Grade'),
