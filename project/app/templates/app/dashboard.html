@@ -121,7 +121,7 @@
                     {{student.get_grade_display}}
                   </td>
                   <td>
-                    {% if student.classmates %}
+                    {% if student.classmates.first.homeroom.id %}
                       <a href='{% url "homeroom" student.classmates.first.homeroom.id %}'>Homeroom</a>
                     {% else %}
                       <a href='{% url "join-homeroom"%}'>Join Homeroom</a>
