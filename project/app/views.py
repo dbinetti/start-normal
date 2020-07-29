@@ -783,7 +783,7 @@ def school(request, slug):
         is_active=True,
         entries__school=school,
     ).order_by('role')
-    homerooms = school.homerooms.order_by('grade')
+    # homerooms = school.homerooms.order_by('grade')
     students = school.students.select_related('parent').order_by('grade', 'name')
     return render(
         request,
@@ -794,7 +794,7 @@ def school(request, slug):
             'reports': reports,
             'contacts': contacts,
             'parents': parents,
-            'homerooms': homerooms,
+            # 'homerooms': homerooms,
             'students': students,
         },
     )

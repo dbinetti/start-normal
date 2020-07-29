@@ -8,6 +8,7 @@ from mptt.admin import MPTTModelAdmin
 # Local
 from .forms import UserChangeForm
 from .forms import UserCreationForm
+from .inlines import ClassmateInline
 from .inlines import ContactInline
 from .inlines import HomeroomInline
 from .inlines import ReportInline
@@ -37,36 +38,28 @@ def approve_report(modeladmin, request, queryset):
 class HomeroomAdmin(admin.ModelAdmin):
     save_on_top = True
     fields = [
-        'name',
-        'description',
         'status',
-        'grade',
-        'school',
+        'notes',
         'parent',
     ]
     list_display = [
-        'name',
         'status',
-        'grade',
-        'school',
         'created',
         'updated',
     ]
     list_filter = [
-        'grade',
         'status',
         'created',
         'updated',
     ]
     search_fields = [
-        'name',
+        'students__school__name',
     ]
     autocomplete_fields = [
-        'school',
         'parent',
     ]
     inlines = [
-        StudentInline,
+        ClassmateInline,
     ]
 
 
@@ -293,7 +286,8 @@ class StudentAdmin(admin.ModelAdmin):
         'updated',
     ]
     search_fields = [
-        'parent',
+        'name',
+        'parent__user__name',
     ]
     inlines = [
     ]

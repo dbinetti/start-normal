@@ -1,12 +1,12 @@
 # Django
-# Third-Party
-from dal import autocomplete
-
 from django import forms
 from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.forms import UserChangeForm as UserChangeFormBase
 from django.contrib.auth.forms import UserCreationForm as UserCreationFormBase
 from django.forms.models import inlineformset_factory
+
+# First-Party
+from dal import autocomplete
 
 # Local
 from .models import Account
@@ -173,15 +173,13 @@ class HomeroomForm(forms.ModelForm):
     class Meta:
         model = Homeroom
         fields = [
-            'name',
-            'max_size',
-            'description',
+            'notes',
         ]
         widgets = {
-            'description': forms.Textarea(
+            'notes': forms.Textarea(
                 attrs={
                     'class': 'form-control h-25',
-                    'placeholder': 'Provide a brief description of your homeroom\'s character.',
+                    'placeholder': 'Please provide some notes on your preferred safety regimen; i.e., masks, distance, hygenic requirements.',
                     'rows': 5,
                 }
             )

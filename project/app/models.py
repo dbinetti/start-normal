@@ -46,6 +46,9 @@ class Classmate(models.Model):
         related_name='classmates',
     )
 
+    def __str__(self):
+        return str(self.student.name)
+
 class Roomparent(models.Model):
     id = HashidAutoField(
         primary_key=True,
@@ -605,31 +608,13 @@ class Homeroom(models.Model):
     id = HashidAutoField(
         primary_key=True,
     )
-    name = models.CharField(
-        max_length=255,
-        blank=False,
-    )
-    description = models.TextField(
-        blank=True,
-    )
-    slug = AutoSlugField(
-        max_length=255,
-        always_update=True,
-        populate_from='__str__',
-        unique=True,
-    )
     status = models.IntegerField(
         blank=False,
         choices=STATUS,
         default=STATUS.new,
     )
-    max_size = models.IntegerField(
-        default=10,
-    )
-    grade = models.IntegerField(
+    notes = models.TextField(
         blank=True,
-        choices=GRADE,
-        null=True,
     )
     created = models.DateTimeField(
         auto_now_add=True,
@@ -637,40 +622,33 @@ class Homeroom(models.Model):
     updated = models.DateTimeField(
         auto_now=True,
     )
-    school = models.ForeignKey(
-        'School',
-        on_delete=models.SET_NULL,
-        null=True,
-        related_name='homerooms',
-    )
     parent = models.ForeignKey(
         'Parent',
-        on_delete=models.SET_NULL,
+        on_delete=models.CASCADE,
         related_name='homerooms',
-        null=True,
     )
 
     @property
     def grades(self):
-        grades = self.students.values_list(
-            'grade', flat=True,
+        grades = self.classmates.values_list(
+            'student__grade', flat=True,
         ).order_by(
-            'grade',
+            'student__grade',
         ).distinct()
         return list(set([self.GRADE[x] for x in grades]))
 
     @property
     def schools(self):
-        schools = self.students.values_list(
-            'school__name', flat=True
+        schools = self.classmates.values_list(
+            'student__school__name', flat=True
         ).order_by(
-            'name',
+            'student__name',
         ).distinct()
         return list(set(schools))
 
     def __str__(self):
         return "{0}".format(
-            self.name,
+            self.id,
         )
 
     # class Meta:
@@ -1024,7 +1002,10 @@ class Student(models.Model):
     )
 
     def __str__(self):
-        return str(self.id)
+        return "{0} - {1}".format(
+            self.name,
+            self.parent.user.name,
+        )
 
 
 class Transmission(models.Model):
