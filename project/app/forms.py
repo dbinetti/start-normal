@@ -109,11 +109,9 @@ class AccountForm(forms.ModelForm):
             'message',
             'teacher',
             'is_subscribe',
-            'is_doctor',
         ]
         labels = {
             "is_subscribe": "Send Updates",
-            "is_doctor": "I'm a Physician",
         }
         widgets = {
             'message': forms.Textarea(

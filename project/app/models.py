@@ -88,10 +88,6 @@ class Account(models.Model):
         default=True,
         help_text="""Subscribe for updates.""",
     )
-    is_doctor = models.BooleanField(
-        default=False,
-        help_text="""If you're a physician please check this box.""",
-    )
     teacher = models.IntegerField(
         blank=True,
         null=True,
