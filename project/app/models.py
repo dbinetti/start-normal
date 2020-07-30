@@ -660,6 +660,16 @@ class Student(models.Model):
     id = HashidAutoField(
         primary_key=True,
     )
+    STATUS = Choices(
+        (0, 'new', 'New'),
+        (10, 'approved', 'Approved'),
+        (20, 'rejected', 'Rejected'),
+    )
+    status = models.IntegerField(
+        blank=False,
+        choices=STATUS,
+        default=STATUS.new,
+    )
     GRADE = Choices(
         (2, 'tk', 'Preschool'),
         (5, 'k', 'Kindergarten'),
@@ -718,6 +728,11 @@ class Student(models.Model):
 
 
 class Transmission(models.Model):
+    STATUS = Choices(
+        (0, 'new', 'New'),
+        (10, 'approved', 'Approved'),
+        (20, 'rejected', 'Rejected'),
+    )
     id = HashidAutoField(
         primary_key=True,
     )
@@ -742,6 +757,11 @@ class Transmission(models.Model):
 
 
 class Entry(models.Model):
+    STATUS = Choices(
+        (0, 'new', 'New'),
+        (10, 'approved', 'Approved'),
+        (20, 'rejected', 'Rejected'),
+    )
     id = HashidAutoField(
         primary_key=True,
     )
