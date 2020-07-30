@@ -12,7 +12,6 @@ from .inlines import ReportInline
 from .inlines import SchoolInline
 from .inlines import StudentInline
 from .models import Account
-from .models import Classroom
 from .models import Contact
 from .models import District
 from .models import Homeroom
@@ -59,52 +58,6 @@ class HomeroomAdmin(admin.ModelAdmin):
         ClassmateInline,
     ]
 
-
-@admin.register(Classroom)
-class ClassroomAdmin(admin.ModelAdmin):
-    save_on_top = True
-    fields = [
-        'name',
-        'description',
-        'status',
-        'subjects',
-        'venue',
-        'address',
-        'city',
-        'state',
-        'zipcode',
-        'phone',
-        'lat',
-        'lon',
-        'teacher',
-        'homeroom',
-    ]
-    list_display = [
-        'name',
-        'status',
-        'subjects',
-        'venue',
-        'teacher',
-        'homeroom',
-        'created',
-        'updated',
-    ]
-    list_filter = [
-        'status',
-        'subjects',
-        'teacher',
-        'homeroom',
-    ]
-    search_fields = [
-        'name',
-    ]
-    autocomplete_fields = [
-        'teacher',
-        'homeroom',
-    ]
-    inlines = [
-        # StudentInline,
-    ]
 
 @admin.register(Account)
 class AccountAdmin(admin.ModelAdmin):
