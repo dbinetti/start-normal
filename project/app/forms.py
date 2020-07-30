@@ -48,20 +48,6 @@ StudentFormSet = inlineformset_factory(
 )
 
 
-InviteFormSet = inlineformset_factory(
-    Homeroom,
-    Invite,
-    fields=[
-        'parent_name',
-        'parent_email',
-        'student_name',
-    ],
-    extra=5,
-    max_num=5,
-    can_delete=True,
-)
-
-
 class SchoolForm(forms.ModelForm):
     class Meta:
         model = School

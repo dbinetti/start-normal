@@ -559,6 +559,10 @@ class Homeroom(models.Model):
 
 
 class Contact(models.Model):
+    STATUS = Choices(
+        (0, 'new', 'New'),
+        (10, 'active', 'Active'),
+    )
     ROLE = Choices(
         (410, 'super', 'Superintendent'),
         (420, 'president', 'Board President'),
@@ -573,8 +577,11 @@ class Contact(models.Model):
     id = HashidAutoField(
         primary_key=True,
     )
-    is_active = models.BooleanField(
-        default=True,
+    status = models.IntegerField(
+        null=True,
+        blank=False,
+        choices=STATUS,
+        default=STATUS.new,
     )
     name = models.CharField(
         max_length=255,
