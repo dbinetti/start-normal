@@ -278,7 +278,7 @@ class Teacher(models.Model):
         related_name='teachers',
         on_delete=models.SET_NULL,
         null=True,
-        help_text="""Pick a near where you'd like to teach (dosn't have to be your own school; this is just for location.)""",
+        help_text="""Pick a school near where you'd like to teach (dosn't have to be your own school; this is just for location.)""",
     )
     notes = models.TextField(
         max_length=2000,
