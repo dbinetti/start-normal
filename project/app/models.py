@@ -640,10 +640,6 @@ class Report(models.Model):
         blank=False,
         help_text="""Use your own voice, but please stick to the facts as much as possible; we want to be a credible source to all parents.""",
     )
-    is_district = models.BooleanField(
-        default=True,
-        help_text="""Keep this checked if your update applies to the entire school district.  If unsure, keep it checked -- it probably does.""",
-    )
     created = models.DateTimeField(
         auto_now_add=True,
     )
