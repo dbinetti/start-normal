@@ -6,28 +6,16 @@ from django.contrib.auth.admin import UserAdmin as UserAdminBase
 from .forms import UserChangeForm
 from .forms import UserCreationForm
 from .inlines import ClassmateInline
-from .inlines import ContactInline
 from .inlines import HomeroomInline
-from .inlines import ReportInline
-from .inlines import SchoolInline
 from .inlines import StudentInline
 from .models import Account
-from .models import Contact
 from .models import District
 from .models import Homeroom
 from .models import Parent
-from .models import Report
 from .models import School
 from .models import Student
 from .models import Teacher
 from .models import User
-
-
-def approve_report(modeladmin, request, queryset):
-    for report in queryset:
-        report.status = Report.STATUS.approved
-        report.save()
-    return
 
 
 @admin.register(Homeroom)
@@ -231,55 +219,6 @@ class StudentAdmin(admin.ModelAdmin):
         'school',
     ]
 
-
-@admin.register(Contact)
-class ContactAdmin(admin.ModelAdmin):
-    list_display = [
-        'name',
-        'role',
-        'email',
-        'phone',
-    ]
-    list_filter = [
-        'role',
-        'created',
-        'updated',
-    ]
-    search_fields = [
-        'name',
-    ]
-    inlines = [
-    ]
-    autocomplete_fields = [
-        # 'parent',
-    ]
-
-
-@admin.register(Report)
-class ReportAdmin(admin.ModelAdmin):
-    fields = [
-        'status',
-        'title',
-        'text',
-        'user',
-    ]
-    list_display = [
-        'title',
-        'status',
-        'user',
-    ]
-    list_filter = [
-        'status',
-    ]
-    search_fields = [
-        'name',
-    ]
-    autocomplete_fields = [
-        'user',
-    ]
-    actions = [
-        approve_report,
-    ]
 
 
 @admin.register(User)

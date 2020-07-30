@@ -1,70 +1,59 @@
-# Django
 # Standard Library
 import json
 import logging
 
-from django import forms
+# Django
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as log_in
 from django.contrib.auth import logout as log_out
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.views import PasswordResetConfirmView
-from django.core.mail import EmailMessage
-from django.db.models import Count
 from django.db.models import Q
-from django.db.models import Sum
-from django.dispatch import receiver
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.urls import reverse
-from django.urls import reverse_lazy
 from django.utils.crypto import get_random_string
 
 # First-Party
-import django_rq
 import requests
-from auth0.v3.authentication import Database
-from auth0.v3.authentication import Logout
-from auth0.v3.exceptions import Auth0Error
 from dal import autocomplete
-from django_rq import job
 
 # Local
-from .forms import ClassmateForm
-from .forms import ContactForm
 from .forms import DeleteForm
-from .forms import HomeroomForm
-from .forms import ReportForm
 from .forms import SchoolForm
-from .forms import SignupForm
 from .forms import StudentForm
 from .forms import StudentFormSet
 from .forms import SubscribeForm
 from .forms import TeacherForm
-from .forms import UserCreationForm
 from .models import Classmate
-from .models import Contact
-from .models import District
-from .models import Entry
 from .models import Homeroom
 from .models import Parent
-from .models import Report
 from .models import School
 from .models import Student
 from .models import Teacher
-from .models import Transmission
 from .models import User
-from .tasks import build_email
-from .tasks import mailchimp_create_or_update_from_user
 from .tasks import mailchimp_subscribe_email
-from .tasks import send_email
+
+
+# Autocomplete
+class SchoolAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = School.objects.filter(
+        )
+
+        if self.q:
+            # qs = qs.filter(slug__icontains=self.q)
+            qs = qs.filter(
+                Q(name__icontains=self.q)|
+                Q(city__icontains=self.q) |
+                Q(state__icontains=self.q)
+            )
+
+        return qs
 
 
 # Root
@@ -72,7 +61,7 @@ def index(request):
     return render(
         request,
         'app/index.html',
-        context = {
+        context={
             'app_id': settings.ALGOLIA['APPLICATION_ID'],
             'search_key': settings.ALGOLIA['SEARCH_KEY'],
             'index_name': "School_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
@@ -103,7 +92,7 @@ def privacy(request):
         'app/privacy.html',
     )
 
-def robots(request):
+def robots():
     rendered = render_to_string(
         'robots.txt',
     )
@@ -112,12 +101,11 @@ def robots(request):
         content_type="text/plain",
     )
 
-
-def sitemap(request):
+def sitemap():
     slugs = School.objects.values_list('slug', flat=True)
     rendered = render_to_string(
         'sitemap.txt',
-        context = {
+        context={
             'slugs': slugs,
         }
     )
@@ -153,8 +141,6 @@ def dashboard(request):
             'homerooms': homerooms,
         }
     )
-
-
 
 @login_required
 def pending(request):
@@ -230,10 +216,10 @@ def join_homeroom(request):
     )
 
 @login_required
-def delete_student(request, id):
+def delete_student(request, student_id):
     parent = request.user.parent
     student = Student.objects.get(
-        id=id,
+        id=student_id,
     )
     if request.method == "POST":
         form = DeleteForm(request.POST)
@@ -279,15 +265,15 @@ def parent(request):
     return render(
         request,
         'app/parent.html',
-        context = {
+        context={
             'formset': formset,
         }
     )
 
 
 @login_required
-def join(request, id):
-    homeroom = Homeroom.objects.get(id=id)
+def join(request, homeroom_id):
+    homeroom = Homeroom.objects.get(id=homeroom_id)
     user = request.user
     parent, created = Parent.objects.get_or_create(
         user=user,
@@ -324,10 +310,10 @@ def join(request, id):
 
 
 @login_required
-def student(request, id):
+def student(request, student_id):
     user = request.user
     student = Student.objects.get(
-        id=id,
+        id=student_id,
         parent=user.parent,
     )
     if request.method == 'POST':
@@ -352,8 +338,8 @@ def student(request, id):
     )
 
 # @login_required
-def homeroom(request, id):
-    homeroom = get_object_or_404(Homeroom, pk=id)
+def homeroom(request, homeroom_id):
+    homeroom = get_object_or_404(Homeroom, pk=homeroom_id)
     classmates = homeroom.classmates.all()
     return render(
         request,
@@ -544,47 +530,6 @@ def logout(request):
     return redirect(logout_url)
 
 
-# Autocomplete
-class SchoolAutocomplete(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        qs = School.objects.filter(
-        )
-
-        if self.q:
-            # qs = qs.filter(slug__icontains=self.q)
-            qs = qs.filter(
-                Q(name__icontains=self.q)|
-                Q(city__icontains=self.q) |
-                Q(state__icontains=self.q)
-            )
-
-        return qs
-
-# Informed
-def informed(request):
-    if request.method == "POST":
-        form = SubscribeForm(request.POST)
-        if form.is_valid():
-            email = form.cleaned_data.get('email')
-            mailchimp_subscribe_email.delay(email=email)
-            messages.success(
-                request,
-                'You have been subscribed.',
-            )
-            return redirect('index')
-    else:
-        form = SubscribeForm()
-    return render(
-        request,
-        'app/informed.html',
-        context = {
-            'form': form,
-            'app_id': settings.ALGOLIA['APPLICATION_ID'],
-            'search_key': settings.ALGOLIA['SEARCH_KEY'],
-            'index_name': "School_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
-        },
-    )
-
 def school(request, slug):
     user = request.user
     school = School.objects.get(slug=slug)
@@ -594,34 +539,13 @@ def school(request, slug):
     for parent in parents:
         parent.grades = ", ".join([x.get_grade_display() for x in parent.parent.students.filter(
         school=school).order_by('grade')])
-    if request.user.is_authenticated:
-        user_reports = Report.objects.filter(
-            status=Report.STATUS.new,
-            transmissions__school=school,
-            user=request.user,
-        ).order_by('-created')
-    else:
-        user_reports = None
-    reports = Report.objects.filter(
-        status=Report.STATUS.approved,
-        transmissions__school=school,
-    ).order_by('-created')
-    contacts = Contact.objects.filter(
-        is_active=True,
-        entries__school=school,
-    ).order_by('role')
-    # homerooms = school.homerooms.order_by('grade')
     students = school.students.select_related('parent').order_by('grade', 'name')
     return render(
         request,
         'app/school.html',
         context={
             'school': school,
-            'user_reports': user_reports,
-            'reports': reports,
-            'contacts': contacts,
             'parents': parents,
-            # 'homerooms': homerooms,
             'students': students,
         },
     )
@@ -636,7 +560,6 @@ def search(request):
             'index_name': "School_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
         },
     )
-
 
 
 @login_required
@@ -656,67 +579,4 @@ def add_school(request):
         context = {
             'form': form,
         },
-    )
-
-@login_required
-def add_report(request, slug):
-    user = request.user
-    school = School.objects.get(slug=slug)
-    form = ReportForm(request.POST or None)
-    if form.is_valid():
-        report = form.save(commit=False)
-        report.user = user
-        report.save()
-        transmission = Transmission.objects.create(
-            school=school,
-            report=report,
-        )
-        messages.success(
-            request,
-            "Report Submitted!",
-        )
-        return redirect('school', slug)
-    return render(
-        request,
-        'app/report.html',
-        {'form': form,},
-    )
-
-@login_required
-def add_contact(request, slug):
-    user = request.user
-    school = School.objects.get(slug=slug)
-    form = ContactForm(request.POST or None)
-    if form.is_valid():
-        contact = form.save(commit=False)
-        contact.user = user
-        contact = form.save()
-        entry = Entry.objects.create(
-            school=school,
-            contact=contact,
-        )
-        messages.success(
-            request,
-            "Contact Submitted!",
-        )
-        return redirect('school', slug)
-    return render(
-        request,
-        'app/contact.html',
-        {'form': form,},
-    )
-
-
-
-
-def morrow(request):
-    return render(
-        request,
-        'app/morrow.html',
-    )
-
-def thomas(request):
-    return render(
-        request,
-        'app/thomas.html',
     )

@@ -4,6 +4,7 @@ from django.test.client import Client
 # First-Party
 import pytest
 from algoliasearch_django.decorators import disable_auto_indexing
+from app.factories import AccountFactory
 from app.factories import UserFactory
 
 
@@ -16,11 +17,14 @@ def anon_client():
 @pytest.fixture
 def user_client():
     user = UserFactory(
-        username='auth0|5f07d7e7fd30e200136652f6',
-        name='Foo Bar',
-        email='foo@startnormal.com',
+        username='user',
+        name='User',
+        email='user@startnormal.com',
         is_active=True,
         is_admin=False,
+    )
+    AccountFactory(
+        user=user,
     )
     client = Client()
     client.force_login(user)
@@ -30,23 +34,12 @@ def user_client():
 @pytest.fixture
 def admin_client():
     admin = UserFactory(
-        username='auth0|5f07d616a1f6030019b0a1ea',
+        username='admin',
         name='Admin',
-        email='dbinetti@startnormal.com',
+        email='admin@startnormal.com',
         is_active=True,
         is_admin=True,
     )
     client = Client()
     client.force_login(admin)
     return client
-
-
-@pytest.fixture
-def school():
-    school = SchoolFactory()
-    return school
-
-@pytest.fixture
-def district():
-    district = DistrictFactory()
-    return district

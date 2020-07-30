@@ -1,12 +1,6 @@
-# Standard Libary
-# Standard Library
-import json
-from textwrap import wrap
 
 # Django
 from django.conf import settings
-from django.contrib.auth import get_user_model
-from django.contrib.auth.forms import PasswordResetForm
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 
@@ -37,7 +31,7 @@ def auth0_get_client():
 def auth0_delete_user(username):
     client = auth0_get_client()
     result = client.users.delete(username)
-    return
+    return result
 
 
 # Utility

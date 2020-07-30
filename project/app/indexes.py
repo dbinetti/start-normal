@@ -1,6 +1,5 @@
 # Third-Party
 # First-Party
-import algoliasearch_django as algoliasearch
 from algoliasearch_django import AlgoliaIndex
 
 

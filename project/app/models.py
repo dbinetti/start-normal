@@ -1,11 +1,6 @@
-# Standard Library
-from operator import attrgetter
-
 # Django
 from django.contrib.auth.models import AbstractBaseUser
 from django.db import models
-from django.db.models.constraints import UniqueConstraint
-from django.utils.text import slugify
 
 # First-Party
 from autoslug import AutoSlugField
@@ -558,104 +553,6 @@ class Homeroom(models.Model):
         )
 
 
-class Contact(models.Model):
-    STATUS = Choices(
-        (0, 'new', 'New'),
-        (10, 'active', 'Active'),
-    )
-    ROLE = Choices(
-        (410, 'super', 'Superintendent'),
-        (420, 'president', 'Board President'),
-        (430, 'vice', 'Board Vice-President'),
-        (440, 'clerk', 'Board Clerk'),
-        (450, 'trustee', 'Board Trustee'),
-        (460, 'admin', 'Administrative'),
-        (510, 'principal', 'Principal'),
-        (900, 'unknown', 'Unknown'),
-    )
-
-    id = HashidAutoField(
-        primary_key=True,
-    )
-    status = models.IntegerField(
-        null=True,
-        blank=False,
-        choices=STATUS,
-        default=STATUS.new,
-    )
-    name = models.CharField(
-        max_length=255,
-        blank=False,
-    )
-    role = models.IntegerField(
-        null=True,
-        blank=False,
-        choices=ROLE,
-    )
-    email = models.EmailField(
-        blank=False,
-        default='',
-    )
-    phone = models.CharField(
-        max_length=255,
-        blank=True,
-        default='',
-    )
-    created = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated = models.DateTimeField(
-        auto_now=True,
-    )
-    user = models.ForeignKey(
-        'app.User',
-        related_name='contacts',
-        on_delete=models.SET_NULL,
-        null=True,
-    )
-    def __str__(self):
-        return str(self.name)
-
-
-class Report(models.Model):
-    STATUS = Choices(
-        (0, 'new', 'New'),
-        (10, 'approved', 'Approved'),
-        (20, 'rejected', 'Rejected'),
-    )
-    id = HashidAutoField(
-        primary_key=True,
-    )
-    status = models.IntegerField(
-        blank=False,
-        choices=STATUS,
-        default=STATUS.new,
-    )
-    title = models.CharField(
-        max_length=100,
-        blank=False,
-        help_text="""Give a brief title (ideally no more than five words.)""",
-    )
-    text = models.TextField(
-        blank=False,
-        help_text="""Use your own voice, but please stick to the facts as much as possible; we want to be a credible source to all parents.""",
-    )
-    created = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated = models.DateTimeField(
-        auto_now=True,
-    )
-    user = models.ForeignKey(
-        'app.User',
-        related_name='reports',
-        on_delete=models.CASCADE,
-    )
-
-    def __str__(self):
-        return str(self.title)
-
-
 class Student(models.Model):
     id = HashidAutoField(
         primary_key=True,
@@ -727,64 +624,6 @@ class Student(models.Model):
         )
 
 
-class Transmission(models.Model):
-    STATUS = Choices(
-        (0, 'new', 'New'),
-        (10, 'approved', 'Approved'),
-        (20, 'rejected', 'Rejected'),
-    )
-    id = HashidAutoField(
-        primary_key=True,
-    )
-    created = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated = models.DateTimeField(
-        auto_now=True,
-    )
-    report = models.ForeignKey(
-        'app.Report',
-        on_delete=models.CASCADE,
-        related_name='transmissions',
-    )
-    school = models.ForeignKey(
-        'app.School',
-        on_delete=models.CASCADE,
-        related_name='transmissions',
-    )
-    def __str__(self):
-        return str(self.id)
-
-
-class Entry(models.Model):
-    STATUS = Choices(
-        (0, 'new', 'New'),
-        (10, 'approved', 'Approved'),
-        (20, 'rejected', 'Rejected'),
-    )
-    id = HashidAutoField(
-        primary_key=True,
-    )
-    created = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated = models.DateTimeField(
-        auto_now=True,
-    )
-    contact = models.ForeignKey(
-        'app.Contact',
-        on_delete=models.CASCADE,
-        related_name='entries',
-    )
-    school = models.ForeignKey(
-        'app.School',
-        on_delete=models.CASCADE,
-        related_name='entries',
-    )
-    def __str__(self):
-        return str(self.id)
-
-
 class User(AbstractBaseUser):
     id = HashidAutoField(
         primary_key=True,
@@ -827,7 +666,7 @@ class User(AbstractBaseUser):
         return self.is_admin
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
     def has_perm(self, perm, obj=None):
         return True

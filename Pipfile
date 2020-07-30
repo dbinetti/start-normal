@@ -10,6 +10,7 @@ factory-boy = "*"
 faker = "*"
 pytest = "*"
 pytest-django = "*"
+pylint = "*"
 
 [packages]
 django = "*"

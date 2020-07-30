@@ -1,6 +1,5 @@
 # Django
 from django import forms
-from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.forms import UserChangeForm as UserChangeFormBase
 from django.contrib.auth.forms import UserCreationForm as UserCreationFormBase
 from django.forms.models import inlineformset_factory
@@ -10,11 +9,9 @@ from dal import autocomplete
 
 # Local
 from .models import Classmate
-from .models import Contact
 from .models import District
 from .models import Homeroom
 from .models import Parent
-from .models import Report
 from .models import School
 from .models import Student
 from .models import Teacher
@@ -29,7 +26,7 @@ StudentFormSet = inlineformset_factory(
         'school',
         'parent',
     ],
-    widgets = {
+    widgets={
         'school': autocomplete.ModelSelect2(
             url='school-autocomplete',
             attrs={
@@ -48,6 +45,7 @@ StudentFormSet = inlineformset_factory(
 
 
 class SchoolForm(forms.ModelForm):
+
     class Meta:
         model = School
         fields = [
@@ -67,6 +65,7 @@ class SchoolForm(forms.ModelForm):
 
 
 class DistrictForm(forms.ModelForm):
+
     class Meta:
         model = District
         fields = [
@@ -123,6 +122,7 @@ class TeacherForm(forms.ModelForm):
 
 
 class HomeroomForm(forms.ModelForm):
+
     class Meta:
         model = Homeroom
         fields = [
@@ -138,16 +138,6 @@ class HomeroomForm(forms.ModelForm):
             )
         }
 
-
-class ContactForm(forms.ModelForm):
-    class Meta:
-        model = Contact
-        fields = [
-            'name',
-            'role',
-            'email',
-            'phone',
-        ]
 
 
 class StudentForm(forms.ModelForm):
@@ -173,18 +163,6 @@ class StudentForm(forms.ModelForm):
         help_text="Please select the school your student would be entering in the Fall.",
     )
 
-
-class ReportForm(forms.ModelForm):
-    class Meta:
-        model = Report
-        fields = [
-            'title',
-            'text',
-        ]
-
-    def clean_title(self):
-        data = self.cleaned_data['title']
-        return data.title()
 
 
 class ClassmateForm(forms.ModelForm):
