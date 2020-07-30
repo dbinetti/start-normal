@@ -49,6 +49,7 @@ class Classmate(models.Model):
     def __str__(self):
         return str(self.student.name)
 
+
 class Roomparent(models.Model):
     id = HashidAutoField(
         primary_key=True,
@@ -73,6 +74,7 @@ class Roomparent(models.Model):
         on_delete=models.CASCADE,
         related_name='roomparents',
     )
+
 
 class Account(models.Model):
     TEACHER = Choices(
@@ -245,14 +247,14 @@ class Teacher(models.Model):
         default=False,
         help_text="""Are you credentialed?""",
     )
-    KIND = Choices(
+    LEVEL = Choices(
         (510, 'ps', 'Preschool'),
         (520, 'elem', 'Elementary'),
         (530, 'intmidjr', 'Intermediate/Middle/Junior High'),
         (540, 'hs', 'High School'),
     )
-    kinds = MultiSelectField(
-        choices=KIND,
+    levels = MultiSelectField(
+        choices=LEVEL,
         null=True,
         help_text="""What levels do you teach?""",
     )

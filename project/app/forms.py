@@ -154,14 +154,14 @@ class TeacherForm(forms.ModelForm):
         model = Teacher
         fields = [
             'is_credential',
-            'kinds',
+            'levels',
             'subjects',
             'school',
             'notes',
         ]
         labels = {
             "is_credential": "Credentialed?",
-            "kinds": "School Level",
+            "levels": "School Level",
             "subjects": "School Subjects",
         }
         help_texts = {

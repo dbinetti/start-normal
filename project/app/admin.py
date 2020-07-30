@@ -183,7 +183,7 @@ class TeacherAdmin(admin.ModelAdmin):
     fields = [
         'user',
         'is_credential',
-        'kinds',
+        'levels',
         'subjects',
         'school',
         'notes',
