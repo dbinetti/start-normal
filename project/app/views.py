@@ -105,7 +105,7 @@ def privacy(request):
 
 def robots(request):
     rendered = render_to_string(
-        'app/robots.txt',
+        'robots.txt',
     )
     return HttpResponse(
         rendered,
@@ -116,7 +116,7 @@ def robots(request):
 def sitemap(request):
     slugs = School.objects.values_list('slug', flat=True)
     rendered = render_to_string(
-        'app/sitemap.txt',
+        'sitemap.txt',
         context = {
             'slugs': slugs,
         }
