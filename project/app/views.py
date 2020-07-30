@@ -539,7 +539,11 @@ def school(request, slug):
     for parent in parents:
         parent.grades = ", ".join([x.get_grade_display() for x in parent.parent.students.filter(
         school=school).order_by('grade')])
-    students = school.students.select_related('parent').order_by('grade', 'name')
+    students = school.students.select_related('parent').filter(classmates__isnull=True).order_by('grade', 'name')
+    homerooms = Homeroom.objects.filter(
+        classmates__student__school=school,
+    ).distinct()
+
     return render(
         request,
         'app/school.html',
@@ -547,6 +551,7 @@ def school(request, slug):
             'school': school,
             'parents': parents,
             'students': students,
+            'homerooms': homerooms,
         },
     )
 
