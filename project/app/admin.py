@@ -2,9 +2,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as UserAdminBase
 
-# First-Party
-from mptt.admin import MPTTModelAdmin
-
 # Local
 from .forms import UserChangeForm
 from .forms import UserCreationForm

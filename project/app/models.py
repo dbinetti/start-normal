@@ -8,14 +8,10 @@ from django.db.models.constraints import UniqueConstraint
 from django.utils.text import slugify
 
 # First-Party
-import shortuuid
 from autoslug import AutoSlugField
 from hashid_field import HashidAutoField
 from model_utils import Choices
-from mptt.models import MPTTModel
-from mptt.models import TreeForeignKey
 from multiselectfield import MultiSelectField
-from shortuuidfield import ShortUUIDField
 
 # Local
 from .managers import UserManager
@@ -77,16 +73,6 @@ class Roomparent(models.Model):
 
 
 class Account(models.Model):
-    TEACHER = Choices(
-        (510, 'ps', 'Preschool'),
-        (520, 'elem', 'Elementary'),
-        (530, 'intmidjr', 'Intermediate/Middle/Junior High'),
-        (540, 'hs', 'High School'),
-        (550, 'elemhigh', 'Elementary-High Combination'),
-        (560, 'a', 'Adult'),
-        (570, 'ug', 'Ungraded'),
-    )
-
     id = HashidAutoField(
         primary_key=True,
     )

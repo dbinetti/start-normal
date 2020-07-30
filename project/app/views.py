@@ -25,11 +25,11 @@ from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.urls import reverse_lazy
+from django.utils.crypto import get_random_string
 
 # First-Party
 import django_rq
 import requests
-import shortuuid
 from auth0.v3.authentication import Database
 from auth0.v3.authentication import Logout
 from auth0.v3.exceptions import Auth0Error
@@ -597,7 +597,7 @@ def login(request):
     redirect_uri = request.build_absolute_uri(reverse('callback'))
     state = "{0}|{1}".format(
         'dashboard',
-        shortuuid.uuid(),
+        get_random_string(),
     )
     request.session['state'] = state
     params = {
@@ -618,7 +618,7 @@ def signup(request, kind):
     redirect_uri = request.build_absolute_uri(reverse('callback'))
     state = "{0}|{1}".format(
         kind,
-        shortuuid.uuid()
+        get_random_string(),
     )
     request.session['state'] = state
     params = {
