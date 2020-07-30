@@ -109,13 +109,11 @@ class AccountForm(forms.ModelForm):
             'message',
             'teacher',
             'is_subscribe',
-            'is_volunteer',
             'is_teacher',
             'is_doctor',
         ]
         labels = {
             "is_subscribe": "Send Updates",
-            "is_volunteer": "I Can Volunteer",
             "is_teacher": "I'm an Educator",
             "is_doctor": "I'm a Physician",
         }

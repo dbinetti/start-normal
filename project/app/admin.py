@@ -113,7 +113,6 @@ class AccountAdmin(admin.ModelAdmin):
         'user',
         'phone',
         'is_subscribe',
-        'is_volunteer',
         'is_teacher',
         'is_doctor',
         'message',
@@ -131,7 +130,6 @@ class AccountAdmin(admin.ModelAdmin):
         'is_subscribe',
         'is_teacher',
         'is_doctor',
-        'is_volunteer',
         'created',
     ]
     search_fields = [
