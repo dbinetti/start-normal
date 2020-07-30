@@ -23,11 +23,7 @@ urlpatterns = [
 
     # Account
     path('dashboard', views.dashboard, name='dashboard',),
-    path('account', views.account, name='account',),
-    path('pending', views.pending, name='pending',),
     path('teacher', views.teacher, name='teacher',),
-    path('create-teacher', views.create_teacher, name='create-teacher',),
-    path('create-parent', views.create_parent, name='create-parent',),
     path('homeroom/<id>', views.homeroom, name='homeroom',),
     path('homeroom/<homeroom_id>/add-student', views.add_student, name='add-student',),
     path('homeroom/<homeroom_id>/<student_id>', views.add_classmate, name='add-classmate',),

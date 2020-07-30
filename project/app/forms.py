@@ -9,7 +9,6 @@ from django.forms.models import inlineformset_factory
 from dal import autocomplete
 
 # Local
-from .models import Account
 from .models import Classmate
 from .models import Contact
 from .models import District
@@ -100,28 +99,6 @@ class DistrictForm(forms.ModelForm):
             'lat',
             'lon',
         ]
-
-
-class AccountForm(forms.ModelForm):
-    class Meta:
-        model = Account
-        fields = [
-            'message',
-            'teacher',
-            'is_subscribe',
-        ]
-        labels = {
-            "is_subscribe": "Send Updates",
-        }
-        widgets = {
-            'message': forms.Textarea(
-                attrs={
-                    'class': 'form-control',
-                    'placeholder': 'Your Message to your Public Officials',
-                    'rows': 5,
-                }
-            ),
-        }
 
 
 class TeacherForm(forms.ModelForm):
@@ -270,10 +247,6 @@ class SignupForm(forms.Form):
         required=True,
         widget=forms.PasswordInput(attrs={'class': 'form-control'}),
         help_text="""A password is necessary to manage preferences. (Required)""",
-    )
-    is_subscribe = forms.BooleanField(
-        initial=True,
-        label='Receive Updates (roughly once/week)',
     )
     message = forms.CharField(
         required=False,

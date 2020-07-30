@@ -37,7 +37,6 @@ from dal import autocomplete
 from django_rq import job
 
 # Local
-from .forms import AccountForm
 from .forms import ClassmateForm
 from .forms import ContactForm
 from .forms import DeleteForm
@@ -52,7 +51,6 @@ from .forms import StudentFormSet
 from .forms import SubscribeForm
 from .forms import TeacherForm
 from .forms import UserCreationForm
-from .models import Account
 from .models import Classmate
 from .models import Contact
 from .models import District
@@ -159,83 +157,6 @@ def dashboard(request):
     )
 
 
-@login_required
-def account(request):
-    StudentFormSet.extra = 0
-    user = request.user
-    account = Account.objects.get(
-        user=user,
-    )
-    parent = getattr(user, 'parent', None)
-    teacher = getattr(user, 'teacher', None)
-    valid = False
-    if request.method == "POST":
-        form = AccountForm(
-            request.POST,
-            instance=account,
-            prefix='account',
-        )
-        if form.is_valid():
-            form.save()
-        else:
-            valid = False
-        if teacher:
-            teacher_form = TeacherForm(
-                request.POST,
-                instance=teacher,
-                prefix='teacher',
-            )
-            if teacher_form.is_valid():
-                teacher_form.save(commit=False)
-                teacher_form.user = user
-                teacher_form.save()
-            else:
-                valid = False
-        if parent:
-            formset = StudentFormSet(
-                request.POST,
-                request.FILES,
-                instance=parent,
-                prefix='students',
-            )
-            if formset.is_valid():
-                formset.save()
-            else:
-                valid = False
-        if valid:
-            messages.success(
-                request,
-                "Saved!",
-            )
-            return redirect('account')
-    else:
-        form = AccountForm(
-            instance=account,
-            prefix='account',
-        )
-        if teacher:
-            teacher_form = TeacherForm(
-                instance=teacher,
-                prefix='teacher',
-            )
-        else:
-            teacher_form = None
-        if parent:
-            formset = StudentFormSet(
-                instance=parent,
-                prefix='students',
-            )
-        else:
-            formset = None
-    return render(
-        request,
-        'app/account.html', {
-            'user': user,
-            'form': form,
-            'teacher_form': teacher_form,
-            'formset': formset,
-        },
-    )
 
 @login_required
 def pending(request):
@@ -304,22 +225,6 @@ def invite(request, student_id):
             'form': form,
         }
     )
-
-@login_required
-def create_teacher(request):
-    user = request.user
-    teacher, created = Teacher.objects.get_or_create(
-        user=user,
-    )
-    return redirect('account')
-
-@login_required
-def create_parent(request):
-    user = request.user
-    parent, created = Parent.objects.get_or_create(
-        user=user,
-    )
-    return redirect('account')
 
 @login_required
 def create_student(request):

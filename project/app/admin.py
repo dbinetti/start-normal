@@ -110,20 +110,17 @@ class ClassroomAdmin(admin.ModelAdmin):
 class AccountAdmin(admin.ModelAdmin):
     save_on_top = True
     fields = [
-        'user',
         'phone',
-        'is_subscribe',
-        'message',
+        'is_welcomed',
+        'user',
     ]
     list_display = [
         'user',
-        'location',
         'created',
         'updated',
     ]
     list_filter = [
-        'location',
-        'is_subscribe',
+        'is_welcomed',
         'created',
     ]
     search_fields = [

@@ -84,20 +84,6 @@ class Account(models.Model):
     is_welcomed = models.BooleanField(
         default=False,
     )
-    is_subscribe = models.BooleanField(
-        default=True,
-        help_text="""Subscribe for updates.""",
-    )
-    teacher = models.IntegerField(
-        blank=True,
-        null=True,
-    )
-    message = models.TextField(
-        max_length=512,
-        blank=True,
-        default='',
-        help_text="""Feel free to include private notes just for us.""",
-    )
     created = models.DateTimeField(
         auto_now_add=True,
     )
@@ -109,46 +95,6 @@ class Account(models.Model):
         on_delete=models.CASCADE,
         related_name='account',
     )
-
-    # TODO Cruft
-    LOCATION = Choices(
-        ('ath', 'Atherton'),
-        ('bel', 'Belmont'),
-        ('brb', 'Brisbane'),
-        ('bur', 'Burlingame'),
-        ('col', 'Colma'),
-        ('dc', 'Daly City'),
-        ('epa', 'East Palo Alto'),
-        ('fc', 'Foster City'),
-        ('hmb', 'Half Moon Bay'),
-        ('hil', 'Hillsborough'),
-        ('mp', 'Menlo Park'),
-        ('mil', 'Millbrae'),
-        ('pac', 'Pacifica'),
-        ('pv', 'Portola Valley'),
-        ('rc', 'Redwood City'),
-        ('sb', 'San Bruno'),
-        ('sc', 'San Carlos'),
-        ('sm', 'San Mateo'),
-        ('ssf', 'South San Francisco'),
-        ('ws', 'Woodside'),
-        ('un', 'Unincorporated San Mateo County'),
-        ('out', 'Outside of San Mateo County'),
-    )
-    location = models.CharField(
-        max_length=255,
-        choices=LOCATION,
-        blank=True,
-        help_text="""Your city. (Required)""",
-    )
-    notes = models.TextField(
-        max_length=512,
-        blank=True,
-        default='',
-        help_text="""Feel free to include private notes just for us.""",
-    )
-
-
     def __str__(self):
         return str(self.user)
 
