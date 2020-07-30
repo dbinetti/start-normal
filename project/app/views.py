@@ -92,7 +92,7 @@ def privacy(request):
         'app/privacy.html',
     )
 
-def robots():
+def robots(request):
     rendered = render_to_string(
         'robots.txt',
     )
@@ -101,7 +101,7 @@ def robots():
         content_type="text/plain",
     )
 
-def sitemap():
+def sitemap(request):
     slugs = School.objects.values_list('slug', flat=True)
     rendered = render_to_string(
         'sitemap.txt',

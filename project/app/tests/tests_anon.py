@@ -33,3 +33,14 @@ def test_team(anon_client):
     path = reverse('team')
     response = anon_client.get(path)
     assert response.status_code == 200
+
+def test_robots(anon_client):
+    path = reverse('robots')
+    response = anon_client.get(path)
+    assert response.status_code == 200
+
+@pytest.mark.django_db
+def test_sitemap(anon_client):
+    path = reverse('sitemap')
+    response = anon_client.get(path)
+    assert response.status_code == 200
