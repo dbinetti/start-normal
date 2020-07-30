@@ -6,7 +6,7 @@ import pytest
 
 
 def test_deploy():
-    assert True
+    assert False
 
 
 @pytest.mark.django_db
