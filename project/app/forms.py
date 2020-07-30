@@ -109,12 +109,10 @@ class AccountForm(forms.ModelForm):
             'message',
             'teacher',
             'is_subscribe',
-            'is_teacher',
             'is_doctor',
         ]
         labels = {
             "is_subscribe": "Send Updates",
-            "is_teacher": "I'm an Educator",
             "is_doctor": "I'm a Physician",
         }
         widgets = {

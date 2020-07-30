@@ -113,14 +113,12 @@ class AccountAdmin(admin.ModelAdmin):
         'user',
         'phone',
         'is_subscribe',
-        'is_teacher',
         'is_doctor',
         'message',
     ]
     list_display = [
         'user',
         'location',
-        'is_teacher',
         'is_doctor',
         'created',
         'updated',
@@ -128,7 +126,6 @@ class AccountAdmin(admin.ModelAdmin):
     list_filter = [
         'location',
         'is_subscribe',
-        'is_teacher',
         'is_doctor',
         'created',
     ]
