@@ -41,8 +41,6 @@ from .forms import ClassmateForm
 from .forms import ContactForm
 from .forms import DeleteForm
 from .forms import HomeroomForm
-from .forms import InviteForm
-from .forms import InviteFormSet
 from .forms import ReportForm
 from .forms import SchoolForm
 from .forms import SignupForm
@@ -196,37 +194,6 @@ def teacher(request):
     )
 
 @login_required
-def invite(request, student_id):
-    student = Student.objects.get(id=student_id)
-    parent = request.user.parent
-    if request.method == 'POST':
-        form = InviteForm(request.POST)
-        if form.is_valid():
-            homeroom = form.cleaned_data['homeroom']
-            classmate, created = Classmate.objects.get_or_create(
-                homeroom=homeroom,
-                student=student,
-            )
-            classmate.status = classmate.STATUS.accepted
-            classmate.save()
-            messages.success(
-                request,
-                "Classmate Added!",
-            )
-            return redirect('school', student.school.slug)
-    form = InviteForm()
-    form.fields['homeroom'].queryset = Homeroom.objects.filter(
-        parent=parent,
-    )
-    return render(
-        request,
-        'app/invite.html',
-        context = {
-            'form': form,
-        }
-    )
-
-@login_required
 def create_student(request):
     parent = request.user.parent
     form = StudentForm(request.POST or None)
@@ -352,43 +319,6 @@ def join(request, id):
         context = {
             'form': form,
             'homeroom': homeroom,
-        }
-    )
-
-
-@login_required
-def addme(request, homeroom_id):
-    homeroom = Homeroom.objects.get(id=homeroom_id)
-    user = request.user
-    parent, created = Parent.objects.get_or_create(
-        user=user,
-    )
-    student = Student.objects.create(
-        grade=homeroom.grade,
-        school=homeroom.school,
-        parent=parent,
-        # homeroom=homeroom,
-    )
-    if request.method == 'POST':
-        form = StudentForm(
-            request.POST,
-            instance=student,
-        )
-        if form.is_valid():
-            form.save()
-            messages.success(
-                request,
-                "Added to Homeroom!",
-            )
-            return redirect('dashboard')
-    form = StudentForm(
-        instance=student,
-    )
-    return render(
-        request,
-        'app/invite.html',
-        context = {
-            'form': form,
         }
     )
 

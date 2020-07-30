@@ -239,10 +239,8 @@ class ContactAdmin(admin.ModelAdmin):
         'role',
         'email',
         'phone',
-        'is_active',
     ]
     list_filter = [
-        'is_active',
         'role',
         'created',
         'updated',

@@ -13,7 +13,6 @@ from .models import Classmate
 from .models import Contact
 from .models import District
 from .models import Homeroom
-from .models import Invite
 from .models import Parent
 from .models import Report
 from .models import School
@@ -200,13 +199,6 @@ class DeleteForm(forms.Form):
     confirm = forms.BooleanField(
         required=True,
     )
-
-
-class InviteForm(forms.Form):
-    homeroom = forms.ModelChoiceField(
-        queryset=Homeroom.objects.all(),
-    )
-
 
 
 class SignupForm(forms.Form):
