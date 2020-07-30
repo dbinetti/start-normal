@@ -70,7 +70,7 @@ class SchoolFactory(DjangoModelFactory):
     is_active = True
     name = 'Central Middle'
     status = School.STATUS.active
-    kind = School.KIND.intmidjr
+    level = School.LEVEL.intmidjr
     nces_id = 5401
     address = '123 Main St'
     city = 'San Carlos'

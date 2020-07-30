@@ -244,21 +244,21 @@ class DistrictAdmin(admin.ModelAdmin):
 class SchoolAdmin(admin.ModelAdmin):
     fields = [
         'name',
-        'kind',
+        'level',
         'low_grade',
         'high_grade',
         'website',
     ]
     list_display = [
         'name',
-        'kind',
+        'level',
         'low_grade',
         'high_grade',
         'website',
     ]
     list_filter = [
         'is_active',
-        'kind',
+        'level',
         'status',
     ]
     search_fields = [

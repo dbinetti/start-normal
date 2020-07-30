@@ -432,7 +432,7 @@ class School(models.Model):
         (20, 'closed', "Closed"),
         (30, 'merged', "Merged"),
     )
-    KIND = Choices(
+    LEVEL = Choices(
         (510, 'ps', 'Preschool'),
         (520, 'elem', 'Elementary'),
         (530, 'intmidjr', 'Intermediate/Middle/Junior High'),
@@ -483,10 +483,10 @@ class School(models.Model):
         choices=STATUS,
         default=STATUS.new,
     )
-    kind = models.IntegerField(
+    level = models.IntegerField(
         blank=False,
         null=True,
-        choices=KIND,
+        choices=LEVEL,
     )
     cd_id = models.BigIntegerField(
         blank=True,

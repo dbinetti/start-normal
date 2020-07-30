@@ -1,4 +1,5 @@
 # Third-Party
+# First-Party
 import algoliasearch_django as algoliasearch
 from algoliasearch_django import AlgoliaIndex
 
@@ -15,7 +16,7 @@ class SchoolIndex(AlgoliaIndex):
         'phone',
         'website',
         'nces_id',
-        'get_kind_display',
+        'get_level_display',
         'district',
     ]
     geo_field = 'location'
@@ -32,7 +33,7 @@ class SchoolIndex(AlgoliaIndex):
             'city',
             'state',
             'county',
-            'get_kind_display',
+            'get_level_display',
         ],
     }
     should_index = 'should_index'

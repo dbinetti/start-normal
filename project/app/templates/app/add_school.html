@@ -23,7 +23,7 @@
           <form method='post'>
             {% csrf_token %}
             {% bootstrap_form_errors form %}
-            {% bootstrap_field form.kind show_label=False show_help=False  %}
+            {% bootstrap_field form.level show_label=False show_help=False  %}
             {% bootstrap_field form.name show_label=False show_help=False placeholder='School Name'  %}
             {% bootstrap_field form.city show_label=False show_help=False placeholder='School City'  %}
             {% bootstrap_field form.state show_label=False show_help=False placeholder='School State'  %}

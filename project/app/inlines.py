@@ -108,14 +108,14 @@ class SchoolInline(admin.TabularInline):
     model = School
     fields = [
         'name',
-        'kind',
+        'level',
         'district',
     ]
     readonly_fields = [
     ]
-    ordering = (
+    ordering = [
         'name',
-    )
+    ]
     show_change_link = True
     extra = 0
     classes = [

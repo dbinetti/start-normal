@@ -303,7 +303,7 @@ def private_schools_list(filename='privates.csv'):
             school = {
                 'status': School.STATUS.active,
                 'name': str(row[6]) if row[6] != 'No Data' else '',
-                'kind': kind_map[row[14]] if row[14] != 'No Data' else None,
+                'level': level_map[row[14]] if row[14] != 'No Data' else None,
                 'cd_id': cd_id,
                 'nces_id': int(row[2]) if row[2] != 'No Data' else None,
                 # 'district_name': str(row[5]) if row[5] != 'No Data' else '',

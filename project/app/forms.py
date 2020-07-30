@@ -67,9 +67,8 @@ class SchoolForm(forms.ModelForm):
     class Meta:
         model = School
         fields = [
-            'kind',
+            'level',
             'name',
-            'kind',
             'nces_id',
             'address',
             'city',
