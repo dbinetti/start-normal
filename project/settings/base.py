@@ -215,16 +215,13 @@ logging.config.dictConfig({
             'level': 'WARNING',
             'handlers': [
                 'console',
-                # 'sentry',
             ],
         },
         'app': {
             'level': LOGLEVEL,
             'handlers': [
                 'console',
-                # 'sentry',
             ],
-            # Avoid double logging because of root logger
             'propagate': False,
         },
         # Prevent noisy modules from logging to Sentry
@@ -251,6 +248,5 @@ INSTALLED_APPS = [
     'bootstrap4',
     'dal',
     'dal_select2',
-    'mptt',
     'app',
 ]
