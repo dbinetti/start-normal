@@ -165,17 +165,6 @@ class ContactForm(forms.ModelForm):
         ]
 
 
-class ParentForm(forms.ModelForm):
-    class Meta:
-        model = Parent
-        fields = [
-            'address',
-            'city',
-            'state',
-            'phone',
-        ]
-
-
 class StudentForm(forms.ModelForm):
     class Meta:
         model = Student
