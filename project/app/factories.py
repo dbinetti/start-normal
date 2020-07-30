@@ -66,7 +66,6 @@ class ReportFactory(DjangoModelFactory):
 
 
 class SchoolFactory(DjangoModelFactory):
-    is_active = True
     name = 'Central Middle'
     status = School.STATUS.active
     level = School.LEVEL.intmidjr
@@ -81,7 +80,6 @@ class SchoolFactory(DjangoModelFactory):
         model = School
 
 class DistrictFactory(DjangoModelFactory):
-    is_active = True
     name = 'San Carlos School District'
     status = District.STATUS.active
     kind = District.KIND.elementary

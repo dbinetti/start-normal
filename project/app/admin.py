@@ -204,7 +204,6 @@ class DistrictAdmin(admin.ModelAdmin):
         'website',
     ]
     list_filter = [
-        'is_active',
         'kind',
         'status',
         'county',
@@ -241,7 +240,6 @@ class SchoolAdmin(admin.ModelAdmin):
         'website',
     ]
     list_filter = [
-        'is_active',
         'level',
         'status',
     ]

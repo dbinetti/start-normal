@@ -31,7 +31,6 @@ class Command(BaseCommand):
             is_admin=False,
         )
         scsd = District.objects.create(
-            is_active=True,
             name='San Carlos School District',
             status=District.STATUS.active,
             kind=District.KIND.elementary,
@@ -45,7 +44,6 @@ class Command(BaseCommand):
         )
 
         central = School.objects.create(
-            is_active=True,
             name='Central Middle',
             status=School.STATUS.active,
             level=School.LEVEL.intmidjr,
@@ -60,7 +58,6 @@ class Command(BaseCommand):
         )
 
         ba = School.objects.create(
-            is_active=True,
             name='Brittan Acres',
             status=School.STATUS.active,
             level=School.LEVEL.elem,

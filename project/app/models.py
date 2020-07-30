@@ -236,9 +236,6 @@ class District(models.Model):
     id = HashidAutoField(
         primary_key=True,
     )
-    is_active = models.BooleanField(
-        default=False,
-    )
     name = models.CharField(
         max_length=255,
         blank=False,
@@ -371,9 +368,6 @@ class School(models.Model):
     )
     id = HashidAutoField(
         primary_key=True,
-    )
-    is_active = models.BooleanField(
-        default=False,
     )
     name = models.CharField(
         max_length=255,
