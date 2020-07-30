@@ -10,14 +10,11 @@
 
   <section class='my-5'>
     <p class='lead'>
-      Your Dashboard allows you to see and update details of your account, either as a Parent, Teacher, or both.
-    </p>
-    <p>
-      Please note that your name, email, and student name are available to others in your Homeroom.
+      Your Dashboard allows you to see and update details of your account.
     </p>
   </section>
+
   {% comment %}
-  {% if homerooms %}
   <section class='mt-2 mt-5'>
     <div class='card'>
       <div class='card-header'>
@@ -50,13 +47,13 @@
               {% for homeroom in homerooms %}
                 <tr>
                   <td>
-                    <a href='{% url "homeroom" homeroom.id %}'>{{homeroom.name}}</a>
+                    <a href='{% url "homeroom" homeroom.id %}'>{{homeroom}}</a>
                   </td>
                   <td>
-                    {{homeroom.schools|join:"<br>"|escape}}
+                    {{homeroom.schools|join:"<br>"|escape|default:"(Empty)"}}
                   </td>
                   <td>
-                    {{homeroom.grades|join:"<br>"|escape}}
+                    {{homeroom.grades|join:"<br>"|escape|default:"(Empty)"}}
                   </td>
                   <td>
                     {{homeroom.students.count}}
@@ -76,12 +73,11 @@
       </div>
       {% if parent %}
       <div class='card-footer'>
-        {# <a href='{% url "create-homeroom" %}' class='btn btn-success btn-large' role='button'>Create Homeroom</a> #}
+        <a href='{% url "create-homeroom" %}' class='btn btn-success btn-large' role='button'>Create Homeroom</a>
       </div>
       {% endif %}
     </div>
   </section>
-  {% endif %}
   {% endcomment %}
   <section class='mt-2 mt-5'>
     <div class='card'>
@@ -144,6 +140,7 @@
       {% endif %}
     </div>
   </section>
+
   <section class='my-5'>
     <div class='card'>
       <div class='card-header'>

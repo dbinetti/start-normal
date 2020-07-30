@@ -53,7 +53,7 @@
                         <a href='mailto:{{student.parent.user.email}}'>{{student.parent.user.email}}</a>
                       </td>
                       <td>
-                        <a href='{% url "add-classmate" homeroom.id student.id %}' role='button' class="btn btn-success btn-sm">Add Classmate</a>
+                        <a href='{% url "add-classmate-from-student" homeroom.id student.id %}' role='button' class="btn btn-success btn-sm">Add Classmate</a>
                       </td>
                     </tr>
                   {% endfor %}

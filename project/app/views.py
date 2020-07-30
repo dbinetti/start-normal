@@ -2,6 +2,10 @@
 import json
 import logging
 
+# Third-Party
+import requests
+from dal import autocomplete
+
 # Django
 from django.conf import settings
 from django.contrib import messages
@@ -18,16 +22,12 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.crypto import get_random_string
 
-# First-Party
-import requests
-from dal import autocomplete
-
 # Local
 from .forms import DeleteForm
+from .forms import HomeroomForm
 from .forms import SchoolForm
 from .forms import StudentForm
 from .forms import StudentFormSet
-from .forms import SubscribeForm
 from .forms import TeacherForm
 from .models import Classmate
 from .models import Homeroom
@@ -128,7 +128,7 @@ def dashboard(request):
         parent=parent,
     )
     homerooms = Homeroom.objects.filter(
-        students__in=students,
+        parent=parent,
     )
     return render(
         request,
@@ -147,6 +147,22 @@ def pending(request):
     return render(
         request,
         'app/pending.html',
+    )
+
+@login_required
+def connect_homeroom(request, student_id):
+    student = get_object_or_404(Student, id=student_id)
+    homerooms = Homeroom.objects.filter(
+        classmates__student__school=student.school,
+        classmates__student__grade=student.grade,
+    ).distinct()
+    return render(
+        request,
+        'app/connect_homeroom.html',
+        context={
+            'student': student,
+            'homerooms': homerooms,
+        }
     )
 
 @login_required
@@ -206,6 +222,23 @@ def create_student(request):
             'form': form,
         }
     )
+
+@login_required
+def create_homeroom(request, student_id):
+    parent = request.user.parent
+    student = Student.objects.get(id=student_id)
+    homeroom = Homeroom.objects.create(
+        parent=parent,
+    )
+    homeroom.classmates.create(
+        student=student,
+    )
+    messages.success(
+        request,
+        "Homeroom Created!",
+    )
+    return redirect('homeroom', homeroom.id)
+
 
 @login_required
 def join_homeroom(request):
@@ -340,12 +373,19 @@ def student(request, student_id):
 # @login_required
 def homeroom(request, homeroom_id):
     homeroom = get_object_or_404(Homeroom, pk=homeroom_id)
+    schools = School.objects.filter(
+        students__classmates__homeroom=homeroom,
+    )
     classmates = homeroom.classmates.all()
+    students = Student.objects.filter(
+        school__in=schools,
+    ).order_by('grade')
     return render(
         request,
         'app/homeroom.html', {
             'homeroom': homeroom,
             'classmates': classmates,
+            'students': students,
         },
     )
 
@@ -366,7 +406,7 @@ def add_student(request, homeroom_id):
 
 
 @login_required
-def add_classmate(request, homeroom_id, student_id):
+def add_classmate_from_student(request, homeroom_id, student_id):
     homeroom = get_object_or_404(Homeroom, pk=homeroom_id)
     student = get_object_or_404(Student, pk=student_id)
     classmate, created = Classmate.objects.get_or_create(

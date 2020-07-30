@@ -1,0 +1,30 @@
+{% extends 'app/base.html' %}
+
+{% load bootstrap4 %}
+
+{% block title %}Create Homeroom{% endblock title %}
+{% block header %}Create Homeroom{% endblock header %}
+
+{% block content %}
+<section>
+  <p class='lead'>
+    A Homeroom is a stable cohort of children to be instructed together.
+  </p>
+  <p>
+    After you create a Homeroom you'll be able to add your students and invite others to join your group.
+  </p>
+</section>
+<section class='my-5'>
+  <form method='post' role='form'>
+    {% csrf_token %}
+    {% bootstrap_form_errors form %}
+    {% bootstrap_field form.notes label=false %}
+    {% buttons %}
+      <button type="submit" class="btn btn-success btn-lg btn-block">
+        Create this Homeroom
+      </button>
+    {% endbuttons %}
+  </form>
+</section>
+
+{% endblock content %}

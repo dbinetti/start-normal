@@ -1,0 +1,82 @@
+{% extends 'app/base.html' %}
+
+{% load bootstrap4 %}
+{% load humanize %}
+
+{% block title %}Connect to Homeroom{% endblock title %}
+{% block header %}Connect to Homeroom{% endblock header %}
+
+{% block content %}
+  <section class='my-5'>
+    <p class='lead mb-5 col-lg-9'>
+      Connect your student, {{student.name}}, to a Homeroom.
+    </p>
+  </section>
+  <section class='mt-2 mt-5'>
+    <div class='card'>
+      <div class='card-header'>
+        <h4>Homeroom Information</h4>
+      </div>
+      <div class='card-body'>
+        <h6>
+          Your Homerooms
+        </h6>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>
+                Homeroom
+              </th>
+              <th>
+                School(s)
+              </th>
+              <th>
+                Grade(s)
+              </th>
+              <th>
+                Student(s)
+              </th>
+              <th>
+                Status
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for homeroom in homerooms %}
+              <tr>
+                <td>
+                  <a href='{% url "homeroom" homeroom.id %}'>{{homeroom}}</a>
+                </td>
+                <td>
+                  {{homeroom.schools|join:"<br>"|escape|default:"(Empty)"}}
+                </td>
+                <td>
+                  {{homeroom.grades|join:"<br>"|escape|default:"(Empty)"}}
+                </td>
+                <td>
+                  {{homeroom.students.count}}
+                </td>
+                <td>
+                  {{homeroom.get_status_display}}
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan=5>
+                  (No existing Homerooms match your School and Grade)
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class='card-footer'>
+        <p>
+          <a href='{% url "create-homeroom" student.id %}' role='button' class='btn btn-success btn-lg'>Create a Homeroom</a>
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+{% endblock content %}

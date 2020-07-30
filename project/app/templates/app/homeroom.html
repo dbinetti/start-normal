@@ -9,8 +9,12 @@
 {% block content %}
   <section class='my-5'>
     <p class='lead mb-5 col-lg-9'>
-      This Homeroom is a stable cohort of {{homeroom.classmates.count}} students from the following schools and grades:<br>
-      <strong>{{homeroom.schools|join:", "}}; {{homeroom.grades|join:", "}}</strong>
+      {% if homeroom.classmates.count %}
+        This Homeroom is a stable cohort of {{homeroom.classmates.count}} students from the following schools and grades:<br>
+        <strong>{{homeroom.schools|join:", "}}; {{homeroom.grades|join:", "}}</strong>
+      {% else %}
+        There are no students currently in this Homeroom.
+      {% endif %}
     </p>
   </section>
   <section class='my-5'>
@@ -62,13 +66,21 @@
                         <a href='mailto:{{classmate.student.parent.user.email}}'>{{classmate.student.parent.user.email}}</a>
                       </td>
                     </tr>
+                  {% empty %}
+                    <tr>
+                      <td colspan=3>
+                        (No Students in this Homeroom)
+                      </td>
+                    </tr>
                   {% endfor %}
                 </tbody>
               </table>
             </div>
           </div>
           <div class='card-footer'>
-            To add or remove a student from this Homeroom, please send an email to <a href='mailto:dbinetti@startnormal.com'>dbinetti@startnormal.com</a> or call/text 415.713.2126
+            <p>
+              {# <a href='{% url "add-classmate" homeroom.id %}'>Add a Student</a> #}
+            </p>
           </div>
         </div>
       </section>
@@ -87,4 +99,73 @@
       </section>
     {% endif %}
 
+
+  {% if request.user.is_authenticated %}
+    <section class='my-5'>
+      <div class='card'>
+        <div class='card-header'>
+          <h4>Potential Classmates</h4>
+        </div>
+        <div class='card-body'>
+          <table class='table'>
+            <thead>
+              <th>
+                Grade
+              </th>
+              <th>
+                Student Name
+              </th>
+              <th>
+                Parent Name
+              </th>
+              <th>
+                Parent Email
+              </th>
+              <th>
+                Add to Homeroom
+              </th>
+            </thead>
+            <tbody>
+              {% for student in students %}
+                <tr>
+                  <td>
+                    {{student.get_grade_display}}
+                  </td>
+                  {% if user.is_authenticated %}
+                    <td>
+                      {{student.name}}
+                    </td>
+                    <td>
+                      {{student.parent.user.name}}
+                    </td>
+                    <td>
+                      {{student.parent.user.email}}
+                    </td>
+                    <td>
+                      <a href='{% url "add-classmate-from-student" homeroom.id student.id %}'>Add to this Homeroom</a>
+                    </td>
+
+                  {% else %}
+                    <td>
+                      {{student.name.0|upper}}.{{student.parent.user.name.0|upper}}.
+                    </td>
+                    <td colspan=2>
+                      <em>
+                        Register to see student and parent information.
+                      </em>
+                    </td>
+                  {% endif %}
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class='card-footer'>
+          <p>
+            I am hard at work to create a tool to help you form Homerooms.  In the meantime, to add any of these students to your Homeroom please email me at <a href='mailto:dbinetti@startnormal.com'>dbinetti@startnormal.com</a> or call/text 415.713.2126
+          </p>
+        </div>
+      </div>
+    </section>
+  {% endif %}
 {% endblock content %}
