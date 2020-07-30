@@ -1,14 +1,14 @@
 # Django
-# Third-Party
-import pytest
-
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
+# First-Party
+import pytest
+
 
 def test_deploy():
-    assert True
+    assert False
 
 
 def test_index_anon(anon_client):
