@@ -29,7 +29,6 @@ from .models import User
 
 @mute_signals(post_delete, post_save)
 class AccountFactory(DjangoModelFactory):
-    is_public = True
     user = RelatedFactory(
         'app.factories.AccountFactory',
         factory_related_name='account',

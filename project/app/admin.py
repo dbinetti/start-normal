@@ -112,7 +112,6 @@ class AccountAdmin(admin.ModelAdmin):
     fields = [
         'user',
         'phone',
-        'is_public',
         'is_subscribe',
         'is_volunteer',
         'is_teacher',
@@ -129,7 +128,6 @@ class AccountAdmin(admin.ModelAdmin):
     ]
     list_filter = [
         'location',
-        'is_public',
         'is_subscribe',
         'is_teacher',
         'is_doctor',

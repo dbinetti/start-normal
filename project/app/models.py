@@ -84,10 +84,6 @@ class Account(models.Model):
     is_welcomed = models.BooleanField(
         default=False,
     )
-    is_public = models.BooleanField(
-        default=True,
-        help_text="""List name on website.""",
-    )
     is_subscribe = models.BooleanField(
         default=True,
         help_text="""Subscribe for updates.""",
@@ -107,7 +103,6 @@ class Account(models.Model):
     teacher = models.IntegerField(
         blank=True,
         null=True,
-        choices=TEACHER,
     )
     message = models.TextField(
         max_length=512,

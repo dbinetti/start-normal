@@ -108,14 +108,12 @@ class AccountForm(forms.ModelForm):
         fields = [
             'message',
             'teacher',
-            'is_public',
             'is_subscribe',
             'is_volunteer',
             'is_teacher',
             'is_doctor',
         ]
         labels = {
-            "is_public": "List my Name on the Website",
             "is_subscribe": "Send Updates",
             "is_volunteer": "I Can Volunteer",
             "is_teacher": "I'm an Educator",
@@ -278,10 +276,6 @@ class SignupForm(forms.Form):
         required=True,
         widget=forms.PasswordInput(attrs={'class': 'form-control'}),
         help_text="""A password is necessary to manage preferences. (Required)""",
-    )
-    is_public = forms.BooleanField(
-        initial=True,
-        label='List My Name on the Website',
     )
     is_subscribe = forms.BooleanField(
         initial=True,
