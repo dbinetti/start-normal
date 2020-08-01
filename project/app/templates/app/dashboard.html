@@ -9,85 +9,29 @@
 {% block content %}
 
   <section class='my-5'>
-    <p class='lead'>
-      Your Dashboard allows you to see and update details of your account.
-    </p>
   </section>
 
-  {% comment %}
+  {% if request.user.account.has_classmates %}
+    <p class='lead'>
+      Make changes to your account through this Dashboard
+    </p>
+  {% else %}
+    <p class='lead'>
+      Welcome!  The next step is to choose a Homeroom for your students.
+    </p>
+    <p>
+      You can join an existing Homeroom, or create one of your own and invite others to it.  Click the "Join Homeroom" button below to get started.
+    </p>
+  {% endif %}
   <section class='mt-2 mt-5'>
     <div class='card'>
       <div class='card-header'>
-        <h4>Homeroom Information</h4>
-      </div>
-      <div class='card-body'>
-        {% if parent %}
-          <h6>Your Homerooms</h6>
-          <table class='table table-responsive'>
-            <thead>
-              <tr>
-                <th>
-                  Homeroom
-                </th>
-                <th>
-                  School(s)
-                </th>
-                <th>
-                  Grade(s)
-                </th>
-                <th>
-                  Student(s)
-                </th>
-                <th>
-                  Status
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for homeroom in homerooms %}
-                <tr>
-                  <td>
-                    <a href='{% url "homeroom" homeroom.id %}'>{{homeroom}}</a>
-                  </td>
-                  <td>
-                    {{homeroom.schools|join:"<br>"|escape|default:"(Empty)"}}
-                  </td>
-                  <td>
-                    {{homeroom.grades|join:"<br>"|escape|default:"(Empty)"}}
-                  </td>
-                  <td>
-                    {{homeroom.students.count}}
-                  </td>
-                  <td>
-                    {{homeroom.get_status_display}}
-                  </td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        {% else %}
-          <p>
-            You are not currently registered as a parent.  <a href='{% url "parent" %}'>Register as Parent</a>
-          </p>
-        {% endif %}
-      </div>
-      {% if parent %}
-      <div class='card-footer'>
-        <a href='{% url "create-homeroom" %}' class='btn btn-success btn-large' role='button'>Create Homeroom</a>
-      </div>
-      {% endif %}
-    </div>
-  </section>
-  {% endcomment %}
-  <section class='mt-2 mt-5'>
-    <div class='card'>
-      <div class='card-header'>
-        <h4>Parent Information</h4>
+        <h4>Student Information</h4>
       </div>
       <div class='card-body'>
         {% if parent %}
           <h6>Your Students</h6>
-          <table class='table table-responsive'>
+          <table class='table table-reponsive-lg'>
             <thead>
               <tr>
                 <th>

@@ -117,6 +117,8 @@ class Account(models.Model):
     def __str__(self):
         return str(self.user)
 
+    def has_classmates(self):
+        return bool(self.user.parent.students.filter(classmates__isnull=False))
 
 class Parent(models.Model):
     id = HashidAutoField(

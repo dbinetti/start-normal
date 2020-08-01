@@ -121,9 +121,6 @@ def sitemap(request):
 @login_required
 def dashboard(request):
     user = request.user
-
-    if not user.account.is_welcomed:
-        return redirect('share')
     parent = getattr(user, 'parent', None)
     teacher = getattr(user, 'teacher', None)
     students = Student.objects.filter(
