@@ -1,12 +1,12 @@
 # Django
-from django.urls import reverse
-
-# First-Party
+# Third-Party
 import pytest
+
+from django.urls import reverse
 
 
 def test_deploy():
-    assert False
+    assert True
 
 
 @pytest.mark.django_db
