@@ -169,10 +169,11 @@ def invite_classmate(request, homeroom_id):
     homeroom = Homeroom.objects.get(id=homeroom_id)
     schools = School.objects.filter(
         students__classmates__homeroom=homeroom,
+    ).exclude(
     )
     students = Student.objects.filter(
         school__in=schools,
-
+        classmates__isnull=True,
     ).order_by('grade')
     if request.method == 'POST':
         form = InviteForm(request.POST)

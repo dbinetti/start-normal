@@ -27,8 +27,7 @@
           {{formset.management_form}}
           {% csrf_token %}
           {% bootstrap_formset_errors formset %}
-          <div class='table-responsive'>
-          <table class='table table-sm'>
+          <table class='table table-responsive table-sm'>
             <thead>
               <tr>
                 <th>
@@ -53,7 +52,6 @@
               {% endfor %}
             </tbody>
           </table>
-          </div>
           {% comment %}
           <div class='my-5'>
             <h4>

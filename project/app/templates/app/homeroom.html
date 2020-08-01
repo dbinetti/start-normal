@@ -33,8 +33,7 @@
         <h4>Current Classmates</h4>
       </div>
       <div class='card-body'>
-        <div class='table-responsive-lg mb-5'>
-          <table class='table table-sm'>
+          <table class='table table-responsive table-sm'>
             <thead>
               <tr>
                 <th>
@@ -70,7 +69,6 @@
               {% endfor %}
             </tbody>
           </table>
-        </div>
       </div>
       <div class='card-footer'>
         <p>
@@ -85,32 +83,30 @@
         <h4>Invited Classmates</h4>
       </div>
       <div class='card-body'>
-        <div class='table-responsive-lg mb-5'>
-          <table class='table table-sm'>
-            <thead>
+        <table class='table table-responsive table-sm'>
+          <thead>
+            <tr>
+              <th>
+                Parent Email
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for invite in invites %}
               <tr>
-                <th>
-                  Parent Email
-                </th>
+                <td>
+                  {{invite.email}}
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {% for invite in invites %}
-                <tr>
-                  <td>
-                    {{invite.email}}
-                  </td>
-                </tr>
-              {% empty %}
-                <tr>
-                  <td colspan=3>
-                    (No Classmates in this Homeroom)
-                  </td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
+            {% empty %}
+              <tr>
+                <td colspan=3>
+                  (No Classmates in this Homeroom)
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
       <div class='card-footer'>
         <p>
