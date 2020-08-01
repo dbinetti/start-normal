@@ -1,0 +1,50 @@
+{% extends 'app/base.html' %}
+
+{% load bootstrap4 %}
+{% load humanize %}
+
+{% block title %}Classmate Information{% endblock title %}
+{% block header %}Classmate Information{% endblock header %}
+
+{% block content %}
+
+  <section>
+    <p class='lead'>
+      View classmate information below.
+    </p>
+  </section>
+  <section class='mt-2 mt-5'>
+    <div class='card'>
+      <div class='card-header'>
+        <h4>Classmate Information</h4>
+      </div>
+      <div class="card-body">
+        <div class='card-text'>
+          <div class='form-group'>
+            <p>
+              <strong>Classmate Name:</strong>  {{classmate}}
+            </p>
+          </div>
+          <div class='form-group'>
+              <strong>Classmate School:</strong>  {{classmate.student.school}}
+          </div>
+          <div class='form-group'>
+              <strong>Classmate Grade:</strong>  {{classmate.student.get_grade_display}}
+          </div>
+        </div>
+      </div>
+
+      <div class='card-footer'>
+        <p class="card-text">
+          <small class='text-muted'>Please contact <a href='dbinetti@startnormal.com'>dbinetti@startnormal.com</a> if you have any questions or need support.</small>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class='mt-2 ml-2'>
+    <a href='{% url "delete-classmate" classmate.id %}'><span class='text-danger'>Remove Classmate</span></a>
+  </section>
+
+{% endblock content %}
+

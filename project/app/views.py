@@ -2,10 +2,6 @@
 import json
 import logging
 
-# Third-Party
-import requests
-from dal import autocomplete
-
 # Django
 from django.conf import settings
 from django.contrib import messages
@@ -15,12 +11,17 @@ from django.contrib.auth import logout as log_out
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.http import HttpResponse
+from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.crypto import get_random_string
+
+# First-Party
+import requests
+from dal import autocomplete
 
 # Local
 from .forms import DeleteForm
@@ -143,25 +144,22 @@ def dashboard(request):
     )
 
 @login_required
-def pending(request):
-    return render(
-        request,
-        'app/pending.html',
-    )
-
-@login_required
 def connect_homeroom(request, student_id):
     student = get_object_or_404(Student, id=student_id)
     homerooms = Homeroom.objects.filter(
         classmates__student__school=student.school,
         classmates__student__grade=student.grade,
     ).distinct()
+    students = Student.objects.filter(
+        school=student.school,
+    ).order_by('grade')
     return render(
         request,
         'app/connect_homeroom.html',
         context={
             'student': student,
             'homerooms': homerooms,
+            'students': students,
         }
     )
 
@@ -241,14 +239,6 @@ def create_homeroom(request, student_id):
 
 
 @login_required
-def join_homeroom(request):
-    return render(
-        request,
-        'app/join_homeroom.html',
-        # {'form': form,},
-    )
-
-@login_required
 def delete_student(request, student_id):
     parent = request.user.parent
     student = Student.objects.get(
@@ -268,6 +258,34 @@ def delete_student(request, student_id):
     return render(
         request,
         'app/delete_student.html',
+        {'form': form,},
+    )
+
+
+@login_required
+def delete_classmate(request, classmate_id):
+    parent = request.user.parent
+    classmate = Classmate.objects.get(
+        id=classmate_id,
+    )
+    homeroom = classmate.homeroom
+    if homeroom.parent != parent:
+        return HttpResponseForbidden()
+    homeroom_id = classmate.homeroom.id
+    if request.method == "POST":
+        form = DeleteForm(request.POST)
+        if form.is_valid():
+            classmate.delete()
+            messages.warning(
+                request,
+                "Classmate removed!",
+            )
+            return redirect('homeroom', homeroom_id)
+    else:
+        form = DeleteForm()
+    return render(
+        request,
+        'app/delete_classmate.html',
         {'form': form,},
     )
 
@@ -304,43 +322,6 @@ def parent(request):
     )
 
 
-@login_required
-def join(request, homeroom_id):
-    homeroom = Homeroom.objects.get(id=homeroom_id)
-    user = request.user
-    parent, created = Parent.objects.get_or_create(
-        user=user,
-    )
-    student = Student.objects.create(
-        grade=homeroom.grade,
-        school=homeroom.school,
-        parent=parent,
-        # homeroom=homeroom,
-    )
-    if request.method == 'POST':
-        form = StudentForm(
-            request.POST,
-            instance=student,
-        )
-        if form.is_valid():
-            form.save()
-            messages.success(
-                request,
-                "Added to Homeroom!",
-            )
-            return redirect('dashboard')
-    form = StudentForm(
-        instance=student,
-    )
-    return render(
-        request,
-        'app/join.html',
-        context = {
-            'form': form,
-            'homeroom': homeroom,
-        }
-    )
-
 
 @login_required
 def student(request, student_id):
@@ -370,7 +351,7 @@ def student(request, student_id):
         },
     )
 
-# @login_required
+@login_required
 def homeroom(request, homeroom_id):
     homeroom = get_object_or_404(Homeroom, pk=homeroom_id)
     schools = School.objects.filter(
@@ -379,6 +360,7 @@ def homeroom(request, homeroom_id):
     classmates = homeroom.classmates.all()
     students = Student.objects.filter(
         school__in=schools,
+
     ).order_by('grade')
     return render(
         request,
@@ -389,6 +371,20 @@ def homeroom(request, homeroom_id):
         },
     )
 
+
+@login_required
+def classmate(request, classmate_id):
+    classmate = Classmate.objects.get(
+        id=classmate_id,
+        homeroom__parent=request.user.parent,
+    )
+    return render(
+        request,
+        'app/classmate.html',
+        context={
+            'classmate': classmate,
+        },
+    )
 
 @login_required
 def add_student(request, homeroom_id):
@@ -571,7 +567,6 @@ def logout(request):
 
 
 def school(request, slug):
-    user = request.user
     school = School.objects.get(slug=slug)
     parents = User.objects.filter(
         parent__students__school=school,
@@ -579,7 +574,14 @@ def school(request, slug):
     for parent in parents:
         parent.grades = ", ".join([x.get_grade_display() for x in parent.parent.students.filter(
         school=school).order_by('grade')])
-    students = school.students.select_related('parent').filter(classmates__isnull=True).order_by('grade', 'name')
+    students = school.students.select_related(
+        'parent'
+    ).filter(
+        classmates__isnull=True,
+    ).order_by(
+        'grade',
+        'name',
+    )
     homerooms = Homeroom.objects.filter(
         classmates__student__school=school,
     ).distinct()

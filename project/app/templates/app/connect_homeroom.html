@@ -9,23 +9,20 @@
 {% block content %}
   <section class='my-5'>
     <p class='lead mb-5 col-lg-9'>
-      Connect your student, {{student.name}}, to a Homeroom.
+      Connect your student, {{student.name}}, to an existing Homeroom <strong>OR</strong> create one of your own.
     </p>
   </section>
   <section class='mt-2 mt-5'>
     <div class='card'>
       <div class='card-header'>
-        <h4>Homeroom Information</h4>
+        <h4>Open Homerooms</h4>
       </div>
       <div class='card-body'>
-        <h6>
-          Your Homerooms
-        </h6>
         <table class='table'>
           <thead>
             <tr>
               <th>
-                Homeroom
+                Room Parent
               </th>
               <th>
                 School(s)
@@ -45,7 +42,7 @@
             {% for homeroom in homerooms %}
               <tr>
                 <td>
-                  <a href='{% url "homeroom" homeroom.id %}'>{{homeroom}}</a>
+                  <a href='{% url "homeroom" homeroom.id %}'>{{homeroom.parent}}</a>
                 </td>
                 <td>
                   {{homeroom.schools|join:"<br>"|escape|default:"(Empty)"}}
@@ -64,6 +61,54 @@
               <tr>
                 <td colspan=5>
                   (No existing Homerooms match your School and Grade)
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class='card-footer'>
+        <p>
+          {# <a href='{% url "create-homeroom" student.id %}' role='button' class='btn btn-success btn-lg'>Create a Homeroom</a> #}
+        </p>
+      </div>
+    </div>
+  </section>
+  <section class='my-5'>
+    <div class='card'>
+      <div class='card-header'>
+        <h4>Potential Classmates</h4>
+      </div>
+      <div class='card-body'>
+        <table class='table'>
+          <thead>
+            <th>
+              Grade
+            </th>
+            <th>
+              Student Name
+            </th>
+            <th>
+              Parent Name
+            </th>
+            <th>
+              Parent Email
+            </th>
+          </thead>
+          <tbody>
+            {% for student in students %}
+              <tr>
+                <td>
+                  {{student.get_grade_display}}
+                </td>
+                <td>
+                  {{student.name}}
+                </td>
+                <td>
+                  {{student.parent.user.name}}
+                </td>
+                <td>
+                  <a href='mailto:{{student.parent.user.email}}'>{{student.parent.user.email}}</a>
                 </td>
               </tr>
             {% endfor %}

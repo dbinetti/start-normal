@@ -120,7 +120,7 @@
                     {% if student.classmates.first.homeroom.id %}
                       <a href='{% url "homeroom" student.classmates.first.homeroom.id %}'>Homeroom</a>
                     {% else %}
-                      <a href='{% url "join-homeroom"%}'>Join Homeroom</a>
+                      <a href='{% url "connect-homeroom" student.id %}'>Join Homeroom</a>
                     {% endif %}
                   </td>
                 </tr>
