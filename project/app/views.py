@@ -26,6 +26,7 @@ from dal import autocomplete
 # Local
 from .forms import DeleteForm
 from .forms import HomeroomForm
+from .forms import InviteForm
 from .forms import SchoolForm
 from .forms import StudentForm
 from .forms import StudentFormSet
@@ -164,6 +165,42 @@ def connect_homeroom(request, student_id):
     )
 
 @login_required
+def invite_classmate(request, homeroom_id):
+    homeroom = Homeroom.objects.get(id=homeroom_id)
+    schools = School.objects.filter(
+        students__classmates__homeroom=homeroom,
+    )
+    students = Student.objects.filter(
+        school__in=schools,
+
+    ).order_by('grade')
+    if request.method == 'POST':
+        form = InviteForm(request.POST)
+        if form.is_valid():
+            invite = form.save(commit=False)
+            invite.homeroom = homeroom
+            invite.inviter = request.user
+            invite.save()
+            messages.success(
+                request,
+                "Classmate invited",
+            )
+            return redirect('homeroom', homeroom.id)
+        else:
+            print(form.errors)
+    form = InviteForm()
+    return render(
+        request,
+        'app/invite_classmate.html',
+        context={
+            'form': form,
+            'homeroom': homeroom,
+            'students': students,
+        }
+    )
+
+
+@login_required
 def teacher(request):
     user = request.user
     teacher, created = Teacher.objects.get_or_create(
@@ -229,6 +266,38 @@ def create_homeroom(request, student_id):
         "Homeroom Created!",
     )
     return redirect('homeroom', homeroom.id)
+
+
+@login_required
+def create_invite(request, homeroom_id):
+    return
+
+
+@login_required
+def create_classmate(request, homeroom_id):
+    homeroom = get_object_or_404(Homeroom, pk=homeroom_id)
+    schools = School.objects.filter(
+        students__classmates__homeroom=homeroom,
+    )
+    students = Student.objects.filter(
+        school__in=schools,
+
+    ).order_by('grade')
+    if request.method == 'POST':
+
+        form = InviteForm(request.POST)
+        if form.is_valid():
+            invite = form.save(commit=False)
+            invite.homeroom = homeroom
+            invite.save()
+    return render(
+        request,
+        'app/create_classmate.html',
+        context={
+            'students': students,
+            'form': form,
+        },
+    )
 
 
 @login_required
@@ -355,12 +424,14 @@ def homeroom(request, homeroom_id):
         school__in=schools,
 
     ).order_by('grade')
+    invites = homeroom.invites.all()
     return render(
         request,
         'app/homeroom.html', {
             'homeroom': homeroom,
             'classmates': classmates,
             'students': students,
+            'invites': invites,
         },
     )
 

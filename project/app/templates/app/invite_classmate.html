@@ -1,0 +1,83 @@
+{% extends 'app/base.html' %}
+
+{% load bootstrap4 %}
+{% load humanize %}
+
+{% block title %}Invite Classmate{% endblock title %}
+{% block header %}Invite Classmate{% endblock header %}
+
+{% block content %}
+
+  <section>
+    <p class='lead'>
+      Invite a Classmate to your Homeroom.
+    </p>
+    <p>
+      You can invite a classmate to your homeroom either directly from the list below or by sending an email request to the parent of another student.
+    </p>
+  </section>
+  <section class='my-5'>
+    <form method='post'>
+      {% csrf_token %}
+      {% bootstrap_form_errors form %}
+      {% bootstrap_field form.email show_label=False show_help=False placeholder='Invite email'  %}
+      {% bootstrap_field form.message show_label=False show_help=False placeholder='Include a message inviting the student to your homeroom.' %}
+      {% buttons %}
+        <button type="submit" class="btn btn-primary btn-lg btn-block" >
+          Invite Classmate
+        </button>
+      {% endbuttons %}
+    </form>
+  </section>
+  <section class='my-5'>
+    <div class='card'>
+      <div class='card-header'>
+        <h4>Potential Classmates</h4>
+      </div>
+      <div class='card-body'>
+        <table class='table'>
+          <thead>
+            <th>
+              Grade
+            </th>
+            <th>
+              Student Name
+            </th>
+            <th>
+              Parent Name
+            </th>
+            <th>
+              Parent Email
+            </th>
+          </thead>
+          <tbody>
+            {% for student in students %}
+              <tr>
+                <td>
+                  {{student.get_grade_display}}
+                </td>
+                <td>
+                  {{student.name}}
+                </td>
+                <td>
+                  {{student.parent.user.name}}
+                </td>
+                <td>
+                  <a href='mailto:{{student.parent.user.email}}'>{{student.parent.user.email}}</a>
+                </td>
+                <td>
+                  <a href='{% url "add-classmate-from-student" homeroom.id student.id %}'>Add</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class='card-footer'>
+        <p>
+        </p>
+      </div>
+    </div>
+  </section>
+{% endblock content %}
+

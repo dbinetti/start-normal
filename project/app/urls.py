@@ -35,12 +35,17 @@ urlpatterns = [
     path('teacher', views.teacher, name='teacher',),
 
     # Homeroom
+    path('homeroom/<homeroom_id>', views.homeroom, name='homeroom',),
     path('homeroom/connect/<student_id>', views.connect_homeroom, name='connect-homeroom'),
     path('homeroom/create/<student_id>', views.create_homeroom, name='create-homeroom'),
-    path('homeroom/<homeroom_id>', views.homeroom, name='homeroom',),
-    path('homeroom/<homeroom_id>/<student_id>', views.add_classmate_from_student, name='add-classmate-from-student',),
+    path('homeroom/<homeroom_id>/invite', views.invite_classmate, name='invite-classmate',),
+
+    # Classmate
     path('classmate/<classmate_id>', views.classmate, name='classmate',),
     path('classmate/<classmate_id>/delete', views.delete_classmate, name='delete-classmate',),
+    path('invite/create/<homeroom_id>', views.create_invite, name='create-invite',),
+
+    path('homeroom/<homeroom_id>/<student_id>', views.add_classmate_from_student, name='add-classmate-from-student',),
 
     # Schools
     path('search', views.search, name='search'),

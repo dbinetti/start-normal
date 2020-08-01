@@ -20,13 +20,17 @@
   <section>
     <p>
       {# Current Status:  {{homeroom.get_status_display}}<br> #}
-      If you'd like to join this Homeroom, please reach out to the Room Parent:  {{homeroom.parent.user.name}}, <a href='mailto:{{homeroom.parent.user.email}}'>{{homeroom.parent.user.email}}</a>
+      {% if homeroom.parent == request.user.parent %}
+        Here are the current classmates in your Homeroom.
+      {% else %}
+        If you'd like to join this Homeroom, please reach out to the Room Parent:  {{homeroom.parent.user.name}}, <a href='mailto:{{homeroom.parent.user.email}}'>{{homeroom.parent.user.email}}</a>
+      {% endif %}
     </p>
   </section>
   <section class='mt-2 mt-5'>
     <div class='card'>
       <div class='card-header'>
-        <h4>Homeroom Classmates</h4>
+        <h4>Current Classmates</h4>
       </div>
       <div class='card-body'>
         <div class='table-responsive-lg mb-5'>
@@ -70,72 +74,49 @@
       </div>
       <div class='card-footer'>
         <p>
-          {# <a href='{% url "add-classmate" homeroom.id %}'>Add a Student</a> #}
+          <a href='{% url "invite-classmate" homeroom.id %}' role='button' class='btn btn-success btn-lg'>Invite a Classmate</a>
         </p>
       </div>
     </div>
   </section>
-
-
-  {% if homeroom.parent == request.user.parent %}
-  <section class='my-5'>
-    <p>
-      As a Room Parent, you can automatically add any of the following students to your homeroom by clicking the "Add to this Homeroom" link.
-    </p>
-  </section>
-  <section class='my-5'>
+  <section class='mt-2 mt-5'>
     <div class='card'>
       <div class='card-header'>
-        <h4>Potential Classmates</h4>
+        <h4>Invited Classmates</h4>
       </div>
       <div class='card-body'>
-        <table class='table'>
-          <thead>
-            <th>
-              Grade
-            </th>
-            <th>
-              Student Name
-            </th>
-            <th>
-              Parent Name
-            </th>
-            <th>
-              Parent Email
-            </th>
-            <th>
-              Add to Homeroom
-            </th>
-          </thead>
-          <tbody>
-            {% for student in students %}
+        <div class='table-responsive-lg mb-5'>
+          <table class='table table-sm'>
+            <thead>
               <tr>
-                <td>
-                  {{student.get_grade_display}}
-                </td>
-                <td>
-                  {{student.name}}
-                </td>
-                <td>
-                  {{student.parent.user.name}}
-                </td>
-                <td>
-                  <a href='mailto:{{student.parent.user.email}}'>{{student.parent.user.email}}</a>
-                </td>
-                <td>
-                  <a href='{% url "add-classmate-from-student" homeroom.id student.id %}'>Add to this Homeroom</a>
-                </td>
+                <th>
+                  Parent Email
+                </th>
               </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {% for invite in invites %}
+                <tr>
+                  <td>
+                    {{invite.email}}
+                  </td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan=3>
+                    (No Classmates in this Homeroom)
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
       </div>
       <div class='card-footer'>
         <p>
-          {# I am hard at work to create a tool to help you form Homerooms.  In the meantime, to add any of these students to your Homeroom please email me at <a href='mailto:dbinetti@startnormal.com'>dbinetti@startnormal.com</a> or call/text 415.713.2126 #}
+          <a href='{% url "invite-classmate" homeroom.id %}' role='button' class='btn btn-success btn-lg'>Invite a Classmate</a>
         </p>
       </div>
     </div>
   </section>
-  {% endif %}
 {% endblock content %}

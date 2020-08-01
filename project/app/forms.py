@@ -11,6 +11,7 @@ from dal import autocomplete
 from .models import Classmate
 from .models import District
 from .models import Homeroom
+from .models import Invite
 from .models import Parent
 from .models import School
 from .models import Student
@@ -139,7 +140,6 @@ class HomeroomForm(forms.ModelForm):
         }
 
 
-
 class StudentForm(forms.ModelForm):
     class Meta:
         model = Student
@@ -164,7 +164,6 @@ class StudentForm(forms.ModelForm):
     )
 
 
-
 class ClassmateForm(forms.ModelForm):
     class Meta:
         model = Classmate
@@ -177,6 +176,17 @@ class DeleteForm(forms.Form):
     confirm = forms.BooleanField(
         required=True,
     )
+
+class InviteForm(forms.ModelForm):
+    class Meta:
+        model = Invite
+        fields = [
+            'email',
+            'message',
+            # 'homeroom',
+            # 'inviter',
+        ]
+
 
 
 class SignupForm(forms.Form):
