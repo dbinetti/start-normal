@@ -9,7 +9,7 @@
 {% block content %}
   <section class='my-5'>
     <p class='lead mb-5 col-lg-9'>
-      Connect your student, {{student.name}}, to an existing Homeroom <strong>OR</strong> create one of your own.
+      Request to join an existing Homeroom <strong>OR</strong> create one of your own.
     </p>
   </section>
   <section class='mt-2 mt-5'>
@@ -69,7 +69,7 @@
       </div>
       <div class='card-footer'>
         <p>
-          {# <a href='{% url "create-homeroom" student.id %}' role='button' class='btn btn-success btn-lg'>Create a Homeroom</a> #}
+          <a href='{% url "create-homeroom" student.id %}' role='button' class='btn btn-success btn-lg'>Create a Homeroom</a>
         </p>
       </div>
     </div>

@@ -111,7 +111,7 @@
                     <a href='{% url "student" student.id %}'>{{student.name|default:"(Unknown)"}}</a>
                   </td>
                   <td>
-                    <a href='{% url "school" student.school.slug %}'>{{student.school}}</a>
+                    {{student.school}}
                   </td>
                   <td>
                     {{student.get_grade_display}}

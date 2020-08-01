@@ -198,14 +198,7 @@ def create_student(request):
     parent = request.user.parent
     form = StudentForm(request.POST or None)
     if form.is_valid():
-        school = form.cleaned_data['school']
-        grade = form.cleaned_data['grade']
-        homeroom = Homeroom.objects.get(
-            school=school,
-            grade=grade,
-        )
         student = form.save(commit=False)
-        student.homeroom = homeroom
         student.parent = parent
         student.save()
         messages.success(
@@ -216,7 +209,7 @@ def create_student(request):
     return render(
         request,
         'app/create_student.html',
-        context = {
+        context={
             'form': form,
         }
     )
