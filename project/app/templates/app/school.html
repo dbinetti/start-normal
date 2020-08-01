@@ -21,7 +21,7 @@
   {% if school.students.count >= 10 %}
     There are {{school.students.count}} students from {{school.name}} using Start Normal.  Register to add your student to an existing Homeroom or create one of your own.
   {% else %}
-    Register to create a Homeroom and add sudents to it.
+    Register to create a Homeroom and add students to it.
   {% endif %}
   </p>
   {% if not request.user.is_authenticated %}
