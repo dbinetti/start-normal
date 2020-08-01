@@ -186,7 +186,15 @@ class InviteForm(forms.ModelForm):
             # 'homeroom',
             # 'inviter',
         ]
-
+        widgets = {
+            'message': forms.Textarea(
+                attrs={
+                    'class': 'form-control h-25',
+                    'placeholder': 'You can include a short message with your invite.',
+                    'rows': 5,
+                }
+            )
+        }
 
 
 class SignupForm(forms.Form):

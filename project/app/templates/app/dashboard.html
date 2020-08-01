@@ -20,8 +20,13 @@
       Welcome!  The next step is to choose a Homeroom for your students.
     </p>
     <p>
-      You can join an existing Homeroom, or create one of your own and invite others to it.  Click the "Join Homeroom" button below to get started.
+      You can join an existing Homeroom, or create one of your own and invite others to it.  Click the "Join Homeroom" link for the student you want to place.
     </p>
+    {% if homeroom %}
+      <p>
+        While you have no obligation to join, remember that you have been invited to join {{homeroom.parent.user.name}}'s Homeroom.  It will appear at the top of the list.
+      </p>
+    {% endif %}
   {% endif %}
   <section class='mt-2 mt-5'>
     <div class='card'>

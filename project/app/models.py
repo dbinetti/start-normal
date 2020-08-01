@@ -156,8 +156,7 @@ class Invite(models.Model):
     )
     message = models.TextField(
         blank=True,
-        default='Please join my homeroom.',
-        help_text="""Notes.""",
+        default='',
     )
     created = models.DateTimeField(
         auto_now_add=True,

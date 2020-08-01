@@ -44,6 +44,7 @@ urlpatterns = [
     path('classmate/<classmate_id>', views.classmate, name='classmate',),
     path('classmate/<classmate_id>/delete', views.delete_classmate, name='delete-classmate',),
     path('invite/create/<homeroom_id>', views.create_invite, name='create-invite',),
+    path('invite/<homeroom_id>', views.invite, name='invite',),
 
     path('homeroom/<homeroom_id>/<student_id>', views.add_classmate_from_student, name='add-classmate-from-student',),
 

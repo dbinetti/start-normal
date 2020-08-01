@@ -1,0 +1,20 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Invite{% endblock title%}
+
+
+{% block content %}
+
+<section>
+  <div class='jumbotron'>
+    <section>
+      <p class='my-3 lead'>
+        You have been invited to join {{parent.name}}'s Homeroom.  To accept this invitation <a href='{% url "signup" "parent" %}'>Register for Free</a> or read our <a href='{% url "faq" %}'>FAQ</a> to learn more.
+      </p>
+      <p class='my-3 lead'>
+        <strong>Start Normal</strong> is a network of parents and teachers seeking in-person, at-home, small-group instruction for low-risk groups.  If you're looking for a supplement/alterative to Distance Learning, this is for you.
+      </p>
+    </section>
+  </div>
+</section>
+{% endblock content %}
