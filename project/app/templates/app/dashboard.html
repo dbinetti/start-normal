@@ -20,7 +20,7 @@
       Welcome!  The next step is to choose a Homeroom for your students.
     </p>
     <p>
-      You can join an existing Homeroom, or create one of your own and invite others to it.  Click the "Join Homeroom" link for the student you want to place.
+      You can join an existing Homeroom, or create one of your own and invite others to it.  Click the "Join/Create Homeroom" link for the student you want to place.
     </p>
     {% if homeroom %}
       <p>
@@ -31,10 +31,19 @@
   <section class='mt-2 mt-5'>
     <div class='card'>
       <div class='card-header'>
-        <h4>Student Information</h4>
+        <h4>Parent Information</h4>
       </div>
       <div class='card-body'>
         {% if parent %}
+          <p>
+            <strong>Name:</strong>&nbsp;{{parent.user.name|title}}<br>
+            <strong>Willing to Host Instruction?</strong>&nbsp;{{parent.is_host|yesno|title}}<br>
+            <strong>Notes:</strong>&nbsp;{{parent.notes|default:'(No Notes Provided)'}}
+          </p>
+          <p>
+            <a href='{% url "parent" %}'>Edit this information</a>
+          </p>
+          <br><br>
           <h6>Your Students</h6>
           <table class='table table-reponsive-lg'>
             <thead>
@@ -69,7 +78,7 @@
                     {% if student.classmates.first.homeroom.id %}
                       <a href='{% url "homeroom" student.classmates.first.homeroom.id %}'>Homeroom</a>
                     {% else %}
-                      <a href='{% url "connect-homeroom" student.id %}'>Join Homeroom</a>
+                      <a href='{% url "connect-homeroom" student.id %}'>Join/Create Homeroom</a>
                     {% endif %}
                   </td>
                 </tr>

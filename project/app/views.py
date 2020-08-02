@@ -374,12 +374,13 @@ def delete_classmate(request, classmate_id):
 
 @login_required
 def parent(request):
-    user = request.user
     StudentFormSet.extra = 5
-    parent, created = Parent.objects.get_or_create(
-        user=user,
-    )
-
+    try:
+        parent = Parent.objects.get(
+            user=request.user,
+        )
+    except Parent.DoesNotExist:
+        parent = None
     if request.method == "POST":
         formset = StudentFormSet(
             request.POST,
@@ -390,6 +391,7 @@ def parent(request):
         form = ParentForm(
             request.POST,
             instance=parent,
+            prefix='parent',
         )
         if formset.is_valid() and form.is_valid():
             formset.save()
