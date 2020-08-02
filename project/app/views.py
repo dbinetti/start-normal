@@ -27,6 +27,7 @@ from dal import autocomplete
 from .forms import DeleteForm
 from .forms import HomeroomForm
 from .forms import InviteForm
+from .forms import ParentForm
 from .forms import SchoolForm
 from .forms import StudentForm
 from .forms import StudentFormSet
@@ -378,14 +379,21 @@ def parent(request):
     parent, created = Parent.objects.get_or_create(
         user=user,
     )
+
     if request.method == "POST":
         formset = StudentFormSet(
             request.POST,
             request.FILES,
             instance=parent,
+            prefix='students',
         )
-        if formset.is_valid():
+        form = ParentForm(
+            request.POST,
+            instance=parent,
+        )
+        if formset.is_valid() and form.is_valid():
             formset.save()
+            form.save()
             messages.success(
                 request,
                 "Saved!",
@@ -393,12 +401,18 @@ def parent(request):
             return redirect('dashboard')
     formset = StudentFormSet(
         instance=parent,
+        prefix='students',
+    )
+    form = ParentForm(
+        instance=parent,
+        prefix='parent',
     )
     return render(
         request,
         'app/parent.html',
         context={
             'formset': formset,
+            'form': form,
         }
     )
 

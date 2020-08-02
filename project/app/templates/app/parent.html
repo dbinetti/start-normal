@@ -9,16 +9,13 @@
 {% block content %}
 <section class='mb-5'>
   <p class='lead'>
-    Please select the school and grade your student(s) will be entering in the Fall.
-  </p>
-  <p>
-    This will help us match you to other students and teachers of the same grade and location.
+    Please update preferences and select the school and grade your student(s) will be entering in the Fall so we can match you properly.
   </p>
 </section>
 <section>
   <div class='card'>
     <div class='card-header'>
-      <h4>Student Information</h4>
+      <h4>Parent Information</h4>
     </div>
     <div class='card-body'>
 
@@ -27,7 +24,13 @@
           {{formset.management_form}}
           {% csrf_token %}
           {% bootstrap_formset_errors formset %}
-          <table class='table table-reponsive-lg table-sm'>
+          {% bootstrap_form_errors form %}
+          {% bootstrap_field form.is_host show_help=True show_label=False%}
+          {% bootstrap_field form.notes show_help=False shoe_label=False%}
+            <h6 class='mt-3'>
+              <br>Student Information
+            </h6>
+          <table class='table table-reponsive table-sm'>
             <thead>
               <tr>
                 <th>

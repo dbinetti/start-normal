@@ -164,6 +164,27 @@ class StudentForm(forms.ModelForm):
     )
 
 
+class ParentForm(forms.ModelForm):
+    class Meta:
+        model = Parent
+        fields = [
+            'notes',
+            'is_host',
+        ]
+        widgets = {
+            'notes': forms.Textarea(
+                attrs={
+                    'class': 'form-control h-25',
+                    'placeholder': 'Please provide some notes on your preferred safety regimen; i.e., masks, distance, hygenic requirements.',
+                    'rows': 5,
+                }
+            )
+        }
+        labels = {
+            'is_host': "Willing to host instruction at your house?",
+        }
+
+
 class ClassmateForm(forms.ModelForm):
     class Meta:
         model = Classmate
@@ -176,6 +197,7 @@ class DeleteForm(forms.Form):
     confirm = forms.BooleanField(
         required=True,
     )
+
 
 class InviteForm(forms.ModelForm):
     class Meta:

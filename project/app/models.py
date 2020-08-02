@@ -120,9 +120,13 @@ class Account(models.Model):
     def has_classmates(self):
         return bool(self.user.parent.students.filter(classmates__isnull=False))
 
+
 class Parent(models.Model):
     id = HashidAutoField(
         primary_key=True,
+    )
+    is_host = models.BooleanField(
+        default=False,
     )
     notes = models.TextField(
         max_length=512,
