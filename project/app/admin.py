@@ -27,6 +27,7 @@ class HomeroomAdmin(admin.ModelAdmin):
         'parent',
     ]
     list_display = [
+        'parent',
         'status',
         'created',
         'updated',
