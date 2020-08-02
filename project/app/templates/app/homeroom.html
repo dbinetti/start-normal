@@ -45,19 +45,25 @@
                 <th>
                   Parent Email
                 </th>
+                <th>
+                  Remove Student
+                </th>
               </tr>
             </thead>
             <tbody>
               {% for student in students %}
                 <tr>
                   <td>
-                    <a href='{% url "student" student.id %}'>{{student.name|default:"(Unknown)"}}</a>
+                    {{student.name}}
                   </td>
                   <td>
                     {{student.parent}}
                   </td>
                   <td>
                     <a href='mailto:{{student.parent.user.email}}'>{{student.parent.user.email}}</a>
+                  </td>
+                  <td>
+                    <a href='{% url "remove-homeroom-student" homeroom.id student.id %}' class='text-danger'>Remove</a>
                   </td>
                 </tr>
               {% empty %}
@@ -73,7 +79,7 @@
       <div class='card-footer'>
         <p>
          {% if homeroom.parent == request.user.parent %}
-          <a href='{% url "invite-classmate" homeroom.id %}' role='button' class='btn btn-success btn-lg'>Invite a Student</a>
+          <a href='{% url "homeroom-invite" homeroom.id %}' role='button' class='btn btn-success btn-lg'>Invite a Student</a>
         {% else%}
           {# <a href='{% url "invite-classmate" homeroom.id %}' role='button' class='btn btn-success btn-lg'>Ask to Join</a> #}
         {% endif %}

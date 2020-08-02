@@ -36,18 +36,18 @@ urlpatterns = [
 
     # Homeroom
     path('homeroom/<homeroom_id>', views.homeroom, name='homeroom',),
-    path('homeroom/<homeroom_id>/invite', views.invite_classmate, name='invite-classmate',),
+    path('homeroom/<homeroom_id>/invite', views.homeroom_invite, name='homeroom-invite',),
     path('homeroom/connect/<student_id>', views.connect_homeroom, name='connect-homeroom'),
     path('homeroom/create/<student_id>', views.create_homeroom, name='create-homeroom'),
 
     # Classmate
     path('classmate/<classmate_id>', views.classmate, name='classmate',),
-    path('classmate/<classmate_id>/delete', views.delete_classmate, name='delete-classmate',),
     path('invite/<homeroom_id>', views.invite, name='invite',),
     path('accept/<homeroom_id>', views.accept, name='accept',),
     path('invite/create/<homeroom_id>', views.create_invite, name='create-invite',),
 
-    path('homeroom/<homeroom_id>/<student_id>', views.add_classmate_from_student, name='add-classmate-from-student',),
+    path('homeroom/<homeroom_id>/add/<student_id>', views.add_homeroom_student, name='add-homeroom-student',),
+    path('homeroom/<homeroom_id>/remove/<student_id>', views.remove_homeroom_student, name='remove-homeroom-student',),
 
     # Schools
     path('search', views.search, name='search'),

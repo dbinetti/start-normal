@@ -23,16 +23,16 @@
         <th>
           Grade
         </th>
-        {% for classmate in classmates %}
+        {% for student in students %}
           <tr>
             <td>
-              {{classmate.student.name}}
+              {{student.name}}
             </td>
             <td>
-              {{classmate.student.school}}
+              {{student.school}}
             </td>
             <td>
-              {{classmate.student.get_grade_display}}
+              {{student.get_grade_display}}
             </td>
           </tr>
         {% endfor %}

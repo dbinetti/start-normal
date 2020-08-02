@@ -62,22 +62,22 @@
             </th>
           </thead>
           <tbody>
-            {% for student in students %}
+            {% for schoolmate in schoolmates %}
               <tr>
                 <td>
-                  {{student.get_grade_display}}
+                  {{schoolmate.get_grade_display}}
                 </td>
                 <td>
-                  {{student.name}}
+                  {{schoolmate.name}}
                 </td>
                 <td>
-                  {{student.parent.user.name}}
+                  {{schoolmate.parent.user.name}}
                 </td>
                 <td>
-                  <a href='mailto:{{student.parent.user.email}}'>{{student.parent.user.email}}</a>
+                  <a href='mailto:{{schoolmate.parent.user.email}}'>{{schoolmate.parent.user.email}}</a>
                 </td>
                 <td>
-                  <a href='{% url "add-classmate-from-student" homeroom.id student.id %}'>Add</a>
+                  <a href='{% url "add-homeroom-student" homeroom.id schoolmate.id %}'>Add</a>
                 </td>
               </tr>
             {% endfor %}

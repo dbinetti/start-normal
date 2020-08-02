@@ -583,12 +583,14 @@ class Homeroom(models.Model):
         return list(set(schools))
 
     def __str__(self):
-        return "{0} - {1}".format(
-            self.parent,
-            ", ".join(
-                self.students.values_list('name', flat=True),
-            )
-        )
+        return str(self.id)
+
+        # return "{0} - {1}".format(
+        #     self.parent,
+        #     ", ".join(
+        #         self.students.values_list('name', flat=True),
+        #     )
+        # )
 
 
 class Student(models.Model):

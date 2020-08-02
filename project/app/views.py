@@ -163,41 +163,36 @@ def connect_homeroom(request, student_id):
     )
 
 @login_required
-def invite_classmate(request, homeroom_id):
+def homeroom_invite(request, homeroom_id):
     homeroom = Homeroom.objects.get(id=homeroom_id)
     schools = School.objects.filter(
-        students__classmates__homeroom=homeroom,
+        students__homeroom=homeroom,
     ).exclude(
     )
-    students = Student.objects.filter(
+    schoolmates = Student.objects.filter(
         school__in=schools,
-        classmates__isnull=True,
+        homeroom__isnull=True,
     ).exclude(
     ).order_by('grade')
-    if request.method == 'POST':
-        form = InviteForm(request.POST)
-        if form.is_valid():
-            invite = form.save(commit=False)
-            invite.homeroom = homeroom
-            invite.inviter = request.user
-            invite.save()
-            messages.success(
-                request,
-                "Classmate invited",
-            )
-            return redirect('homeroom', homeroom.id)
-        else:
-            print(form.errors)
-    form = InviteForm()
-    # invite_link = f'http://localhost:8000/invite/{homeroom_id}'
+    form = InviteForm(request.POST or None)
+    if form.is_valid():
+        invite = form.save(commit=False)
+        invite.homeroom = homeroom
+        invite.inviter = request.user
+        invite.save()
+        messages.success(
+            request,
+            "Classmate invited",
+        )
+        return redirect('homeroom', homeroom.id)
     invite_link = request.build_absolute_uri(reverse('invite', args=[homeroom_id]))
     return render(
         request,
-        'app/invite_classmate.html',
+        'app/homeroom_invite.html',
         context={
             'form': form,
             'homeroom': homeroom,
-            'students': students,
+            'schoolmates': schoolmates,
             'invite_link': invite_link,
         }
     )
@@ -206,9 +201,9 @@ def invite_classmate(request, homeroom_id):
 def invite(request, homeroom_id):
     homeroom = Homeroom.objects.get(id=homeroom_id)
     parent = homeroom.parent.user.name
-    classmates = homeroom.classmates.order_by(
-        'student__school',
-        'student__grade',
+    students = homeroom.students.order_by(
+        'school',
+        'grade',
     )
     return render(
         request,
@@ -216,7 +211,7 @@ def invite(request, homeroom_id):
         context={
             'homeroom': homeroom,
             'parent': parent,
-            'classmates': classmates,
+            'students': students,
         }
     )
 
@@ -345,8 +340,17 @@ def delete_student(request, student_id):
 
 
 @login_required
-def delete_classmate(request, classmate_id):
-    return
+def remove_homeroom_student(request, homeroom_id, student_id):
+    homeroom = get_object_or_404(Homeroom, pk=homeroom_id)
+    student = get_object_or_404(Student, pk=student_id)
+    student.homeroom = None
+    student.save()
+    messages.success(
+        request,
+        "Student Removed!",
+    )
+    return redirect('homeroom', homeroom.id)
+
 
 
 @login_required
@@ -467,7 +471,7 @@ def homeroom(request, homeroom_id):
     homeroom = get_object_or_404(Homeroom, pk=homeroom_id)
     schools = School.objects.filter(
         students__homeroom=homeroom,
-    )
+    ).distinct()
     students = homeroom.students.all()
     schoolmates = Student.objects.filter(
         school__in=schools,
@@ -505,18 +509,15 @@ def add_student(request, homeroom_id):
 
 
 @login_required
-def add_classmate_from_student(request, homeroom_id, student_id):
+def add_homeroom_student(request, homeroom_id, student_id):
     homeroom = get_object_or_404(Homeroom, pk=homeroom_id)
     student = get_object_or_404(Student, pk=student_id)
-    classmate, created = Classmate.objects.get_or_create(
-        homeroom=homeroom,
-        student=student,
+    student.homeroom = homeroom
+    student.save()
+    messages.success(
+        request,
+        "Student Addded!",
     )
-    if created:
-        messages.success(
-            request,
-            "Classmate Addded!",
-        )
     return redirect('homeroom', homeroom.id)
 
 
