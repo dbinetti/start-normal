@@ -1,6 +1,8 @@
 # Django
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as UserAdminBase
+from django.urls import reverse
+from django.utils.safestring import mark_safe
 
 # Local
 from .forms import UserChangeForm
@@ -221,19 +223,43 @@ class StudentAdmin(admin.ModelAdmin):
     ]
 
 
-
 @admin.register(User)
 class UserAdmin(UserAdminBase):
     save_on_top = True
     add_form = UserCreationForm
     form = UserChangeForm
     model = User
+    fieldsets = (
+        (None, {
+            'fields': [
+                'name',
+                'email',
+                'username',
+                'account_link',
+                'parent_link',
+                'teacher_link',
+            ]
+        }
+        ),
+        ('Permissions', {'fields': ('is_admin', 'is_active')}),
+    )
     list_display = [
         'name',
-        'email',
-        'username',
+        'email_link',
+        'parent_link',
+        'teacher_link',
         'created',
         'last_login'
+    ]
+    list_select_related = [
+        'parent',
+        'teacher',
+        'account',
+    ]
+    readonly_fields = [
+        'account_link',
+        'parent_link',
+        'teacher_link',
     ]
     list_filter = [
         'is_active',
@@ -249,17 +275,6 @@ class UserAdmin(UserAdminBase):
     ordering = [
         '-created',
     ]
-    fieldsets = (
-        (None, {
-            'fields': [
-                'name',
-                'email',
-                'username',
-            ]
-        }
-        ),
-        ('Permissions', {'fields': ('is_admin', 'is_active')}),
-    )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
@@ -277,3 +292,47 @@ class UserAdmin(UserAdminBase):
     inlines = [
         # StudentInline,
     ]
+
+    def email_link(self, obj):
+        return mark_safe(
+            '<a href="mailto:{0}">{0}</a>'.format(
+                obj.email,
+            )
+        )
+    email_link.short_description = 'email'
+
+    def account_link(self, obj):
+        return mark_safe(
+            '<a href="{}">{}</a>'.format(
+                reverse(
+                    "admin:app_account_change",
+                    args=[obj.account.pk,]
+                ),
+                'Account',
+            )
+        )
+    account_link.short_description = 'account'
+
+    def parent_link(self, obj):
+        return mark_safe(
+            '<a href="{}">{}</a>'.format(
+                reverse(
+                    "admin:app_parent_change",
+                    args=[obj.parent.pk,]
+                ),
+                'Parent',
+            )
+        )
+    parent_link.short_description = 'parent'
+
+    def teacher_link(self, obj):
+        return mark_safe(
+            '<a href="{}">{}</a>'.format(
+                reverse(
+                    "admin:app_teacher_change",
+                    args=[obj.teacher.pk,]
+                ),
+                'Teacher',
+            )
+        )
+    teacher_link.short_description = 'teacher'
