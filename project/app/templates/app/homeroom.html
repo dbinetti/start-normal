@@ -72,7 +72,11 @@
       </div>
       <div class='card-footer'>
         <p>
+         {% if homeroom.parent == request.user.parent %}
           <a href='{% url "invite-classmate" homeroom.id %}' role='button' class='btn btn-success btn-lg'>Invite a Classmate</a>
+        {% else%}
+          {# <a href='{% url "invite-classmate" homeroom.id %}' role='button' class='btn btn-success btn-lg'>Ask to Join</a> #}
+        {% endif %}
         </p>
       </div>
     </div>
@@ -105,7 +109,7 @@
       </div>
       <div class='card-footer'>
         <p>
-          <a href='{% url "invite-classmate" homeroom.id %}' role='button' class='btn btn-success btn-lg'>Invite a Classmate</a>
+          {# <a href='{% url "invite-classmate" homeroom.id %}' role='button' class='btn btn-success btn-lg'>Invite a Classmate</a> #}
         </p>
       </div>
     </div>
