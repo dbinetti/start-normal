@@ -126,12 +126,6 @@ def dashboard(request):
     students = Student.objects.filter(
         parent=parent,
     )
-    homeroom_id = request.session.get('homeroom', None)
-    if homeroom_id:
-        homeroom = Homeroom.objects.get(id=homeroom_id)
-        request.session['homeroom'] = None
-    else:
-        homeroom = None
     homerooms = Homeroom.objects.filter(
         parent=parent,
     )
@@ -143,7 +137,6 @@ def dashboard(request):
             'parent': parent,
             'teacher': teacher,
             'students': students,
-            'homeroom': homeroom,
             'homerooms': homerooms,
         }
     )
@@ -151,20 +144,6 @@ def dashboard(request):
 @login_required
 def connect_homeroom(request, student_id):
     student = get_object_or_404(Student, id=student_id)
-    homeroom_id = request.session.get('homeroom', None)
-    if homeroom_id:
-        homeroom = Homeroom.objects.get(id=homeroom_id)
-        Classmate.objects.create(
-            homeroom=homeroom,
-            student=student,
-        )
-        request.session['homeroom'] = None
-        messages.success(
-            request,
-            "You have joined the Homeroom!",
-        )
-        return redirect('dashboard')
-
     homerooms = Homeroom.objects.filter(
         classmates__student__school=student.school,
         classmates__student__grade=student.grade,
@@ -179,7 +158,6 @@ def connect_homeroom(request, student_id):
             'student': student,
             'homerooms': homerooms,
             'students': students,
-            'homeroom': homeroom,
         }
     )
 
@@ -209,7 +187,8 @@ def invite_classmate(request, homeroom_id):
         else:
             print(form.errors)
     form = InviteForm()
-    invite_link = request.build_absolute_uri(reverse('invite', homeroom.id))
+    # invite_link = f'http://localhost:8000/invite/{homeroom_id}'
+    invite_link = request.build_absolute_uri(reverse('invite', args=[homeroom_id]))
     return render(
         request,
         'app/invite_classmate.html',
@@ -222,14 +201,20 @@ def invite_classmate(request, homeroom_id):
     )
 
 
-@login_required
 def invite(request, homeroom_id):
     homeroom = Homeroom.objects.get(id=homeroom_id)
+    parent = homeroom.parent.user.name
+    classmates = homeroom.classmates.order_by(
+        'student__school',
+        'student__grade',
+    )
     return render(
         request,
         'app/invite.html',
         context={
             'homeroom': homeroom,
+            'parent': parent,
+            'classmates': classmates,
         }
     )
 
@@ -420,6 +405,46 @@ def parent(request):
 
 
 @login_required
+def accept(request, homeroom_id):
+    user = request.user
+    homeroom = Homeroom.objects.get(id=homeroom_id)
+
+    if request.method == "POST":
+        form = StudentForm(request.POST)
+        if form.is_valid():
+            parent, created = Parent.objects.get_or_create(
+                user=user,
+            )
+            name = form.cleaned_data['name']
+            school = form.cleaned_data['school']
+            grade = form.cleaned_data['grade']
+            student = Student.objects.create(
+                name=name,
+                school=school,
+                grade=grade,
+                parent=parent,
+            )
+            homeroom.classmates.create(student=student)
+            messages.success(
+                request,
+                "Student added to homeroom!",
+            )
+            return redirect('dashboard')
+
+    else:
+        form = StudentForm()
+
+    return render(
+        request,
+        'app/accept.html',
+        context={
+            'form': form,
+        }
+    )
+
+
+
+@login_required
 def student(request, student_id):
     user = request.user
     student = Student.objects.get(
@@ -600,15 +625,10 @@ def callback(request):
 
     # Parse referrer
     kind = server_state.partition("|")[0]
-    if kind not in ['dashboard', 'parent', 'teacher',]:
-        try:
-            homeroom = Homeroom.objects.get(id=kind)
-            kind = 'parent'
-        except Homeroom.DoesNotExist:
-            homeroom = None
-            kind = 'parent'
-    else:
-        homeroom = None
+    if kind not in ['dashboard', 'teacher', 'parent']:
+        homeroom_id = kind
+        kind = 'accept'
+
     # Get Auth0 Code
     code = request.GET.get('code', None)
     if not code:
@@ -638,12 +658,11 @@ def callback(request):
     payload = requests.get(user_url).json()
     # format payload key
     payload['username'] = payload.pop('sub')
-    request.session['user'] = payload
     user = authenticate(request, **payload)
     if user:
         log_in(request, user)
-        if homeroom:
-            request.session['homeroom'] = homeroom.id
+        if kind == 'accept':
+            return redirect('accept', homeroom_id)
         return redirect(kind)
     return HttpResponse(status=400)
 

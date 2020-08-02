@@ -2,6 +2,7 @@
 from .base import *
 
 DEBUG = True
+SESSION_COOKIE_SECURE = False
 ALLOWED_HOSTS = [
     'localhost',
 ]
