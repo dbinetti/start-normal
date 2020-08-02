@@ -524,8 +524,8 @@ class Homeroom(models.Model):
 
     STATUS = Choices(
         (0, 'new', "New"),
-        (10, 'active', "Open"),
-        (20, 'active', "Closed"),
+        (10, 'open', "Open"),
+        (20, 'closed', "Closed"),
     )
     GRADE = Choices(
         (2, 'tk', 'Preschool'),
