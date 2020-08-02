@@ -3,27 +3,9 @@
 from django.contrib import admin
 
 # Local
-from .models import Classmate
 from .models import Homeroom
 from .models import School
 from .models import Student
-
-
-class ClassmateInline(admin.TabularInline):
-    model = Classmate
-    fields = [
-        'student',
-    ]
-    readonly_fields = [
-    ]
-    show_change_link = True
-    extra = 0
-    classes = [
-        # 'collapse',
-    ]
-    autocomplete_fields = [
-        'student',
-    ]
 
 
 class HomeroomInline(admin.TabularInline):

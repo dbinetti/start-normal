@@ -7,7 +7,6 @@ from django.utils.safestring import mark_safe
 # Local
 from .forms import UserChangeForm
 from .forms import UserCreationForm
-from .inlines import ClassmateInline
 from .inlines import HomeroomInline
 from .inlines import StudentInline
 from .models import Account
@@ -29,6 +28,7 @@ class HomeroomAdmin(admin.ModelAdmin):
         'parent',
     ]
     list_display = [
+        '__str__',
         'parent',
         'status',
         'created',
@@ -46,7 +46,6 @@ class HomeroomAdmin(admin.ModelAdmin):
         'parent',
     ]
     inlines = [
-        ClassmateInline,
     ]
 
 

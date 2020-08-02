@@ -11,34 +11,33 @@ from multiselectfield import MultiSelectField
 # Local
 from .managers import UserManager
 
+# class Classmate(models.Model):
+#     id = HashidAutoField(
+#         primary_key=True,
+#     )
+#     STATUS = Choices(
+#         (0, 'new', 'New'),
+#         (10, 'invited', 'Invited'),
+#         (20, 'accepted', 'Accepted'),
+#     )
+#     status = models.IntegerField(
+#         blank=False,
+#         choices=STATUS,
+#         default=STATUS.new,
+#     )
+#     student = models.ForeignKey(
+#         'Student',
+#         on_delete=models.CASCADE,
+#         related_name='classmates',
+#     )
+#     homeroom = models.ForeignKey(
+#         'Homeroom',
+#         on_delete=models.CASCADE,
+#         related_name='classmates',
+#     )
 
-class Classmate(models.Model):
-    id = HashidAutoField(
-        primary_key=True,
-    )
-    STATUS = Choices(
-        (0, 'new', 'New'),
-        (10, 'invited', 'Invited'),
-        (20, 'accepted', 'Accepted'),
-    )
-    status = models.IntegerField(
-        blank=False,
-        choices=STATUS,
-        default=STATUS.new,
-    )
-    student = models.ForeignKey(
-        'Student',
-        on_delete=models.CASCADE,
-        related_name='classmates',
-    )
-    homeroom = models.ForeignKey(
-        'Homeroom',
-        on_delete=models.CASCADE,
-        related_name='classmates',
-    )
-
-    def __str__(self):
-        return str(self.student.name)
+#     def __str__(self):
+#         return str(self.student.name)
 
 
 class Roomparent(models.Model):
@@ -116,9 +115,6 @@ class Account(models.Model):
     )
     def __str__(self):
         return str(self.user)
-
-    def has_classmates(self):
-        return bool(self.user.parent.students.filter(classmates__isnull=False))
 
 
 class Parent(models.Model):
@@ -570,25 +566,28 @@ class Homeroom(models.Model):
 
     @property
     def grades(self):
-        grades = self.classmates.values_list(
-            'student__grade', flat=True,
+        grades = self.students.values_list(
+            'grade', flat=True,
         ).order_by(
-            'student__grade',
+            'grade',
         ).distinct()
         return list(set([self.GRADE[x] for x in grades]))
 
     @property
     def schools(self):
-        schools = self.classmates.values_list(
-            'student__school__name', flat=True
+        schools = self.students.values_list(
+            'school__name', flat=True
         ).order_by(
-            'student__name',
+            'school__name',
         ).distinct()
         return list(set(schools))
 
     def __str__(self):
-        return "{0}".format(
+        return "{0} - {1}".format(
             self.parent,
+            ", ".join(
+                self.students.values_list('name', flat=True),
+            )
         )
 
 

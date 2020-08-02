@@ -9,8 +9,8 @@
 {% block content %}
   <section class='my-5'>
     <p class='lead'>
-      {% if homeroom.classmates.count %}
-        This Homeroom is a stable cohort of {{homeroom.classmates.count}} students from the following schools and grades:<br>
+      {% if homeroom.students.count %}
+        This Homeroom is a stable cohort of {{homeroom.students.count}} students from the following schools and grades:<br>
         <strong>{{homeroom.schools|join:", "}}; {{homeroom.grades|join:", "}}</strong>
       {% else %}
         There are no students currently in this Homeroom.
@@ -30,14 +30,14 @@
   <section class='mt-2 mt-5'>
     <div class='card'>
       <div class='card-header'>
-        <h4>Current Classmates</h4>
+        <h4>Current Students</h4>
       </div>
       <div class='card-body'>
           <table class='table table-reponsive-lg table-sm'>
             <thead>
               <tr>
                 <th>
-                  Classmate Name
+                  Student Name
                 </th>
                 <th>
                   Parent Name
@@ -48,22 +48,22 @@
               </tr>
             </thead>
             <tbody>
-              {% for classmate in classmates %}
+              {% for student in students %}
                 <tr>
                   <td>
-                    <a href='{% url "classmate" classmate.id %}'>{{classmate.student.name|default:"(Unknown)"}}</a>
+                    <a href='{% url "student" student.id %}'>{{student.name|default:"(Unknown)"}}</a>
                   </td>
                   <td>
-                    {{classmate.student.parent}}
+                    {{student.parent}}
                   </td>
                   <td>
-                    <a href='mailto:{{classmate.student.parent.user.email}}'>{{classmate.student.parent.user.email}}</a>
+                    <a href='mailto:{{student.parent.user.email}}'>{{student.parent.user.email}}</a>
                   </td>
                 </tr>
               {% empty %}
                 <tr>
                   <td colspan=3>
-                    (No Classmates in this Homeroom)
+                    (No Students in this Homeroom)
                   </td>
                 </tr>
               {% endfor %}
@@ -73,7 +73,7 @@
       <div class='card-footer'>
         <p>
          {% if homeroom.parent == request.user.parent %}
-          <a href='{% url "invite-classmate" homeroom.id %}' role='button' class='btn btn-success btn-lg'>Invite a Classmate</a>
+          <a href='{% url "invite-classmate" homeroom.id %}' role='button' class='btn btn-success btn-lg'>Invite a Student</a>
         {% else%}
           {# <a href='{% url "invite-classmate" homeroom.id %}' role='button' class='btn btn-success btn-lg'>Ask to Join</a> #}
         {% endif %}
@@ -85,7 +85,7 @@
   <section class='mt-2 mt-5'>
     <div class='card'>
       <div class='card-header'>
-        <h4>Invited Classmates</h4>
+        <h4>Invited Students</h4>
       </div>
       <div class='card-body'>
         <table class='table table-reponsive-lg table-sm'>

@@ -8,7 +8,6 @@ from django.forms.models import inlineformset_factory
 from dal import autocomplete
 
 # Local
-from .models import Classmate
 from .models import District
 from .models import Homeroom
 from .models import Invite
@@ -184,13 +183,6 @@ class ParentForm(forms.ModelForm):
             'is_host': "Willing to host instruction at your house?",
         }
 
-
-class ClassmateForm(forms.ModelForm):
-    class Meta:
-        model = Classmate
-        fields = [
-            'status',
-        ]
 
 
 class DeleteForm(forms.Form):

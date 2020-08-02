@@ -2,13 +2,13 @@
 
 {% load bootstrap4 %}
 
-{% block title %}Remove Classmate{% endblock title %}
-{% block header %}Remove Classmate{% endblock header %}
+{% block title %}Remove Student{% endblock title %}
+{% block header %}Remove Student{% endblock header %}
 
 {% block content %}
 <section>
   <p class='lead'>
-    Removing this classmate from your Homeroom will not affect the underlying Student information.
+    {# Removing this Student from your Homeroom will not affect the . #}
   </p>
 </section>
 <section class='my-5'>
@@ -18,7 +18,7 @@
     {% bootstrap_field form.confirm %}
     {% buttons %}
       <button type="submit" class="btn btn-danger btn-lg btn-block">
-        Remove This Classmate from my Homeroom
+        Remove This Student from my Homeroom
       </button>
     {% endbuttons %}
   </form>

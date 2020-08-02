@@ -3,14 +3,14 @@
 {% load bootstrap4 %}
 {% load humanize %}
 
-{% block title %}Invite Classmate{% endblock title %}
-{% block header %}Invite Classmate{% endblock header %}
+{% block title %}Invite Student{% endblock title %}
+{% block header %}Invite Student{% endblock header %}
 
 {% block content %}
 
   <section>
     <p class='lead'>
-      Invite a Classmate to your Homeroom.
+      Invite a Student to your Homeroom.
     </p>
     <p>
       There are three ways to invite a classmate to your homeroom:
@@ -32,7 +32,7 @@
       {% bootstrap_field form.message show_label=False show_help=False placeholder='Include a message inviting the student to your homeroom.' %}
       {% buttons %}
         <button type="submit" class="btn btn-primary btn-lg btn-block" >
-          Invite Classmate
+          Invite Student
         </button>
       {% endbuttons %}
     </form>
@@ -40,7 +40,7 @@
   <section class='my-5'>
     <div class='card'>
       <div class='card-header'>
-        <h4>Potential Classmates</h4>
+        <h4>Available Schoolmates</h4>
       </div>
       <div class='card-body'>
         <table class='table table-reponsive-lg'>

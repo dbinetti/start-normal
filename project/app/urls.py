@@ -22,23 +22,23 @@ urlpatterns = [
 
     # Account
     path('dashboard', views.dashboard, name='dashboard',),
-    path('share', views.share, name='share',),
+    # path('share', views.share, name='share',),
     path('delete', views.delete, name='delete',),
 
     # Parent
     path('parent', views.parent, name='parent',),
     path('student/<student_id>', views.student, name='student',),
-    path('create-student', views.create_student, name='create-student'),
-    path('delete-student/<student_id>', views.delete_student, name='delete-student'),
+    path('student/create', views.create_student, name='create-student'),
+    path('student/<student_id>/delete', views.delete_student, name='delete-student'),
 
     # Teacher
     path('teacher', views.teacher, name='teacher',),
 
     # Homeroom
     path('homeroom/<homeroom_id>', views.homeroom, name='homeroom',),
+    path('homeroom/<homeroom_id>/invite', views.invite_classmate, name='invite-classmate',),
     path('homeroom/connect/<student_id>', views.connect_homeroom, name='connect-homeroom'),
     path('homeroom/create/<student_id>', views.create_homeroom, name='create-homeroom'),
-    path('homeroom/<homeroom_id>/invite', views.invite_classmate, name='invite-classmate',),
 
     # Classmate
     path('classmate/<classmate_id>', views.classmate, name='classmate',),
