@@ -87,7 +87,7 @@
       </div>
     </div>
   </section>
-  {% if invites %}
+  {% if invites.count > 0 %}
   <section class='mt-2 mt-5'>
     <div class='card'>
       <div class='card-header'>
@@ -98,6 +98,12 @@
           <thead>
             <tr>
               <th>
+                Student Name
+              </th>
+              <th>
+                Parent Name
+              </th>
+              <th>
                 Parent Email
               </th>
             </tr>
@@ -106,7 +112,13 @@
             {% for invite in invites %}
               <tr>
                 <td>
-                  {{invite.email}}
+                  {{invite.student_name}}
+                </td>
+                <td>
+                  {{invite.parent_name}}
+                </td>
+                <td>
+                  {{invite.parent_email}}
                 </td>
               </tr>
             {% endfor %}

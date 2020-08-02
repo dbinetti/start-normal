@@ -32,7 +32,9 @@ from .forms import SchoolForm
 from .forms import StudentForm
 from .forms import StudentFormSet
 from .forms import TeacherForm
+from .models import Ask
 from .models import Homeroom
+from .models import Invite
 from .models import Parent
 from .models import School
 from .models import Student
@@ -142,6 +144,20 @@ def dashboard(request):
     )
 
 @login_required
+def ask(request, homeroom_id, student_id):
+    student = get_object_or_404(Student, id=student_id)
+    homeroom = get_object_or_404(Homeroom, id=homeroom_id)
+    Ask.objects.create(
+        student=student,
+        homeroom=homeroom,
+    )
+    messages.success(
+        request,
+        "Request sent!",
+    )
+    return redirect('dashboard')
+
+@login_required
 def connect_homeroom(request, student_id):
     student = get_object_or_404(Student, id=student_id)
     homerooms = Homeroom.objects.filter(
@@ -185,7 +201,7 @@ def homeroom_invite(request, homeroom_id):
             "Classmate invited",
         )
         return redirect('homeroom', homeroom.id)
-    invite_link = request.build_absolute_uri(reverse('invite', args=[homeroom_id]))
+    homeroom_link = request.build_absolute_uri(reverse('homeroom', args=[homeroom_id]))
     return render(
         request,
         'app/homeroom_invite.html',
@@ -193,15 +209,14 @@ def homeroom_invite(request, homeroom_id):
             'form': form,
             'homeroom': homeroom,
             'schoolmates': schoolmates,
-            'invite_link': invite_link,
+            'homeroom_link': homeroom_link,
         }
     )
 
 
-def invite(request, homeroom_id):
-    homeroom = Homeroom.objects.get(id=homeroom_id)
-    parent = homeroom.parent.user.name
-    students = homeroom.students.order_by(
+def invite(request, invite_id):
+    invite = get_object_or_404(Invite, pk=invite_id)
+    students = invite.homeroom.students.order_by(
         'school',
         'grade',
     )
@@ -209,8 +224,7 @@ def invite(request, homeroom_id):
         request,
         'app/invite.html',
         context={
-            'homeroom': homeroom,
-            'parent': parent,
+            'invite': invite,
             'students': students,
         }
     )
@@ -275,7 +289,7 @@ def create_homeroom(request, student_id):
     )
     student = Student.objects.get(id=student_id)
     student.homeroom = homeroom
-    student.save
+    student.save()
     messages.success(
         request,
         "Homeroom Created!",

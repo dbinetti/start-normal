@@ -27,24 +27,25 @@ urlpatterns = [
 
     # Parent
     path('parent', views.parent, name='parent',),
-    path('student/<student_id>', views.student, name='student',),
     path('student/create', views.create_student, name='create-student'),
+    path('student/<student_id>', views.student, name='student',),
     path('student/<student_id>/delete', views.delete_student, name='delete-student'),
 
     # Teacher
     path('teacher', views.teacher, name='teacher',),
 
     # Homeroom
-    path('homeroom/<homeroom_id>', views.homeroom, name='homeroom',),
-    path('homeroom/<homeroom_id>/invite', views.homeroom_invite, name='homeroom-invite',),
     path('homeroom/connect/<student_id>', views.connect_homeroom, name='connect-homeroom'),
     path('homeroom/create/<student_id>', views.create_homeroom, name='create-homeroom'),
+    path('homeroom/<homeroom_id>', views.homeroom, name='homeroom',),
+    path('homeroom/<homeroom_id>/invite', views.homeroom_invite, name='homeroom-invite',),
 
     # Classmate
     path('classmate/<classmate_id>', views.classmate, name='classmate',),
-    path('invite/<homeroom_id>', views.invite, name='invite',),
-    path('accept/<homeroom_id>', views.accept, name='accept',),
     path('invite/create/<homeroom_id>', views.create_invite, name='create-invite',),
+    path('ask/<homeroom_id>/<student_id>', views.ask, name='ask',),
+    path('invite/<invite_id>', views.invite, name='invite',),
+    path('accept/<homeroom_id>', views.accept, name='accept',),
 
     path('homeroom/<homeroom_id>/add/<student_id>', views.add_homeroom_student, name='add-homeroom-student',),
     path('homeroom/<homeroom_id>/remove/<student_id>', views.remove_homeroom_student, name='remove-homeroom-student',),

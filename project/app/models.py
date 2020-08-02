@@ -64,6 +64,34 @@ class Roomparent(models.Model):
         on_delete=models.CASCADE,
         related_name='roomparents',
     )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+
+
+class Ask(models.Model):
+    id = HashidAutoField(
+        primary_key=True,
+    )
+    homeroom = models.ForeignKey(
+        'Homeroom',
+        on_delete=models.CASCADE,
+        related_name='asks',
+    )
+    student = models.ForeignKey(
+        'Student',
+        on_delete=models.CASCADE,
+        related_name='asks',
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
 
 
 class Account(models.Model):
@@ -150,7 +178,18 @@ class Invite(models.Model):
     id = HashidAutoField(
         primary_key=True,
     )
-    email = models.EmailField(
+    student_name = models.CharField(
+        max_length=255,
+        blank=False,
+        default='',
+    )
+    parent_name = models.CharField(
+        max_length=255,
+        blank=False,
+        default='',
+    )
+    parent_email = models.EmailField(
+        max_length=255,
         blank=False,
         default='',
     )
@@ -176,7 +215,7 @@ class Invite(models.Model):
     )
 
     def __str__(self):
-        return str(self.email)
+        return str(self.id)
 
 
 class Teacher(models.Model):

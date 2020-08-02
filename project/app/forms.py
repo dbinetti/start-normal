@@ -195,10 +195,10 @@ class InviteForm(forms.ModelForm):
     class Meta:
         model = Invite
         fields = [
-            'email',
+            'student_name',
+            'parent_name',
+            'parent_email',
             'message',
-            # 'homeroom',
-            # 'inviter',
         ]
         widgets = {
             'message': forms.Textarea(
