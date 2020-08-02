@@ -151,6 +151,7 @@ def connect_homeroom(request, student_id):
     ).distinct()
     students = Student.objects.filter(
         school=student.school,
+        classmates__isnull=True,
     ).order_by('grade')
     return render(
         request,
@@ -172,6 +173,7 @@ def invite_classmate(request, homeroom_id):
     students = Student.objects.filter(
         school__in=schools,
         classmates__isnull=True,
+    ).exclude(
     ).order_by('grade')
     if request.method == 'POST':
         form = InviteForm(request.POST)
