@@ -690,13 +690,13 @@ def school(request, slug):
     students = school.students.select_related(
         'parent'
     ).filter(
-        classmates__isnull=True,
+        homeroom__isnull=True,
     ).order_by(
         'grade',
         'name',
     )
     homerooms = Homeroom.objects.filter(
-        classmates__student__school=school,
+        students__school=school,
     ).distinct()
 
     return render(
