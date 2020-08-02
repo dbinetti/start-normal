@@ -457,7 +457,7 @@ class School(models.Model):
         default=STATUS.new,
     )
     level = models.IntegerField(
-        blank=False,
+        blank=True,
         null=True,
         choices=LEVEL,
     )

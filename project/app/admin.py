@@ -186,17 +186,35 @@ class DistrictAdmin(admin.ModelAdmin):
 class SchoolAdmin(admin.ModelAdmin):
     fields = [
         'name',
+        'status',
         'level',
+        'nces_id',
         'low_grade',
         'high_grade',
+        'address',
+        'city',
+        'state',
+        'zipcode',
+        'county',
+        'phone',
         'website',
+        'lat',
+        'lon',
     ]
     list_display = [
         'name',
         'level',
+        'nces_id',
         'low_grade',
         'high_grade',
+        'city',
+        'state',
+        'phone',
         'website',
+        'lat',
+        'lon',
+        'created',
+        'updated',
     ]
     list_filter = [
         'level',

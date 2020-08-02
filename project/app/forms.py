@@ -63,6 +63,24 @@ class SchoolForm(forms.ModelForm):
             'lon',
         ]
 
+    def clean_name(self):
+        data = self.cleaned_data['name']
+        return data.title()
+
+
+    def clean_address(self):
+        data = self.cleaned_data['address']
+        return data.title()
+
+    def clean_city(self):
+        data = self.cleaned_data['city']
+        return data.title()
+
+    def clean_state(self):
+        data = self.cleaned_data['state']
+        return data.upper()
+
+
 
 class DistrictForm(forms.ModelForm):
 
@@ -182,7 +200,6 @@ class ParentForm(forms.ModelForm):
         labels = {
             'is_host': "Willing to host instruction at your house?",
         }
-
 
 
 class DeleteForm(forms.Form):

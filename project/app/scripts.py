@@ -2,24 +2,26 @@
 import csv
 
 # Django
+from django.core.exceptions import ValidationError
+from django.core.validators import URLValidator
 from django.db import IntegrityError
 from django.db.models import Q
 
 # First-Party
 from algoliasearch_django.decorators import disable_auto_indexing
-from app.forms import ContactForm
+# from app.forms import ContactForm
 from app.forms import DistrictForm
 from app.forms import SchoolForm
-from app.models import Contact
+# from app.models import Entry
+# from app.models import Contact
 from app.models import District
-from app.models import Entry
 from app.models import Homeroom
 from app.models import School
 from app.tasks import build_email
 from app.tasks import send_email
 from nameparser import HumanName
 
-
+url_validator = URLValidator()
 # public
 def districts_list():
     with open('ca.csv') as f:
@@ -184,6 +186,118 @@ def schools_list(filename='publics.csv'):
         else:
             print('Error!')
             return errors
+
+def elsi_public_list(filename='publics.csv'):
+    with open(filename) as f:
+        reader = csv.reader(
+            f,
+            skipinitialspace=True,
+        )
+        next(reader)
+        rows = [row for row in reader]
+        t = len(rows)
+        i = 0
+        errors = []
+        output = []
+        STATUS = {
+            '3-New': 0,
+            '1-Open': 10,
+            '2-Closed': 20,
+            '7-Future': None,
+            '6-Inactive': 20,
+            '5-Changed Boundary/Agency': 30,
+            '4-Added': None,
+            '8-Reopened': 10
+        }
+        GRADE = {
+            '6th Grade': 60,
+            '5th Grade': 50,
+            '9th Grade': 90,
+            '–': None,
+            'Prekindergarten': 2,
+            'Kindergarten': 5,
+            '10th Grade': 100,
+            '7th Grade': 70,
+            '4th Grade': 40,
+            '8th Grade': 80,
+            '3rd Grade': 30,
+            'Ungraded': None,
+            '1st Grade': 10,
+            '2nd Grade': 20,
+            '12th Grade': 120,
+            '11th Grade': 110,
+            '13th Grade': 130,
+            '†': None,
+            'Adult Education': None,
+        }
+        LEVEL = {
+            'High': 540,
+            'Middle': 530,
+            'Not Reported': None,
+            'Elementary': 520,
+            'Other': None,
+            'Prekindergarten': 510,
+            'Secondary': None,
+            'Ungraded': 570,
+            'Not Applicable': None,
+            'Adult Education': 560,
+         }
+        for row in rows:
+            i += 1
+            print(f"{i}/{t}")
+            name = str(row[4])
+            status = STATUS[str(row[23])]
+            if status != 10:
+                continue
+            level = LEVEL[str(row[32])]
+            nces_id = int(str(row[5])[-5:])
+            try:
+                low_grade = int(GRADE[str(row[33])])
+            except TypeError:
+                low_grade = None
+            try:
+                high_grade = int(GRADE[str(row[34])])
+            except TypeError:
+                high_grade = None
+            address = str(row[12])
+            city = str(row[15])
+            state = str(row[16])
+            zipcode = str(row[17])
+            county = str(row[9])
+            phone = str(row[19])
+            website = str(row[6])
+            try:
+                url_validator(website)
+            except ValidationError:
+                website = ''
+            lat = float(row[28])
+            lon = float(row[29])
+            school = {
+                'name': name,
+                'status': status,
+                'level': level,
+                'low_grade': low_grade,
+                'high_grade': high_grade,
+                'address': address,
+                'city': city,
+                'state': state,
+                'zipcode': zipcode,
+                'county': county,
+                'phone': phone,
+                'website': website,
+                'lat': lat,
+                'lon': lon,
+            }
+            form = SchoolForm(school)
+            if form.is_valid():
+                defaults = school
+                school, created = School.objects.update_or_create(
+                    nces_id=nces_id,
+                    defaults=defaults,
+                )
+            else:
+                print((school.state, school.id))
+    return output
 
 def import_schools(schools):
     t = len(schools)
