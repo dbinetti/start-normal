@@ -21,7 +21,7 @@
     <p>
       {# Current Status:  {{homeroom.get_status_display}}<br> #}
       {% if homeroom.parent == request.user.parent %}
-        Here are the current classmates in your Homeroom.
+        Here are the current classmates in your Homeroom.  Click the "Invite a Student" button to invite others.
       {% else %}
         If you'd like to join this Homeroom, please reach out to the Room Parent:  {{homeroom.parent.user.name}}, <a href='mailto:{{homeroom.parent.user.email}}'>{{homeroom.parent.user.email}}</a>
       {% endif %}
