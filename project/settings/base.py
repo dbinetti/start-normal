@@ -86,6 +86,7 @@ ALGOLIA = {
     'API_KEY': env("ALGOLIA_API_KEY"),
     'SEARCH_KEY': env("ALGOLIA_SEARCH_KEY"),
     'INDEX_SUFFIX': 'dev',
+    'AUTO_INDEXING': False,
 }
 
 # RQ
