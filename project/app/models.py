@@ -466,7 +466,7 @@ class School(models.Model):
         null=True,
         unique=True,
     )
-    nces_id = models.IntegerField(
+    nces_id = models.BigIntegerField(
         blank=True,
         null=True,
         unique=True,
