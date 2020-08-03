@@ -377,9 +377,9 @@ def elsi_private_list(filename='privates.csv'):
             if form.is_valid():
                 form.save()
             else:
-                continue
+                errors.append((form, row))
             print(f"{i}/{t}")
-    return output
+    return errors
 
 
 def import_schools(schools):
