@@ -414,6 +414,7 @@ class School(models.Model):
         (530, 'intmidjr', 'Intermediate/Middle/Junior High'),
         (540, 'hs', 'High School'),
         (550, 'elemhigh', 'Elementary-High Combination'),
+        (555, 'secondary', 'Secondary'),
         (560, 'a', 'Adult'),
         (570, 'ug', 'Ungraded'),
     )
@@ -466,7 +467,8 @@ class School(models.Model):
         null=True,
         unique=True,
     )
-    nces_id = models.BigIntegerField(
+    nces_id = models.CharField(
+        max_length=50,
         blank=True,
         null=True,
         unique=True,

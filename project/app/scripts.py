@@ -301,6 +301,97 @@ def elsi_public_list(filename='publics.csv'):
                 output.append((school.state, school.id))
     return output
 
+def elsi_private_list(filename='privates.csv'):
+    with open(filename) as f:
+        reader = csv.reader(
+            f,
+            skipinitialspace=True,
+        )
+        next(reader)
+        rows = [row for row in reader]
+        t = len(rows)
+        i = 0
+        errors = []
+        output = []
+        GRADE = {
+            '6th grade': 60,
+            '5th grade': 50,
+            '9th grade': 90,
+            'Prekindergarten': 2,
+            'Kindergarten': 5,
+            'Transitional Kindergarten': 5,
+            '10th grade': 100,
+            '7th grade': 70,
+            '4th grade': 40,
+            '8th grade': 80,
+            '3rd grade': 30,
+            '1st grade': 10,
+            'Transitional 1st grade': 10,
+            '2nd grade': 20,
+            '12th grade': 120,
+            '11th grade': 110,
+            '†': None,
+            'All Ungraded': None,
+        }
+        LEVEL = {
+            '3': 550,
+            '1': 520,
+            '2': 555,
+            '†': None,
+         }
+        for row in rows:
+            i += 1
+            name = str(row[0]).strip()
+            status = 10
+            level = LEVEL[str(row[13]).strip()[0]]
+            nces_id = str(row[2]).strip()
+            try:
+                low_grade = int(GRADE[str(row[10]).strip()])
+            except TypeError:
+                low_grade = None
+            try:
+                high_grade = int(GRADE[str(row[11]).strip()])
+            except TypeError:
+                high_grade = None
+            address = str(row[7]).strip()
+            city = str(row[8]).strip()
+            state = str(row[9]).strip()
+            zipcode = str(row[14]).strip()
+            county = str(row[3]).strip()
+            phone = str(row[6]).strip()
+            website = ''
+            lat = None
+            lon = None
+            school = {
+                'name': name,
+                'status': status,
+                'level': level,
+                'low_grade': low_grade,
+                'high_grade': high_grade,
+                'address': address,
+                'city': city,
+                'state': state,
+                'zipcode': zipcode,
+                'county': county,
+                'phone': phone,
+                'website': website,
+                'lat': lat,
+                'lon': lon,
+            }
+            form = SchoolForm(school)
+            if form.is_valid():
+                pass
+                # school, created = School.objects.update_or_create(
+                #     nces_id=nces_id,
+                #     defaults=school,
+                # )
+                # if created:
+                #     print(f"{i}/{t} - created")
+                # else:
+                #     print(f"{i}/{t} - updated")
+    return output
+
+
 def import_schools(schools):
     t = len(schools)
     i = 0
