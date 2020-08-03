@@ -244,28 +244,27 @@ def elsi_public_list(filename='publics.csv'):
          }
         for row in rows:
             i += 1
-            print(f"{i}/{t}")
-            name = str(row[4])
-            status = STATUS[str(row[23])]
+            name = str(row[4]).strip()
+            status = STATUS[str(row[23]).strip()]
             if status != 10:
                 continue
-            level = LEVEL[str(row[32])]
-            nces_id = int(str(row[5])[-5:])
+            level = LEVEL[str(row[32]).strip()]
+            nces_id = int(str(row[5]).strip())
             try:
-                low_grade = int(GRADE[str(row[33])])
+                low_grade = int(GRADE[str(row[33]).strip()])
             except TypeError:
                 low_grade = None
             try:
-                high_grade = int(GRADE[str(row[34])])
+                high_grade = int(GRADE[str(row[34]).strip()])
             except TypeError:
                 high_grade = None
-            address = str(row[12])
-            city = str(row[15])
-            state = str(row[16])
-            zipcode = str(row[17])
-            county = str(row[9])
-            phone = str(row[19])
-            website = str(row[6])
+            address = str(row[12]).strip()
+            city = str(row[15]).strip()
+            state = str(row[16]).strip()
+            zipcode = str(row[17]).strip()
+            county = str(row[9]).strip()
+            phone = str(row[19]).strip()
+            website = str(row[6]).strip()
             try:
                 url_validator(website)
             except ValidationError:
@@ -290,13 +289,16 @@ def elsi_public_list(filename='publics.csv'):
             }
             form = SchoolForm(school)
             if form.is_valid():
-                defaults = school
                 school, created = School.objects.update_or_create(
                     nces_id=nces_id,
-                    defaults=defaults,
+                    defaults=school,
                 )
+                if created:
+                    print(f"{i}/{t} - created")
+                else:
+                    print(f"{i}/{t} - updated")
             else:
-                print((school.state, school.id))
+                output.append((school.state, school.id))
     return output
 
 def import_schools(schools):
