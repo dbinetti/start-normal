@@ -345,14 +345,9 @@ def elsi_private_list(filename='privates.csv'):
             status = 10
             level = LEVEL[str(row[13]).strip()[0]]
             nces_id = str(row[2]).strip()
-            try:
-                low_grade = int(GRADE[str(row[10]).strip()])
-            except TypeError:
-                low_grade = None
-            try:
-                high_grade = int(GRADE[str(row[11]).strip()])
-            except TypeError:
-                high_grade = None
+            low_grade = GRADE[str(row[10]).strip()]
+            print(type(low_grade), row[10])
+            high_grade = GRADE[str(row[11]).strip()]
             address = str(row[7]).strip()
             city = str(row[8]).strip()
             state = str(row[9]).strip()
@@ -366,6 +361,7 @@ def elsi_private_list(filename='privates.csv'):
                 'name': name,
                 'status': status,
                 'level': level,
+                'nces_id': nces_id,
                 'low_grade': low_grade,
                 'high_grade': high_grade,
                 'address': address,
@@ -380,15 +376,11 @@ def elsi_private_list(filename='privates.csv'):
             }
             form = SchoolForm(school)
             if form.is_valid():
-                pass
-                # school, created = School.objects.update_or_create(
-                #     nces_id=nces_id,
-                #     defaults=school,
-                # )
-                # if created:
-                #     print(f"{i}/{t} - created")
-                # else:
-                #     print(f"{i}/{t} - updated")
+                form.save()
+            else:
+                return row, form.errors
+                break
+            # print(f"{i}/{t}")
     return output
 
 

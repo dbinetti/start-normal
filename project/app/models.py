@@ -408,6 +408,11 @@ class School(models.Model):
         (20, 'closed', "Closed"),
         (30, 'merged', "Merged"),
     )
+    KIND = Choices(
+        (0, 'new', "New"),
+        (10, 'public', "Public"),
+        (20, 'private', "Private"),
+    )
     LEVEL = Choices(
         (510, 'ps', 'Preschool'),
         (520, 'elem', 'Elementary'),
@@ -456,6 +461,11 @@ class School(models.Model):
         blank=False,
         choices=STATUS,
         default=STATUS.new,
+    )
+    kind = models.IntegerField(
+        blank=False,
+        choices=KIND,
+        default=KIND.new,
     )
     level = models.IntegerField(
         blank=True,
