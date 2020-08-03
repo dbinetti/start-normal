@@ -200,6 +200,7 @@ class SchoolAdmin(admin.ModelAdmin):
         'website',
         'lat',
         'lon',
+        'district',
     ]
     list_display = [
         'name',
