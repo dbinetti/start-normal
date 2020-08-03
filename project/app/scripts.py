@@ -346,7 +346,6 @@ def elsi_private_list(filename='privates.csv'):
             level = LEVEL[str(row[13]).strip()[0]]
             nces_id = str(row[2]).strip()
             low_grade = GRADE[str(row[10]).strip()]
-            print(type(low_grade), row[10])
             high_grade = GRADE[str(row[11]).strip()]
             address = str(row[7]).strip()
             city = str(row[8]).strip()
@@ -378,9 +377,8 @@ def elsi_private_list(filename='privates.csv'):
             if form.is_valid():
                 form.save()
             else:
-                return row, form.errors
-                break
-            # print(f"{i}/{t}")
+                continue
+            print(f"{i}/{t}")
     return output
 
 

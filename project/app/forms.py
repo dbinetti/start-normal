@@ -49,18 +49,21 @@ class SchoolForm(forms.ModelForm):
     class Meta:
         model = School
         fields = [
-            'level',
-            'name',
-            'nces_id',
-            'address',
-            'city',
-            'state',
-            'zipcode',
-            'county',
-            'phone',
-            'website',
-            'lat',
-            'lon',
+                'name',
+                'status',
+                'level',
+                'nces_id',
+                'low_grade',
+                'high_grade',
+                'address',
+                'city',
+                'state',
+                'zipcode',
+                'county',
+                'phone',
+                'website',
+                'lat',
+                'lon',
         ]
 
     def clean_name(self):
