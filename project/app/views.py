@@ -680,7 +680,7 @@ def logout(request):
 
 
 def school(request, slug):
-    school = School.objects.get(slug=slug)
+    school = get_object_or_404(School, slug=slug)
     parents = User.objects.filter(
         parent__students__school=school,
     ).distinct()
