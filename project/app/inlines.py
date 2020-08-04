@@ -11,7 +11,6 @@ from .models import Student
 class HomeroomInline(admin.TabularInline):
     model = Homeroom
     fields = [
-        'name',
         'parent',
     ]
     autocomplete_fields = [
