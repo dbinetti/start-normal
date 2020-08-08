@@ -6,6 +6,7 @@ from model_utils import Choices
 from multiselectfield import MultiSelectField
 
 from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.fields import JSONField
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
@@ -493,6 +494,13 @@ class School(models.Model):
     high_grade = models.IntegerField(
         blank=True,
         choices=GRADE,
+        null=True,
+    )
+    grades = ArrayField(
+        models.IntegerField(
+            choices=GRADE,
+        ),
+        blank=True,
         null=True,
     )
     address = models.CharField(
