@@ -15,6 +15,7 @@ class SchoolIndex(AlgoliaIndex):
         'website',
         'nces_id',
         'grades',
+        'grades_display',
         'get_level_display',
         'district',
     ]
