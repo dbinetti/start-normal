@@ -427,22 +427,20 @@ class School(models.Model):
         (570, 'ug', 'Ungraded'),
     )
     GRADE = Choices(
-        (2, 'tk', 'Preschool'),
-        (5, 'k', 'Kindergarten'),
-        (10, 'first', 'First Grade'),
-        (20, 'second', 'Second Grade'),
-        (30, 'third', 'Third Grade'),
-        (40, 'fourth', 'Fourth Grade'),
-        (50, 'fifth', 'Fifth Grade'),
-        (60, 'sixth', 'Sixth Grade'),
-        (70, 'seventh', 'Seventh Grade'),
-        (80, 'eighth', 'Eighth Grade'),
-        (90, 'ninth', 'Ninth Grade'),
-        (100, 'tenth', 'Tenth Grade'),
-        (110, 'eleventh', 'Eleventh Grade'),
-        (120, 'twelfth', 'Twelfth Grade'),
-        (130, 'fresh', 'Freshman'),
-        (140, 'soph', 'Sophomore'),
+        (-1, 'p', 'Preschool'),
+        (0, 'k', 'Kindergarten'),
+        (1, 'first', 'First Grade'),
+        (2, 'second', 'Second Grade'),
+        (3, 'third', 'Third Grade'),
+        (4, 'fourth', 'Fourth Grade'),
+        (5, 'fifth', 'Fifth Grade'),
+        (6, 'sixth', 'Sixth Grade'),
+        (7, 'seventh', 'Seventh Grade'),
+        (8, 'eighth', 'Eighth Grade'),
+        (9, 'ninth', 'Ninth Grade'),
+        (10, 'tenth', 'Tenth Grade'),
+        (11, 'eleventh', 'Eleventh Grade'),
+        (12, 'twelfth', 'Twelfth Grade'),
     )
     id = HashidAutoField(
         primary_key=True,
@@ -575,7 +573,10 @@ class School(models.Model):
         )
 
     def location(self):
-        return(self.lat, self.lon)
+        return (self.lat, self.lon)
+
+    def grades_display(self):
+        return [self.GRADE[x] for x in self.grades]
 
     def should_index(self):
         if self.status == self.STATUS.active:
@@ -591,22 +592,20 @@ class Homeroom(models.Model):
         (20, 'closed', "Closed"),
     )
     GRADE = Choices(
-        (2, 'tk', 'Preschool'),
-        (5, 'k', 'Kindergarten'),
-        (10, 'first', 'First Grade'),
-        (20, 'second', 'Second Grade'),
-        (30, 'third', 'Third Grade'),
-        (40, 'fourth', 'Fourth Grade'),
-        (50, 'fifth', 'Fifth Grade'),
-        (60, 'sixth', 'Sixth Grade'),
-        (70, 'seventh', 'Seventh Grade'),
-        (80, 'eighth', 'Eighth Grade'),
-        (90, 'ninth', 'Ninth Grade'),
-        (100, 'tenth', 'Tenth Grade'),
-        (110, 'eleventh', 'Eleventh Grade'),
-        (120, 'twelfth', 'Twelfth Grade'),
-        (130, 'fresh', 'Freshman'),
-        (140, 'soph', 'Sophomore'),
+        (-1, 'p', 'Preschool'),
+        (0, 'k', 'Kindergarten'),
+        (1, 'first', 'First Grade'),
+        (2, 'second', 'Second Grade'),
+        (3, 'third', 'Third Grade'),
+        (4, 'fourth', 'Fourth Grade'),
+        (5, 'fifth', 'Fifth Grade'),
+        (6, 'sixth', 'Sixth Grade'),
+        (7, 'seventh', 'Seventh Grade'),
+        (8, 'eighth', 'Eighth Grade'),
+        (9, 'ninth', 'Ninth Grade'),
+        (10, 'tenth', 'Tenth Grade'),
+        (11, 'eleventh', 'Eleventh Grade'),
+        (12, 'twelfth', 'Twelfth Grade'),
     )
     id = HashidAutoField(
         primary_key=True,
@@ -675,22 +674,20 @@ class Student(models.Model):
         default=STATUS.new,
     )
     GRADE = Choices(
-        (2, 'tk', 'Preschool'),
-        (5, 'k', 'Kindergarten'),
-        (10, 'first', 'First Grade'),
-        (20, 'second', 'Second Grade'),
-        (30, 'third', 'Third Grade'),
-        (40, 'fourth', 'Fourth Grade'),
-        (50, 'fifth', 'Fifth Grade'),
-        (60, 'sixth', 'Sixth Grade'),
-        (70, 'seventh', 'Seventh Grade'),
-        (80, 'eighth', 'Eighth Grade'),
-        (90, 'ninth', 'Ninth Grade'),
-        (100, 'tenth', 'Tenth Grade'),
-        (110, 'eleventh', 'Eleventh Grade'),
-        (120, 'twelfth', 'Twelfth Grade'),
-        (130, 'fresh', 'Freshman'),
-        (140, 'soph', 'Sophomore'),
+        (-1, 'p', 'Preschool'),
+        (0, 'k', 'Kindergarten'),
+        (1, 'first', 'First Grade'),
+        (2, 'second', 'Second Grade'),
+        (3, 'third', 'Third Grade'),
+        (4, 'fourth', 'Fourth Grade'),
+        (5, 'fifth', 'Fifth Grade'),
+        (6, 'sixth', 'Sixth Grade'),
+        (7, 'seventh', 'Seventh Grade'),
+        (8, 'eighth', 'Eighth Grade'),
+        (9, 'ninth', 'Ninth Grade'),
+        (10, 'tenth', 'Tenth Grade'),
+        (11, 'eleventh', 'Eleventh Grade'),
+        (12, 'twelfth', 'Twelfth Grade'),
     )
     name = models.CharField(
         max_length=100,
