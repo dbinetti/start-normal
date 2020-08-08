@@ -124,8 +124,9 @@ def mailchimp_create_or_update_from_user(user):
 def geocode_school(school):
     full = f"{school.address}, {school.city} {school.state} {school.zipcode}"
     response = geocoder.google(full)
-    if response.ok:
-        school.geojson = response.geojson
-        school.save()
-    else:
+    if not response.ok:
         raise ValueError("{0} - {1}".format(school, response))
+    school.geo = response.json
+    school.lat = response.json['lat']
+    school.lon = response.json['lng']
+    return school.save()

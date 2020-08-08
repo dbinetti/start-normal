@@ -528,7 +528,7 @@ class School(models.Model):
         blank=True,
         default='',
     )
-    geojson = models.JSONField(
+    geo = models.JSONField(
         encoder=DjangoJSONEncoder,
         null=True,
         blank=True,
