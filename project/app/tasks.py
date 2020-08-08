@@ -1,16 +1,17 @@
 
-# Django
-from django.conf import settings
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
-
-# First-Party
+# Third-Party
+import geocoder
 from auth0.v3.authentication import GetToken
 from auth0.v3.management import Auth0
 from django_rq import job
 from mailchimp3 import MailChimp
 from mailchimp3.helpers import get_subscriber_hash
 from mailchimp3.mailchimpclient import MailChimpError
+
+# Django
+from django.conf import settings
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
 
 
 def auth0_get_client():
@@ -117,3 +118,14 @@ def mailchimp_create_or_update_from_user(user):
         data=data,
     )
     return result
+
+
+@job
+def geocode_school(school):
+    full = f"{school.address}, {school.city} {school.state} {school.zipcode}"
+    response = geocoder.google(full)
+    if response.ok:
+        school.geojson = response.geojson
+        school.save()
+    else:
+        raise ValueError("{0} - {1}".format(school, response))
