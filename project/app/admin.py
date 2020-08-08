@@ -96,8 +96,9 @@ class AccountAdmin(admin.ModelAdmin):
 class ParentAdmin(admin.ModelAdmin):
     save_on_top = True
     fields = [
-        'user',
+        'is_host',
         'notes',
+        'user',
     ]
     list_display = [
         'user',
