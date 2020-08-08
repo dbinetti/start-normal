@@ -10,4 +10,4 @@ class AppConfig(AppConfig):
         import algoliasearch_django as algoliasearch
         from .indexes import SchoolIndex
         School = self.get_model('school')
-        algoliasearch.register(School, SchoolIndex)
+        # algoliasearch.register(School, SchoolIndex)
