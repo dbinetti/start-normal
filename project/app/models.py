@@ -1,12 +1,14 @@
 # Django
-from django.contrib.auth.models import AbstractBaseUser
-from django.db import models
-
-# First-Party
+# Third-Party
 from autoslug import AutoSlugField
 from hashid_field import HashidAutoField
 from model_utils import Choices
 from multiselectfield import MultiSelectField
+
+from django.contrib.auth.models import AbstractBaseUser
+from django.contrib.postgres.fields import JSONField
+from django.core.serializers.json import DjangoJSONEncoder
+from django.db import models
 
 # Local
 from .managers import UserManager
@@ -525,6 +527,11 @@ class School(models.Model):
     website = models.URLField(
         blank=True,
         default='',
+    )
+    geojson = models.JSONField(
+        encoder=DjangoJSONEncoder,
+        null=True,
+        blank=True,
     )
     lat = models.DecimalField(
         max_digits=10,

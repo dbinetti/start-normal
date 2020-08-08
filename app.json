@@ -90,6 +90,9 @@
         },
         "AUTH0_DOMAIN": {
           "generator": "secret"
+        },
+        "GOOGLE_API_KEY": {
+          "generator": "secret"
         }
       },
       "scripts": {
