@@ -1,5 +1,4 @@
 # Third-Party
-# First-Party
 from algoliasearch_django import AlgoliaIndex
 
 
@@ -15,6 +14,7 @@ class SchoolIndex(AlgoliaIndex):
         'phone',
         'website',
         'nces_id',
+        'grades',
         'get_level_display',
         'district',
     ]

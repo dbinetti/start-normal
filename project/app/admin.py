@@ -190,6 +190,7 @@ class SchoolAdmin(admin.ModelAdmin):
         'status',
         'level',
         'nces_id',
+        'grades',
         'low_grade',
         'high_grade',
         'address',
