@@ -17,6 +17,7 @@ class SchoolIndex(AlgoliaIndex):
         'grades',
         'grades_display',
         'get_level_display',
+        'get_kind_display',
         'district',
     ]
     geo_field = 'location'
@@ -34,39 +35,36 @@ class SchoolIndex(AlgoliaIndex):
             'state',
             'county',
             'get_level_display',
+            'get_kind_display',
         ],
     }
     should_index = 'should_index'
 
-class DistrictIndex(AlgoliaIndex):
+class HomeroomIndex(AlgoliaIndex):
     fields = [
-        'name',
-        'slug',
-        'county',
-        'address',
-        'city',
-        'state',
-        'zipcode',
-        'phone',
-        'website',
-        'nces_id',
-        'get_kind_display',
+        'get_status_display',
+        'get_masks_display',
+        'get_distance_display',
+        'get_schedule_display',
+        'size',
+        'notes',
+        'nomen',
+        'schools',
+        'grades',
     ]
     geo_field = 'location'
     settings = {
         'searchableAttributes': [
-            'name',
-            'slug',
-            'county',
-            'city',
-            'state',
-            'nces_id',
+            'nomen',
+            'schools',
+            'grades',
         ],
         'attributesForFaceting': [
-            'city',
-            'state',
-            'county',
-            'get_kind_display',
+            'get_status_display',
+            'get_masks_display',
+            'get_distance_display',
+            'get_schedule_display',
+            'size',
         ],
     }
     should_index = 'should_index'

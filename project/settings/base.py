@@ -85,7 +85,7 @@ ALGOLIA = {
     'APPLICATION_ID': env("ALGOLIA_APPLICATION_ID"),
     'API_KEY': env("ALGOLIA_API_KEY"),
     'SEARCH_KEY': env("ALGOLIA_SEARCH_KEY"),
-    'INDEX_SUFFIX': 'dev',
+    'INDEX_SUFFIX': 'prod',
     'AUTO_INDEXING': True,
 }
 

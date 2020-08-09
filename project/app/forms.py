@@ -1,11 +1,11 @@
 # Django
+# Third-Party
+from dal import autocomplete
+
 from django import forms
 from django.contrib.auth.forms import UserChangeForm as UserChangeFormBase
 from django.contrib.auth.forms import UserCreationForm as UserCreationFormBase
 from django.forms.models import inlineformset_factory
-
-# First-Party
-from dal import autocomplete
 
 # Local
 from .models import District
@@ -82,7 +82,6 @@ class SchoolForm(forms.ModelForm):
     def clean_state(self):
         data = self.cleaned_data['state']
         return data.upper()
-
 
 
 class DistrictForm(forms.ModelForm):
@@ -188,14 +187,16 @@ class ParentForm(forms.ModelForm):
     class Meta:
         model = Parent
         fields = [
-            'notes',
             'is_host',
+            'masks',
+            'distance',
+            'notes',
         ]
         widgets = {
             'notes': forms.Textarea(
                 attrs={
                     'class': 'form-control h-25',
-                    'placeholder': 'Please provide some notes on your preferred safety regimen; i.e., masks, distance, hygenic requirements.',
+                    'placeholder': 'Any notes to share?',
                     'rows': 5,
                 }
             )

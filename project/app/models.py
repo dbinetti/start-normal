@@ -149,11 +149,33 @@ class Account(models.Model):
 
 
 class Parent(models.Model):
+    MASKS = Choices(
+        (0, 'none', "No Preference"),
+        (10, 'required', "Required"),
+        (20, 'optional', "Optional"),
+    )
+    DISTANCE = Choices(
+        (0, 'none', "No Preference"),
+        (10, 'required', "Required"),
+        (20, 'optional', "Optional"),
+    )
     id = HashidAutoField(
         primary_key=True,
     )
     is_host = models.BooleanField(
         default=False,
+    )
+    masks = models.IntegerField(
+        blank=True,
+        null=True,
+        choices=MASKS,
+        default=MASKS.none
+    )
+    distance = models.IntegerField(
+        blank=True,
+        null=True,
+        choices=DISTANCE,
+        default=DISTANCE.none
     )
     notes = models.TextField(
         max_length=512,
@@ -395,7 +417,7 @@ class District(models.Model):
         )
 
     def location(self):
-        return(self.lat, self.lon)
+        return (self.lat, self.lon)
 
     def should_index(self):
         if self.status == self.STATUS.active:
@@ -587,9 +609,28 @@ class School(models.Model):
 class Homeroom(models.Model):
 
     STATUS = Choices(
-        (0, 'new', "New"),
         (10, 'open', "Open"),
         (20, 'closed', "Closed"),
+    )
+    KIND = Choices(
+        (10, 'public', "Public"),
+        (20, 'private', "Private"),
+    )
+    MASKS = Choices(
+        (0, 'none', "No Preference"),
+        (10, 'required', "Required"),
+        (20, 'optional', "Optional"),
+    )
+    DISTANCE = Choices(
+        (0, 'none', "No Preference"),
+        (10, 'required', "Required"),
+        (20, 'optional', "Optional"),
+    )
+    SCHEDULE = Choices(
+        (0, 'none', "No Preference"),
+        (10, 'light', "1-2 Days"),
+        (20, 'moderate', "3-4 Days"),
+        (30, 'heavy', "5 Days"),
     )
     GRADE = Choices(
         (-1, 'p', 'Preschool'),
@@ -613,7 +654,42 @@ class Homeroom(models.Model):
     status = models.IntegerField(
         blank=False,
         choices=STATUS,
-        default=STATUS.new,
+        default=STATUS.open,
+    )
+    kind = models.IntegerField(
+        blank=False,
+        choices=KIND,
+        default=KIND.public,
+    )
+    masks = models.IntegerField(
+        blank=True,
+        null=True,
+        choices=MASKS,
+        default=MASKS.none
+    )
+    distance = models.IntegerField(
+        blank=True,
+        null=True,
+        choices=DISTANCE,
+        default=DISTANCE.none
+    )
+    schedule = models.IntegerField(
+        blank=True,
+        null=True,
+        choices=SCHEDULE,
+        default=SCHEDULE.none
+    )
+    lat = models.DecimalField(
+        max_digits=10,
+        decimal_places=6,
+        blank=True,
+        default=0.0,
+    )
+    lon = models.DecimalField(
+        max_digits=10,
+        decimal_places=6,
+        default=0.0,
+        blank=True,
     )
     notes = models.TextField(
         blank=True,
@@ -631,13 +707,17 @@ class Homeroom(models.Model):
     )
 
     @property
-    def grades(self):
-        grades = self.students.values_list(
-            'grade', flat=True,
-        ).order_by(
-            'grade',
-        ).distinct()
-        return list(set([self.GRADE[x] for x in grades]))
+    def size(self):
+        return self.students.count()
+
+    @property
+    def nomen(self):
+        nomen = "{0} - {1} - {2}".format(
+            self.parent.user.name,
+            ", ".join(self.schools),
+            ", ".join(self.grades),
+        )
+        return nomen
 
     @property
     def schools(self):
@@ -647,6 +727,27 @@ class Homeroom(models.Model):
             'school__name',
         ).distinct()
         return list(set(schools))
+
+    @property
+    def grades(self):
+        grades = self.students.values_list(
+            'grade', flat=True,
+        ).order_by(
+            'grade',
+        ).distinct()
+        return list(set([self.GRADE[x] for x in grades]))
+
+    def location(self):
+        try:
+            school = self.students.first().school
+        except AttributeError:
+            return (0.0, 0.0)
+        return (school.lat, school.lon)
+
+    def should_index(self):
+        if self.kind == self.KIND.public:
+            return True
+        return False
 
     def __str__(self):
         return str(self.id)
