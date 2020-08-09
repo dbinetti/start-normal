@@ -11,7 +11,7 @@ class AppConfig(AppConfig):
 
         from .indexes import SchoolIndex
         School = self.get_model('school')
-        algoliasearch.register(School, SchoolIndex)
+        # algoliasearch.register(School, SchoolIndex)
 
         from .indexes import HomeroomIndex
         Homeroom = self.get_model('homeroom')

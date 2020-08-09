@@ -2,6 +2,10 @@
 import json
 import logging
 
+# Third-Party
+import requests
+from dal import autocomplete
+
 # Django
 from django.conf import settings
 from django.contrib import messages
@@ -18,10 +22,6 @@ from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.crypto import get_random_string
-
-# First-Party
-import requests
-from dal import autocomplete
 
 # Local
 from .forms import DeleteForm
@@ -50,13 +50,7 @@ class SchoolAutocomplete(autocomplete.Select2QuerySetView):
         )
 
         if self.q:
-            # qs = qs.filter(slug__icontains=self.q)
-            qs = qs.filter(
-                Q(name__icontains=self.q)|
-                Q(city__icontains=self.q) |
-                Q(state__icontains=self.q)
-            )
-
+            qs = qs.filter(search_vector=self.q)
         return qs
 
 

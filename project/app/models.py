@@ -8,6 +8,8 @@ from multiselectfield import MultiSelectField
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.indexes import GinIndex
+from django.contrib.postgres.search import SearchVectorField
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 
@@ -586,6 +588,9 @@ class School(models.Model):
         null=True,
         blank=True,
     )
+    search_vector = SearchVectorField(
+        null=True,
+    )
 
     def __str__(self):
         return "{0} - {1}, {2}".format(
@@ -604,6 +609,11 @@ class School(models.Model):
         if self.status == self.STATUS.active:
             return True
         return False
+
+    class Meta:
+        indexes = [
+            GinIndex(fields=['search_vector'])
+        ]
 
 
 class Homeroom(models.Model):
