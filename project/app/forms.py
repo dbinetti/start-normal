@@ -21,8 +21,9 @@ StudentFormSet = inlineformset_factory(
     Parent,
     Student,
     fields=[
-        'grade',
         'name',
+        'gender',
+        'grade',
         'school',
         'parent',
     ],
@@ -49,27 +50,29 @@ class SchoolForm(forms.ModelForm):
     class Meta:
         model = School
         fields = [
-                'name',
-                'status',
-                'level',
-                'nces_id',
-                'low_grade',
-                'high_grade',
-                'address',
-                'city',
-                'state',
-                'zipcode',
-                'county',
-                'phone',
-                'website',
-                'lat',
-                'lon',
+            'name',
+            'status',
+            'level',
+            'nces_id',
+            'low_grade',
+            'high_grade',
+            'address',
+            'city',
+            'state',
+            'zipcode',
+            'county',
+            'phone',
+            'website',
+            'lat',
+            'lon',
         ]
+
+
+class DistrictForm(forms.ModelForm):
 
     def clean_name(self):
         data = self.cleaned_data['name']
         return data.title()
-
 
     def clean_address(self):
         data = self.cleaned_data['address']
@@ -82,9 +85,6 @@ class SchoolForm(forms.ModelForm):
     def clean_state(self):
         data = self.cleaned_data['state']
         return data.upper()
-
-
-class DistrictForm(forms.ModelForm):
 
     class Meta:
         model = District
@@ -164,6 +164,7 @@ class StudentForm(forms.ModelForm):
         model = Student
         fields = [
             'name',
+            'gender',
             'school',
             'grade',
         ]

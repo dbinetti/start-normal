@@ -747,6 +747,20 @@ class Homeroom(models.Model):
         ).distinct()
         return list(set([self.GRADE[x] for x in grades]))
 
+    def parent_name(self):
+        try:
+            parent = self.parent
+        except AttributeError:
+            return "(No Owner)"
+        return parent.user.name
+
+    def student_names(self):
+        try:
+            students = self.students.values_list('name', flat=True)
+        except AttributeError:
+            return "(No Students)"
+        return ", ".join(list(students))
+
     def location(self):
         try:
             school = self.students.first().school
@@ -779,10 +793,9 @@ class Student(models.Model):
         (10, 'approved', 'Approved'),
         (20, 'rejected', 'Rejected'),
     )
-    status = models.IntegerField(
-        blank=False,
-        choices=STATUS,
-        default=STATUS.new,
+    GENDER = Choices(
+        (10, 'boy', 'Boy'),
+        (20, 'girl', 'Girl'),
     )
     GRADE = Choices(
         (-1, 'p', 'Preschool'),
@@ -800,10 +813,20 @@ class Student(models.Model):
         (11, 'eleventh', 'Eleventh Grade'),
         (12, 'twelfth', 'Twelfth Grade'),
     )
+    status = models.IntegerField(
+        blank=False,
+        choices=STATUS,
+        default=STATUS.new,
+    )
     name = models.CharField(
         max_length=100,
         blank=False,
-        help_text="""Your Student's name will be shown to other parents on the private site; it will not appear on the public site.  """,
+        help_text="""This will be shown to other parents on the private site; it will not appear on the public site.  """,
+    )
+    gender = models.IntegerField(
+        blank=True,
+        null=True,
+        choices=GENDER,
     )
     grade = models.IntegerField(
         blank=False,

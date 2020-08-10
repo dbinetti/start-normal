@@ -169,6 +169,9 @@ def connect_homeroom(request, student_id):
             'student': student,
             'homerooms': homerooms,
             'students': students,
+            'app_id': settings.ALGOLIA['APPLICATION_ID'],
+            'search_key': settings.ALGOLIA['SEARCH_KEY'],
+            'index_name': "Homeroom_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
         }
     )
 

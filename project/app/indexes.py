@@ -42,6 +42,7 @@ class SchoolIndex(AlgoliaIndex):
 
 class HomeroomIndex(AlgoliaIndex):
     fields = [
+        'id',
         'get_status_display',
         'get_masks_display',
         'get_distance_display',
@@ -51,6 +52,8 @@ class HomeroomIndex(AlgoliaIndex):
         'nomen',
         'schools',
         'grades',
+        'parent_name',
+        'student_names',
     ]
     geo_field = 'location'
     settings = {
@@ -58,6 +61,8 @@ class HomeroomIndex(AlgoliaIndex):
             'nomen',
             'schools',
             'grades',
+            'parent_name',
+            'student_names',
         ],
         'attributesForFaceting': [
             'get_status_display',
