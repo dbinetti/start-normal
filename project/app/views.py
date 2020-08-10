@@ -366,44 +366,86 @@ def remove_homeroom_student(request, homeroom_id, student_id):
 
 @login_required
 def parent(request):
-    StudentFormSet.extra = 5
-    parent, created = Parent.objects.get_or_create(
-        user=request.user,
-    )
+    parent = getattr(request.user, 'parent', None)
     if request.method == "POST":
-        formset = StudentFormSet(
-            request.POST,
-            request.FILES,
-            instance=parent,
-            prefix='students',
+        parent, _ = Parent.objects.get_or_create(
+            user=request.user,
         )
         form = ParentForm(
             request.POST,
             instance=parent,
-            prefix='parent',
         )
-        if formset.is_valid() and form.is_valid():
-            formset.save()
+        if form.is_valid():
             form.save()
             messages.success(
                 request,
                 "Saved!",
             )
-            return redirect('dashboard')
-    formset = StudentFormSet(
-        instance=parent,
-        prefix='students',
-    )
-    form = ParentForm(
-        instance=parent,
-        prefix='parent',
-    )
+            return redirect('parent-two')
+    else:
+        form = ParentForm(
+            instance=parent,
+        )
     return render(
         request,
         'app/parent.html',
         context={
-            'formset': formset,
             'form': form,
+        }
+    )
+
+
+@login_required
+def parent_two(request):
+    StudentFormSet.extra = 1
+    parent = request.user.parent
+    if request.method == "POST":
+        formset = StudentFormSet(
+            request.POST,
+            request.FILES,
+            instance=parent,
+        )
+        if formset.is_valid():
+            formset.save()
+            messages.success(
+                request,
+                "Saved!",
+            )
+            return redirect('dashboard')
+    else:
+        formset = StudentFormSet(
+            instance=parent,
+        )
+    return render(
+        request,
+        'app/parent_two.html',
+        context={
+            'formset': formset,
+        }
+    )
+
+
+
+@login_required
+def add_student_parent(request):
+    parent = request.user.parent
+    is_more = bool(parent.students.count())
+    form = StudentForm(request.POST or None)
+    if form.is_valid():
+        student = form.save(commit=False)
+        student.parent = parent
+        student.save()
+        messages.success(
+            request,
+            "Student Added!",
+        )
+        return redirect('add-student-parent')
+    return render(
+        request,
+        'app/add_student_parent.html',
+        context={
+            'form': form,
+            'is_more': is_more,
         }
     )
 

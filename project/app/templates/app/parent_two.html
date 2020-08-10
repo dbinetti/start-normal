@@ -1,0 +1,81 @@
+{% extends 'app/base.html' %}
+
+{% load bootstrap4 %}
+
+{% block title %}Step Two of Three{% endblock title %}
+{% block header %}Step Two of Three{% endblock header %}
+{% block topnav %}{% endblock topnav %}
+
+{% block content %}
+  <section class='mb-5'>
+    <p class='lead'>
+      Enter Student Information to match you to Teachers and other Parents.
+    </p>
+  </section>
+  <section>
+    <form method="POST">
+      {{formset.management_form}}
+      {% csrf_token %}
+      {% bootstrap_formset_errors formset %}
+      <div id='form_set'>
+        {% for form in formset %}
+          <div class='card my-5'>
+            <div class='card-header'>
+              <h4>
+                Student {{forloop.counter}}
+              </h4>
+            </div>
+            <div class='card-body'>
+              <p>
+                {% bootstrap_field form.name show_help=False show_label=True size='small' placeholder="Student's First Name/Initials" %}
+                {% bootstrap_field form.gender show_help=False show_label=True size='small' %}
+                {% bootstrap_field form.school show_help=False show_label=True size='small' placeholder='Type to search....' %}
+                {% bootstrap_field form.grade show_help=False show_label=True size='small'%}
+                {{form.id}}
+              </p>
+            </div>
+            <div class='card-footer'>
+              <a href='#' id='add_more' class="btn btn-success" role='button'>Add Student</a>
+              <button class='btn btn-danger float-right'>Remove Student</button>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+      <div id="empty_form" style="display:none">
+        <div class='card my-5'>
+          <div class='card-header'>
+            <h4>
+              Student {{forloop.counter}}
+            </h4>
+          </div>
+          <div class='card-body'>
+            <p>
+              {% bootstrap_field formset.empty_form.name show_help=False show_label=True size='small' placeholder="Student's First Name/Initials" %}
+              {% bootstrap_field formset.empty_form.gender show_help=False show_label=True size='small' %}
+              {% bootstrap_field formset.empty_form.school show_help=False show_label=True size='small' placeholder='Type to search....' %}
+              {% bootstrap_field formset.empty_form.grade show_help=False show_label=True size='small'%}
+              {{formset.empty_form.id}}
+            </p>
+          </div>
+          <div class='card-footer'>
+            <a href='#' id='add_more' class="btn btn-success" role='button'>Add Student</a>
+            <button class='btn btn-danger float-right'>Remove Student</button>
+          </div>
+        </div>
+      </div>
+      {% bootstrap_button "Save" button_type='submit' button_class='btn btn-primary btn-block' size='lg' %}
+    </form>
+  </section>
+{% endblock content %}
+
+{% block scripts %}
+  {{formset.media}}
+  <script type='text/javascript'>
+    $('#add_more').click(function() {
+      var form_idx = $('#id_form-TOTAL_FORMS').val();
+      $('#form_set').append($('#empty_form').html().replace(/__prefix__/g, form_idx));
+      $('#id_form-TOTAL_FORMS').val(parseInt(form_idx) + 1);
+    });
+  </script>
+
+{% endblock scripts %}

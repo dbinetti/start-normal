@@ -1,0 +1,58 @@
+{% extends 'app/base.html' %}
+
+{% load bootstrap4 %}
+
+{% block title %}Step Two of Three{% endblock title %}
+{% block header %}Step Two of Three{% endblock header %}
+{% block topnav %}{% endblock topnav %}
+
+{% block content %}
+  <section class='mb-5'>
+    <p class='lead'>
+      Enter Student Information
+    </p>
+    {% if is_more %}
+      <p>
+        Add another student below, or skip to <a href='#'>Last Step</a> if you're finished.
+      </p>
+    {% else %}
+      <p>
+        Add your first student below.  You'll then be able to add more, or skip to the next step.
+      </p>
+    {% endif %}
+  </section>
+  <section>
+    <form method="POST">
+      {% csrf_token %}
+      {% bootstrap_form_errors form %}
+      <div id='form_set'>
+        <div class='card my-5'>
+          <div class='card-header'>
+            <h4>
+              Student Info
+            </h4>
+          </div>
+          <div class='card-body'>
+            <p>
+              {% bootstrap_field form.name show_help=False show_label=True size='small' placeholder="Student's First Name/Initials" %}
+              {% bootstrap_field form.school show_help=False show_label=True size='small' placeholder='Type to search....' %}
+              {% bootstrap_field form.grade show_help=False show_label=True size='small'%}
+              {% bootstrap_field form.gender show_help=False show_label=True size='small' %}
+              {{form.id}}
+            </p>
+          </div>
+          <div class='card-footer'>
+            {% bootstrap_button "Add Student" button_type='submit' button_class='btn btn-primary btn-block' size='lg' %}
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class='mt-5'>
+      <a href='#' class="btn btn-dark btn-lg btn-block" role='button'>No More Students.  Skip to Last Step</a>
+    </div>
+  </section>
+{% endblock content %}
+
+{% block scripts %}
+  {{form.media}}
+{% endblock scripts %}

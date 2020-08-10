@@ -27,6 +27,8 @@ urlpatterns = [
 
     # Parent
     path('parent', views.parent, name='parent',),
+    path('parent2', views.parent_two, name='parent-two',),
+    path('student-parent', views.add_student_parent, name='add-student-parent',),
     path('student/create', views.create_student, name='create-student'),
     path('student/<student_id>', views.student, name='student',),
     path('student/<student_id>/delete', views.delete_student, name='delete-student'),

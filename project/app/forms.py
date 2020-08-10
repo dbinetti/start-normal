@@ -39,8 +39,7 @@ StudentFormSet = inlineformset_factory(
             },
         ),
     },
-    extra=0,
-    max_num=5,
+    extra=1,
     can_delete=True,
 )
 
@@ -189,21 +188,27 @@ class ParentForm(forms.ModelForm):
         model = Parent
         fields = [
             'is_host',
-            'masks',
-            'distance',
+            'schedule',
+            'frequency',
+            'safety',
             'notes',
         ]
         widgets = {
             'notes': forms.Textarea(
                 attrs={
                     'class': 'form-control h-25',
-                    'placeholder': 'Any notes to share?',
+                    'placeholder': 'Anything else to share?',
                     'rows': 5,
                 }
             )
         }
         labels = {
-            'is_host': "Willing to host instruction at your house?",
+            'is_host': "Are you able to host instruction at your house?",
+        }
+        help_texts = {
+            'schedule': "What time of day would you like your homeroom pod to meet?",
+            'frequency': "How many days a week would you like your homeroom pod to meet?",
+            'safety': "Standard safety is rigorous hygiene; Enhanced adds Masks and Distance requirements.",
         }
 
 
