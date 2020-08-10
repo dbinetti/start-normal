@@ -281,17 +281,63 @@ def create_student(request):
 @login_required
 def create_homeroom(request, student_id):
     parent = request.user.parent
-    homeroom = Homeroom.objects.create(
-        parent=parent,
-    )
     student = Student.objects.get(id=student_id)
-    student.homeroom = homeroom
-    student.save()
-    messages.success(
+    initial = {
+        'schedule': parent.schedule,
+        'frequency': parent.frequency,
+        'safety': parent.safety,
+    }
+    form = HomeroomForm(request.POST or None, initial=initial)
+    if form.is_valid():
+        homeroom = form.save(commit=False)
+        homeroom.parent = parent
+        homeroom.save()
+        student.homeroom = homeroom
+        student.save()
+        messages.success(
+            request,
+            "Homeroom Created!",
+        )
+        return redirect('parent-homeroom-intro')
+    return render(
         request,
-        "Homeroom Created!",
+        'app/create_homeroom.html',
+        context={
+            'form': form,
+            'student': student,
+        }
     )
-    return redirect('homeroom', homeroom.id)
+
+
+@login_required
+def create_homerooms(request):
+    parent = request.user.parent
+    students = parent.students.all()
+    for student in students:
+        homeroom = Homeroom.objects.create(
+            parent=parent,
+            frequency=parent.frequency,
+            schedule=parent.schedule,
+            safety=parent.safety,
+        )
+        student.homeroom = homeroom
+        student.save()
+    return redirect('homerooms')
+
+
+
+@login_required
+def homerooms(request):
+    parent = request.user.parent
+    homerooms = parent.homerooms.all()
+    return render(
+        request,
+        'app/homerooms.html',
+        context={
+            'homerooms': homerooms,
+        }
+    )
+
 
 
 @login_required
@@ -449,6 +495,20 @@ def add_student_parent(request):
         }
     )
 
+
+@login_required
+def parent_homeroom_intro(request):
+    parent = request.user.parent
+    students = parent.students.order_by(
+        'grade',
+    )
+    return render(
+        request,
+        'app/parent_homeroom_intro.html',
+        context={
+            'students': students,
+        }
+    )
 
 
 @login_required

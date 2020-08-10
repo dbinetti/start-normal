@@ -672,10 +672,21 @@ class Homeroom(models.Model):
         (20, 'optional', "Optional"),
     )
     SCHEDULE = Choices(
-        (0, 'none', "No Preference"),
+        (0, 'none', "No Schedule Preference"),
+        (10, 'morning', "Morning"),
+        (20, 'afternoon', "Afternoon"),
+        (30, 'full', "Full Day"),
+    )
+    FREQUENCY = Choices(
+        (0, 'none', "No Frequency Preference"),
         (10, 'light', "1-2 Days"),
         (20, 'moderate', "3-4 Days"),
         (30, 'heavy', "5 Days"),
+    )
+    SAFETY = Choices(
+        (0, 'none', "No Safety Preference"),
+        (10, 'standard', "Standard"),
+        (20, 'enhanced', "Enhanced"),
     )
     GRADE = Choices(
         (-1, 'p', 'Preschool'),
@@ -718,11 +729,23 @@ class Homeroom(models.Model):
         choices=DISTANCE,
         default=DISTANCE.none
     )
+    safety = models.IntegerField(
+        blank=True,
+        null=True,
+        choices=SAFETY,
+        default=SAFETY.none
+    )
     schedule = models.IntegerField(
         blank=True,
         null=True,
         choices=SCHEDULE,
         default=SCHEDULE.none
+    )
+    frequency = models.IntegerField(
+        blank=True,
+        null=True,
+        choices=FREQUENCY,
+        default=FREQUENCY.none
     )
     lat = models.DecimalField(
         max_digits=10,

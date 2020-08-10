@@ -1,0 +1,56 @@
+{% extends 'app/base.html' %}
+
+{% load bootstrap4 %}
+{% load humanize %}
+
+{% block title %}Your Homerooms{% endblock title %}
+{% block header %}Your Homerooms{% endblock header %}
+
+{% block content %}
+
+  <section class='my-5'>
+    <p class='lead'>
+      These are the Homerooms you manage.
+    </p>
+  </section>
+
+  <section class='mt-2 mt-5'>
+    <div class='card'>
+      <div class='card-header'>
+        <h4>Homerooms</h4>
+      </div>
+      <div class='card-body'>
+        <table class='table table-reponsive-lg'>
+          <thead>
+            <tr>
+              <th>
+                Student(s)
+              </th>
+              <th>
+                Kind
+              </th>
+              <th>
+                Status
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for homeroom in homerooms %}
+              <tr>
+                <td>
+                  <a href='{% url "homeroom" homeroom.id %}'>{{homeroom.student_names}}</a>
+                </td>
+                <td>
+                  {{homeroom.get_status_display}}
+                </td>
+                <td>
+                  {{homeroom.get_kind_display}}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+{% endblock content %}

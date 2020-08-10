@@ -145,18 +145,24 @@ class HomeroomForm(forms.ModelForm):
     class Meta:
         model = Homeroom
         fields = [
+            'kind',
+            'schedule',
+            'frequency',
+            'safety',
             'notes',
         ]
         widgets = {
             'notes': forms.Textarea(
                 attrs={
                     'class': 'form-control h-25',
-                    'placeholder': 'Please provide some notes on your preferred safety regimen; i.e., masks, distance, hygenic requirements.',
+                    'placeholder': 'Add other notes about your Homeroom.',
                     'rows': 5,
                 }
             )
         }
-
+        help_texts = {
+            'kind': "Choose 'Public' if you'd like Teachers and Parents to be able to find your Homeroom.<br>  Choose 'Private' if you'd like it kept hidden from others."
+        }
 
 class StudentForm(forms.ModelForm):
     class Meta:
