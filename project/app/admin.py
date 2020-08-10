@@ -138,6 +138,10 @@ class TeacherAdmin(admin.ModelAdmin):
         'updated',
     ]
     list_filter = [
+        'is_credential',
+        'levels',
+        'subjects',
+        # 'school',
         'created',
         'updated',
     ]
