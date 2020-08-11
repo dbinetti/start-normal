@@ -25,8 +25,23 @@ from .models import User
 @admin.register(Ask)
 class AskAdmin(admin.ModelAdmin):
     save_on_top = True
-    exclude = [
+    fields = [
+        'homeroom',
+        'student',
+    ]
+    list_display = [
+        'homeroom',
+        'student',
+        'created',
         'updated',
+    ]
+    list_filter = [
+        'created',
+        'updated',
+    ]
+    autocomplete_fields = [
+        'student',
+        'homeroom',
     ]
 
 @admin.register(Invite)

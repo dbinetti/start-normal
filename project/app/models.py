@@ -1,10 +1,4 @@
 # Django
-# Third-Party
-from autoslug import AutoSlugField
-from hashid_field import HashidAutoField
-from model_utils import Choices
-from multiselectfield import MultiSelectField
-
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.fields import JSONField
@@ -12,6 +6,12 @@ from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
+
+# First-Party
+from autoslug import AutoSlugField
+from hashid_field import HashidAutoField
+from model_utils import Choices
+from multiselectfield import MultiSelectField
 
 # Local
 from .managers import UserManager
@@ -81,14 +81,35 @@ class Ask(models.Model):
     id = HashidAutoField(
         primary_key=True,
     )
+    student_name = models.CharField(
+        max_length=255,
+        blank=False,
+        default='',
+    )
+    parent_name = models.CharField(
+        max_length=255,
+        blank=False,
+        default='',
+    )
+    parent_email = models.EmailField(
+        max_length=255,
+        blank=False,
+        default='',
+    )
+    message = models.TextField(
+        blank=True,
+        default='',
+    )
     homeroom = models.ForeignKey(
         'Homeroom',
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
+        null=True,
         related_name='asks',
     )
     student = models.ForeignKey(
         'Student',
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
+        null=True,
         related_name='asks',
     )
     created = models.DateTimeField(
@@ -868,10 +889,12 @@ class Student(models.Model):
         (20, 'rejected', 'Rejected'),
     )
     GENDER = Choices(
+        (None, 'none', '-- Choose Gender --'),
         (10, 'boy', 'Boy'),
         (20, 'girl', 'Girl'),
     )
     GRADE = Choices(
+        (None, 'none', '-- Choose Grade --'),
         (-1, 'p', 'Preschool'),
         (0, 'k', 'Kindergarten'),
         (1, 'first', 'First Grade'),
@@ -898,7 +921,7 @@ class Student(models.Model):
         help_text="""This will be shown to other parents on the private site; it will not appear on the public site.  """,
     )
     gender = models.IntegerField(
-        blank=True,
+        blank=False,
         null=True,
         choices=GENDER,
     )

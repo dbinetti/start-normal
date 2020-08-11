@@ -1,13 +1,14 @@
 # Django
-# Third-Party
-from dal import autocomplete
-
 from django import forms
 from django.contrib.auth.forms import UserChangeForm as UserChangeFormBase
 from django.contrib.auth.forms import UserCreationForm as UserCreationFormBase
 from django.forms.models import inlineformset_factory
 
+# First-Party
+from dal import autocomplete
+
 # Local
+from .models import Ask
 from .models import District
 from .models import Homeroom
 from .models import Invite
@@ -241,7 +242,7 @@ class InviteForm(forms.ModelForm):
             'message': forms.Textarea(
                 attrs={
                     'class': 'form-control h-25',
-                    'placeholder': 'You can include a short message with your invite.',
+                    'placeholder': 'You can include a short message with your request.',
                     'rows': 5,
                 }
             )
@@ -282,21 +283,30 @@ class SignupForm(forms.Form):
         return data.title()
 
 
-class AskForm(forms.Form):
-    student_name = forms.CharField(
-        required=True,
-        help_text="""Real name strongly encouraged.  However, if necessary use a descriptor like 'Concerned Parent' or 'Father of Two'. (Required)""",
-    )
-    message = forms.CharField(
-        required=False,
-        widget=forms.Textarea(
-            attrs={
-                'class': 'form-control h-25',
-                'placeholder': 'Optional Message to attach to your request',
-                'rows': 5,
-            }
-        )
-    )
+class AskForm(forms.ModelForm):
+
+    class Meta:
+        model = Ask
+        fields = [
+            'student_name',
+            'parent_name',
+            'parent_email',
+            'student',
+            'message',
+        ]
+        widgets = {
+            'message': forms.Textarea(
+                attrs={
+                    'class': 'form-control h-25',
+                    'placeholder': 'You can include a short message with your request.',
+                    'rows': 5,
+                }
+            )
+        }
+
+    def __init__(self, parent, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['student'].queryset = Student.objects.filter(parent=parent)
 
 
 class SubscribeForm(forms.Form):

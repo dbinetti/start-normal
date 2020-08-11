@@ -24,6 +24,7 @@ import requests
 from dal import autocomplete
 
 # Local
+from .forms import AskForm
 from .forms import DeleteForm
 from .forms import HomeroomForm
 from .forms import InviteForm
@@ -329,15 +330,18 @@ def create_homerooms(request):
 @login_required
 def homerooms(request):
     parent = request.user.parent
-    homerooms = parent.homerooms.all()
+    students = parent.students.all()
+    for student in students:
+        student.homeroom.homeroom_link = request.build_absolute_uri(
+            reverse('homeroom', args=[student.homeroom.id])
+        )
     return render(
         request,
         'app/homerooms.html',
         context={
-            'homerooms': homerooms,
+            'students': students,
         }
     )
-
 
 
 @login_required
@@ -804,20 +808,19 @@ def ask_form(request, homeroom_id):
         parent.frequency = homeroom.frequency
         parent.safety = homeroom.safety
         parent.save()
-    form = StudentForm(request.POST or None)
-    if form.is_valid():
-        student = form.save(commit=False)
-        student.parent = parent
-        student.save()
-        Ask.objects.create(
-            homeroom=homeroom,
-            student=student,
-        )
-        messages.success(
-            request,
-            "Request Sent!",
-        )
-        return redirect('dashboard')
+    if request.method == 'POST':
+        form = AskForm(parent, request.POST)
+        if form.is_valid():
+            ask = form.save(commit=False)
+            ask.homeroom = homeroom
+            ask.save()
+            messages.success(
+                request,
+                "Request Sent!",
+            )
+            return redirect('dashboard')
+    else:
+        form = AskForm(parent)
     return render(
         request,
         'app/ask_form.html',

@@ -92,8 +92,15 @@
   {# User #}
     <section class='my-5'>
       <p class='lead'>
-        Homeroom Details
+        This Homeroom has {{homeroom.students.count}} students representing:<br>
+        &nbsp;&nbsp; - {{homeroom.schools|join:", "}}<br>
+        &nbsp;&nbsp; - {{homeroom.grades|join:", "}}<br>
       </p>
+    </section>
+    <section class='my-5'>
+      <a href='{% url "ask-form" homeroom.id %}' role='button' class="btn btn-success btn-block btn-lg">
+        Request to Join This Homeroom
+      </a>
     </section>
     <section class='my-5'>
       <div class='card'>
@@ -178,6 +185,11 @@
       </p>
     </section>
     <section class='my-5'>
+      <p class='mb-5'>If you'd like to see more details about this Homeroom and request to join, please:</p>
+      <a href='{% url "signup" "parent" %}' role='button' class="btn btn-success btn-block btn-lg">Register as a Parent</a>.
+    </section>
+    {% comment %}
+    <section class='my-5'>
       <a href='{% url "signup" homeroom.id %}' role='button' class="btn btn-success btn-block btn-lg">
         Request to Join This Homeroom
       </a>
@@ -247,6 +259,7 @@
         </div>
       </div>
     </section>
+  {% endcomment %}
 
   {% endif %}
 

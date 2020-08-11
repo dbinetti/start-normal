@@ -3,14 +3,17 @@
 {% load bootstrap4 %}
 {% load humanize %}
 
-{% block title %}Your Homerooms{% endblock title %}
-{% block header %}Your Homerooms{% endblock header %}
+{% block title %}Step Three of Three{% endblock title %}
+{% block header %}Step Three of Three{% endblock header %}
 
 {% block content %}
 
   <section class='my-5'>
     <p class='lead'>
-      These are the Homerooms you manage.
+      Set Up Homerooms
+    </p>
+    <p>
+      We've set up your students with Homerooms.  You can now invite other students to join, or switch to another Homeroom.
     </p>
   </section>
 
@@ -24,27 +27,27 @@
           <thead>
             <tr>
               <th>
-                Student(s)
+                Student
               </th>
               <th>
-                Kind
+                Invite Link (copy and send to parents)
               </th>
               <th>
-                Status
+                Switch Homerooms
               </th>
             </tr>
           </thead>
           <tbody>
-            {% for homeroom in homerooms %}
+            {% for student in students %}
               <tr>
                 <td>
-                  <a href='{% url "homeroom" homeroom.id %}'>{{homeroom.student_names}}</a>
+                  <a href='{% url "homeroom" student.homeroom.id %}'>{{student.name}}</a>
                 </td>
                 <td>
-                  {{homeroom.get_kind_display}}
+                  {{student.homeroom.homeroom_link}}
                 </td>
                 <td>
-                  {{homeroom.get_status_display}}
+                  <a href='{% url "connect-homeroom" student.id %}'>Switch Homerooms</a>
                 </td>
               </tr>
             {% endfor %}
