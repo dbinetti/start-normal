@@ -10,32 +10,39 @@
 
   <section>
     <p class='lead'>
-      Invite a Student to your Homeroom.
+      Add a Student to your Homeroom.
     </p>
     <p>
-      There are two ways to invite a classmate to your homeroom:
-      <ul class='list-styled'>
-        <li>Send an email to a friend using our form.</li>
-        <li>Choose from the list of existing students below.</li>
-        {# <li>Send your own email to a friend using this link:<br>{{homeroom_link}}</li> #}
-      </ul>
+      The easiest way to invite others to your Homeroom is through this link:<br>
+    </p>
+    <h5 class='m-5'>
+      {{homeroom_link}}
+    </h5>
+    <p>
+      You can also just add students directly through the following form.
     </p>
   </section>
   <section class='my-5'>
-    <form method='post'>
-      {% csrf_token %}
-      {% bootstrap_form_errors form %}
-      {% bootstrap_field form.student_name show_label=False show_help=False placeholder='Student Name'  %}
-      {% bootstrap_field form.parent_name show_label=False show_help=False placeholder='Parent Name'  %}
-      {% bootstrap_field form.parent_email show_label=False show_help=False placeholder='Parent Email'  %}
-      {% bootstrap_field form.message show_label=False show_help=False placeholder='Include a message inviting the student to your homeroom (optional)' %}
-      {% buttons %}
-        <button type="submit" class="btn btn-primary btn-lg btn-block" >
-          Invite Student
-        </button>
-      {% endbuttons %}
-    </form>
+    <div class='card'>
+      <div class='card-header'>
+        <h4>Add Student</h4>
+      </div>
+      <form method='post'>
+        <div class='card-body'>
+          {% csrf_token %}
+          {% bootstrap_form_errors form %}
+          {% bootstrap_field form.student_name show_label=False show_help=False placeholder='Student Name'  %}
+          {% bootstrap_field form.parent_name show_label=False show_help=False placeholder='Parent Name'  %}
+          {% bootstrap_field form.parent_email show_label=False show_help=False placeholder='Parent Email'  %}
+          {# {% bootstrap_field form.message show_label=False show_help=False placeholder='Include a message inviting the student to your homeroom (optional)' %} #}
+        </div>
+        <div class='card-footer'>
+          {% bootstrap_button "Add Student" size='lg' button_type='submit' button_class='btn-success'%}
+        </div>
+      </form>
+    </div>
   </section>
+  {% comment %}
   <section class='my-5'>
     <div class='card'>
       <div class='card-header'>
@@ -95,5 +102,6 @@
       </div>
     </div>
   </section>
+  {% endcomment %}
 {% endblock content %}
 

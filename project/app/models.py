@@ -181,6 +181,22 @@ class Parent(models.Model):
     id = HashidAutoField(
         primary_key=True,
     )
+    name = models.CharField(
+        max_length=255,
+        blank=False,
+        default='',
+    )
+    email = models.EmailField(
+        blank=False,
+        unique=True,
+        null=True,
+    )
+    phone = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="""Your mobile phone. (Optional)""",
+        default='',
+    )
     is_host = models.BooleanField(
         default=False,
     )
@@ -228,7 +244,8 @@ class Parent(models.Model):
     )
     user = models.OneToOneField(
         'app.User',
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
+        null=True,
         related_name='parent',
     )
 
@@ -904,7 +921,8 @@ class Student(models.Model):
     school = models.ForeignKey(
         'app.School',
         related_name='students',
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
+        null=True,
     )
     homeroom = models.ForeignKey(
         'Homeroom',

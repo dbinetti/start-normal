@@ -178,15 +178,15 @@ def connect_homeroom(request, student_id):
 @login_required
 def homeroom_invite(request, homeroom_id):
     homeroom = Homeroom.objects.get(id=homeroom_id)
-    schools = School.objects.filter(
-        students__homeroom=homeroom,
-    ).exclude(
-    )
-    schoolmates = Student.objects.filter(
-        school__in=schools,
-        homeroom__isnull=True,
-    ).exclude(
-    ).order_by('grade')
+    # schools = School.objects.filter(
+    #     students__homeroom=homeroom,
+    # ).exclude(
+    # )
+    # schoolmates = Student.objects.filter(
+    #     school__in=schools,
+    #     homeroom__isnull=True,
+    # ).exclude(
+    # ).order_by('grade')
     form = InviteForm(request.POST or None)
     if form.is_valid():
         invite = form.save(commit=False)
@@ -195,7 +195,7 @@ def homeroom_invite(request, homeroom_id):
         invite.save()
         messages.success(
             request,
-            "Classmate invited",
+            "Classmate Added!",
         )
         return redirect('homeroom', homeroom.id)
     homeroom_link = request.build_absolute_uri(reverse('homeroom', args=[homeroom_id]))
@@ -205,7 +205,7 @@ def homeroom_invite(request, homeroom_id):
         context={
             'form': form,
             'homeroom': homeroom,
-            'schoolmates': schoolmates,
+            # 'schoolmates': schoolmates,
             'homeroom_link': homeroom_link,
         }
     )
@@ -579,26 +579,55 @@ def student(request, student_id):
         },
     )
 
-@login_required
 def homeroom(request, homeroom_id):
     homeroom = get_object_or_404(Homeroom, pk=homeroom_id)
-    schools = School.objects.filter(
-        students__homeroom=homeroom,
-    ).distinct()
-    students = homeroom.students.all()
-    schoolmates = Student.objects.filter(
-        school__in=schools,
-        homeroom__isnull=True,
-    ).order_by('grade')
     invites = homeroom.invites.all()
+    form = HomeroomForm(
+        request.POST or None,
+        instance=homeroom,
+    )
+    if form.is_valid():
+        form.save()
+        messages.success(
+            request,
+            'Saved!',
+        )
+        return redirect('homeroom', homeroom.id)
+    homeroom_link = request.build_absolute_uri(
+        reverse('homeroom', args=[homeroom_id])
+    )
+    students = homeroom.students.values_list(
+        'name',
+        'parent__user__name',
+        'parent__user__email',
+    )
+    invites = homeroom.invites.values_list(
+        'student_name',
+        'parent_name',
+        'parent_email',
+    )
+    classmates = []
+    for student in students:
+        classmates.append({
+            'student_name': student[0],
+            'parent_name':student[1],
+            'parent_email':student[2],
+        })
+    for invite in invites:
+        classmates.append({
+            'student_name': invite[0],
+            'parent_name':invite[1],
+            'parent_email':invite[2],
+        })
     return render(
         request,
         'app/homeroom.html', {
+            'form': form,
             'homeroom': homeroom,
-            'students': students,
-            'schoolmates': schoolmates,
             'invites': invites,
-        },
+            'homeroom_link': homeroom_link,
+            'classmates': classmates,
+        }
     )
 
 

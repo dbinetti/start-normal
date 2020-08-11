@@ -164,6 +164,7 @@ class HomeroomForm(forms.ModelForm):
             'kind': "Choose 'Public' if you'd like Teachers and Parents to be able to find your Homeroom.<br>  Choose 'Private' if you'd like it kept hidden from others."
         }
 
+
 class StudentForm(forms.ModelForm):
     class Meta:
         model = Student
@@ -193,6 +194,9 @@ class ParentForm(forms.ModelForm):
     class Meta:
         model = Parent
         fields = [
+            'name',
+            'email',
+            'phone',
             'is_host',
             'schedule',
             'frequency',

@@ -41,10 +41,10 @@
                   <a href='{% url "homeroom" homeroom.id %}'>{{homeroom.student_names}}</a>
                 </td>
                 <td>
-                  {{homeroom.get_status_display}}
+                  {{homeroom.get_kind_display}}
                 </td>
                 <td>
-                  {{homeroom.get_kind_display}}
+                  {{homeroom.get_status_display}}
                 </td>
               </tr>
             {% endfor %}

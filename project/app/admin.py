@@ -8,6 +8,7 @@ from django.utils.safestring import mark_safe
 from .forms import UserChangeForm
 from .forms import UserCreationForm
 from .inlines import HomeroomInline
+from .inlines import InviteInline
 from .inlines import StudentInline
 from .models import Account
 from .models import Ask
@@ -62,6 +63,8 @@ class HomeroomAdmin(admin.ModelAdmin):
         'parent',
     ]
     inlines = [
+        StudentInline,
+        InviteInline,
     ]
 
 
