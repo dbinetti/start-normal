@@ -750,7 +750,7 @@ def callback(request):
     kind = server_state.partition("|")[0]
     if kind not in ['dashboard', 'teacher', 'parent']:
         homeroom_id = kind
-        kind = 'accept'
+        kind = 'ask'
 
     # Get Auth0 Code
     code = request.GET.get('code', None)
@@ -784,10 +784,44 @@ def callback(request):
     user = authenticate(request, **payload)
     if user:
         log_in(request, user)
-        if kind == 'accept':
-            return redirect('accept', homeroom_id)
+        if kind == 'ask':
+            return redirect('ask-form', homeroom_id)
         return redirect(kind)
     return HttpResponse(status=400)
+
+@login_required
+def ask_form(request, homeroom_id):
+    homeroom = get_object_or_404(Homeroom, id=homeroom_id)
+    parent, created = Parent.objects.get_or_create(
+        user=request.user,
+    )
+    if created:
+        parent.schedule = homeroom.schedule
+        parent.frequency = homeroom.frequency
+        parent.safety = homeroom.safety
+        parent.save()
+    form = StudentForm(request.POST or None)
+    if form.is_valid():
+        student = form.save(commit=False)
+        student.parent = parent
+        student.save()
+        Ask.objects.create(
+            homeroom=homeroom,
+            student=student,
+        )
+        messages.success(
+            request,
+            "Request Sent!",
+        )
+        return redirect('dashboard')
+    return render(
+        request,
+        'app/ask_form.html',
+        context={
+            'form': form,
+        }
+    )
+
 
 def logout(request):
     log_out(request)

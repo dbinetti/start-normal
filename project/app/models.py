@@ -183,13 +183,12 @@ class Parent(models.Model):
     )
     name = models.CharField(
         max_length=255,
-        blank=False,
+        blank=True,
         default='',
     )
     email = models.EmailField(
-        blank=False,
-        unique=True,
-        null=True,
+        blank=True,
+        default='',
     )
     phone = models.CharField(
         max_length=255,

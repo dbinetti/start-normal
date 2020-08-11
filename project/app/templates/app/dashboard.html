@@ -24,8 +24,9 @@
           <ul class='list-group list-group-flush'>
             <li class='list-group-item'><strong>Name:</strong>&nbsp;{{parent.user.name|title}}</li>
             <li class='list-group-item'><strong>Willing to Host Instruction?</strong>&nbsp;{{parent.is_host|yesno|title}}</li>
-            <li class='list-group-item'><strong>Masks:</strong>&nbsp;{{parent.get_masks_display|default:'(No Notes Provided)'}}</li>
-            <li class='list-group-item'><strong>Distance:</strong>&nbsp;{{parent.get_distance_display|default:'(No Notes Provided)'}}</li>
+            <li class='list-group-item'><strong>Schedule:</strong>&nbsp;{{parent.get_schedule_display}}</li>
+            <li class='list-group-item'><strong>Frequency:</strong>&nbsp;{{parent.get_frequency_display}}</li>
+            <li class='list-group-item'><strong>Safety:</strong>&nbsp;{{parent.get_safety_display}}</li>
             <li class='list-group-item'><strong>Notes:</strong>&nbsp;{{parent.notes|default:'(No Notes Provided)'}}</li>
           </ul>
           <p class='mt-4'>

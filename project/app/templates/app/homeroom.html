@@ -90,11 +90,163 @@
 
   {% elif request.user.is_authenticated %}
   {# User #}
-
+    <section class='my-5'>
+      <p class='lead'>
+        Homeroom Details
+      </p>
+    </section>
+    <section class='my-5'>
+      <div class='card'>
+        <div class='card-header'>
+          <h4>Preferences</h4>
+        </div>
+        <div class='card-body'>
+          <ul class='list-group'>
+            <li class='list-group-item'>
+              <strong>Owner:</strong>&nbsp;{{homeroom.parent.user.name}}
+            </li>
+            <li class='list-group-item'>
+              <strong>Schedule:</strong>&nbsp;{{homeroom.get_schedule_display}}
+            </li>
+            <li class='list-group-item'>
+              <strong>Frequency:</strong>&nbsp;{{homeroom.get_frequency_display}}
+            </li>
+            <li class='list-group-item'>
+              <strong>Safety:</strong>&nbsp;{{homeroom.get_safety_display}}
+            </li>
+            <li class='list-group-item'>
+              <strong>Notes:</strong>&nbsp;{{homeroom.notes|default:"(No Notes)"}}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <section class='mt-2 mt-5'>
+      <div class='card'>
+        <div class='card-header'>
+          <h4>Current Students</h4>
+        </div>
+        <div class='card-body'>
+            <table class='table table-reponsive-lg table-sm'>
+              <thead>
+                <tr>
+                  <th>
+                    Student Name
+                  </th>
+                  <th>
+                    Parent Name
+                  </th>
+                  <th>
+                    Parent Email
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for classmate in classmates %}
+                  <tr>
+                    <td>
+                      {{classmate.student_name}}
+                    </td>
+                    <td>
+                      {{classmate.parent_name}}
+                    </td>
+                    <td>
+                      <a href='mailto:{{classmate.parent_email}}'>{{classmate.parent_email}}</a>
+                    </td>
+                  </tr>
+                {% empty %}
+                  <tr>
+                    <td colspan=3>
+                      (No Students in this Homeroom)
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+        </div>
+      </div>
+    </section>
 
 
   {% else %}
   {# Public #}
+    <section class='my-5'>
+      <p class='lead'>
+        This Homeroom has {{homeroom.students.count}} students representing:<br>
+        &nbsp;&nbsp; - {{homeroom.schools|join:", "}}<br>
+        &nbsp;&nbsp; - {{homeroom.grades|join:", "}}<br>
+      </p>
+    </section>
+    <section class='my-5'>
+      <a href='{% url "signup" homeroom.id %}' role='button' class="btn btn-success btn-block btn-lg">
+        Request to Join This Homeroom
+      </a>
+    </section>
+    <section class='my-5'>
+      <div class='card'>
+        <div class='card-header'>
+          <h4>Details</h4>
+        </div>
+        <div class='card-body'>
+          <ul class='list-group'>
+            <li class='list-group-item'>
+              <strong>Owner:</strong>&nbsp;{{homeroom.parent.user.name}}
+            </li>
+            <li class='list-group-item'>
+              <strong>Schedule:</strong>&nbsp;{{homeroom.get_schedule_display}}
+            </li>
+            <li class='list-group-item'>
+              <strong>Frequency:</strong>&nbsp;{{homeroom.get_frequency_display}}
+            </li>
+            <li class='list-group-item'>
+              <strong>Safety:</strong>&nbsp;{{homeroom.get_safety_display}}
+            </li>
+            <li class='list-group-item'>
+              <strong>Notes:</strong>&nbsp;{{homeroom.notes|default:"(No Notes)"}}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <section class='mt-2 mt-5'>
+      <div class='card'>
+        <div class='card-header'>
+          <h4>Current Students</h4>
+        </div>
+        <div class='card-body'>
+            <table class='table table-reponsive-lg table-sm'>
+              <thead>
+                <tr>
+                  <th>
+                    Student Name
+                  </th>
+                  <th>
+                    Parent Name
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for classmate in classmates %}
+                  <tr>
+                    <td>
+                      {{classmate.student_name}}
+                    </td>
+                    <td>
+                      {{classmate.parent_name}}
+                    </td>
+                  </tr>
+                {% empty %}
+                  <tr>
+                    <td colspan=3>
+                      (No Students in this Homeroom)
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+        </div>
+      </div>
+    </section>
 
   {% endif %}
 

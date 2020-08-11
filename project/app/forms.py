@@ -282,6 +282,23 @@ class SignupForm(forms.Form):
         return data.title()
 
 
+class AskForm(forms.Form):
+    student_name = forms.CharField(
+        required=True,
+        help_text="""Real name strongly encouraged.  However, if necessary use a descriptor like 'Concerned Parent' or 'Father of Two'. (Required)""",
+    )
+    message = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+            attrs={
+                'class': 'form-control h-25',
+                'placeholder': 'Optional Message to attach to your request',
+                'rows': 5,
+            }
+        )
+    )
+
+
 class SubscribeForm(forms.Form):
     email = forms.EmailField(
         required=True,
