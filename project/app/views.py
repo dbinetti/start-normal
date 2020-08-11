@@ -2,10 +2,6 @@
 import json
 import logging
 
-# Third-Party
-import requests
-from dal import autocomplete
-
 # Django
 from django.conf import settings
 from django.contrib import messages
@@ -22,6 +18,10 @@ from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.crypto import get_random_string
+
+# First-Party
+import requests
+from dal import autocomplete
 
 # Local
 from .forms import DeleteForm
@@ -427,10 +427,14 @@ def parent(request):
                 request,
                 "Saved!",
             )
-            return redirect('parent-two')
+            return redirect('add-student-parent')
     else:
         form = ParentForm(
             instance=parent,
+            initial={
+                'name': request.user.name,
+                'email': request.user.email,
+            }
         )
     return render(
         request,

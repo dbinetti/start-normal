@@ -13,7 +13,7 @@ def handler500(request, *args, **argv):
     return render(
         request,
         "app/500.html",
-        context = {
+        context={
             'sentry_event_id': last_event_id(),
         },
         status=500,

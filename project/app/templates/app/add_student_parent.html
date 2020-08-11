@@ -47,9 +47,11 @@
         </div>
       </div>
     </form>
-    <div class='mt-5'>
-      <a href='#' class="btn btn-dark btn-lg btn-block" role='button'>No More Students.  Skip to Last Step</a>
-    </div>
+    {% if is_more %}
+      <div class='mt-5'>
+        <a href='{% url "create-homerooms" %}' class="btn btn-dark btn-lg btn-block" role='button'>No More Students.  Skip to Last Step</a>
+      </div>
+    {% endif %}
   </section>
 {% endblock content %}
 

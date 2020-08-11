@@ -29,6 +29,9 @@
       <form method="post">
         {% csrf_token %}
         {% bootstrap_form_errors form %}
+        {% bootstrap_field form.name show_help=False show_label=False%}
+        {% bootstrap_field form.email show_help=False show_label=False%}
+        {% bootstrap_field form.phone show_help=False show_label=False%}
         {% bootstrap_field form.is_host show_help=True show_label=False%}
         {% bootstrap_field form.schedule show_help=True show_label=False%}
         {% bootstrap_field form.frequency show_help=True show_label=False%}
