@@ -117,7 +117,7 @@ class TeacherForm(forms.ModelForm):
                 'data-minimum-input-length': 3,
             },
         ),
-        help_text="Pick a school near where you'd like to teach (dosn't have to be your own school; this is just for location.)",
+        help_text="Pick a school near where you'd like to teach (doesn't have to be your own school; this is just for location.)",
     )
 
     class Meta:
