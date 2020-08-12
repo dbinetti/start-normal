@@ -589,7 +589,6 @@ def student(request, student_id):
 
 def homeroom(request, homeroom_id):
     homeroom = get_object_or_404(Homeroom, pk=homeroom_id)
-    invites = homeroom.invites.all()
     form = HomeroomForm(
         request.POST or None,
         instance=homeroom,
@@ -604,37 +603,14 @@ def homeroom(request, homeroom_id):
     homeroom_link = request.build_absolute_uri(
         reverse('homeroom', args=[homeroom_id])
     )
-    students = homeroom.students.values_list(
-        'name',
-        'parent__user__name',
-        'parent__user__email',
-    )
-    invites = homeroom.invites.values_list(
-        'student_name',
-        'parent_name',
-        'parent_email',
-    )
-    classmates = []
-    for student in students:
-        classmates.append({
-            'student_name': student[0],
-            'parent_name':student[1],
-            'parent_email':student[2],
-        })
-    for invite in invites:
-        classmates.append({
-            'student_name': invite[0],
-            'parent_name':invite[1],
-            'parent_email':invite[2],
-        })
+    students = homeroom.students.all()
     return render(
         request,
         'app/homeroom.html', {
             'form': form,
             'homeroom': homeroom,
-            'invites': invites,
             'homeroom_link': homeroom_link,
-            'classmates': classmates,
+            'students': students,
         }
     )
 

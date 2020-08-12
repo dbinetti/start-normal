@@ -58,16 +58,16 @@
                 </tr>
               </thead>
               <tbody>
-                {% for classmate in classmates %}
+                {% for student in students %}
                   <tr>
                     <td>
-                      {{classmate.student_name}}
+                      {{student.name}}
                     </td>
                     <td>
-                      {{classmate.parent_name}}
+                      {{student.parent.name}}
                     </td>
                     <td>
-                      <a href='mailto:{{classmate.parent_email}}'>{{classmate.parent_email}}</a>
+                      <a href='mailto:{{student.parent.email}}'>{{student.parent.email}}</a>
                     </td>
                   </tr>
                 {% empty %}
@@ -82,8 +82,11 @@
         </div>
         <div class='card-footer'>
           <p>
-            <a href='{% url "homeroom-invite" homeroom.id %}' role='button' class='btn btn-success btn-lg'>Invite a Student</a>
+            The easiest way to invite others to your Homeroom is through this link:<br>
           </p>
+          <h5 class='m-5'>
+            {{homeroom_link}}
+          </h5>
         </div>
       </div>
     </section>
@@ -149,16 +152,16 @@
                 </tr>
               </thead>
               <tbody>
-                {% for classmate in classmates %}
+                {% for student in students %}
                   <tr>
                     <td>
-                      {{classmate.student_name}}
+                      {{student.name}}
                     </td>
                     <td>
-                      {{classmate.parent_name}}
+                      {{student.parent.name}}
                     </td>
                     <td>
-                      <a href='mailto:{{classmate.parent_email}}'>{{classmate.parent_email}}</a>
+                      <a href='mailto:{{student.parent.email}}'>{{student.parent.email}}</a>
                     </td>
                   </tr>
                 {% empty %}
