@@ -289,6 +289,27 @@ class AskForm(forms.ModelForm):
         self.fields['student'].queryset = Student.objects.filter(parent=parent)
 
 
+class AddAskForm(forms.ModelForm):
+
+    class Meta:
+        model = Ask
+        fields = [
+            'student_name',
+            'parent_name',
+            'parent_email',
+            'message',
+        ]
+        widgets = {
+            'message': forms.Textarea(
+                attrs={
+                    'class': 'form-control h-25',
+                    'placeholder': 'You can include a short message with your request.',
+                    'rows': 5,
+                }
+            )
+        }
+
+
 class SubscribeForm(forms.Form):
     email = forms.EmailField(
         required=True,

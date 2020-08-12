@@ -41,6 +41,7 @@ urlpatterns = [
     path('student-parent', views.add_student_parent, name='add-student-parent',),
     path('homeroom/create-homerooms', views.create_homerooms, name='create-homerooms'),
 
+    path('ask/add/<homeroom_id>', views.add_ask, name='add-ask',),
     path('ask/<homeroom_id>/<student_id>', views.ask, name='ask',),
     path('ask-form/<homeroom_id>', views.ask_form, name='ask-form',),
     path('homerooms', views.homerooms, name='homerooms',),

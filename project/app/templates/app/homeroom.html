@@ -63,6 +63,12 @@
                   <th>
                     Parent Name
                   </th>
+                  <th>
+                    Parent Email
+                  </th>
+                  <th>
+                    Status
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -73,6 +79,12 @@
                     </td>
                     <td>
                       {{student.parent.name}}
+                    </td>
+                    <td>
+                      {{student.parent.email}}
+                    </td>
+                    <td>
+                      {{student.get_status_display}}
                     </td>
                   </tr>
                 {% empty %}
@@ -87,6 +99,64 @@
         </div>
       </div>
     </section>
+
+    <section class='mt-2 mt-5'>
+      <div class='card'>
+        <div class='card-header'>
+          <h4>Pending Students (Invites or Requests)</h4>
+        </div>
+        <div class='card-body'>
+          <table class='table table-responsive-lg table-sm'>
+            <thead>
+              <tr>
+                <th>
+                  Student Name
+                </th>
+                <th>
+                  Parent Name
+                </th>
+                <th>
+                  Parent Email
+                </th>
+                <th>
+                  Status
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for ask in asks %}
+                <tr>
+                  <td>
+                    {{ask.student_name}}
+                  </td>
+                  <td>
+                    {{ask.parent_name}}
+                  </td>
+                  <td>
+                    {{ask.parent_email}}
+                  </td>
+                  <td>
+                    {{ask.get_status_display}}
+                  </td>
+                </tr>
+              {% empty %}
+                <tr>
+                  <td colspan=4>
+                    (No Pending Student Invites/Requests)
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class='card-footer'>
+          <p>
+            <a href='{% url "add-ask" homeroom.id %}' class='btn btn-success btn-lg'>Add Student</a>
+          </p>
+        </div>
+      </div>
+    </section>
+
     <section class='mt-5 mt-3'>
       <p>
         <a href='{% url "delete-homeroom" homeroom.id %}'><span class='text-danger'>Delete Homeroom</span></a>
@@ -138,45 +208,46 @@
           <h4>Current Students</h4>
         </div>
         <div class='card-body'>
-            <table class='table table-responsive-lg table-sm'>
-              <thead>
+          <table class='table table-responsive-lg table-sm'>
+            <thead>
+              <tr>
+                <th>
+                  Student Name
+                </th>
+                <th>
+                  Parent Name
+                </th>
+                <th>
+                  Parent Email
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for student in students %}
                 <tr>
-                  <th>
-                    Student Name
-                  </th>
-                  <th>
-                    Parent Name
-                  </th>
-                  <th>
-                    Parent Email
-                  </th>
+                  <td>
+                    {{student.name}}
+                  </td>
+                  <td>
+                    {{student.parent.name}}
+                  </td>
+                  <td>
+                    <a href='mailto:{{student.parent.email}}'>{{student.parent.email}}</a>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {% for student in students %}
-                  <tr>
-                    <td>
-                      {{student.name}}
-                    </td>
-                    <td>
-                      {{student.parent.name}}
-                    </td>
-                    <td>
-                      <a href='mailto:{{student.parent.email}}'>{{student.parent.email}}</a>
-                    </td>
-                  </tr>
-                {% empty %}
-                  <tr>
-                    <td colspan=3>
-                      (No Students in this Homeroom)
-                    </td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
+              {% empty %}
+                <tr>
+                  <td colspan=3>
+                    (No Students in this Homeroom)
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
         </div>
       </div>
     </section>
+
 
 
   {% else %}

@@ -24,6 +24,7 @@ import requests
 from dal import autocomplete
 
 # Local
+from .forms import AddAskForm
 from .forms import AskForm
 from .forms import DeleteForm
 from .forms import HomeroomForm
@@ -200,7 +201,7 @@ def teacher(request):
     return render(
         request,
         'app/teacher.html',
-        context = {
+        context={
             'form': form,
         }
     )
@@ -469,6 +470,7 @@ def homeroom(request, homeroom_id):
         reverse('homeroom', args=[homeroom_id])
     )
     students = homeroom.students.all()
+    asks = homeroom.asks.all()
     return render(
         request,
         'app/homeroom.html', {
@@ -476,6 +478,7 @@ def homeroom(request, homeroom_id):
             'homeroom': homeroom,
             'homeroom_link': homeroom_link,
             'students': students,
+            'asks': asks,
         }
     )
 
@@ -661,6 +664,29 @@ def ask_form(request, homeroom_id):
     return render(
         request,
         'app/ask_form.html',
+        context={
+            'form': form,
+        }
+    )
+
+
+@login_required
+def add_ask(request, homeroom_id):
+    homeroom = get_object_or_404(Homeroom, id=homeroom_id)
+    form = AddAskForm(request.POST or None)
+    if form.is_valid():
+        ask = form.save(commit=False)
+        ask.status = ask.STATUS.invited
+        ask.homeroom = homeroom
+        ask.save()
+        messages.success(
+            request,
+            "Student Added!",
+        )
+        return redirect('homeroom', homeroom.id)
+    return render(
+        request,
+        'app/add_ask.html',
         context={
             'form': form,
         }

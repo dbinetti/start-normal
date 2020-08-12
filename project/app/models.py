@@ -20,6 +20,15 @@ class Ask(models.Model):
     id = HashidAutoField(
         primary_key=True,
     )
+    STATUS = Choices(
+        (0, 'new', "New"),
+        (10, 'invited', "Invited"),
+    )
+    status = models.IntegerField(
+        blank=True,
+        choices=STATUS,
+        default=STATUS.new,
+    )
     student_name = models.CharField(
         max_length=255,
         blank=False,
@@ -43,6 +52,7 @@ class Ask(models.Model):
         'Homeroom',
         on_delete=models.SET_NULL,
         null=True,
+        blank=True,
         related_name='asks',
     )
     student = models.ForeignKey(
@@ -50,6 +60,7 @@ class Ask(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         related_name='asks',
+        blank=True,
     )
     created = models.DateTimeField(
         auto_now_add=True,
