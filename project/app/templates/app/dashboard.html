@@ -44,6 +44,7 @@
   </section>
 
 
+  {% if parent %}
   <section class='mt-2 mt-5'>
     <div class='card'>
       <div class='card-header'>
@@ -100,6 +101,46 @@
       </div>
     </div>
   </section>
+  {% endif %}
+
+  {% if teacher %}
+  <section class='mt-2 mt-5'>
+    <div class='card'>
+      <div class='card-header'>
+        <h4>Student/Homeroom Information</h4>
+      </div>
+      <div class='card-body'>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>
+                Name
+              </th>
+              <th>
+                School
+              </th>
+              <th>
+                Grade
+              </th>
+              <th>
+                Homeroom
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td colspan=4>
+                We're looking for good matches for you; when we find some candidates we'll add them here for your review...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+
+  {% endif %}
 
   <section class='my-5'>
     <div class='card'>
