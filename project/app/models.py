@@ -687,15 +687,6 @@ class Homeroom(models.Model):
         return self.students.count()
 
     @property
-    def nomen(self):
-        nomen = "{0} - {1} - {2}".format(
-            self.parent.user.name,
-            ", ".join(self.schools),
-            ", ".join(self.grades),
-        )
-        return nomen
-
-    @property
     def schools(self):
         schools = self.students.values_list(
             'school__name', flat=True

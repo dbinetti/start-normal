@@ -49,7 +49,6 @@ class HomeroomIndex(AlgoliaIndex):
         'get_schedule_display',
         'size',
         'notes',
-        'nomen',
         'schools',
         'grades',
         'parent_name',
@@ -58,7 +57,6 @@ class HomeroomIndex(AlgoliaIndex):
     geo_field = 'location'
     settings = {
         'searchableAttributes': [
-            'nomen',
             'schools',
             'grades',
             'parent_name',
