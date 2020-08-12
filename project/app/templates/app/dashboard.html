@@ -86,7 +86,7 @@
                     {% if student.asks.count > 0 %}
                       Request Pending
                     {% else %}
-                      <a href='{% url "connect-homeroom" student.id %}'>Join/Create Homeroom</a>
+                      <a href='{% url "homeroom-search" %}'>Join/Create Homeroom</a>
                     {% endif %}
                   {% endif %}
                 </td>

@@ -24,6 +24,28 @@ class Ask(models.Model):
         (0, 'new', "New"),
         (10, 'invited', "Invited"),
     )
+    GENDER = Choices(
+        (None, 'none', '-- Choose Gender --'),
+        (10, 'boy', 'Boy'),
+        (20, 'girl', 'Girl'),
+    )
+    GRADE = Choices(
+        (None, 'none', '-- Choose Grade --'),
+        (-1, 'p', 'Preschool'),
+        (0, 'k', 'Kindergarten'),
+        (1, 'first', 'First Grade'),
+        (2, 'second', 'Second Grade'),
+        (3, 'third', 'Third Grade'),
+        (4, 'fourth', 'Fourth Grade'),
+        (5, 'fifth', 'Fifth Grade'),
+        (6, 'sixth', 'Sixth Grade'),
+        (7, 'seventh', 'Seventh Grade'),
+        (8, 'eighth', 'Eighth Grade'),
+        (9, 'ninth', 'Ninth Grade'),
+        (10, 'tenth', 'Tenth Grade'),
+        (11, 'eleventh', 'Eleventh Grade'),
+        (12, 'twelfth', 'Twelfth Grade'),
+    )
     status = models.IntegerField(
         blank=True,
         choices=STATUS,
@@ -44,6 +66,16 @@ class Ask(models.Model):
         blank=False,
         default='',
     )
+    gender = models.IntegerField(
+        blank=True,
+        null=True,
+        choices=GENDER,
+    )
+    grade = models.IntegerField(
+        blank=True,
+        choices=GRADE,
+        null=True,
+    )
     message = models.TextField(
         blank=True,
         default='',
@@ -60,6 +92,13 @@ class Ask(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         related_name='asks',
+        blank=True,
+    )
+    school = models.ForeignKey(
+        'app.School',
+        related_name='asks',
+        on_delete=models.SET_NULL,
+        null=True,
         blank=True,
     )
     created = models.DateTimeField(

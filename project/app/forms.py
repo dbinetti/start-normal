@@ -167,14 +167,6 @@ class HomeroomForm(forms.ModelForm):
 
 
 class StudentForm(forms.ModelForm):
-    class Meta:
-        model = Student
-        fields = [
-            'name',
-            'gender',
-            'school',
-            'grade',
-        ]
     school = forms.ModelChoiceField(
         queryset=School.objects.all(),
         widget=autocomplete.ModelSelect2(
@@ -189,6 +181,14 @@ class StudentForm(forms.ModelForm):
         ),
         help_text="Please select the school your student would be entering in the Fall.",
     )
+    class Meta:
+        model = Student
+        fields = [
+            'name',
+            'gender',
+            'school',
+            'grade',
+        ]
 
 
 class ParentForm(forms.ModelForm):
@@ -264,13 +264,47 @@ class SignupForm(forms.Form):
 
 
 class AskForm(forms.ModelForm):
+    school = forms.ModelChoiceField(
+        queryset=School.objects.all(),
+        widget=autocomplete.ModelSelect2(
+            url='school-autocomplete',
+            attrs={
+                'data-container-css-class': '',
+                'data-close-on-select': 'false',
+                'data-scroll-after-select': 'false',
+                'data-placeholder': 'Search Schools',
+                'data-minimum-input-length': 3,
+            },
+        ),
+        help_text="Please select the school your student would be entering in the Fall.",
+    )
 
     class Meta:
         model = Ask
         fields = [
             'student_name',
-            'parent_name',
-            'parent_email',
+            'message',
+            'gender',
+            'school',
+            'grade',
+        ]
+        widgets = {
+            'message': forms.Textarea(
+                attrs={
+                    'class': 'form-control h-25',
+                    'placeholder': 'You can include a short message with your request.',
+                    'rows': 5,
+                }
+            )
+        }
+
+
+
+class UserAskForm(forms.ModelForm):
+
+    class Meta:
+        model = Ask
+        fields = [
             'student',
             'message',
         ]

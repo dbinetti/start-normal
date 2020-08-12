@@ -44,7 +44,9 @@ urlpatterns = [
     path('ask/add/<homeroom_id>', views.add_ask, name='add-ask',),
     path('ask/<homeroom_id>/<student_id>', views.ask, name='ask',),
     path('ask-form/<homeroom_id>', views.ask_form, name='ask-form',),
+    path('ask-user/<homeroom_id>', views.ask_user, name='ask-user',),
     path('homerooms', views.homerooms, name='homerooms',),
+    path('homeroom/search', views.homeroom_search, name='homeroom-search',),
 
 
     # Homeroom

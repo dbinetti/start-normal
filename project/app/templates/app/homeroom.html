@@ -3,8 +3,8 @@
 {% load bootstrap4 %}
 {% load humanize %}
 
-{% block title %}Manage Homeroom{% endblock title %}
-{% block header %}Manage Homeroom{% endblock header %}
+{% block title %}Homeroom{% endblock title %}
+{% block header %}Homeroom{% endblock header %}
 
 {% block content %}
   {% if request.user == homeroom.parent.user %}
@@ -106,7 +106,7 @@
           <h4>Pending Students (Invites or Requests)</h4>
         </div>
         <div class='card-body'>
-          <table class='table table-responsive-lg table-sm'>
+          <table class='table'>
             <thead>
               <tr>
                 <th>
@@ -162,6 +162,8 @@
         <a href='{% url "delete-homeroom" homeroom.id %}'><span class='text-danger'>Delete Homeroom</span></a>
       </p>
     </section>
+
+
   {% elif request.user.is_authenticated %}
   {# User #}
     <section class='my-5'>
@@ -172,7 +174,7 @@
       </p>
     </section>
     <section class='my-5'>
-      <a href='{% url "ask-form" homeroom.id %}' role='button' class="btn btn-success btn-block btn-lg">
+      <a href='{% url "ask-user" homeroom.id %}' role='button' class="btn btn-success btn-block btn-lg">
         Request to Join This Homeroom
       </a>
     </section>
@@ -261,7 +263,7 @@
     </section>
     <section class='my-5'>
       <p class='mb-5'>If you'd like to see more details about this Homeroom and request to join, please:</p>
-      <a href='{% url "signup" "parent" %}' role='button' class="btn btn-success btn-block btn-lg">Register as a Parent</a>.
+      <a href='{% url "signup" homeroom.id %}' role='button' class="btn btn-success btn-block btn-lg">Register as a Parent</a>.
     </section>
     {% comment %}
     <section class='my-5'>

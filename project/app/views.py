@@ -33,6 +33,7 @@ from .forms import SchoolForm
 from .forms import StudentForm
 from .forms import StudentFormSet
 from .forms import TeacherForm
+from .forms import UserAskForm
 from .models import Ask
 from .models import Homeroom
 from .models import Parent
@@ -169,6 +170,19 @@ def connect_homeroom(request, student_id):
             'student': student,
             'homerooms': homerooms,
             'students': students,
+            'app_id': settings.ALGOLIA['APPLICATION_ID'],
+            'search_key': settings.ALGOLIA['SEARCH_KEY'],
+            'index_name': "Homeroom_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
+        }
+    )
+
+
+@login_required
+def homeroom_search(request):
+    return render(
+        request,
+        'app/homeroom_search.html',
+        context={
             'app_id': settings.ALGOLIA['APPLICATION_ID'],
             'search_key': settings.ALGOLIA['SEARCH_KEY'],
             'index_name': "Homeroom_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
@@ -644,14 +658,26 @@ def ask_form(request, homeroom_id):
         user=request.user,
     )
     if created:
+        parent.name = request.user.name
+        parent.email = request.user.email
         parent.schedule = homeroom.schedule
         parent.frequency = homeroom.frequency
         parent.safety = homeroom.safety
         parent.save()
     if request.method == 'POST':
-        form = AskForm(parent, request.POST)
+        form = AskForm(request.POST)
         if form.is_valid():
             ask = form.save(commit=False)
+            student = Student.objects.create(
+                name=ask.student_name,
+                gender=ask.gender,
+                school=ask.school,
+                grade=ask.grade,
+                parent=parent,
+            )
+            ask.student = student
+            ask.parent_name = parent.name
+            ask.parent_email = parent.email
             ask.homeroom = homeroom
             ask.save()
             messages.success(
@@ -660,12 +686,42 @@ def ask_form(request, homeroom_id):
             )
             return redirect('dashboard')
     else:
-        form = AskForm(parent)
+        form = AskForm()
     return render(
         request,
         'app/ask_form.html',
         context={
             'form': form,
+        }
+    )
+
+
+@login_required
+def ask_user(request, homeroom_id):
+    homeroom = get_object_or_404(Homeroom, id=homeroom_id)
+    parent = request.user.parent
+    if request.method == 'POST':
+        form = UserAskForm(parent, request.POST)
+        if form.is_valid():
+            ask = form.save(commit=False)
+            ask.student_name = ask.student.name
+            ask.parent_name = ask.student.parent.name
+            ask.parent_email = ask.student.parent.email
+            ask.homeroom = homeroom
+            ask.save()
+            messages.success(
+                request,
+                "Request Sent!",
+            )
+            return redirect('dashboard')
+    else:
+        form = UserAskForm(parent)
+    return render(
+        request,
+        'app/ask_user.html',
+        context={
+            'form': form,
+            'homeroom': homeroom,
         }
     )
 
