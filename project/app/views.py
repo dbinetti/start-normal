@@ -27,7 +27,6 @@ from dal import autocomplete
 from .forms import AskForm
 from .forms import DeleteForm
 from .forms import HomeroomForm
-from .forms import InviteForm
 from .forms import ParentForm
 from .forms import SchoolForm
 from .forms import StudentForm
@@ -35,7 +34,6 @@ from .forms import StudentFormSet
 from .forms import TeacherForm
 from .models import Ask
 from .models import Homeroom
-from .models import Invite
 from .models import Parent
 from .models import School
 from .models import Student
@@ -176,57 +174,6 @@ def connect_homeroom(request, student_id):
         }
     )
 
-@login_required
-def homeroom_invite(request, homeroom_id):
-    homeroom = Homeroom.objects.get(id=homeroom_id)
-    # schools = School.objects.filter(
-    #     students__homeroom=homeroom,
-    # ).exclude(
-    # )
-    # schoolmates = Student.objects.filter(
-    #     school__in=schools,
-    #     homeroom__isnull=True,
-    # ).exclude(
-    # ).order_by('grade')
-    form = InviteForm(request.POST or None)
-    if form.is_valid():
-        invite = form.save(commit=False)
-        invite.homeroom = homeroom
-        invite.inviter = request.user
-        invite.save()
-        messages.success(
-            request,
-            "Classmate Added!",
-        )
-        return redirect('homeroom', homeroom.id)
-    homeroom_link = request.build_absolute_uri(reverse('homeroom', args=[homeroom_id]))
-    return render(
-        request,
-        'app/homeroom_invite.html',
-        context={
-            'form': form,
-            'homeroom': homeroom,
-            # 'schoolmates': schoolmates,
-            'homeroom_link': homeroom_link,
-        }
-    )
-
-
-def invite(request, invite_id):
-    invite = get_object_or_404(Invite, pk=invite_id)
-    students = invite.homeroom.students.order_by(
-        'school',
-        'grade',
-    )
-    return render(
-        request,
-        'app/invite.html',
-        context={
-            'invite': invite,
-            'students': students,
-        }
-    )
-
 
 @login_required
 def teacher(request):
@@ -310,20 +257,6 @@ def create_homeroom(request, student_id):
     )
 
 
-@login_required
-def create_homerooms(request):
-    parent = request.user.parent
-    students = parent.students.all()
-    for student in students:
-        homeroom = Homeroom.objects.create(
-            parent=parent,
-            frequency=parent.frequency,
-            schedule=parent.schedule,
-            safety=parent.safety,
-        )
-        student.homeroom = homeroom
-        student.save()
-    return redirect('homerooms')
 
 
 
@@ -345,43 +278,13 @@ def homerooms(request):
 
 
 @login_required
-def create_invite(request, homeroom_id):
-    return
-
-
-@login_required
-def create_classmate(request, homeroom_id):
-    homeroom = get_object_or_404(Homeroom, pk=homeroom_id)
-    schools = School.objects.filter(
-        students__classmates__homeroom=homeroom,
-    )
-    students = Student.objects.filter(
-        school__in=schools,
-
-    ).order_by('grade')
-    if request.method == 'POST':
-
-        form = InviteForm(request.POST)
-        if form.is_valid():
-            invite = form.save(commit=False)
-            invite.homeroom = homeroom
-            invite.save()
-    return render(
-        request,
-        'app/create_classmate.html',
-        context={
-            'students': students,
-            'form': form,
-        },
-    )
-
-
-@login_required
 def delete_student(request, student_id):
     parent = request.user.parent
     student = Student.objects.get(
         id=student_id,
     )
+    if student.parent != parent:
+        return HttpResponse(status=400)
     if request.method == "POST":
         form = DeleteForm(request.POST)
         if form.is_valid():
@@ -396,6 +299,29 @@ def delete_student(request, student_id):
     return render(
         request,
         'app/delete_student.html',
+        {'form': form,},
+    )
+
+@login_required
+def delete_homeroom(request, homeroom_id):
+    parent = request.user.parent
+    homeroom = get_object_or_404(Homeroom, id=homeroom_id)
+    if homeroom.parent != parent:
+        return HttpResponse(status=400)
+    if request.method == "POST":
+        form = DeleteForm(request.POST)
+        if form.is_valid():
+            homeroom.delete()
+            messages.error(
+                request,
+                "Homeroom Deleted!",
+            )
+            return redirect('dashboard')
+    else:
+        form = DeleteForm()
+    return render(
+        request,
+        'app/delete_homeroom.html',
         {'form': form,},
     )
 
@@ -429,7 +355,7 @@ def parent(request):
             form.save()
             messages.success(
                 request,
-                "Saved!",
+                "Parent Preferences Saved!",
             )
             return redirect('add-student-parent')
     else:
@@ -447,37 +373,6 @@ def parent(request):
             'form': form,
         }
     )
-
-
-@login_required
-def parent_two(request):
-    StudentFormSet.extra = 1
-    parent = request.user.parent
-    if request.method == "POST":
-        formset = StudentFormSet(
-            request.POST,
-            request.FILES,
-            instance=parent,
-        )
-        if formset.is_valid():
-            formset.save()
-            messages.success(
-                request,
-                "Saved!",
-            )
-            return redirect('dashboard')
-    else:
-        formset = StudentFormSet(
-            instance=parent,
-        )
-    return render(
-        request,
-        'app/parent_two.html',
-        context={
-            'formset': formset,
-        }
-    )
-
 
 
 @login_required
@@ -503,6 +398,21 @@ def add_student_parent(request):
         }
     )
 
+@login_required
+def create_homerooms(request):
+    parent = request.user.parent
+    students = parent.students.all()
+    for student in students:
+        homeroom = Homeroom.objects.create(
+            parent=parent,
+            frequency=parent.frequency,
+            schedule=parent.schedule,
+            safety=parent.safety,
+        )
+        student.homeroom = homeroom
+        student.save()
+    return redirect('homerooms')
+
 
 @login_required
 def parent_homeroom_intro(request):
@@ -517,47 +427,6 @@ def parent_homeroom_intro(request):
             'students': students,
         }
     )
-
-
-@login_required
-def accept(request, homeroom_id):
-    user = request.user
-    homeroom = Homeroom.objects.get(id=homeroom_id)
-
-    if request.method == "POST":
-        form = StudentForm(request.POST)
-        if form.is_valid():
-            parent, created = Parent.objects.get_or_create(
-                user=user,
-            )
-            name = form.cleaned_data['name']
-            school = form.cleaned_data['school']
-            grade = form.cleaned_data['grade']
-            student = Student.objects.create(
-                name=name,
-                school=school,
-                grade=grade,
-                parent=parent,
-            )
-            homeroom.classmates.create(student=student)
-            messages.success(
-                request,
-                "Student added to homeroom!",
-            )
-            return redirect('dashboard')
-
-    else:
-        form = StudentForm()
-
-    return render(
-        request,
-        'app/accept.html',
-        context={
-            'form': form,
-        }
-    )
-
-
 
 @login_required
 def student(request, student_id):
@@ -614,10 +483,6 @@ def homeroom(request, homeroom_id):
         }
     )
 
-
-@login_required
-def classmate(request, classmate_id):
-    return
 
 @login_required
 def add_student(request, homeroom_id):

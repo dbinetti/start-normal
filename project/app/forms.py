@@ -10,7 +10,6 @@ from dal import autocomplete
 # Local
 from .models import Ask
 from .models import Homeroom
-from .models import Invite
 from .models import Parent
 from .models import School
 from .models import Student
@@ -150,6 +149,7 @@ class HomeroomForm(forms.ModelForm):
             'frequency',
             'safety',
             'notes',
+            'goal',
         ]
         widgets = {
             'notes': forms.Textarea(
@@ -161,7 +161,8 @@ class HomeroomForm(forms.ModelForm):
             )
         }
         help_texts = {
-            'kind': "Choose 'Public' if you'd like Teachers and Parents to be able to find your Homeroom.<br>  Choose 'Private' if you'd like it kept hidden from others."
+            'kind': "Choose 'Public' if you'd like others to be able to find and ask to join your Homeroom.<br>  Choose 'Private' if you'd like your Homeroom to be hidden and joinable by invite-only.",
+            'goal': "Choose 'Instruction' if you're seeking a dedicated teacher for your Homeroom.<br>  Choose 'Social' if you're primarily using your school's distance learning material and mainly want social support."
         }
 
 
@@ -226,26 +227,6 @@ class DeleteForm(forms.Form):
     confirm = forms.BooleanField(
         required=True,
     )
-
-
-class InviteForm(forms.ModelForm):
-    class Meta:
-        model = Invite
-        fields = [
-            'student_name',
-            'parent_name',
-            'parent_email',
-            'message',
-        ]
-        widgets = {
-            'message': forms.Textarea(
-                attrs={
-                    'class': 'form-control h-25',
-                    'placeholder': 'You can include a short message with your request.',
-                    'rows': 5,
-                }
-            )
-        }
 
 
 class SignupForm(forms.Form):

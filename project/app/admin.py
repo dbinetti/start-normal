@@ -8,12 +8,10 @@ from django.utils.safestring import mark_safe
 from .forms import UserChangeForm
 from .forms import UserCreationForm
 from .inlines import HomeroomInline
-from .inlines import InviteInline
 from .inlines import StudentInline
 from .models import Account
 from .models import Ask
 from .models import Homeroom
-from .models import Invite
 from .models import Parent
 from .models import School
 from .models import Student
@@ -41,13 +39,6 @@ class AskAdmin(admin.ModelAdmin):
     autocomplete_fields = [
         'student',
         'homeroom',
-    ]
-
-@admin.register(Invite)
-class InviteAdmin(admin.ModelAdmin):
-    save_on_top = True
-    exclude = [
-        'updated',
     ]
 
 @admin.register(Homeroom)
@@ -78,7 +69,6 @@ class HomeroomAdmin(admin.ModelAdmin):
     ]
     inlines = [
         StudentInline,
-        InviteInline,
     ]
 
 

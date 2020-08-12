@@ -4,7 +4,6 @@ from django.contrib import admin
 
 # Local
 from .models import Homeroom
-from .models import Invite
 from .models import School
 from .models import Student
 
@@ -44,28 +43,6 @@ class StudentInline(admin.TabularInline):
         'homeroom',
     ]
 
-
-class InviteInline(admin.TabularInline):
-    model = Invite
-    fields = [
-        'student_name',
-        'parent_name',
-        'parent_email',
-        'homeroom',
-    ]
-    readonly_fields = [
-    ]
-    ordering = [
-        '-created',
-    ]
-    show_change_link = True
-    extra = 0
-    classes = [
-        # 'collapse',
-    ]
-    autocomplete_fields = [
-        'homeroom',
-    ]
 
 
 class SchoolInline(admin.TabularInline):

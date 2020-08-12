@@ -10,30 +10,29 @@
 
   <section class='my-5'>
     <p class='lead'>
-      Set Up Homerooms
+      Set Up Homeroom Pod
     </p>
     <p>
-      We've set up your students with Homerooms.  You can now invite other students to join, or switch to another Homeroom.
+      A Homeroom is a stable pod of students to be taught as a group.  Typical homerooms are about 4-6 students of the same grade with similar preferences for schedule, frequency and safety.
+    </p>
+    <p>
+      We've set up starting Homerooms for your students; you can keep the ones we've created and invite students to them, or you can search for an already established Homeroom that matches your needs (including merging the Homerooms of your students into one.)
     </p>
   </section>
-
   <section class='mt-2 mt-5'>
     <div class='card'>
       <div class='card-header'>
-        <h4>Homerooms</h4>
+        <h4>Your Homerooms</h4>
       </div>
       <div class='card-body'>
-        <table class='table table-reponsive-lg'>
+        <table class='table'>
           <thead>
             <tr>
               <th>
                 Student
               </th>
               <th>
-                Invite Link (copy and send to parents)
-              </th>
-              <th>
-                Switch Homerooms
+                Manage
               </th>
             </tr>
           </thead>
@@ -41,13 +40,10 @@
             {% for student in students %}
               <tr>
                 <td>
-                  <a href='{% url "homeroom" student.homeroom.id %}'>{{student.name}}</a>
+                  {{student.name}}
                 </td>
                 <td>
-                  {{student.homeroom.homeroom_link}}
-                </td>
-                <td>
-                  <a href='{% url "connect-homeroom" student.id %}'>Switch Homerooms</a>
+                  <a href='{% url "homeroom" student.homeroom.id %}'>Set Up</a>
                 </td>
               </tr>
             {% endfor %}

@@ -13,11 +13,11 @@
     </p>
     {% if is_more %}
       <p>
-        Add another student below, or skip to <a href='#'>Last Step</a> if you're finished.
+        Add another student below, or skip to <a href='{% url "create-homerooms" %}'>Last Step</a> if you're finished.
       </p>
     {% else %}
       <p>
-        Add your first student below.  You'll then be able to add more, or skip to the next step.
+        Add your first student below.  After that you'll be able to additional students, or skip to the third step.
       </p>
     {% endif %}
   </section>

@@ -3,15 +3,25 @@
 {% load bootstrap4 %}
 {% load humanize %}
 
-{% block title %}Homeroom{% endblock title %}
-{% block header %}Homeroom{% endblock header %}
+{% block title %}Manage Homeroom{% endblock title %}
+{% block header %}Manage Homeroom{% endblock header %}
 
 {% block content %}
   {% if request.user == homeroom.parent.user %}
     {# Owner #}
     <section class='my-5'>
       <p class='lead'>
-        Manage your Homeroom
+        Build your Homeroom for {{homeroom.student_names}}
+      </p>
+      <p>
+        There are two ways to build up your Homeroom:
+      </p>
+      <ul class='list-unstyled ml-2'>
+        <li class='my-3'><strong>1.</strong>&nbsp;&nbsp;If you have already formed your own pod you can just add names directly, using the form at the bottom of this page.</li>
+        <li class='my-3'><strong>2.</strong>&nbsp;&nbsp;You can invite a friend using this link: <strong>{{homeroom_link}}</strong>  <br>Just copy &amp; paste and send it in email or text along with your personal message.</li>
+      </ul>
+      <p>
+        Be sure to review your Homeroom preferences; these are important details others will consider when joining a Homeroom.
       </p>
     </section>
     <section class='my-5'>
@@ -27,6 +37,7 @@
             {% bootstrap_field form.frequency show_label=false %}
             {% bootstrap_field form.safety show_label=false %}
             {% bootstrap_field form.kind show_label=false show_help=True %}
+            {% bootstrap_field form.goal show_label=false show_help=True %}
             {% bootstrap_field form.notes show_label=false %}
             {% buttons %}
               <button type="submit" class="btn btn-success btn-lg">
@@ -43,7 +54,7 @@
           <h4>Current Students</h4>
         </div>
         <div class='card-body'>
-            <table class='table table-reponsive-lg table-sm'>
+            <table class='table'>
               <thead>
                 <tr>
                   <th>
@@ -51,9 +62,6 @@
                   </th>
                   <th>
                     Parent Name
-                  </th>
-                  <th>
-                    Parent Email
                   </th>
                 </tr>
               </thead>
@@ -66,9 +74,6 @@
                     <td>
                       {{student.parent.name}}
                     </td>
-                    <td>
-                      <a href='mailto:{{student.parent.email}}'>{{student.parent.email}}</a>
-                    </td>
                   </tr>
                 {% empty %}
                   <tr>
@@ -80,17 +85,13 @@
               </tbody>
             </table>
         </div>
-        <div class='card-footer'>
-          <p>
-            The easiest way to invite others to your Homeroom is through this link:<br>
-          </p>
-          <h5 class='m-5'>
-            {{homeroom_link}}
-          </h5>
-        </div>
       </div>
     </section>
-
+    <section class='mt-5 mt-3'>
+      <p>
+        <a href='{% url "delete-homeroom" homeroom.id %}'><span class='text-danger'>Delete Homeroom</span></a>
+      </p>
+    </section>
   {% elif request.user.is_authenticated %}
   {# User #}
     <section class='my-5'>
@@ -137,7 +138,7 @@
           <h4>Current Students</h4>
         </div>
         <div class='card-body'>
-            <table class='table table-reponsive-lg table-sm'>
+            <table class='table table-responsive-lg table-sm'>
               <thead>
                 <tr>
                   <th>
@@ -229,7 +230,7 @@
           <h4>Current Students</h4>
         </div>
         <div class='card-body'>
-            <table class='table table-reponsive-lg table-sm'>
+            <table class='table table-responsive-lg table-sm'>
               <thead>
                 <tr>
                   <th>
@@ -267,3 +268,7 @@
   {% endif %}
 
 {% endblock content %}
+
+
+
+

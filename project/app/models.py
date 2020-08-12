@@ -510,6 +510,10 @@ class Homeroom(models.Model):
         (10, 'public', "Public"),
         (20, 'private', "Private"),
     )
+    GOAL = Choices(
+        (10, 'instruction', "Instruction"),
+        (20, 'social', "Social"),
+    )
     MASKS = Choices(
         (0, 'none', "No Preference"),
         (10, 'required', "Required"),
@@ -565,6 +569,11 @@ class Homeroom(models.Model):
         blank=False,
         choices=KIND,
         default=KIND.public,
+    )
+    goal = models.IntegerField(
+        blank=False,
+        choices=GOAL,
+        default=GOAL.instruction,
     )
     masks = models.IntegerField(
         blank=True,
