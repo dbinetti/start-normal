@@ -23,10 +23,16 @@ from .models import User
 class AskAdmin(admin.ModelAdmin):
     save_on_top = True
     fields = [
+        'student_name',
+        'parent_name',
+        'parent_email',
         'homeroom',
         'student',
     ]
     list_display = [
+        'student_name',
+        'parent_name',
+        'parent_email',
         'homeroom',
         'student',
         'created',
