@@ -11,18 +11,14 @@
     {# Owner #}
     <section class='my-5'>
       <p class='lead'>
-        Build your Homeroom for {{homeroom.student_names}}
+        Manage Homeroom
       </p>
       <p>
-        There are two ways to build up your Homeroom:
+        Update your preferences, <a href='{% url "add-ask" homeroom.id %}'>add students</a> directly, or copy/paste your unique Homeroom Link and send it to those you want to join your Homeroom Pod:
       </p>
-      <ul class='list-unstyled ml-2'>
-        <li class='my-3'><strong>1.</strong>&nbsp;&nbsp;If you have already formed your own pod you can just add names directly, using the form at the bottom of this page.</li>
-        <li class='my-3'><strong>2.</strong>&nbsp;&nbsp;You can invite a friend using this link: <strong>{{homeroom_link}}</strong>  <br>Just copy &amp; paste and send it in email or text along with your personal message.</li>
-      </ul>
-      <p>
-        Be sure to review your Homeroom preferences; these are important details others will consider when joining a Homeroom.
-      </p>
+      <h5 class='my-3 ml-5'>
+        {{homeroom_link}}
+      </h5>
     </section>
     <section class='my-5'>
       <div class='card'>

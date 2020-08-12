@@ -828,7 +828,7 @@ class Student(models.Model):
     def __str__(self):
         return "{0} - {1}".format(
             self.name,
-            self.parent.user.name,
+            self.parent.name,
         )
 
 

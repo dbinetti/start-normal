@@ -12,6 +12,13 @@
       Enter Student Information
     </p>
     {% if is_more %}
+      <p>We've added:
+      <ul class='list-styled'>
+        {% for student in students %}
+          <li>{{student.name}}</li>
+        {% endfor %}
+      </ul>
+      </p>
       <p>
         Add another student below, or skip to <a href='{% url "create-homerooms" %}'>Last Step</a> if you're finished.
       </p>
@@ -37,7 +44,11 @@
           {% bootstrap_field form.grade show_help=False show_label=True size='small'%}
           {% bootstrap_field form.gender show_help=False show_label=True size='small' %}
           {{form.id}}
-          {% bootstrap_button "Add Student" button_type='submit' button_class='btn btn-primary btn-block' size='lg' %}
+          {% if is_more %}
+            {% bootstrap_button "Add Another Student" button_type='submit' button_class='btn btn-primary btn-block' size='lg' %}
+          {% else %}
+            {% bootstrap_button "Add Student" button_type='submit' button_class='btn btn-primary btn-block' size='lg' %}
+          {% endif %}
         </form>
       </div>
       {% if is_more %}

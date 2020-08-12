@@ -417,6 +417,7 @@ def parent_edit(request):
 def add_student_parent(request):
     parent = request.user.parent
     is_more = bool(parent.students.count())
+    students = parent.students.order_by('created')
     form = StudentForm(request.POST or None)
     if form.is_valid():
         student = form.save(commit=False)
@@ -433,6 +434,7 @@ def add_student_parent(request):
         context={
             'form': form,
             'is_more': is_more,
+            'students': students,
         }
     )
 
