@@ -38,6 +38,7 @@ urlpatterns = [
 
     # Parent Onboarding
     path('parent', views.parent, name='parent',),
+    path('parent-edit', views.parent_edit, name='parent-edit',),
     path('student-parent', views.add_student_parent, name='add-student-parent',),
     path('homeroom/create-homerooms', views.create_homerooms, name='create-homerooms'),
 

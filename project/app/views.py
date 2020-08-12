@@ -391,6 +391,29 @@ def parent(request):
 
 
 @login_required
+def parent_edit(request):
+    parent = request.user.parent
+    form = ParentForm(
+        request.POST or None,
+        instance=parent,
+    )
+    if form.is_valid():
+        form.save()
+        messages.success(
+            request,
+            "Saved!",
+        )
+        return redirect('dashboard')
+    return render(
+        request,
+        'app/parent_edit.html',
+        context={
+            'form': form,
+        }
+    )
+
+
+@login_required
 def add_student_parent(request):
     parent = request.user.parent
     is_more = bool(parent.students.count())

@@ -347,6 +347,12 @@ class Teacher(models.Model):
         null=True,
         help_text="""Pick a school near where you'd like to teach (dosn't have to be your own school; this is just for location.)""",
     )
+    rate = models.CharField(
+        max_length=512,
+        blank=True,
+        default='',
+        help_text="""What is your hourly rate range?""",
+    )
     notes = models.TextField(
         max_length=2000,
         blank=True,

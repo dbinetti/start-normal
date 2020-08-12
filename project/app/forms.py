@@ -127,12 +127,14 @@ class TeacherForm(forms.ModelForm):
             'levels',
             'subjects',
             'school',
+            'rate',
             'notes',
         ]
         labels = {
             "is_credential": "Credentialed?",
             "levels": "School Level",
             "subjects": "School Subjects",
+            "rate": "Hourly Rate Range",
         }
         help_texts = {
             "is_credential": "If you are credentialed please check the box.",
