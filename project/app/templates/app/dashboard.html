@@ -10,7 +10,7 @@
 
   <section class='my-5'>
     <p class='lead'>
-      Next, search to join an existing Homeroom Pod or create one of your own.
+      Manage your account from your Dashboard
     </p>
   </section>
 
@@ -19,8 +19,8 @@
       <div class='card-header'>
         <h4>Parent Information</h4>
       </div>
-      <div class='card-body'>
-        {% if parent %}
+      {% if parent %}
+        <div class='card-body'>
           <ul class='list-group list-group-flush'>
             <li class='list-group-item'><strong>Name:</strong>&nbsp;{{parent.user.name|title}}</li>
             <li class='list-group-item'><strong>Willing to Host Instruction?</strong>&nbsp;{{parent.is_host|yesno|title}}</li>
@@ -29,66 +29,75 @@
             <li class='list-group-item'><strong>Safety:</strong>&nbsp;{{parent.get_safety_display}}</li>
             <li class='list-group-item'><strong>Notes:</strong>&nbsp;{{parent.notes|default:'(No Notes Provided)'}}</li>
           </ul>
-          <p class='mt-4'>
-            <a href='{% url "parent" %}'>Edit this information</a>
-          </p>
-          <br><br>
-          <h6>Your Students</h6>
-          <table class='table table-responsive-lg'>
-            <thead>
-              <tr>
-                <th>
-                  Name
-                </th>
-                <th>
-                  School
-                </th>
-                <th>
-                  Grade
-                </th>
-                <th>
-                  Homeroom
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for student in students %}
-                <tr>
-                  <td>
-                    <a href='{% url "student" student.id %}'>{{student.name|default:"(Unknown)"}}</a>
-                  </td>
-                  <td>
-                    {{student.school}}
-                  </td>
-                  <td>
-                    {{student.get_grade_display}}
-                  </td>
-                  <td>
-                    {% if student.homeroom %}
-                      <a href='{% url "homeroom" student.homeroom.id %}'>Homeroom</a>
-                    {% else %}
-                      {% if student.asks.count > 0 %}
-                        Request Pending
-                      {% else %}
-                        <a href='{% url "connect-homeroom" student.id %}'>Join/Create Homeroom</a>
-                      {% endif %}
-                    {% endif %}
-                  </td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        {% else %}
+        </div>
+        <div class='card-footer'>
+          <a href='{% url "parent" %}' class='btn btn-success btn-large' role='button'>Edit Parent Information</a>
+        </div>
+      {% else %}
+        <div class='card-body'>
           <p>
             You are not currently registered as a parent.  <a href='{% url "parent" %}'>Register as Parent</a>
           </p>
-        {% endif %}
+        </div>
+      {% endif %}
+    </div>
+  </section>
+
+
+  <section class='mt-2 mt-5'>
+    <div class='card'>
+      <div class='card-header'>
+        <h4>Student/Homeroom Information</h4>
       </div>
-      {% if parent %}
+      <div class='card-body'>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>
+                Name
+              </th>
+              <th>
+                School
+              </th>
+              <th>
+                Grade
+              </th>
+              <th>
+                Homeroom
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for student in students %}
+              <tr>
+                <td>
+                  <a href='{% url "student" student.id %}'>{{student.name|default:"(Unknown)"}}</a>
+                </td>
+                <td>
+                  {{student.school}}
+                </td>
+                <td>
+                  {{student.get_grade_display}}
+                </td>
+                <td>
+                  {% if student.homeroom %}
+                    <a href='{% url "homeroom" student.homeroom.id %}'>Homeroom</a>
+                  {% else %}
+                    {% if student.asks.count > 0 %}
+                      Request Pending
+                    {% else %}
+                      <a href='{% url "connect-homeroom" student.id %}'>Join/Create Homeroom</a>
+                    {% endif %}
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
       <div class='card-footer'>
         <a href='{% url "create-student" %}' class='btn btn-success btn-large' role='button'>Add a Student</a>
       </div>
-      {% endif %}
     </div>
   </section>
 

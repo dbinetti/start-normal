@@ -435,22 +435,18 @@ def student(request, student_id):
         id=student_id,
         parent=user.parent,
     )
-    if request.method == 'POST':
-        form = StudentForm(request.POST, instance=student)
-        if form.is_valid():
-            form.save()
-            messages.success(
-                request,
-                "Saved!",
-            )
-            return redirect('dashboard')
-    else:
-        form = StudentForm(instance=student)
-
+    form = StudentForm(request.POST or None, instance=student)
+    if form.is_valid():
+        form.save()
+        messages.success(
+            request,
+            "Saved!",
+        )
+        return redirect('dashboard')
     return render(
         request,
         'app/student.html',
-        context = {
+        context={
             'form': form,
             'student': student,
         },
