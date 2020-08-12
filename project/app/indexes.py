@@ -1,4 +1,5 @@
 # Third-Party
+# First-Party
 from algoliasearch_django import AlgoliaIndex
 
 
@@ -18,7 +19,6 @@ class SchoolIndex(AlgoliaIndex):
         'grades_display',
         'get_level_display',
         'get_kind_display',
-        'district',
     ]
     geo_field = 'location'
     settings = {

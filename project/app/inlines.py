@@ -73,7 +73,6 @@ class SchoolInline(admin.TabularInline):
     fields = [
         'name',
         'level',
-        'district',
     ]
     readonly_fields = [
     ]
@@ -86,5 +85,4 @@ class SchoolInline(admin.TabularInline):
         # 'collapse',
     ]
     autocomplete_fields = [
-        'district',
     ]

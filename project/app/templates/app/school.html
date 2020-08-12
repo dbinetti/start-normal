@@ -7,7 +7,6 @@
 {% block header %}{{school.name}}{% endblock header %}
 {% block subheader %}
   {{school.address}}, {{school.city}}, {{school.state}}&nbsp;&nbsp;<a href='tel:{{school.phone}}'>{{school.phone}}</a>&nbsp;<a href='{{school.website}}'>{{school.website}}</a><br>
-  {{school.district.name}}
 {% endblock subheader %}
 
 {% block content %}

@@ -16,66 +16,6 @@ from multiselectfield import MultiSelectField
 # Local
 from .managers import UserManager
 
-# class Classmate(models.Model):
-#     id = HashidAutoField(
-#         primary_key=True,
-#     )
-#     STATUS = Choices(
-#         (0, 'new', 'New'),
-#         (10, 'invited', 'Invited'),
-#         (20, 'accepted', 'Accepted'),
-#     )
-#     status = models.IntegerField(
-#         blank=False,
-#         choices=STATUS,
-#         default=STATUS.new,
-#     )
-#     student = models.ForeignKey(
-#         'Student',
-#         on_delete=models.CASCADE,
-#         related_name='classmates',
-#     )
-#     homeroom = models.ForeignKey(
-#         'Homeroom',
-#         on_delete=models.CASCADE,
-#         related_name='classmates',
-#     )
-
-#     def __str__(self):
-#         return str(self.student.name)
-
-
-class Roomparent(models.Model):
-    id = HashidAutoField(
-        primary_key=True,
-    )
-    STATUS = Choices(
-        (0, 'new', 'New'),
-        (10, 'invited', 'Invited'),
-        (20, 'accepted', 'Accepted'),
-    )
-    status = models.IntegerField(
-        blank=False,
-        choices=STATUS,
-        default=STATUS.new,
-    )
-    parent = models.ForeignKey(
-        'Parent',
-        on_delete=models.CASCADE,
-        related_name='roomparents',
-    )
-    homeroom = models.ForeignKey(
-        'Homeroom',
-        on_delete=models.CASCADE,
-        related_name='roomparents',
-    )
-    created = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated = models.DateTimeField(
-        auto_now=True,
-    )
-
 
 class Ask(models.Model):
     id = HashidAutoField(
@@ -379,126 +319,6 @@ class Teacher(models.Model):
         return str(self.user)
 
 
-class District(models.Model):
-
-    STATUS = Choices(
-        (10, 'active', "Active"),
-        (20, 'closed', "Closed"),
-        (30, 'merged', "Merged"),
-    )
-    KIND = Choices(
-        (400, 'county', 'County Office of Education'),
-        (402, 'state', 'State Board of Education'),
-        (403, 'charter', 'Statewide Benefit Charter'),
-        (431, 'special', 'State Special Schools'),
-        (434, 'non', 'Non-school Location*'),
-        (442, 'jpa', 'Joint Powers Authority (JPA)'),
-        (452, 'elementary', 'Elementary School District'),
-        (454, 'unified', 'Unified School District'),
-        (456, 'high', 'High School District'),
-        (458, 'ccd', 'Community College District'),
-        (470, 'private', 'Private'),
-        (498, 'roc', 'Regional Occupational Center/Program (ROC/P)'),
-        (499, 'admin', 'Administration Only'),
-    )
-    id = HashidAutoField(
-        primary_key=True,
-    )
-    name = models.CharField(
-        max_length=255,
-        blank=False,
-    )
-    description = models.TextField(
-        blank=True,
-    )
-    status = models.IntegerField(
-        blank=False,
-        choices=STATUS,
-        default=STATUS.active,
-    )
-    kind = models.IntegerField(
-        blank=True,
-        null=True,
-        choices=KIND,
-    )
-    cd_id = models.BigIntegerField(
-        blank=True,
-        null=True,
-        unique=True,
-    )
-    nces_id = models.IntegerField(
-        blank=True,
-        null=True,
-        unique=True,
-    )
-    address = models.CharField(
-        max_length=255,
-        blank=True,
-        default='',
-    )
-    city = models.CharField(
-        max_length=255,
-        blank=True,
-        default='',
-    )
-    state = models.CharField(
-        max_length=255,
-        blank=True,
-        default='',
-    )
-    zipcode = models.CharField(
-        max_length=255,
-        blank=True,
-        default='',
-    )
-    county = models.CharField(
-        max_length=255,
-        blank=True,
-    )
-    phone = models.CharField(
-        max_length=255,
-        blank=True,
-        default='',
-    )
-    website = models.URLField(
-        blank=True,
-        default='',
-    )
-    lat = models.DecimalField(
-        max_digits=10,
-        decimal_places=6,
-        null=True,
-        blank=True,
-    )
-    lon = models.DecimalField(
-        max_digits=10,
-        decimal_places=6,
-        null=True,
-        blank=True,
-    )
-    created = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated = models.DateTimeField(
-        auto_now=True,
-    )
-
-    def __str__(self):
-        return "{0} - {1}, {2}".format(
-            self.name,
-            self.city,
-            self.state,
-        )
-
-    def location(self):
-        return (self.lat, self.lon)
-
-    def should_index(self):
-        if self.status == self.STATUS.active:
-            return True
-        return False
-
-
 class School(models.Model):
 
     STATUS = Choices(
@@ -652,13 +472,6 @@ class School(models.Model):
     )
     updated = models.DateTimeField(
         auto_now=True,
-    )
-    district = models.ForeignKey(
-        'District',
-        on_delete=models.SET_NULL,
-        related_name='schools',
-        null=True,
-        blank=True,
     )
     search_vector = SearchVectorField(
         null=True,

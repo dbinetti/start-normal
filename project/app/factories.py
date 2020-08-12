@@ -12,7 +12,6 @@ from factory.django import mute_signals
 
 # Local
 from .models import Account
-from .models import District
 from .models import School
 from .models import User
 
@@ -39,21 +38,6 @@ class SchoolFactory(DjangoModelFactory):
     lat = -122.0
     class Meta:
         model = School
-
-class DistrictFactory(DjangoModelFactory):
-    name = 'San Carlos School District'
-    status = District.STATUS.active
-    kind = District.KIND.elementary
-    nces_id = 605401
-    address = '123 Foo St'
-    city = 'San Carlos'
-    state = 'CA'
-    website = Faker('url')
-    lon = 32.0
-    lat = -122.0
-    class Meta:
-        model = District
-
 
 
 @mute_signals(post_delete, post_save)

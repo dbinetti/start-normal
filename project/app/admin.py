@@ -12,7 +12,6 @@ from .inlines import InviteInline
 from .inlines import StudentInline
 from .models import Account
 from .models import Ask
-from .models import District
 from .models import Homeroom
 from .models import Invite
 from .models import Parent
@@ -175,36 +174,6 @@ class TeacherAdmin(admin.ModelAdmin):
     ]
 
 
-@admin.register(District)
-class DistrictAdmin(admin.ModelAdmin):
-    exclude = [
-        'slug',
-    ]
-    list_display = [
-        'name',
-        'kind',
-        'website',
-    ]
-    list_filter = [
-        'kind',
-        'status',
-        'county',
-        'state',
-    ]
-    search_fields = [
-        'name',
-        'nces_id',
-    ]
-    inlines = [
-        # SchoolInline,
-        # ReportInline,
-        # ContactInline,
-    ]
-    autocomplete_fields = [
-        # 'parent',
-    ]
-
-
 @admin.register(School)
 class SchoolAdmin(admin.ModelAdmin):
     fields = [
@@ -224,7 +193,6 @@ class SchoolAdmin(admin.ModelAdmin):
         'website',
         'lat',
         'lon',
-        'district',
     ]
     list_display = [
         'name',
@@ -253,7 +221,6 @@ class SchoolAdmin(admin.ModelAdmin):
         # StudentInline,
     ]
     autocomplete_fields = [
-        'district',
     ]
 
 

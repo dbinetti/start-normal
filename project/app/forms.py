@@ -9,7 +9,6 @@ from dal import autocomplete
 
 # Local
 from .models import Ask
-from .models import District
 from .models import Homeroom
 from .models import Invite
 from .models import Parent
@@ -87,7 +86,7 @@ class DistrictForm(forms.ModelForm):
         return data.upper()
 
     class Meta:
-        model = District
+        # model = District
         fields = [
             'kind',
             'name',
