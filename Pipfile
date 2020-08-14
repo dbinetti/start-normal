@@ -37,6 +37,7 @@ django-autocomplete-light = "*"
 nameparser = "*"
 django-multiselectfield = "*"
 geocoder = "*"
+django-fsm = "*"
 
 [requires]
 python_version = "3.8"
