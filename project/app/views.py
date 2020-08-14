@@ -389,12 +389,14 @@ def parent(request):
                 'email': request.user.email,
             }
         )
+    template = 'app/welcome/parent.html'
+    context = {
+        'form': form,
+    }
     return render(
         request,
-        'app/parent.html',
-        context={
-            'form': form,
-        }
+        template,
+        context=context,
     )
 
 @login_required
@@ -413,7 +415,7 @@ def parent_edit(request):
         return redirect('dashboard')
     return render(
         request,
-        'app/parent_edit.html',
+        'app/parent.html',
         context={
             'form': form,
         }
@@ -457,6 +459,8 @@ def create_homerooms(request):
         )
         student.homeroom = homeroom
         student.save()
+    parent.is_welcomed = True
+    parent.save()
     return redirect('homerooms')
 
 

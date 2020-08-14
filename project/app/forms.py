@@ -221,7 +221,7 @@ class ParentForm(forms.ModelForm):
         help_texts = {
             'schedule': "What time of day would you like your homeroom pod to meet?",
             'frequency': "How many days a week would you like your homeroom pod to meet?",
-            'safety': "Standard safety is rigorous hygiene; Enhanced adds Masks and Distance requirements.",
+            'safety': "Standard safety is rigorous hygiene; <br>Enhanced adds Masks and Distance requirements.",
         }
 
 

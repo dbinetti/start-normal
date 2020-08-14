@@ -200,21 +200,21 @@ class Parent(models.Model):
     is_host = models.BooleanField(
         default=False,
     )
+    is_welcomed = models.BooleanField(
+        default=False,
+    )
     safety = models.IntegerField(
-        blank=True,
-        null=True,
+        blank=False,
         choices=SAFETY,
         default=SAFETY.none
     )
     schedule = models.IntegerField(
-        blank=True,
-        null=True,
+        blank=False,
         choices=SCHEDULE,
         default=SCHEDULE.none
     )
     frequency = models.IntegerField(
-        blank=True,
-        null=True,
+        blank=False,
         choices=FREQUENCY,
         default=FREQUENCY.none
     )
