@@ -276,7 +276,7 @@ def create_student(request):
         return redirect('dashboard')
     return render(
         request,
-        'app/create_student.html',
+        'app/student_create.html',
         context={
             'form': form,
         }
@@ -327,7 +327,7 @@ def delete_student(request, student_id):
         form = DeleteForm()
     return render(
         request,
-        'app/delete_student.html',
+        'app/student_delete.html',
         {'form': form,},
     )
 
