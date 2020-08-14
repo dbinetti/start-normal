@@ -20,6 +20,9 @@ urlpatterns = [
     path('callback', views.callback, name='callback'),
     path('logout', views.logout, name='logout'),
 
+    # Onboard
+    path('welcome', views.welcome, name='welcome'),
+
     # Dashboard
     path('dashboard', views.dashboard, name='dashboard',),
     path('dashboard/delete', views.delete_user, name='delete-user',),
@@ -32,17 +35,23 @@ urlpatterns = [
     # Teacher
     path('teacher', views.teacher, name='teacher',),
 
-    # Parent Onboarding
+    # Parent
     path('parent/create', views.create_parent, name='create-parent',),
     path('parent/<parent_id>', views.parent, name='parent',),
-    path('welcome', views.welcome, name='welcome'),
+    path('parent/<parent_id>/delete', views.delete_parent, name='delete-parent',),
 
     # Homeroom
-    path('homeroom/search', views.homeroom_search, name='homeroom-search',),
     path('homeroom/create', views.create_homeroom, name='create-homeroom'),
     path('homeroom/<homeroom_id>', views.homeroom, name='homeroom',),
     path('homeroom/<homeroom_id>/delete', views.delete_homeroom, name='delete-homeroom',),
+
+    path('homeroom/search', views.homeroom_search, name='homeroom-search',),
     path('homeroom/connect/<student_id>', views.connect_homeroom, name='connect-homeroom'),
+
+    # Classmate
+    # path('classmate/create', views.create_classmate, name='create-classmate'),
+    # path('classmate/<classmate_id>', views.classmate, name='classmate',),
+    # path('classmate/<classmate_id>/delete', views.delete_classmate, name='delete-classmate',),
 
     # Ask
     path('ask/add/<homeroom_id>', views.add_ask, name='add-ask',),

@@ -429,6 +429,30 @@ def parent(request, parent_id):
     )
 
 @login_required
+def delete_parent(request, parent_id):
+    parent = request.user.parent
+    parent = get_object_or_404(Parent, parent_id)
+    if parent != request.user.parent:
+        return HttpResponse(status=400)
+    if request.method == "POST":
+        form = DeleteForm(request.POST)
+        if form.is_valid():
+            parent.delete()
+            messages.error(
+                request,
+                "Parent Deleted!",
+            )
+            return redirect('dashboard')
+    else:
+        form = DeleteForm()
+    return render(
+        request,
+        'app/parent_delete.html',
+        {'form': form,},
+    )
+
+
+@login_required
 def welcome(request):
     parent = request.user.parent
     students = parent.students.all()
