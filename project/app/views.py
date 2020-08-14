@@ -709,10 +709,10 @@ def create_homeroom(request, student_id):
 
 
 # Schools
-def search(request):
+def search_schools(request):
     return render(
         request,
-        'app/search.html',
+        'app/search_schools.html',
         context={
             'app_id': settings.ALGOLIA['APPLICATION_ID'],
             'search_key': settings.ALGOLIA['SEARCH_KEY'],
