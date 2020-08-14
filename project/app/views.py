@@ -265,6 +265,7 @@ def delete_user(request):
 def create_student(request):
     parent = request.user.parent
     form = StudentForm(request.POST or None)
+    is_more = bool(parent.students.count())
     if form.is_valid():
         student = form.save(commit=False)
         student.parent = parent
@@ -273,12 +274,14 @@ def create_student(request):
             request,
             'Added!',
         )
-        return redirect('dashboard')
+        return redirect('create-student')
     return render(
         request,
         'app/student_create.html',
         context={
             'form': form,
+            'parent': parent,
+            'is_more': is_more,
         }
     )
 
@@ -384,7 +387,7 @@ def create_parent(request):
                 request,
                 "Parent Preferences Saved!",
             )
-            return redirect('add-student-parent')
+            return redirect('create-student')
     else:
         form = ParentForm(
             instance=parent,
@@ -426,32 +429,7 @@ def parent(request, parent_id):
     )
 
 @login_required
-def add_student_parent(request):
-    parent = request.user.parent
-    is_more = bool(parent.students.count())
-    students = parent.students.order_by('created')
-    form = StudentForm(request.POST or None)
-    if form.is_valid():
-        student = form.save(commit=False)
-        student.parent = parent
-        student.save()
-        messages.success(
-            request,
-            "Student Added!",
-        )
-        return redirect('add-student-parent')
-    return render(
-        request,
-        'app/add_student_parent.html',
-        context={
-            'form': form,
-            'is_more': is_more,
-            'students': students,
-        }
-    )
-
-@login_required
-def create_homerooms(request):
+def welcome(request):
     parent = request.user.parent
     students = parent.students.all()
     for student in students:
@@ -463,10 +441,18 @@ def create_homerooms(request):
         )
         student.homeroom = homeroom
         student.save()
+        student.homeroom.homeroom_link = request.build_absolute_uri(
+            reverse('homeroom', args=[student.homeroom.id])
+        )
     parent.is_welcomed = True
     parent.save()
-    return redirect('homerooms')
-
+    return render(
+        request,
+        'app/welcome.html',
+        context={
+            'students': students,
+        }
+    )
 
 @login_required
 def add_ask(request, homeroom_id):
@@ -755,7 +741,15 @@ class SchoolAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         qs = School.objects.filter(
         )
+        if self.q:
+            qs = qs.filter(search_vector=self.q)
+        return qs
 
+class HomeroomAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = Homeroom.objects.filter(
+            kind=Homeroom.KIND.public,
+        )
         if self.q:
             qs = qs.filter(search_vector=self.q)
         return qs

@@ -35,9 +35,7 @@ urlpatterns = [
     # Parent Onboarding
     path('parent/create', views.create_parent, name='create-parent',),
     path('parent/<parent_id>', views.parent, name='parent',),
-
-    path('student-parent', views.add_student_parent, name='add-student-parent',),
-    path('homeroom/create-homerooms', views.create_homerooms, name='create-homerooms'),
+    path('welcome', views.welcome, name='welcome'),
 
     # Homeroom
     path('homeroom/search', views.homeroom_search, name='homeroom-search',),
@@ -46,8 +44,6 @@ urlpatterns = [
     path('homeroom/<homeroom_id>/delete', views.delete_homeroom, name='delete-homeroom',),
     path('homeroom/connect/<student_id>', views.connect_homeroom, name='connect-homeroom'),
 
-    path('homerooms', views.homerooms, name='homerooms',),
-
     # Ask
     path('ask/add/<homeroom_id>', views.add_ask, name='add-ask',),
     path('ask/<homeroom_id>/<student_id>', views.ask, name='ask',),
@@ -55,9 +51,12 @@ urlpatterns = [
     path('ask-user/<homeroom_id>', views.ask_user, name='ask-user',),
 
 
-
     # Schools
     path('school/search', views.search_schools, name='school-search'),
     path('school/<slug>', views.school, name='school'),
+
+    # Search
     path('school-autocomplete', views.SchoolAutocomplete.as_view(), name='school-autocomplete',),
+    path('homeroom-autocomplete', views.HomeroomAutocomplete.as_view(), name='homeroom-autocomplete',),
+
 ]
