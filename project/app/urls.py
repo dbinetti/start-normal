@@ -38,6 +38,15 @@ urlpatterns = [
     path('student-parent', views.add_student_parent, name='add-student-parent',),
     path('homeroom/create-homerooms', views.create_homerooms, name='create-homerooms'),
 
+    # Homeroom
+    path('homeroom/search', views.homeroom_search, name='homeroom-search',),
+    path('homeroom/create', views.create_homeroom, name='create-homeroom'),
+    path('homeroom/<homeroom_id>', views.homeroom, name='homeroom',),
+    path('homeroom/<homeroom_id>/delete', views.delete_homeroom, name='delete-homeroom',),
+    path('homeroom/connect/<student_id>', views.connect_homeroom, name='connect-homeroom'),
+
+    path('homerooms', views.homerooms, name='homerooms',),
+
     # Ask
     path('ask/add/<homeroom_id>', views.add_ask, name='add-ask',),
     path('ask/<homeroom_id>/<student_id>', views.ask, name='ask',),
@@ -45,14 +54,6 @@ urlpatterns = [
     path('ask-user/<homeroom_id>', views.ask_user, name='ask-user',),
 
 
-    # Homeroom
-    path('homeroom/search', views.homeroom_search, name='homeroom-search',),
-    path('homeroom/create/<student_id>', views.create_homeroom, name='create-homeroom'),
-    path('homeroom/<homeroom_id>', views.homeroom, name='homeroom',),
-    path('homeroom/<homeroom_id>/delete', views.delete_homeroom, name='delete-homeroom',),
-    path('homeroom/connect/<student_id>', views.connect_homeroom, name='connect-homeroom'),
-
-    path('homerooms', views.homerooms, name='homerooms',),
 
     # Schools
     path('school/search', views.search_schools, name='school-search'),

@@ -676,9 +676,8 @@ def connect_homeroom(request, student_id):
     )
 
 @login_required
-def create_homeroom(request, student_id):
+def create_homeroom(request):
     parent = request.user.parent
-    student = Student.objects.get(id=student_id)
     initial = {
         'schedule': parent.schedule,
         'frequency': parent.frequency,
@@ -686,22 +685,17 @@ def create_homeroom(request, student_id):
     }
     form = HomeroomForm(request.POST or None, initial=initial)
     if form.is_valid():
-        homeroom = form.save(commit=False)
-        homeroom.parent = parent
-        homeroom.save()
-        student.homeroom = homeroom
-        student.save()
+        form.save()
         messages.success(
             request,
             "Homeroom Created!",
         )
-        return redirect('parent-homeroom-intro')
+        return redirect('dashboard')
     return render(
         request,
         'app/create_homeroom.html',
         context={
             'form': form,
-            'student': student,
         }
     )
 
