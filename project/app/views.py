@@ -44,17 +44,6 @@ from .models import User
 from .tasks import mailchimp_subscribe_email
 
 
-# Autocomplete
-class SchoolAutocomplete(autocomplete.Select2QuerySetView):
-    def get_queryset(self):
-        qs = School.objects.filter(
-        )
-
-        if self.q:
-            qs = qs.filter(search_vector=self.q)
-        return qs
-
-
 # Root
 def index(request):
     return render(
@@ -112,474 +101,6 @@ def sitemap(request):
         rendered,
         content_type="text/plain",
     )
-
-
-# Account
-@login_required
-def dashboard(request):
-    user = request.user
-    parent = getattr(user, 'parent', None)
-    teacher = getattr(user, 'teacher', None)
-    students = Student.objects.filter(
-        parent=parent,
-    )
-    homerooms = Homeroom.objects.filter(
-        parent=parent,
-    )
-    return render(
-        request,
-        'app/dashboard.html',
-        context={
-            'user': user,
-            'parent': parent,
-            'teacher': teacher,
-            'students': students,
-            'homerooms': homerooms,
-        }
-    )
-
-@login_required
-def ask(request, homeroom_id, student_id):
-    student = get_object_or_404(Student, id=student_id)
-    homeroom = get_object_or_404(Homeroom, id=homeroom_id)
-    Ask.objects.create(
-        student=student,
-        homeroom=homeroom,
-    )
-    messages.success(
-        request,
-        "Request sent!",
-    )
-    return redirect('dashboard')
-
-@login_required
-def connect_homeroom(request, student_id):
-    student = get_object_or_404(Student, id=student_id)
-    homerooms = Homeroom.objects.filter(
-        students__school=student.school,
-        students__grade=student.grade,
-    ).distinct()
-    students = Student.objects.filter(
-        school=student.school,
-        homeroom__isnull=True,
-    ).order_by('grade')
-    return render(
-        request,
-        'app/connect_homeroom.html',
-        context={
-            'student': student,
-            'homerooms': homerooms,
-            'students': students,
-            'app_id': settings.ALGOLIA['APPLICATION_ID'],
-            'search_key': settings.ALGOLIA['SEARCH_KEY'],
-            'index_name': "Homeroom_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
-        }
-    )
-
-
-@login_required
-def homeroom_search(request):
-    return render(
-        request,
-        'app/homeroom_search.html',
-        context={
-            'app_id': settings.ALGOLIA['APPLICATION_ID'],
-            'search_key': settings.ALGOLIA['SEARCH_KEY'],
-            'index_name': "Homeroom_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
-        }
-    )
-
-
-@login_required
-def teacher(request):
-    user = request.user
-    teacher, created = Teacher.objects.get_or_create(
-        user=user,
-    )
-    if request.method == "POST":
-        form = TeacherForm(
-            request.POST,
-            instance=teacher,
-        )
-        if form.is_valid():
-            form.save()
-            messages.success(
-                request,
-                "Saved!",
-            )
-            return redirect('dashboard')
-    else:
-        form = TeacherForm(
-            instance=teacher,
-        )
-    return render(
-        request,
-        'app/teacher.html',
-        context={
-            'form': form,
-        }
-    )
-
-@login_required
-def create_student(request):
-    parent = request.user.parent
-    form = StudentForm(request.POST or None)
-    if form.is_valid():
-        student = form.save(commit=False)
-        student.parent = parent
-        student.save()
-        messages.success(
-            request,
-            'Added!',
-        )
-        return redirect('dashboard')
-    return render(
-        request,
-        'app/create_student.html',
-        context={
-            'form': form,
-        }
-    )
-
-@login_required
-def create_homeroom(request, student_id):
-    parent = request.user.parent
-    student = Student.objects.get(id=student_id)
-    initial = {
-        'schedule': parent.schedule,
-        'frequency': parent.frequency,
-        'safety': parent.safety,
-    }
-    form = HomeroomForm(request.POST or None, initial=initial)
-    if form.is_valid():
-        homeroom = form.save(commit=False)
-        homeroom.parent = parent
-        homeroom.save()
-        student.homeroom = homeroom
-        student.save()
-        messages.success(
-            request,
-            "Homeroom Created!",
-        )
-        return redirect('parent-homeroom-intro')
-    return render(
-        request,
-        'app/create_homeroom.html',
-        context={
-            'form': form,
-            'student': student,
-        }
-    )
-
-
-
-
-
-@login_required
-def homerooms(request):
-    parent = request.user.parent
-    students = parent.students.all()
-    for student in students:
-        student.homeroom.homeroom_link = request.build_absolute_uri(
-            reverse('homeroom', args=[student.homeroom.id])
-        )
-    return render(
-        request,
-        'app/homerooms.html',
-        context={
-            'students': students,
-        }
-    )
-
-
-@login_required
-def delete_student(request, student_id):
-    parent = request.user.parent
-    student = Student.objects.get(
-        id=student_id,
-    )
-    if student.parent != parent:
-        return HttpResponse(status=400)
-    if request.method == "POST":
-        form = DeleteForm(request.POST)
-        if form.is_valid():
-            student.delete()
-            messages.error(
-                request,
-                "Student Deleted!",
-            )
-            return redirect('dashboard')
-    else:
-        form = DeleteForm()
-    return render(
-        request,
-        'app/delete_student.html',
-        {'form': form,},
-    )
-
-@login_required
-def delete_homeroom(request, homeroom_id):
-    parent = request.user.parent
-    homeroom = get_object_or_404(Homeroom, id=homeroom_id)
-    if homeroom.parent != parent:
-        return HttpResponse(status=400)
-    if request.method == "POST":
-        form = DeleteForm(request.POST)
-        if form.is_valid():
-            homeroom.delete()
-            messages.error(
-                request,
-                "Homeroom Deleted!",
-            )
-            return redirect('dashboard')
-    else:
-        form = DeleteForm()
-    return render(
-        request,
-        'app/delete_homeroom.html',
-        {'form': form,},
-    )
-
-
-@login_required
-def remove_homeroom_student(request, homeroom_id, student_id):
-    homeroom = get_object_or_404(Homeroom, pk=homeroom_id)
-    student = get_object_or_404(Student, pk=student_id)
-    student.homeroom = None
-    student.save()
-    messages.success(
-        request,
-        "Student Removed!",
-    )
-    return redirect('homeroom', homeroom.id)
-
-
-
-@login_required
-def parent(request):
-    parent = getattr(request.user, 'parent', None)
-    if request.method == "POST":
-        parent, _ = Parent.objects.get_or_create(
-            user=request.user,
-        )
-        form = ParentForm(
-            request.POST,
-            instance=parent,
-        )
-        if form.is_valid():
-            form.save()
-            messages.success(
-                request,
-                "Parent Preferences Saved!",
-            )
-            return redirect('add-student-parent')
-    else:
-        form = ParentForm(
-            instance=parent,
-            initial={
-                'name': request.user.name,
-                'email': request.user.email,
-            }
-        )
-    return render(
-        request,
-        'app/parent.html',
-        context={
-            'form': form,
-        }
-    )
-
-
-@login_required
-def parent_edit(request):
-    parent = request.user.parent
-    form = ParentForm(
-        request.POST or None,
-        instance=parent,
-    )
-    if form.is_valid():
-        form.save()
-        messages.success(
-            request,
-            "Saved!",
-        )
-        return redirect('dashboard')
-    return render(
-        request,
-        'app/parent_edit.html',
-        context={
-            'form': form,
-        }
-    )
-
-
-@login_required
-def add_student_parent(request):
-    parent = request.user.parent
-    is_more = bool(parent.students.count())
-    students = parent.students.order_by('created')
-    form = StudentForm(request.POST or None)
-    if form.is_valid():
-        student = form.save(commit=False)
-        student.parent = parent
-        student.save()
-        messages.success(
-            request,
-            "Student Added!",
-        )
-        return redirect('add-student-parent')
-    return render(
-        request,
-        'app/add_student_parent.html',
-        context={
-            'form': form,
-            'is_more': is_more,
-            'students': students,
-        }
-    )
-
-@login_required
-def create_homerooms(request):
-    parent = request.user.parent
-    students = parent.students.all()
-    for student in students:
-        homeroom = Homeroom.objects.create(
-            parent=parent,
-            frequency=parent.frequency,
-            schedule=parent.schedule,
-            safety=parent.safety,
-        )
-        student.homeroom = homeroom
-        student.save()
-    return redirect('homerooms')
-
-
-@login_required
-def parent_homeroom_intro(request):
-    parent = request.user.parent
-    students = parent.students.order_by(
-        'grade',
-    )
-    return render(
-        request,
-        'app/parent_homeroom_intro.html',
-        context={
-            'students': students,
-        }
-    )
-
-@login_required
-def student(request, student_id):
-    user = request.user
-    student = Student.objects.get(
-        id=student_id,
-        parent=user.parent,
-    )
-    form = StudentForm(request.POST or None, instance=student)
-    if form.is_valid():
-        form.save()
-        messages.success(
-            request,
-            "Saved!",
-        )
-        return redirect('dashboard')
-    return render(
-        request,
-        'app/student.html',
-        context={
-            'form': form,
-            'student': student,
-        },
-    )
-
-def homeroom(request, homeroom_id):
-    homeroom = get_object_or_404(Homeroom, pk=homeroom_id)
-    form = HomeroomForm(
-        request.POST or None,
-        instance=homeroom,
-    )
-    if form.is_valid():
-        form.save()
-        messages.success(
-            request,
-            'Saved!',
-        )
-        return redirect('homeroom', homeroom.id)
-    homeroom_link = request.build_absolute_uri(
-        reverse('homeroom', args=[homeroom_id])
-    )
-    students = homeroom.students.all()
-    asks = homeroom.asks.all()
-    return render(
-        request,
-        'app/homeroom.html', {
-            'form': form,
-            'homeroom': homeroom,
-            'homeroom_link': homeroom_link,
-            'students': students,
-            'asks': asks,
-        }
-    )
-
-
-@login_required
-def add_student(request, homeroom_id):
-    homeroom = get_object_or_404(Homeroom, pk=homeroom_id)
-    students = Student.objects.filter(
-        school__students__homeroom=homeroom,
-    ).distinct('school__students')
-    return render(
-        request,
-        'app/add_student.html', {
-            'students': students,
-            'homeroom': homeroom,
-        },
-    )
-
-
-@login_required
-def add_homeroom_student(request, homeroom_id, student_id):
-    homeroom = get_object_or_404(Homeroom, pk=homeroom_id)
-    student = get_object_or_404(Student, pk=student_id)
-    student.homeroom = homeroom
-    student.save()
-    messages.success(
-        request,
-        "Student Addded!",
-    )
-    return redirect('homeroom', homeroom.id)
-
-
-@login_required
-def share(request):
-    account = request.user.account
-    account.is_welcomed = True
-    account.save()
-    return render(
-        request,
-        'app/share.html',
-    )
-
-@login_required
-def delete(request):
-    if request.method == "POST":
-        form = DeleteForm(request.POST)
-        if form.is_valid():
-            user = request.user
-            user.delete()
-            messages.error(
-                request,
-                "Account Deleted!",
-            )
-            return redirect('index')
-    else:
-        form = DeleteForm()
-    return render(
-        request,
-        'app/delete.html',
-        {'form': form,},
-    )
-
 
 
 # Authentication
@@ -676,6 +197,307 @@ def callback(request):
         return redirect(kind)
     return HttpResponse(status=400)
 
+def logout(request):
+    log_out(request)
+    params = {
+        'client_id': settings.AUTH0_CLIENT_ID,
+        'return_to': request.build_absolute_uri(reverse('index')),
+    }
+    logout_url = requests.Request(
+        'GET',
+        'https://{0}/v2/logout'.format(settings.AUTH0_DOMAIN),
+        params=params,
+    ).prepare().url
+    messages.success(
+        request,
+        "You Have Been Logged Out!",
+    )
+    return redirect(logout_url)
+
+
+# Account
+@login_required
+def dashboard(request):
+    user = request.user
+    parent = getattr(user, 'parent', None)
+    teacher = getattr(user, 'teacher', None)
+    students = Student.objects.filter(
+        parent=parent,
+    )
+    homerooms = Homeroom.objects.filter(
+        parent=parent,
+    )
+    return render(
+        request,
+        'app/dashboard.html',
+        context={
+            'user': user,
+            'parent': parent,
+            'teacher': teacher,
+            'students': students,
+            'homerooms': homerooms,
+        }
+    )
+
+@login_required
+def delete(request):
+    if request.method == "POST":
+        form = DeleteForm(request.POST)
+        if form.is_valid():
+            user = request.user
+            user.delete()
+            messages.error(
+                request,
+                "Account Deleted!",
+            )
+            return redirect('index')
+    else:
+        form = DeleteForm()
+    return render(
+        request,
+        'app/delete.html',
+        {'form': form,},
+    )
+
+
+# Student
+@login_required
+def create_student(request):
+    parent = request.user.parent
+    form = StudentForm(request.POST or None)
+    if form.is_valid():
+        student = form.save(commit=False)
+        student.parent = parent
+        student.save()
+        messages.success(
+            request,
+            'Added!',
+        )
+        return redirect('dashboard')
+    return render(
+        request,
+        'app/create_student.html',
+        context={
+            'form': form,
+        }
+    )
+
+@login_required
+def student(request, student_id):
+    user = request.user
+    student = Student.objects.get(
+        id=student_id,
+        parent=user.parent,
+    )
+    form = StudentForm(request.POST or None, instance=student)
+    if form.is_valid():
+        form.save()
+        messages.success(
+            request,
+            "Saved!",
+        )
+        return redirect('dashboard')
+    return render(
+        request,
+        'app/student.html',
+        context={
+            'form': form,
+            'student': student,
+        },
+    )
+
+@login_required
+def delete_student(request, student_id):
+    parent = request.user.parent
+    student = Student.objects.get(
+        id=student_id,
+    )
+    if student.parent != parent:
+        return HttpResponse(status=400)
+    if request.method == "POST":
+        form = DeleteForm(request.POST)
+        if form.is_valid():
+            student.delete()
+            messages.error(
+                request,
+                "Student Deleted!",
+            )
+            return redirect('dashboard')
+    else:
+        form = DeleteForm()
+    return render(
+        request,
+        'app/delete_student.html',
+        {'form': form,},
+    )
+
+
+# Teacher
+@login_required
+def teacher(request):
+    user = request.user
+    teacher, created = Teacher.objects.get_or_create(
+        user=user,
+    )
+    if request.method == "POST":
+        form = TeacherForm(
+            request.POST,
+            instance=teacher,
+        )
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                "Saved!",
+            )
+            return redirect('dashboard')
+    else:
+        form = TeacherForm(
+            instance=teacher,
+        )
+    return render(
+        request,
+        'app/teacher.html',
+        context={
+            'form': form,
+        }
+    )
+
+
+# Parent Onboarding
+@login_required
+def parent(request):
+    parent = getattr(request.user, 'parent', None)
+    if request.method == "POST":
+        parent, _ = Parent.objects.get_or_create(
+            user=request.user,
+        )
+        form = ParentForm(
+            request.POST,
+            instance=parent,
+        )
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                "Parent Preferences Saved!",
+            )
+            return redirect('add-student-parent')
+    else:
+        form = ParentForm(
+            instance=parent,
+            initial={
+                'name': request.user.name,
+                'email': request.user.email,
+            }
+        )
+    return render(
+        request,
+        'app/parent.html',
+        context={
+            'form': form,
+        }
+    )
+
+@login_required
+def parent_edit(request):
+    parent = request.user.parent
+    form = ParentForm(
+        request.POST or None,
+        instance=parent,
+    )
+    if form.is_valid():
+        form.save()
+        messages.success(
+            request,
+            "Saved!",
+        )
+        return redirect('dashboard')
+    return render(
+        request,
+        'app/parent_edit.html',
+        context={
+            'form': form,
+        }
+    )
+
+@login_required
+def add_student_parent(request):
+    parent = request.user.parent
+    is_more = bool(parent.students.count())
+    students = parent.students.order_by('created')
+    form = StudentForm(request.POST or None)
+    if form.is_valid():
+        student = form.save(commit=False)
+        student.parent = parent
+        student.save()
+        messages.success(
+            request,
+            "Student Added!",
+        )
+        return redirect('add-student-parent')
+    return render(
+        request,
+        'app/add_student_parent.html',
+        context={
+            'form': form,
+            'is_more': is_more,
+            'students': students,
+        }
+    )
+
+@login_required
+def create_homerooms(request):
+    parent = request.user.parent
+    students = parent.students.all()
+    for student in students:
+        homeroom = Homeroom.objects.create(
+            parent=parent,
+            frequency=parent.frequency,
+            schedule=parent.schedule,
+            safety=parent.safety,
+        )
+        student.homeroom = homeroom
+        student.save()
+    return redirect('homerooms')
+
+
+@login_required
+def add_ask(request, homeroom_id):
+    homeroom = get_object_or_404(Homeroom, id=homeroom_id)
+    form = AddAskForm(request.POST or None)
+    if form.is_valid():
+        ask = form.save(commit=False)
+        ask.status = ask.STATUS.invited
+        ask.homeroom = homeroom
+        ask.save()
+        messages.success(
+            request,
+            "Student Added!",
+        )
+        return redirect('homeroom', homeroom.id)
+    return render(
+        request,
+        'app/add_ask.html',
+        context={
+            'form': form,
+        }
+    )
+
+@login_required
+def ask(request, homeroom_id, student_id):
+    student = get_object_or_404(Student, id=student_id)
+    homeroom = get_object_or_404(Homeroom, id=homeroom_id)
+    Ask.objects.create(
+        student=student,
+        homeroom=homeroom,
+    )
+    messages.success(
+        request,
+        "Request sent!",
+    )
+    return redirect('dashboard')
+
 @login_required
 def ask_form(request, homeroom_id):
     homeroom = get_object_or_404(Homeroom, id=homeroom_id)
@@ -720,7 +542,6 @@ def ask_form(request, homeroom_id):
         }
     )
 
-
 @login_required
 def ask_user(request, homeroom_id):
     homeroom = get_object_or_404(Homeroom, id=homeroom_id)
@@ -750,47 +571,191 @@ def ask_user(request, homeroom_id):
         }
     )
 
-
 @login_required
-def add_ask(request, homeroom_id):
-    homeroom = get_object_or_404(Homeroom, id=homeroom_id)
-    form = AddAskForm(request.POST or None)
-    if form.is_valid():
-        ask = form.save(commit=False)
-        ask.status = ask.STATUS.invited
-        ask.homeroom = homeroom
-        ask.save()
-        messages.success(
-            request,
-            "Student Added!",
+def homerooms(request):
+    parent = request.user.parent
+    students = parent.students.all()
+    for student in students:
+        student.homeroom.homeroom_link = request.build_absolute_uri(
+            reverse('homeroom', args=[student.homeroom.id])
         )
-        return redirect('homeroom', homeroom.id)
     return render(
         request,
-        'app/add_ask.html',
+        'app/homerooms.html',
         context={
-            'form': form,
+            'students': students,
+        }
+    )
+
+@login_required
+def homeroom_search(request):
+    return render(
+        request,
+        'app/homeroom_search.html',
+        context={
+            'app_id': settings.ALGOLIA['APPLICATION_ID'],
+            'search_key': settings.ALGOLIA['SEARCH_KEY'],
+            'index_name': "Homeroom_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
         }
     )
 
 
-def logout(request):
-    log_out(request)
-    params = {
-        'client_id': settings.AUTH0_CLIENT_ID,
-        'return_to': request.build_absolute_uri(reverse('index')),
+# Homeroom
+def homeroom(request, homeroom_id):
+    homeroom = get_object_or_404(Homeroom, pk=homeroom_id)
+    form = HomeroomForm(
+        request.POST or None,
+        instance=homeroom,
+    )
+    if form.is_valid():
+        form.save()
+        messages.success(
+            request,
+            'Saved!',
+        )
+        return redirect('homeroom', homeroom.id)
+    homeroom_link = request.build_absolute_uri(
+        reverse('homeroom', args=[homeroom_id])
+    )
+    students = homeroom.students.all()
+    asks = homeroom.asks.all()
+    return render(
+        request,
+        'app/homeroom.html', {
+            'form': form,
+            'homeroom': homeroom,
+            'homeroom_link': homeroom_link,
+            'students': students,
+            'asks': asks,
+        }
+    )
+
+@login_required
+def delete_homeroom(request, homeroom_id):
+    parent = request.user.parent
+    homeroom = get_object_or_404(Homeroom, id=homeroom_id)
+    if homeroom.parent != parent:
+        return HttpResponse(status=400)
+    if request.method == "POST":
+        form = DeleteForm(request.POST)
+        if form.is_valid():
+            homeroom.delete()
+            messages.error(
+                request,
+                "Homeroom Deleted!",
+            )
+            return redirect('dashboard')
+    else:
+        form = DeleteForm()
+    return render(
+        request,
+        'app/delete_homeroom.html',
+        {'form': form,},
+    )
+
+@login_required
+def connect_homeroom(request, student_id):
+    student = get_object_or_404(Student, id=student_id)
+    homerooms = Homeroom.objects.filter(
+        students__school=student.school,
+        students__grade=student.grade,
+    ).distinct()
+    students = Student.objects.filter(
+        school=student.school,
+        homeroom__isnull=True,
+    ).order_by('grade')
+    return render(
+        request,
+        'app/connect_homeroom.html',
+        context={
+            'student': student,
+            'homerooms': homerooms,
+            'students': students,
+            'app_id': settings.ALGOLIA['APPLICATION_ID'],
+            'search_key': settings.ALGOLIA['SEARCH_KEY'],
+            'index_name': "Homeroom_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
+        }
+    )
+
+@login_required
+def create_homeroom(request, student_id):
+    parent = request.user.parent
+    student = Student.objects.get(id=student_id)
+    initial = {
+        'schedule': parent.schedule,
+        'frequency': parent.frequency,
+        'safety': parent.safety,
     }
-    logout_url = requests.Request(
-        'GET',
-        'https://{0}/v2/logout'.format(settings.AUTH0_DOMAIN),
-        params=params,
-    ).prepare().url
+    form = HomeroomForm(request.POST or None, initial=initial)
+    if form.is_valid():
+        homeroom = form.save(commit=False)
+        homeroom.parent = parent
+        homeroom.save()
+        student.homeroom = homeroom
+        student.save()
+        messages.success(
+            request,
+            "Homeroom Created!",
+        )
+        return redirect('parent-homeroom-intro')
+    return render(
+        request,
+        'app/create_homeroom.html',
+        context={
+            'form': form,
+            'student': student,
+        }
+    )
+
+@login_required
+def parent_homeroom_intro(request):
+    parent = request.user.parent
+    students = parent.students.order_by(
+        'grade',
+    )
+    return render(
+        request,
+        'app/parent_homeroom_intro.html',
+        context={
+            'students': students,
+        }
+    )
+
+@login_required
+def add_homeroom_student(request, homeroom_id, student_id):
+    homeroom = get_object_or_404(Homeroom, pk=homeroom_id)
+    student = get_object_or_404(Student, pk=student_id)
+    student.homeroom = homeroom
+    student.save()
     messages.success(
         request,
-        "You Have Been Logged Out!",
+        "Student Addded!",
     )
-    return redirect(logout_url)
+    return redirect('homeroom', homeroom.id)
 
+@login_required
+def remove_homeroom_student(request, homeroom_id, student_id):
+    homeroom = get_object_or_404(Homeroom, pk=homeroom_id)
+    student = get_object_or_404(Student, pk=student_id)
+    student.homeroom = None
+    student.save()
+    messages.success(
+        request,
+        "Student Removed!",
+    )
+    return redirect('homeroom', homeroom.id)
+
+# Schools
+def search(request):
+    return render(
+        request,
+        'app/search.html',
+        context={
+            'app_id': settings.ALGOLIA['APPLICATION_ID'],
+            'search_key': settings.ALGOLIA['SEARCH_KEY'],
+            'index_name': "School_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
+        },
+    )
 
 def school(request, slug):
     school = get_object_or_404(School, slug=slug)
@@ -823,33 +788,11 @@ def school(request, slug):
         },
     )
 
-def search(request):
-    return render(
-        request,
-        'app/search.html',
-        context={
-            'app_id': settings.ALGOLIA['APPLICATION_ID'],
-            'search_key': settings.ALGOLIA['SEARCH_KEY'],
-            'index_name': "School_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
-        },
-    )
-
-
-@login_required
-def add_school(request):
-    user = request.user
-    form = SchoolForm(request.POST or None)
-    if form.is_valid():
-        form.save()
-        messages.success(
-            request,
-            "School Submitted!",
+class SchoolAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = School.objects.filter(
         )
-        return redirect('parent')
-    return render(
-        request,
-        'app/add_school.html',
-        context = {
-            'form': form,
-        },
-    )
+
+        if self.q:
+            qs = qs.filter(search_vector=self.q)
+        return qs

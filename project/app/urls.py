@@ -24,17 +24,13 @@ urlpatterns = [
     path('dashboard', views.dashboard, name='dashboard',),
     path('delete', views.delete, name='delete',),
 
-
+    # Student
     path('student/create', views.create_student, name='create-student'),
     path('student/<student_id>', views.student, name='student',),
     path('student/<student_id>/delete', views.delete_student, name='delete-student'),
 
-
     # Teacher
     path('teacher', views.teacher, name='teacher',),
-
-
-
 
     # Parent Onboarding
     path('parent', views.parent, name='parent',),
