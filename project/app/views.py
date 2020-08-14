@@ -255,7 +255,7 @@ def delete_user(request):
         form = DeleteForm()
     return render(
         request,
-        'app/delete.html',
+        'app/user_delete.html',
         {'form': form,},
     )
 
@@ -655,7 +655,7 @@ def delete_homeroom(request, homeroom_id):
         form = DeleteForm()
     return render(
         request,
-        'app/delete_homeroom.html',
+        'app/homeroom_delete.html',
         {'form': form,},
     )
 
