@@ -64,7 +64,7 @@
         templates: {
           item(item) {
             return `
-              <strong><a href='school/${item.slug}'>${item.name}</a></strong><br>
+              <strong><a href='${item.slug}'>${item.name}</a></strong><br>
               ${item.address}  ${item.city}, ${item.state}
             `;
           }
