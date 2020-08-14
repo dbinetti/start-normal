@@ -51,10 +51,6 @@ urlpatterns = [
     path('homeroom/<homeroom_id>/delete', views.delete_homeroom, name='delete-homeroom',),
     path('homeroom/connect/<student_id>', views.connect_homeroom, name='connect-homeroom'),
 
-    path('homeroom/create/<student_id>', views.create_homeroom, name='create-homeroom'),
-    path('homeroom-intro', views.parent_homeroom_intro, name='parent-homeroom-intro',),
-    path('homeroom/<homeroom_id>/add/<student_id>', views.add_homeroom_student, name='add-homeroom-student',),
-    path('homeroom/<homeroom_id>/remove/<student_id>', views.remove_homeroom_student, name='remove-homeroom-student',),
 
     # Schools
     path('search', views.search, name='search'),

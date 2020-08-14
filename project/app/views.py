@@ -707,43 +707,6 @@ def create_homeroom(request, student_id):
         }
     )
 
-@login_required
-def parent_homeroom_intro(request):
-    parent = request.user.parent
-    students = parent.students.order_by(
-        'grade',
-    )
-    return render(
-        request,
-        'app/parent_homeroom_intro.html',
-        context={
-            'students': students,
-        }
-    )
-
-@login_required
-def add_homeroom_student(request, homeroom_id, student_id):
-    homeroom = get_object_or_404(Homeroom, pk=homeroom_id)
-    student = get_object_or_404(Student, pk=student_id)
-    student.homeroom = homeroom
-    student.save()
-    messages.success(
-        request,
-        "Student Addded!",
-    )
-    return redirect('homeroom', homeroom.id)
-
-@login_required
-def remove_homeroom_student(request, homeroom_id, student_id):
-    homeroom = get_object_or_404(Homeroom, pk=homeroom_id)
-    student = get_object_or_404(Student, pk=student_id)
-    student.homeroom = None
-    student.save()
-    messages.success(
-        request,
-        "Student Removed!",
-    )
-    return redirect('homeroom', homeroom.id)
 
 # Schools
 def search(request):
