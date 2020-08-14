@@ -595,6 +595,9 @@ class Homeroom(models.Model):
         on_delete=models.CASCADE,
         related_name='homerooms',
     )
+    search_vector = SearchVectorField(
+        null=True,
+    )
 
     @property
     def size(self):
@@ -653,6 +656,10 @@ class Homeroom(models.Model):
         #         self.students.values_list('name', flat=True),
         #     )
         # )
+    class Meta:
+        indexes = [
+            GinIndex(fields=['search_vector'])
+        ]
 
 
 class Student(models.Model):

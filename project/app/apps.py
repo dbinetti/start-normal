@@ -15,4 +15,4 @@ class AppConfig(AppConfig):
 
         from .indexes import HomeroomIndex
         Homeroom = self.get_model('homeroom')
-        algoliasearch.register(Homeroom, HomeroomIndex)
+        # algoliasearch.register(Homeroom, HomeroomIndex)
