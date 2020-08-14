@@ -262,50 +262,6 @@ class Parent(models.Model):
         return str(self.user)
 
 
-class Invite(models.Model):
-    id = HashidAutoField(
-        primary_key=True,
-    )
-    student_name = models.CharField(
-        max_length=255,
-        blank=False,
-        default='',
-    )
-    parent_name = models.CharField(
-        max_length=255,
-        blank=False,
-        default='',
-    )
-    parent_email = models.EmailField(
-        max_length=255,
-        blank=False,
-        default='',
-    )
-    message = models.TextField(
-        blank=True,
-        default='',
-    )
-    created = models.DateTimeField(
-        auto_now_add=True,
-    )
-    updated = models.DateTimeField(
-        auto_now=True,
-    )
-    inviter = models.ForeignKey(
-        'User',
-        on_delete=models.CASCADE,
-        related_name='invites',
-    )
-    homeroom = models.ForeignKey(
-        'Homeroom',
-        on_delete=models.CASCADE,
-        related_name='invites',
-    )
-
-    def __str__(self):
-        return str(self.id)
-
-
 class Teacher(models.Model):
     id = HashidAutoField(
         primary_key=True,
