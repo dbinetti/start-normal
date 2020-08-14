@@ -33,8 +33,9 @@ urlpatterns = [
     path('teacher', views.teacher, name='teacher',),
 
     # Parent Onboarding
-    path('parent', views.parent, name='parent',),
-    path('parent-edit', views.parent_edit, name='parent-edit',),
+    path('parent/create', views.create_parent, name='create-parent',),
+    path('parent/<parent_id>', views.parent, name='parent',),
+
     path('student-parent', views.add_student_parent, name='add-student-parent',),
     path('homeroom/create-homerooms', views.create_homerooms, name='create-homerooms'),
 

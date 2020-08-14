@@ -192,6 +192,8 @@ def callback(request):
         log_in(request, user)
         if kind == 'ask':
             return redirect('ask-form', homeroom_id)
+        if kind == 'parent':
+            kind = 'create-parent'
         return redirect(kind)
     return HttpResponse(status=400)
 
@@ -364,10 +366,12 @@ def teacher(request):
 
 # Parent Onboarding
 @login_required
-def parent(request):
+def create_parent(request):
     parent = getattr(request.user, 'parent', None)
+    if parent:
+        return redirect('parent', parent.id)
     if request.method == "POST":
-        parent, _ = Parent.objects.get_or_create(
+        parent = Parent.objects.create(
             user=request.user,
         )
         form = ParentForm(
@@ -389,19 +393,19 @@ def parent(request):
                 'email': request.user.email,
             }
         )
-    template = 'app/welcome/parent.html'
-    context = {
-        'form': form,
-    }
     return render(
         request,
-        template,
-        context=context,
+        'app/parent_create.html',
+        context={
+            'form': form,
+        },
     )
 
 @login_required
-def parent_edit(request):
-    parent = request.user.parent
+def parent(request, parent_id):
+    parent = get_object_or_404(Parent, parent_id)
+    if parent.id != request.user.parent.id:
+        return HttpResponse(status=400)
     form = ParentForm(
         request.POST or None,
         instance=parent,
