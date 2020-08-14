@@ -22,7 +22,7 @@ urlpatterns = [
 
     # Account
     path('dashboard', views.dashboard, name='dashboard',),
-    path('delete', views.delete, name='delete',),
+    path('dashboard/delete', views.delete_user, name='delete-user',),
 
     # Student
     path('student/create', views.create_student, name='create-student'),

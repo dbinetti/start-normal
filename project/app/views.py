@@ -240,7 +240,7 @@ def dashboard(request):
     )
 
 @login_required
-def delete(request):
+def delete_user(request):
     if request.method == "POST":
         form = DeleteForm(request.POST)
         if form.is_valid():
