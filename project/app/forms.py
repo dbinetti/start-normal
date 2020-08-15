@@ -32,7 +32,7 @@ StudentFormSet = inlineformset_factory(
             url='school-autocomplete',
             attrs={
                 'data-container-css-class': '',
-                'data-close-on-select': 'false',
+                'data-close-on-select': 'true',
                 'data-scroll-after-select': 'true',
                 'data-placeholder': 'Start typing to search....',
                 'data-minimum-input-length': 3,
@@ -69,40 +69,47 @@ class SchoolForm(forms.ModelForm):
 
 class ClassmateForm(forms.ModelForm):
 
-    school = forms.ModelChoiceField(
-        queryset=School.objects.all(),
+    student = forms.ModelChoiceField(
+        queryset=Student.objects.all(),
         widget=autocomplete.ModelSelect2(
-            url='school-autocomplete',
+            url='student-autocomplete',
             attrs={
-                'data-container-css-class': '',
-                'data-close-on-select': 'false',
+                'data-container-css-class': ' ',
+                'data-close-on-select': 'true',
                 'data-scroll-after-select': 'true',
-                'data-placeholder': 'Nearby School',
+                'data-placeholder': 'Search students...',
                 'data-minimum-input-length': 3,
             },
         ),
-        help_text="Pick a school near where you'd like to teach (doesn't have to be your own school; this is just for location.)",
     )
 
     class Meta:
-        model = Teacher
+        model = Classmate
         fields = [
-            'is_credential',
-            'levels',
-            'subjects',
-            'school',
-            'rate',
-            'notes',
+            'message',
+            'homeroom',
+            'student',
+            # 'inviter',
+            # 'invitee',
         ]
         labels = {
-            "is_credential": "Credentialed?",
-            "levels": "School Level",
-            "subjects": "School Subjects",
-            "rate": "Hourly Rate Range",
         }
         help_texts = {
-            "is_credential": "If you are credentialed please check the box.",
         }
+        widgets = {
+            'message': forms.Textarea(
+                attrs={
+                    'class': 'form-control h-25',
+                    'placeholder': 'You can include a short message with your request.',
+                    'rows': 5,
+                }
+            )
+        }
+
+    def __init__(self, parent, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['homeroom'].queryset = Homeroom.objects.filter(parent=parent)
+
 
 
 class TeacherForm(forms.ModelForm):
@@ -113,7 +120,7 @@ class TeacherForm(forms.ModelForm):
             url='school-autocomplete',
             attrs={
                 'data-container-css-class': '',
-                'data-close-on-select': 'false',
+                'data-close-on-select': 'true',
                 'data-scroll-after-select': 'true',
                 'data-placeholder': 'Nearby School',
                 'data-minimum-input-length': 3,
@@ -177,7 +184,7 @@ class StudentForm(forms.ModelForm):
             url='school-autocomplete',
             attrs={
                 'data-container-css-class': '',
-                'data-close-on-select': 'false',
+                'data-close-on-select': 'true',
                 'data-scroll-after-select': 'false',
                 'data-placeholder': 'Search Schools',
                 'data-minimum-input-length': 3,
@@ -274,7 +281,7 @@ class AskForm(forms.ModelForm):
             url='school-autocomplete',
             attrs={
                 'data-container-css-class': '',
-                'data-close-on-select': 'false',
+                'data-close-on-select': 'true',
                 'data-scroll-after-select': 'false',
                 'data-placeholder': 'Search Schools',
                 'data-minimum-input-length': 3,
@@ -301,7 +308,6 @@ class AskForm(forms.ModelForm):
                 }
             )
         }
-
 
 
 class UserAskForm(forms.ModelForm):

@@ -47,6 +47,12 @@ class Classmate(models.Model):
         blank=False,
         related_name='classmates',
     )
+    friend = models.ForeignKey(
+        'Student',
+        on_delete=models.CASCADE,
+        blank=False,
+        related_name='friends',
+    )
     inviter = models.ForeignKey(
         'Parent',
         on_delete=models.CASCADE,
@@ -698,14 +704,13 @@ class Homeroom(models.Model):
         return False
 
     def __str__(self):
-        return str(self.id)
+        return "{0} - {1}".format(
+            self.parent,
+            ", ".join(
+                self.students.values_list('name', flat=True),
+            )
+        )
 
-        # return "{0} - {1}".format(
-        #     self.parent,
-        #     ", ".join(
-        #         self.students.values_list('name', flat=True),
-        #     )
-        # )
     class Meta:
         indexes = [
             GinIndex(fields=['search_vector'])

@@ -49,7 +49,7 @@ urlpatterns = [
     path('homeroom/connect/<student_id>', views.connect_homeroom, name='connect-homeroom'),
 
     # Classmate
-    # path('classmate/create', views.create_classmate, name='create-classmate'),
+    path('classmate/create', views.create_classmate, name='create-classmate'),
     # path('classmate/<classmate_id>', views.classmate, name='classmate',),
     # path('classmate/<classmate_id>/delete', views.delete_classmate, name='delete-classmate',),
 

@@ -24,6 +24,7 @@ from dal import autocomplete
 # Local
 from .forms import AddAskForm
 from .forms import AskForm
+from .forms import ClassmateForm
 from .forms import DeleteForm
 from .forms import HomeroomForm
 from .forms import ParentForm
@@ -635,6 +636,7 @@ def homeroom(request, homeroom_id):
     )
     students = homeroom.students.all()
     asks = homeroom.asks.all()
+    classmates = homeroom.classmates.all()
     return render(
         request,
         'app/homeroom.html', {
@@ -643,6 +645,7 @@ def homeroom(request, homeroom_id):
             'homeroom_link': homeroom_link,
             'students': students,
             'asks': asks,
+            'classmates': classmates,
         }
     )
 
@@ -712,6 +715,31 @@ def create_homeroom(request):
     return render(
         request,
         'app/create_homeroom.html',
+        context={
+            'form': form,
+        }
+    )
+
+# Classmatew
+
+@login_required
+def create_classmate(request):
+    parent = request.user.parent
+    form = ClassmateForm(parent, request.POST or None)
+    if form.is_valid():
+        invitee = form.cleaned_data['student'].parent
+        classmate = form.save(commit=False)
+        classmate.inviter = parent
+        classmate.invitee = invitee
+        classmate.save()
+        messages.success(
+            request,
+            'Classmate Created!',
+        )
+        return redirect('dashboard')
+    return render(
+        request,
+        'app/classmate_create.html',
         context={
             'form': form,
         }

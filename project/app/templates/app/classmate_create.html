@@ -1,0 +1,35 @@
+{% extends 'app/base.html' %}
+
+{% load bootstrap4 %}
+
+{% block title %}Create Classmate{% endblock title %}
+{% block header %}Create Classmate{% endblock header %}
+
+
+{% block content %}
+
+  <section class='mt-2 mt-5'>
+    <div class='card'>
+      <div class='card-header'>
+        <h4>
+          Classmate Form
+        </h4>
+      </div>
+      <div class="card-body">
+        <form method='POST'>
+          {% csrf_token %}
+          {% bootstrap_form_errors form %}
+          {% bootstrap_field form.homeroom %}
+          {% bootstrap_field form.student %}
+          {% bootstrap_field form.message %}
+          {% bootstrap_button "Add Student" button_type='submit' button_class='btn btn-primary btn-block' size='lg' %}
+        </form>
+      </div>
+    </div>
+  </section>
+
+{% endblock content %}
+
+{% block scripts %}
+  {{form.media}}
+{% endblock scripts %}
