@@ -67,5 +67,6 @@ urlpatterns = [
     # Search
     path('school-autocomplete', views.SchoolAutocomplete.as_view(), name='school-autocomplete',),
     path('homeroom-autocomplete', views.HomeroomAutocomplete.as_view(), name='homeroom-autocomplete',),
+    path('student-autocomplete', views.StudentAutocomplete.as_view(), name='student-autocomplete',),
 
 ]

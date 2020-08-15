@@ -9,6 +9,7 @@ from dal import autocomplete
 
 # Local
 from .models import Ask
+from .models import Classmate
 from .models import Homeroom
 from .models import Parent
 from .models import School
@@ -66,41 +67,42 @@ class SchoolForm(forms.ModelForm):
         ]
 
 
-class DistrictForm(forms.ModelForm):
+class ClassmateForm(forms.ModelForm):
 
-    def clean_name(self):
-        data = self.cleaned_data['name']
-        return data.title()
-
-    def clean_address(self):
-        data = self.cleaned_data['address']
-        return data.title()
-
-    def clean_city(self):
-        data = self.cleaned_data['city']
-        return data.title()
-
-    def clean_state(self):
-        data = self.cleaned_data['state']
-        return data.upper()
+    school = forms.ModelChoiceField(
+        queryset=School.objects.all(),
+        widget=autocomplete.ModelSelect2(
+            url='school-autocomplete',
+            attrs={
+                'data-container-css-class': '',
+                'data-close-on-select': 'false',
+                'data-scroll-after-select': 'true',
+                'data-placeholder': 'Nearby School',
+                'data-minimum-input-length': 3,
+            },
+        ),
+        help_text="Pick a school near where you'd like to teach (doesn't have to be your own school; this is just for location.)",
+    )
 
     class Meta:
-        # model = District
+        model = Teacher
         fields = [
-            'kind',
-            'name',
-            'kind',
-            'nces_id',
-            'address',
-            'city',
-            'state',
-            'zipcode',
-            'county',
-            'phone',
-            'website',
-            'lat',
-            'lon',
+            'is_credential',
+            'levels',
+            'subjects',
+            'school',
+            'rate',
+            'notes',
         ]
+        labels = {
+            "is_credential": "Credentialed?",
+            "levels": "School Level",
+            "subjects": "School Subjects",
+            "rate": "Hourly Rate Range",
+        }
+        help_texts = {
+            "is_credential": "If you are credentialed please check the box.",
+        }
 
 
 class TeacherForm(forms.ModelForm):

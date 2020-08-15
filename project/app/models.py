@@ -17,6 +17,56 @@ from multiselectfield import MultiSelectField
 from .managers import UserManager
 
 
+class Classmate(models.Model):
+    id = HashidAutoField(
+        primary_key=True,
+    )
+    STATUS = Choices(
+        (0, 'new', "New"),
+        (10, 'invited', "Invited"),
+        (20, 'enrolled', "Enrolled"),
+    )
+    status = FSMIntegerField(
+        blank=True,
+        choices=STATUS,
+        default=STATUS.new,
+    )
+    message = models.TextField(
+        blank=True,
+        default='',
+    )
+    homeroom = models.ForeignKey(
+        'Homeroom',
+        on_delete=models.CASCADE,
+        blank=False,
+        related_name='classmates',
+    )
+    student = models.ForeignKey(
+        'Student',
+        on_delete=models.CASCADE,
+        blank=False,
+        related_name='classmates',
+    )
+    inviter = models.ForeignKey(
+        'Parent',
+        on_delete=models.CASCADE,
+        blank=False,
+        related_name='classmates_outbound',
+    )
+    invitee = models.ForeignKey(
+        'Parent',
+        on_delete=models.CASCADE,
+        blank=False,
+        related_name='classmates_inbound',
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
+
+
 class Ask(models.Model):
     id = HashidAutoField(
         primary_key=True,
@@ -735,6 +785,9 @@ class Student(models.Model):
         on_delete=models.SET_NULL,
         null=True,
     )
+    search_vector = SearchVectorField(
+        null=True,
+    )
 
     @property
     def initials(self):
@@ -745,6 +798,10 @@ class Student(models.Model):
             self.name,
             self.parent.name,
         )
+    class Meta:
+        indexes = [
+            GinIndex(fields=['search_vector'])
+        ]
 
 
 class User(AbstractBaseUser):

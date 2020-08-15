@@ -777,3 +777,12 @@ class HomeroomAutocomplete(autocomplete.Select2QuerySetView):
         if self.q:
             qs = qs.filter(search_vector=self.q)
         return qs
+
+class StudentAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = Student.objects.filter(
+            # kind=Homeroom.KIND.public,
+        )
+        if self.q:
+            qs = qs.filter(search_vector=self.q)
+        return qs
