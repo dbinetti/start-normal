@@ -1,11 +1,11 @@
 # Django
+# Third-Party
+from dal import autocomplete
+
 from django import forms
 from django.contrib.auth.forms import UserChangeForm as UserChangeFormBase
 from django.contrib.auth.forms import UserCreationForm as UserCreationFormBase
 from django.forms.models import inlineformset_factory
-
-# First-Party
-from dal import autocomplete
 
 # Local
 from .models import Ask
@@ -31,7 +31,7 @@ StudentFormSet = inlineformset_factory(
             url='school-autocomplete',
             attrs={
                 'data-container-css-class': '',
-                'data-close-on-select': 'false',
+                'data-close-on-select': 'true',
                 'data-scroll-after-select': 'true',
                 'data-placeholder': 'Start typing to search....',
                 'data-minimum-input-length': 3,
@@ -111,7 +111,7 @@ class TeacherForm(forms.ModelForm):
             url='school-autocomplete',
             attrs={
                 'data-container-css-class': '',
-                'data-close-on-select': 'false',
+                'data-close-on-select': 'true',
                 'data-scroll-after-select': 'true',
                 'data-placeholder': 'Nearby School',
                 'data-minimum-input-length': 3,
@@ -175,7 +175,7 @@ class StudentForm(forms.ModelForm):
             url='school-autocomplete',
             attrs={
                 'data-container-css-class': '',
-                'data-close-on-select': 'false',
+                'data-close-on-select': 'true',
                 'data-scroll-after-select': 'false',
                 'data-placeholder': 'Search Schools',
                 'data-minimum-input-length': 3,
@@ -272,7 +272,7 @@ class AskForm(forms.ModelForm):
             url='school-autocomplete',
             attrs={
                 'data-container-css-class': '',
-                'data-close-on-select': 'false',
+                'data-close-on-select': 'true',
                 'data-scroll-after-select': 'false',
                 'data-placeholder': 'Search Schools',
                 'data-minimum-input-length': 3,
