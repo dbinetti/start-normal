@@ -1,11 +1,11 @@
 # Django
+# Third-Party
+from dal import autocomplete
+
 from django import forms
 from django.contrib.auth.forms import UserChangeForm as UserChangeFormBase
 from django.contrib.auth.forms import UserCreationForm as UserCreationFormBase
 from django.forms.models import inlineformset_factory
-
-# First-Party
-from dal import autocomplete
 
 # Local
 from .models import Ask
@@ -69,7 +69,7 @@ class SchoolForm(forms.ModelForm):
 
 class ClassmateForm(forms.ModelForm):
 
-    student = forms.ModelChoiceField(
+    to_student = forms.ModelChoiceField(
         queryset=Student.objects.all(),
         widget=autocomplete.ModelSelect2(
             url='student-autocomplete',
@@ -86,11 +86,9 @@ class ClassmateForm(forms.ModelForm):
     class Meta:
         model = Classmate
         fields = [
+            'from_student',
+            'to_student',
             'message',
-            'homeroom',
-            'student',
-            # 'inviter',
-            # 'invitee',
         ]
         labels = {
         }
@@ -108,7 +106,7 @@ class ClassmateForm(forms.ModelForm):
 
     def __init__(self, parent, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['homeroom'].queryset = Homeroom.objects.filter(parent=parent)
+        self.fields['from_student'].queryset = Student.objects.filter(parent=parent)
 
 
 

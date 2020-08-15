@@ -1,17 +1,17 @@
 # Django
+# Third-Party
+from autoslug import AutoSlugField
+from django_fsm import FSMIntegerField
+from hashid_field import HashidAutoField
+from model_utils import Choices
+from multiselectfield import MultiSelectField
+
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
-
-# First-Party
-from autoslug import AutoSlugField
-from django_fsm import FSMIntegerField
-from hashid_field import HashidAutoField
-from model_utils import Choices
-from multiselectfield import MultiSelectField
 
 # Local
 from .managers import UserManager
@@ -23,8 +23,9 @@ class Classmate(models.Model):
     )
     STATUS = Choices(
         (0, 'new', "New"),
-        (10, 'invited', "Invited"),
-        (20, 'enrolled', "Enrolled"),
+        (10, 'pending', "Pending"),
+        (20, 'accepted', "Accepted"),
+        (30, 'rejected', "Rejected"),
     )
     status = FSMIntegerField(
         blank=True,
@@ -35,35 +36,17 @@ class Classmate(models.Model):
         blank=True,
         default='',
     )
-    homeroom = models.ForeignKey(
-        'Homeroom',
-        on_delete=models.CASCADE,
-        blank=False,
-        related_name='classmates',
-    )
-    student = models.ForeignKey(
+    from_student = models.ForeignKey(
         'Student',
         on_delete=models.CASCADE,
         blank=False,
-        related_name='classmates',
+        related_name='classmates_from',
     )
-    friend = models.ForeignKey(
+    to_student = models.ForeignKey(
         'Student',
         on_delete=models.CASCADE,
         blank=False,
-        related_name='friends',
-    )
-    inviter = models.ForeignKey(
-        'Parent',
-        on_delete=models.CASCADE,
-        blank=False,
-        related_name='classmates_outbound',
-    )
-    invitee = models.ForeignKey(
-        'Parent',
-        on_delete=models.CASCADE,
-        blank=False,
-        related_name='classmates_inbound',
+        related_name='classmates_to',
     )
     created = models.DateTimeField(
         auto_now_add=True,
