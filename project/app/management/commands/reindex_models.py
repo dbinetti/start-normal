@@ -34,13 +34,13 @@ class Command(BaseCommand):
             h.search_vector = h.sv
             h.save()
 
-        whens = [When(grade=k, then=Value(v)) for k, v in Student.GRADE]
+        grades = [When(grade=k, then=Value(v)) for k, v in Student.GRADE]
         ss = Student.objects.annotate(
             sv=SearchVector(
                 'name',
                 # 'get_gender_display',
                 'school__name',
-                Case(*whens, output_field=CharField()),
+                Case(*grades, output_field=CharField()),
                 'parent__name',
                 'parent__email',
 

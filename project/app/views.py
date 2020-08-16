@@ -2,6 +2,10 @@
 import json
 import logging
 
+# Third-Party
+import requests
+from dal import autocomplete
+
 # Django
 from django.conf import settings
 from django.contrib import messages
@@ -9,6 +13,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as log_in
 from django.contrib.auth import logout as log_out
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
@@ -16,10 +21,7 @@ from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.crypto import get_random_string
-
-# First-Party
-import requests
-from dal import autocomplete
+from django.utils.html import format_html
 
 # Local
 from .forms import AddAskForm
@@ -34,6 +36,7 @@ from .forms import StudentFormSet
 from .forms import TeacherForm
 from .forms import UserAskForm
 from .models import Ask
+from .models import Classmate
 from .models import Homeroom
 from .models import Parent
 from .models import School
@@ -225,6 +228,10 @@ def dashboard(request):
     students = Student.objects.filter(
         parent=parent,
     )
+    classmates = Classmate.objects.filter(
+        Q(from_student__parent=parent,) |
+        Q(to_student__parent=parent,)
+    ).order_by('from_student', 'to_student')
     homerooms = Homeroom.objects.filter(
         parent=parent,
     )
@@ -236,6 +243,7 @@ def dashboard(request):
             'parent': parent,
             'teacher': teacher,
             'students': students,
+            'classmates': classmates,
             'homerooms': homerooms,
         }
     )
@@ -616,7 +624,6 @@ def homeroom_search(request):
         }
     )
 
-
 # Homeroom
 def homeroom(request, homeroom_id):
     homeroom = get_object_or_404(Homeroom, pk=homeroom_id)
@@ -635,8 +642,6 @@ def homeroom(request, homeroom_id):
         reverse('homeroom', args=[homeroom_id])
     )
     students = homeroom.students.all()
-    asks = homeroom.asks.all()
-    classmates = homeroom.classmates.all()
     return render(
         request,
         'app/homeroom.html', {
@@ -644,8 +649,6 @@ def homeroom(request, homeroom_id):
             'homeroom': homeroom,
             'homeroom_link': homeroom_link,
             'students': students,
-            'asks': asks,
-            'classmates': classmates,
         }
     )
 
@@ -720,18 +723,18 @@ def create_homeroom(request):
         }
     )
 
-# Classmatew
-
+# Classmates
 @login_required
 def create_classmate(request):
     parent = request.user.parent
-    form = ClassmateForm(parent, request.POST or None)
+    form = ClassmateForm(
+        parent,
+        request.POST or None,
+    )
     if form.is_valid():
-        invitee = form.cleaned_data['student'].parent
-        classmate = form.save(commit=False)
-        classmate.inviter = parent
-        classmate.invitee = invitee
-        classmate.save()
+        # from_student = form.cleaned_data['from_student']
+        # to_student = form.cleaned_data['to_student']
+        message = form.cleaned_data['message']
         messages.success(
             request,
             'Classmate Created!',
@@ -807,6 +810,15 @@ class HomeroomAutocomplete(autocomplete.Select2QuerySetView):
         return qs
 
 class StudentAutocomplete(autocomplete.Select2QuerySetView):
+    def get_result_label(self, item):
+        label = format_html("<p>{0} {1} {2} {3}</p>".format(
+            item.name,
+            item.parent.name,
+            item.school.name,
+            item.get_grade_display(),
+        ))
+        return label
+
     def get_queryset(self):
         qs = Student.objects.filter(
             # kind=Homeroom.KIND.public,

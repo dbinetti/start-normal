@@ -101,6 +101,49 @@
       </div>
     </div>
   </section>
+
+  <section class='mt-2 mt-5'>
+    <div class='card'>
+      <div class='card-header'>
+        <h4>Classmate Requests</h4>
+      </div>
+      <div class='card-body'>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>
+                From Student
+              </th>
+              <th>
+                To Student
+              </th>
+              <th>
+                Status
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for classmate in classmates %}
+              <tr>
+                <td>
+                  {{classmate.from_student}}
+                </td>
+                <td>
+                  {{classmate.to_student}}
+                </td>
+                <td>
+                  {{classmate.get_status_display}}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class='card-footer'>
+        <a href='{% url "create-classmate" %}' class='btn btn-success btn-large' role='button'>Make a Classmate Request</a>
+      </div>
+    </div>
+  </section>
   {% endif %}
 
   {% if teacher %}

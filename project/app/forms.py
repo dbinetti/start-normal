@@ -67,7 +67,11 @@ class SchoolForm(forms.ModelForm):
         ]
 
 
-class ClassmateForm(forms.ModelForm):
+class ClassmateForm(forms.Form):
+
+    from_student = forms.ModelChoiceField(
+        queryset=Student.objects.all(),
+    )
 
     to_student = forms.ModelChoiceField(
         queryset=Student.objects.all(),
@@ -79,30 +83,21 @@ class ClassmateForm(forms.ModelForm):
                 'data-scroll-after-select': 'true',
                 'data-placeholder': 'Search students...',
                 'data-minimum-input-length': 3,
+                'data-html': 'true',
+                'data-allow-clear': 'true',
             },
         ),
     )
-
-    class Meta:
-        model = Classmate
-        fields = [
-            'from_student',
-            'to_student',
-            'message',
-        ]
-        labels = {
-        }
-        help_texts = {
-        }
-        widgets = {
-            'message': forms.Textarea(
-                attrs={
-                    'class': 'form-control h-25',
-                    'placeholder': 'You can include a short message with your request.',
-                    'rows': 5,
-                }
-            )
-        }
+    message = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+            attrs={
+                'class': 'form-control h-25',
+                'placeholder': 'Personal message (optional)',
+                'rows': 5,
+            }
+        )
+    )
 
     def __init__(self, parent, *args, **kwargs):
         super().__init__(*args, **kwargs)

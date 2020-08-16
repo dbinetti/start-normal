@@ -12,21 +12,23 @@
     <div class='card'>
       <div class='card-header'>
         <h4>
-          Classmate Form
+          Find a Classmate
         </h4>
       </div>
       <div class="card-body">
         <form method='POST'>
           {% csrf_token %}
           {% bootstrap_form_errors form %}
-          {% bootstrap_field form.homeroom %}
-          {% bootstrap_field form.student %}
+          {% bootstrap_field form.from_student %}
+          {% bootstrap_field form.to_student %}
+          <small>Can't find the student you're looking for?</small>
           {% bootstrap_field form.message %}
-          {% bootstrap_button "Add Student" button_type='submit' button_class='btn btn-primary btn-block' size='lg' %}
+          {% bootstrap_button "Send Classmate Request" button_type='submit' button_class='btn btn-primary btn-block' size='lg' %}
         </form>
       </div>
     </div>
   </section>
+
 
 {% endblock content %}
 
