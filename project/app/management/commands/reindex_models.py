@@ -2,8 +2,11 @@
 from django.contrib.postgres.aggregates import StringAgg
 from django.contrib.postgres.search import SearchVector
 from django.core.management.base import BaseCommand
+from django.db.models import Case
+from django.db.models import CharField
 from django.db.models import F
 from django.db.models import Value
+from django.db.models import When
 
 # First-Party
 from app.models import Homeroom
@@ -30,14 +33,17 @@ class Command(BaseCommand):
         for h in hs:
             h.search_vector = h.sv
             h.save()
+
+        whens = [When(grade=k, then=Value(v)) for k, v in Student.GRADE]
         ss = Student.objects.annotate(
             sv=SearchVector(
                 'name',
                 # 'get_gender_display',
                 'school__name',
-                # 'school__get_grade_display',
+                Case(*whens, output_field=CharField()),
                 'parent__name',
                 'parent__email',
+
             )
         )
         for s in ss:
