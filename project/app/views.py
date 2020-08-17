@@ -2,10 +2,6 @@
 import json
 import logging
 
-# Third-Party
-import requests
-from dal import autocomplete
-
 # Django
 from django.conf import settings
 from django.contrib import messages
@@ -22,6 +18,10 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.crypto import get_random_string
 from django.utils.html import format_html
+
+# First-Party
+import requests
+from dal import autocomplete
 
 # Local
 from .forms import AddAskForm
@@ -732,9 +732,14 @@ def create_classmate(request):
         request.POST or None,
     )
     if form.is_valid():
-        # from_student = form.cleaned_data['from_student']
-        # to_student = form.cleaned_data['to_student']
+        from_student = form.cleaned_data['from_student']
+        to_student = form.cleaned_data['to_student']
         message = form.cleaned_data['message']
+        Classmate.objects.create(
+            from_student=from_student,
+            to_student=to_student,
+            message=message,
+        )
         messages.success(
             request,
             'Classmate Created!',

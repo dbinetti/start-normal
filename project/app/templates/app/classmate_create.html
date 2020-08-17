@@ -21,7 +21,12 @@
           {% bootstrap_form_errors form %}
           {% bootstrap_field form.from_student %}
           {% bootstrap_field form.to_student %}
-          <small>Can't find the student you're looking for?</small>
+          <div class='my-2'>
+            <a href='#addClassmate' data-toggle='collapse' <small>I can't find a particular student.</small></a>
+          </div>
+          <div class='collapse' id='addClassmate'>
+            LINK
+          </div>
           {% bootstrap_field form.message %}
           {% bootstrap_button "Send Classmate Request" button_type='submit' button_class='btn btn-primary btn-block' size='lg' %}
         </form>
