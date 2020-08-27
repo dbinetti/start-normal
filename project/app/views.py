@@ -2,6 +2,10 @@
 import json
 import logging
 
+# Third-Party
+import requests
+from dal import autocomplete
+
 # Django
 from django.conf import settings
 from django.contrib import messages
@@ -9,7 +13,12 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as log_in
 from django.contrib.auth import logout as log_out
 from django.contrib.auth.decorators import login_required
+from django.contrib.postgres.search import SearchVector
+from django.db.models import Case
+from django.db.models import CharField
 from django.db.models import Q
+from django.db.models import Value
+from django.db.models import When
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
@@ -19,13 +28,10 @@ from django.urls import reverse
 from django.utils.crypto import get_random_string
 from django.utils.html import format_html
 
-# First-Party
-import requests
-from dal import autocomplete
-
 # Local
 from .forms import AddAskForm
 from .forms import AskForm
+from .forms import BuildClassmateForm
 from .forms import ClassmateForm
 from .forms import DeleteForm
 from .forms import HomeroomForm
@@ -415,7 +421,7 @@ def create_parent(request):
 
 @login_required
 def parent(request, parent_id):
-    parent = get_object_or_404(Parent, parent_id)
+    parent = get_object_or_404(Parent, id=parent_id)
     if parent.id != request.user.parent.id:
         return HttpResponse(status=400)
     form = ParentForm(
@@ -440,7 +446,7 @@ def parent(request, parent_id):
 @login_required
 def delete_parent(request, parent_id):
     parent = request.user.parent
-    parent = get_object_or_404(Parent, parent_id)
+    parent = get_object_or_404(Parent, id=parent_id)
     if parent != request.user.parent:
         return HttpResponse(status=400)
     if request.method == "POST":
@@ -508,6 +514,14 @@ def add_ask(request, homeroom_id):
             'form': form,
         }
     )
+
+@login_required
+def finalize(request):
+    return render(
+        request,
+        'app/finalize.html',
+    )
+
 
 @login_required
 def ask(request, homeroom_id, student_id):
@@ -753,6 +767,55 @@ def create_classmate(request):
         }
     )
 
+
+@login_required
+def build_classmate(request):
+    form = BuildClassmateForm(
+        request.POST or None,
+    )
+    if form.is_valid():
+        student_name = form.cleaned_data['student_name']
+        parent_name = form.cleaned_data['parent_name']
+        parent_email = form.cleaned_data['parent_email']
+        school = form.cleaned_data['school']
+        grade = form.cleaned_data['grade']
+        parent = Parent.objects.create(
+            name=parent_name,
+            email=parent_email,
+        )
+        student = Student.objects.create(
+            name=student_name,
+            school=school,
+            grade=grade,
+            parent=parent,
+        )
+        grades = [When(grade=k, then=Value(v)) for k, v in Student.GRADE]
+        s = Student.objects.annotate(sv=SearchVector(
+            'name',
+            'school__name',
+            Case(*grades, output_field=CharField()),
+            'parent__name',
+            'parent__email',
+        )).first()
+        s.search_vector = s.sv
+        s.save()
+        messages.success(
+            request,
+            f'Added! You can now add {student_name} by name.',
+        )
+        redirect_uri = request.build_absolute_uri(reverse('create-classmate'))
+        return HttpResponse(
+            f'<script type="text/javascript">window.close(); window.opener.parent.location.href = "{redirect_uri}";</script>'
+        )
+    else:
+        print(form.errors)
+    return render(
+        request,
+        'app/classmate_build.html',
+        context={
+            'form': form,
+        }
+    )
 
 # Schools
 def search_schools(request):

@@ -1,12 +1,12 @@
 # Django
+# Third-Party
+from dal import autocomplete
+
 from django import forms
 from django.contrib.auth.forms import UserChangeForm as UserChangeFormBase
 from django.contrib.auth.forms import UserCreationForm as UserCreationFormBase
 from django.core.exceptions import ValidationError
 from django.forms.models import inlineformset_factory
-
-# First-Party
-from dal import autocomplete
 
 # Local
 from .models import Ask
@@ -110,42 +110,10 @@ class ClassmateForm(forms.ModelForm):
         self.fields['from_student'].queryset = Student.objects.filter(parent=parent)
 
 
-
-class AddClassmateForm(forms.Form):
-
-    from_student = forms.ModelChoiceField(
-        queryset=Student.objects.all(),
-    )
-
-    to_student = forms.ModelChoiceField(
-        queryset=Student.objects.all(),
-        widget=autocomplete.ModelSelect2(
-            url='student-autocomplete',
-            attrs={
-                'data-container-css-class': ' ',
-                'data-close-on-select': 'true',
-                'data-scroll-after-select': 'true',
-                'data-placeholder': 'Search for students by name, parent name, school name and/or grade...',
-                'data-minimum-input-length': 3,
-                'data-html': 'true',
-                'data-allow-clear': 'true',
-            },
-        ),
-        required=False,
-    )
-    message = forms.CharField(
-        required=False,
-        widget=forms.Textarea(
-            attrs={
-                'class': 'form-control h-25',
-                'placeholder': 'Personal message (optional)',
-                'rows': 5,
-            }
-        )
-    )
+class BuildClassmateForm(forms.Form):
 
     student_name = forms.CharField(
-        required=False,
+        required=True,
     )
 
     def clean_student_name(self):
@@ -153,8 +121,7 @@ class AddClassmateForm(forms.Form):
         return data.title()
 
     parent_name = forms.CharField(
-        required=False,
-        # widget=forms.EmailInput(attrs={'class': 'form-control'})
+        required=True,
     )
 
     def clean_parent_name(self):
@@ -162,59 +129,32 @@ class AddClassmateForm(forms.Form):
         return data.title()
 
     parent_email = forms.EmailField(
-        required=False,
+        required=True,
         widget=forms.EmailInput(attrs={'class': 'form-control'})
     )
 
+    def clean_parent_email(self):
+        data = self.cleaned_data['parent_email']
+        return data.lower()
+
     school = forms.ModelChoiceField(
         queryset=School.objects.all(),
+        # required=True,
         widget=autocomplete.ModelSelect2(
             url='school-autocomplete',
             attrs={
                 'data-container-css-class': '',
                 'data-close-on-select': 'true',
                 'data-scroll-after-select': 'true',
-                'data-placeholder': 'Nearby School',
+                'data-placeholder': 'Add Student School',
                 'data-minimum-input-length': 3,
             },
         ),
     )
     grade = forms.ChoiceField(
         choices=Student.GRADE,
-        required=False,
+        required=True,
     )
-
-    def clean_email(self):
-        data = self.cleaned_data['parent_email']
-        return data.lower()
-
-    def __init__(self, parent, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['from_student'].queryset = Student.objects.filter(parent=parent)
-
-    def clean(self):
-        cleaned_data = super().clean()
-        student_name = cleaned_data.get("student_name")
-        parent_name = cleaned_data.get("parent_name")
-        parent_email = cleaned_data.get("parent_email")
-
-        if any([student_name, parent_name, parent_email]):
-            if all([student_name, parent_name, parent_email]):
-                parent = Parent.objects.create(
-                    name=parent_name,
-                    email=parent_email,
-                )
-                student = Student.objects.create(
-                    name=student_name,
-                    parent=parent,
-                )
-                self.cleaned_data['student'] = student
-            else:
-                raise ValidationError(
-                    "Please add all the fields."
-                )
-        return self.cleaned_data
-
 
 
 class TeacherForm(forms.ModelForm):

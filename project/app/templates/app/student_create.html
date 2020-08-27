@@ -31,8 +31,7 @@
         </ul>
         </p>
         <p>
-          Add another student below, or skip to <a href='{% url "finalize
-"welcomed" %}'>Last Step</a> if you're finished.
+          Add another student below, or skip to <a href='{% url "finalize" %}'>Last Step</a> if you're finished.
         </p>
       {% else %}
         <p>
@@ -56,7 +55,7 @@
           {% bootstrap_field form.name show_help=True show_label=False placeholder="Enter Student's First Name/Initials" %}
           {% bootstrap_field form.school show_help=True show_label=false %}
           {% bootstrap_field form.grade show_help=True show_label=False %}
-          {% bootstrap_field form.gender show_help=False show_label=False %}
+          {# {% bootstrap_field form.gender show_help=False show_label=False %} #}
           {% if is_more %}
             {% bootstrap_button "Add Another Student" button_type='submit' button_class='btn btn-primary btn-block' size='lg' %}
           {% else %}
@@ -66,8 +65,7 @@
       </div>
       {% if is_more %}
         <div class='card-footer'>
-          <a href='{% url "finalize
-"welcome" %}' class="btn btn-dark btn-lg btn-block" role='button'>No More Students</a>
+          <a href='{% url "finalize" %}' class="btn btn-dark btn-lg btn-block" role='button'>No More Students</a>
         </div>
       {% endif %}
     </div>

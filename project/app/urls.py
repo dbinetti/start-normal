@@ -22,6 +22,7 @@ urlpatterns = [
 
     # Onboard
     path('welcome', views.welcome, name='welcome'),
+    path('finalize', views.finalize, name='finalize'),
 
     # Dashboard
     path('dashboard', views.dashboard, name='dashboard',),
@@ -50,6 +51,7 @@ urlpatterns = [
 
     # Classmate
     path('classmate/create', views.create_classmate, name='create-classmate'),
+    path('classmate/build', views.build_classmate, name='build-classmate'),
     # path('classmate/<classmate_id>', views.classmate, name='classmate',),
     # path('classmate/<classmate_id>/delete', views.delete_classmate, name='delete-classmate',),
 

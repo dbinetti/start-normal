@@ -48,7 +48,7 @@
   <section class='mt-2 mt-5'>
     <div class='card'>
       <div class='card-header'>
-        <h4>Student/Homeroom Information</h4>
+        <h4>Student Information</h4>
       </div>
       <div class='card-body'>
         <table class='table'>
@@ -63,9 +63,6 @@
               <th>
                 Grade
               </th>
-              <th>
-                Homeroom
-              </th>
             </tr>
           </thead>
           <tbody>
@@ -79,17 +76,6 @@
                 </td>
                 <td>
                   {{student.get_grade_display}}
-                </td>
-                <td>
-                  {% if student.homeroom %}
-                    <a href='{% url "homeroom" student.homeroom.id %}'>Homeroom</a>
-                  {% else %}
-                    {% if student.asks.count > 0 %}
-                      Request Pending
-                    {% else %}
-                      <a href='{% url "homeroom-search" %}'>Join/Create Homeroom</a>
-                    {% endif %}
-                  {% endif %}
                 </td>
               </tr>
             {% endfor %}
@@ -150,7 +136,7 @@
   <section class='mt-2 mt-5'>
     <div class='card'>
       <div class='card-header'>
-        <h4>Student/Homeroom Information</h4>
+        <h4>Student Information</h4>
       </div>
       <div class='card-body'>
         <table class='table'>
@@ -164,9 +150,6 @@
               </th>
               <th>
                 Grade
-              </th>
-              <th>
-                Homeroom
               </th>
             </tr>
           </thead>

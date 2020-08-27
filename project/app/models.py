@@ -248,12 +248,12 @@ class Parent(models.Model):
         default=SAFETY.none
     )
     schedule = models.IntegerField(
-        blank=False,
+        blank=True,
         choices=SCHEDULE,
         default=SCHEDULE.none
     )
     frequency = models.IntegerField(
-        blank=False,
+        blank=True,
         choices=FREQUENCY,
         default=FREQUENCY.none
     )
@@ -742,7 +742,7 @@ class Student(models.Model):
         help_text="""This will be shown to other parents on the private site; it will not appear on the public site.  """,
     )
     gender = models.IntegerField(
-        blank=False,
+        blank=True,
         null=True,
         choices=GENDER,
     )
