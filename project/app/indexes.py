@@ -44,9 +44,9 @@ class HomeroomIndex(AlgoliaIndex):
     fields = [
         'id',
         'get_status_display',
-        'get_masks_display',
-        'get_distance_display',
+        'get_safety_display',
         'get_schedule_display',
+        'get_frequency_display',
         'size',
         'notes',
         'schools',
@@ -64,9 +64,9 @@ class HomeroomIndex(AlgoliaIndex):
         ],
         'attributesForFaceting': [
             'get_status_display',
-            'get_masks_display',
-            'get_distance_display',
+            'get_safety_display',
             'get_schedule_display',
+            'get_frequency_display',
             'size',
         ],
     }

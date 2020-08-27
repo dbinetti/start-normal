@@ -37,4 +37,12 @@ def user_post_save(sender, instance, created, raw=False, **kwargs):
             user=instance,
         )
         mailchimp_create_or_update_from_user.delay(instance)
+        try:
+            parent = Parent.objects.get(
+                email=instance.email,
+            )
+        except Parent.DoesNotExist:
+            return
+        parent.user = instance
+        parent.save()
     return

@@ -44,6 +44,45 @@
         </div>
       </div>
     </section>
+
+    <section class='my-5'>
+      <div class='card'>
+        <div class='card-header'>
+          <h4>
+            Classmates
+          </h4>
+        </div>
+        <div class='card-body'>
+          <table class='table'>
+            <thead>
+              <tr>
+                <th>
+                  Student
+                </th>
+                <th>
+                  Status
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  {{classmate.student.name}}
+                </td>
+                <td>
+                  {{classmate.get_status_display}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class='card-footer'>
+          <a href='{% url "create-classmate" %}'>Add Classmate</a>
+        </div>
+      </div>
+    </section>
+
+
     <section class='mt-2 mt-5'>
       <div class='card'>
         <div class='card-header'>
@@ -261,6 +300,9 @@
       <p class='mb-5'>If you'd like to see more details about this Homeroom and request to join, please:</p>
       <a href='{% url "signup" homeroom.id %}' role='button' class="btn btn-success btn-block btn-lg">Register as a Parent</a>.
     </section>
+
+
+
     {% comment %}
     <section class='my-5'>
       <a href='{% url "signup" homeroom.id %}' role='button' class="btn btn-success btn-block btn-lg">

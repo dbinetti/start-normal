@@ -31,12 +31,12 @@
           </ul>
         </div>
         <div class='card-footer'>
-          <a href='{% url "parent-edit" %}' class='btn btn-success btn-large' role='button'>Edit Parent Information</a>
+          <a href='{% url "parent" parent.id %}' class='btn btn-success btn-large' role='button'>Edit Parent Information</a>
         </div>
       {% else %}
         <div class='card-body'>
           <p>
-            You are not currently registered as a parent.  <a href='{% url "parent" %}'>Register as Parent</a>
+            You are not currently registered as a parent.  <a href='{% url "create-parent" %}'>Register as Parent</a>
           </p>
         </div>
       {% endif %}
@@ -48,7 +48,7 @@
   <section class='mt-2 mt-5'>
     <div class='card'>
       <div class='card-header'>
-        <h4>Student/Homeroom Information</h4>
+        <h4>Student Information</h4>
       </div>
       <div class='card-body'>
         <table class='table'>
@@ -62,9 +62,6 @@
               </th>
               <th>
                 Grade
-              </th>
-              <th>
-                Homeroom
               </th>
             </tr>
           </thead>
@@ -80,17 +77,6 @@
                 <td>
                   {{student.get_grade_display}}
                 </td>
-                <td>
-                  {% if student.homeroom %}
-                    <a href='{% url "homeroom" student.homeroom.id %}'>Homeroom</a>
-                  {% else %}
-                    {% if student.asks.count > 0 %}
-                      Request Pending
-                    {% else %}
-                      <a href='{% url "homeroom-search" %}'>Join/Create Homeroom</a>
-                    {% endif %}
-                  {% endif %}
-                </td>
               </tr>
             {% endfor %}
           </tbody>
@@ -101,13 +87,56 @@
       </div>
     </div>
   </section>
+
+  <section class='mt-2 mt-5'>
+    <div class='card'>
+      <div class='card-header'>
+        <h4>Classmate Requests</h4>
+      </div>
+      <div class='card-body'>
+        <table class='table'>
+          <thead>
+            <tr>
+              <th>
+                From Student
+              </th>
+              <th>
+                To Student
+              </th>
+              <th>
+                Status
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for classmate in classmates %}
+              <tr>
+                <td>
+                  {{classmate.from_student}}
+                </td>
+                <td>
+                  {{classmate.to_student}}
+                </td>
+                <td>
+                  {{classmate.get_status_display}}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class='card-footer'>
+        <a href='{% url "create-classmate" %}' class='btn btn-success btn-large' role='button'>Make a Classmate Request</a>
+      </div>
+    </div>
+  </section>
   {% endif %}
 
   {% if teacher %}
   <section class='mt-2 mt-5'>
     <div class='card'>
       <div class='card-header'>
-        <h4>Student/Homeroom Information</h4>
+        <h4>Student Information</h4>
       </div>
       <div class='card-body'>
         <table class='table'>
@@ -121,9 +150,6 @@
               </th>
               <th>
                 Grade
-              </th>
-              <th>
-                Homeroom
               </th>
             </tr>
           </thead>

@@ -1,4 +1,11 @@
 # Django
+# Third-Party
+from autoslug import AutoSlugField
+from django_fsm import FSMIntegerField
+from hashid_field import HashidAutoField
+from model_utils import Choices
+from multiselectfield import MultiSelectField
+
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
@@ -6,14 +13,47 @@ from django.contrib.postgres.search import SearchVectorField
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 
-# First-Party
-from autoslug import AutoSlugField
-from hashid_field import HashidAutoField
-from model_utils import Choices
-from multiselectfield import MultiSelectField
-
 # Local
 from .managers import UserManager
+
+
+class Classmate(models.Model):
+    id = HashidAutoField(
+        primary_key=True,
+    )
+    STATUS = Choices(
+        (0, 'new', "New"),
+        (10, 'pending', "Pending"),
+        (20, 'accepted', "Accepted"),
+        (30, 'rejected', "Rejected"),
+    )
+    status = FSMIntegerField(
+        blank=True,
+        choices=STATUS,
+        default=STATUS.new,
+    )
+    message = models.TextField(
+        blank=True,
+        default='',
+    )
+    from_student = models.ForeignKey(
+        'Student',
+        on_delete=models.CASCADE,
+        blank=False,
+        related_name='classmates_from',
+    )
+    to_student = models.ForeignKey(
+        'Student',
+        on_delete=models.CASCADE,
+        blank=False,
+        related_name='classmates_to',
+    )
+    created = models.DateTimeField(
+        auto_now_add=True,
+    )
+    updated = models.DateTimeField(
+        auto_now=True,
+    )
 
 
 class Ask(models.Model):
@@ -46,7 +86,7 @@ class Ask(models.Model):
         (11, 'eleventh', 'Eleventh Grade'),
         (12, 'twelfth', 'Twelfth Grade'),
     )
-    status = models.IntegerField(
+    status = FSMIntegerField(
         blank=True,
         choices=STATUS,
         default=STATUS.new,
@@ -113,6 +153,14 @@ class Account(models.Model):
     id = HashidAutoField(
         primary_key=True,
     )
+    is_welcomed = models.BooleanField(
+        default=False,
+    )
+    phone = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="""Your mobile phone. (Optional)""",
+    )
     address = models.CharField(
         max_length=255,
         blank=True,
@@ -137,14 +185,6 @@ class Account(models.Model):
         max_length=255,
         blank=True,
     )
-    phone = models.CharField(
-        max_length=255,
-        blank=True,
-        help_text="""Your mobile phone. (Optional)""",
-    )
-    is_welcomed = models.BooleanField(
-        default=False,
-    )
     created = models.DateTimeField(
         auto_now_add=True,
     )
@@ -161,16 +201,6 @@ class Account(models.Model):
 
 
 class Parent(models.Model):
-    MASKS = Choices(
-        (0, 'none', "No Preference"),
-        (10, 'required', "Required"),
-        (20, 'optional', "Optional"),
-    )
-    DISTANCE = Choices(
-        (0, 'none', "No Preference"),
-        (10, 'required', "Required"),
-        (20, 'optional', "Optional"),
-    )
     SCHEDULE = Choices(
         (0, 'none', "No Schedule Preference"),
         (10, 'morning', "Morning"),
@@ -209,33 +239,21 @@ class Parent(models.Model):
     is_host = models.BooleanField(
         default=False,
     )
-    masks = models.IntegerField(
-        blank=True,
-        null=True,
-        choices=MASKS,
-        default=MASKS.none
-    )
-    distance = models.IntegerField(
-        blank=True,
-        null=True,
-        choices=DISTANCE,
-        default=DISTANCE.none
+    is_welcomed = models.BooleanField(
+        default=False,
     )
     safety = models.IntegerField(
-        blank=True,
-        null=True,
+        blank=False,
         choices=SAFETY,
         default=SAFETY.none
     )
     schedule = models.IntegerField(
         blank=True,
-        null=True,
         choices=SCHEDULE,
         default=SCHEDULE.none
     )
     frequency = models.IntegerField(
         blank=True,
-        null=True,
         choices=FREQUENCY,
         default=FREQUENCY.none
     )
@@ -266,20 +284,11 @@ class Teacher(models.Model):
     id = HashidAutoField(
         primary_key=True,
     )
-    is_credential = models.BooleanField(
-        default=False,
-        help_text="""Are you credentialed?""",
-    )
     LEVEL = Choices(
         (510, 'ps', 'Preschool'),
         (520, 'elem', 'Elementary'),
         (530, 'intmidjr', 'Intermediate/Middle/Junior High'),
         (540, 'hs', 'High School'),
-    )
-    levels = MultiSelectField(
-        choices=LEVEL,
-        null=True,
-        help_text="""What levels do you teach?""",
     )
     SUBJECT = Choices(
         (110, 'ps', 'English'),
@@ -290,6 +299,15 @@ class Teacher(models.Model):
         (160, 'ps', 'Music'),
         (170, 'ps', 'PE'),
         (180, 'ps', 'Other'),
+    )
+    is_credential = models.BooleanField(
+        default=False,
+        help_text="""Are you credentialed?""",
+    )
+    levels = MultiSelectField(
+        choices=LEVEL,
+        null=True,
+        help_text="""What levels do you teach?""",
     )
     subjects = MultiSelectField(
         choices=SUBJECT,
@@ -372,6 +390,11 @@ class School(models.Model):
     id = HashidAutoField(
         primary_key=True,
     )
+    status = FSMIntegerField(
+        blank=False,
+        choices=STATUS,
+        default=STATUS.new,
+    )
     name = models.CharField(
         max_length=255,
         blank=False,
@@ -385,11 +408,6 @@ class School(models.Model):
         populate_from='__str__',
         unique=True,
     )
-    status = models.IntegerField(
-        blank=False,
-        choices=STATUS,
-        default=STATUS.new,
-    )
     kind = models.IntegerField(
         blank=False,
         choices=KIND,
@@ -399,11 +417,6 @@ class School(models.Model):
         blank=True,
         null=True,
         choices=LEVEL,
-    )
-    cd_id = models.BigIntegerField(
-        blank=True,
-        null=True,
-        unique=True,
     )
     nces_id = models.CharField(
         max_length=50,
@@ -526,16 +539,6 @@ class Homeroom(models.Model):
         (10, 'instruction', "Instruction"),
         (20, 'social', "Social"),
     )
-    MASKS = Choices(
-        (0, 'none', "No Preference"),
-        (10, 'required', "Required"),
-        (20, 'optional', "Optional"),
-    )
-    DISTANCE = Choices(
-        (0, 'none', "No Preference"),
-        (10, 'required', "Required"),
-        (20, 'optional', "Optional"),
-    )
     SCHEDULE = Choices(
         (0, 'none', "No Schedule Preference"),
         (10, 'morning', "Morning"),
@@ -572,7 +575,7 @@ class Homeroom(models.Model):
     id = HashidAutoField(
         primary_key=True,
     )
-    status = models.IntegerField(
+    status = FSMIntegerField(
         blank=False,
         choices=STATUS,
         default=STATUS.open,
@@ -586,18 +589,6 @@ class Homeroom(models.Model):
         blank=False,
         choices=GOAL,
         default=GOAL.instruction,
-    )
-    masks = models.IntegerField(
-        blank=True,
-        null=True,
-        choices=MASKS,
-        default=MASKS.none
-    )
-    distance = models.IntegerField(
-        blank=True,
-        null=True,
-        choices=DISTANCE,
-        default=DISTANCE.none
     )
     safety = models.IntegerField(
         blank=True,
@@ -642,6 +633,9 @@ class Homeroom(models.Model):
         'Parent',
         on_delete=models.CASCADE,
         related_name='homerooms',
+    )
+    search_vector = SearchVectorField(
+        null=True,
     )
 
     @property
@@ -693,14 +687,17 @@ class Homeroom(models.Model):
         return False
 
     def __str__(self):
-        return str(self.id)
+        return "{0} - {1}".format(
+            self.parent,
+            ", ".join(
+                self.students.values_list('name', flat=True),
+            )
+        )
 
-        # return "{0} - {1}".format(
-        #     self.parent,
-        #     ", ".join(
-        #         self.students.values_list('name', flat=True),
-        #     )
-        # )
+    class Meta:
+        indexes = [
+            GinIndex(fields=['search_vector'])
+        ]
 
 
 class Student(models.Model):
@@ -734,7 +731,7 @@ class Student(models.Model):
         (11, 'eleventh', 'Eleventh Grade'),
         (12, 'twelfth', 'Twelfth Grade'),
     )
-    status = models.IntegerField(
+    status = FSMIntegerField(
         blank=False,
         choices=STATUS,
         default=STATUS.new,
@@ -745,7 +742,7 @@ class Student(models.Model):
         help_text="""This will be shown to other parents on the private site; it will not appear on the public site.  """,
     )
     gender = models.IntegerField(
-        blank=False,
+        blank=True,
         null=True,
         choices=GENDER,
     )
@@ -776,6 +773,9 @@ class Student(models.Model):
         on_delete=models.SET_NULL,
         null=True,
     )
+    search_vector = SearchVectorField(
+        null=True,
+    )
 
     @property
     def initials(self):
@@ -786,6 +786,10 @@ class Student(models.Model):
             self.name,
             self.parent.name,
         )
+    class Meta:
+        indexes = [
+            GinIndex(fields=['search_vector'])
+        ]
 
 
 class User(AbstractBaseUser):

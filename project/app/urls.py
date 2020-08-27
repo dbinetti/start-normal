@@ -20,6 +20,10 @@ urlpatterns = [
     path('callback', views.callback, name='callback'),
     path('logout', views.logout, name='logout'),
 
+    # Onboard
+    path('welcome', views.welcome, name='welcome'),
+    path('finalize', views.finalize, name='finalize'),
+
     # Dashboard
     path('dashboard', views.dashboard, name='dashboard',),
     path('dashboard/delete', views.delete_user, name='delete-user',),
@@ -32,11 +36,24 @@ urlpatterns = [
     # Teacher
     path('teacher', views.teacher, name='teacher',),
 
-    # Parent Onboarding
-    path('parent', views.parent, name='parent',),
-    path('parent-edit', views.parent_edit, name='parent-edit',),
-    path('student-parent', views.add_student_parent, name='add-student-parent',),
-    path('homeroom/create-homerooms', views.create_homerooms, name='create-homerooms'),
+    # Parent
+    path('parent/create', views.create_parent, name='create-parent',),
+    path('parent/<parent_id>', views.parent, name='parent',),
+    path('parent/<parent_id>/delete', views.delete_parent, name='delete-parent',),
+
+    # Homeroom
+    path('homeroom/create', views.create_homeroom, name='create-homeroom'),
+    path('homeroom/<homeroom_id>', views.homeroom, name='homeroom',),
+    path('homeroom/<homeroom_id>/delete', views.delete_homeroom, name='delete-homeroom',),
+
+    path('homeroom/search', views.homeroom_search, name='homeroom-search',),
+    path('homeroom/connect/<student_id>', views.connect_homeroom, name='connect-homeroom'),
+
+    # Classmate
+    path('classmate/create', views.create_classmate, name='create-classmate'),
+    path('classmate/build', views.build_classmate, name='build-classmate'),
+    # path('classmate/<classmate_id>', views.classmate, name='classmate',),
+    # path('classmate/<classmate_id>/delete', views.delete_classmate, name='delete-classmate',),
 
     # Ask
     path('ask/add/<homeroom_id>', views.add_ask, name='add-ask',),
@@ -45,17 +62,13 @@ urlpatterns = [
     path('ask-user/<homeroom_id>', views.ask_user, name='ask-user',),
 
 
-    # Homeroom
-    path('homeroom/search', views.homeroom_search, name='homeroom-search',),
-    path('homeroom/create/<student_id>', views.create_homeroom, name='create-homeroom'),
-    path('homeroom/<homeroom_id>', views.homeroom, name='homeroom',),
-    path('homeroom/<homeroom_id>/delete', views.delete_homeroom, name='delete-homeroom',),
-    path('homeroom/connect/<student_id>', views.connect_homeroom, name='connect-homeroom'),
-
-    path('homerooms', views.homerooms, name='homerooms',),
-
     # Schools
     path('school/search', views.search_schools, name='school-search'),
     path('school/<slug>', views.school, name='school'),
+
+    # Search
     path('school-autocomplete', views.SchoolAutocomplete.as_view(), name='school-autocomplete',),
+    path('homeroom-autocomplete', views.HomeroomAutocomplete.as_view(), name='homeroom-autocomplete',),
+    path('student-autocomplete', views.StudentAutocomplete.as_view(), name='student-autocomplete',),
+
 ]

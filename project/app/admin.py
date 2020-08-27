@@ -11,6 +11,7 @@ from .inlines import HomeroomInline
 from .inlines import StudentInline
 from .models import Account
 from .models import Ask
+from .models import Classmate
 from .models import Homeroom
 from .models import Parent
 from .models import School
@@ -45,6 +46,25 @@ class AskAdmin(admin.ModelAdmin):
     autocomplete_fields = [
         'student',
         'homeroom',
+    ]
+
+@admin.register(Classmate)
+class ClassmateAdmin(admin.ModelAdmin):
+    save_on_top = True
+    fields = [
+        'from_student',
+        'to_student',
+        'message',
+    ]
+    list_display = [
+        'from_student',
+        'to_student',
+        'created',
+    ]
+
+    autocomplete_fields = [
+        'from_student',
+        'to_student',
     ]
 
 @admin.register(Homeroom)

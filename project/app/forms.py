@@ -5,10 +5,12 @@ from dal import autocomplete
 from django import forms
 from django.contrib.auth.forms import UserChangeForm as UserChangeFormBase
 from django.contrib.auth.forms import UserCreationForm as UserCreationFormBase
+from django.core.exceptions import ValidationError
 from django.forms.models import inlineformset_factory
 
 # Local
 from .models import Ask
+from .models import Classmate
 from .models import Homeroom
 from .models import Parent
 from .models import School
@@ -66,41 +68,93 @@ class SchoolForm(forms.ModelForm):
         ]
 
 
-class DistrictForm(forms.ModelForm):
-
-    def clean_name(self):
-        data = self.cleaned_data['name']
-        return data.title()
-
-    def clean_address(self):
-        data = self.cleaned_data['address']
-        return data.title()
-
-    def clean_city(self):
-        data = self.cleaned_data['city']
-        return data.title()
-
-    def clean_state(self):
-        data = self.cleaned_data['state']
-        return data.upper()
+class ClassmateForm(forms.ModelForm):
 
     class Meta:
-        # model = District
+        model = Classmate
+
         fields = [
-            'kind',
-            'name',
-            'kind',
-            'nces_id',
-            'address',
-            'city',
-            'state',
-            'zipcode',
-            'county',
-            'phone',
-            'website',
-            'lat',
-            'lon',
+            'from_student',
+            'to_student',
+            'message',
         ]
+
+    to_student = forms.ModelChoiceField(
+        queryset=Student.objects.all(),
+        widget=autocomplete.ModelSelect2(
+            url='student-autocomplete',
+            attrs={
+                'data-container-css-class': ' ',
+                'data-close-on-select': 'true',
+                'data-scroll-after-select': 'true',
+                'data-placeholder': 'Search for students by name, parent name, school name and/or grade...',
+                'data-minimum-input-length': 3,
+                'data-html': 'true',
+                'data-allow-clear': 'true',
+            },
+        ),
+    )
+    message = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+            attrs={
+                'class': 'form-control h-25',
+                'placeholder': 'Personal message (optional)',
+                'rows': 5,
+            }
+        )
+    )
+
+    def __init__(self, parent, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['from_student'].queryset = Student.objects.filter(parent=parent)
+
+
+class BuildClassmateForm(forms.Form):
+
+    student_name = forms.CharField(
+        required=True,
+    )
+
+    def clean_student_name(self):
+        data = self.cleaned_data['student_name']
+        return data.title()
+
+    parent_name = forms.CharField(
+        required=True,
+    )
+
+    def clean_parent_name(self):
+        data = self.cleaned_data['parent_name']
+        return data.title()
+
+    parent_email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={'class': 'form-control'})
+    )
+
+    def clean_parent_email(self):
+        data = self.cleaned_data['parent_email']
+        return data.lower()
+
+    school = forms.ModelChoiceField(
+        queryset=School.objects.all(),
+        # required=True,
+        widget=autocomplete.ModelSelect2(
+            url='school-autocomplete',
+            attrs={
+                'data-container-css-class': '',
+                'data-close-on-select': 'true',
+                'data-scroll-after-select': 'true',
+                'data-placeholder': 'Add Student School',
+                'data-minimum-input-length': 3,
+            },
+        ),
+    )
+    grade = forms.ChoiceField(
+        choices=Student.GRADE,
+        required=True,
+    )
 
 
 class TeacherForm(forms.ModelForm):
@@ -221,7 +275,7 @@ class ParentForm(forms.ModelForm):
         help_texts = {
             'schedule': "What time of day would you like your homeroom pod to meet?",
             'frequency': "How many days a week would you like your homeroom pod to meet?",
-            'safety': "Standard safety is rigorous hygiene; Enhanced adds Masks and Distance requirements.",
+            'safety': "Standard safety is rigorous hygiene; <br>Enhanced adds Masks and Distance requirements.",
         }
 
 
@@ -299,7 +353,6 @@ class AskForm(forms.ModelForm):
                 }
             )
         }
-
 
 
 class UserAskForm(forms.ModelForm):

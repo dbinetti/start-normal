@@ -16,11 +16,7 @@
     {% csrf_token %}
     {% bootstrap_form_errors form %}
     {% bootstrap_field form.confirm %}
-    {% buttons %}
-      <button type="submit" class="btn btn-danger btn-lg btn-block">
-        Delete My Account and All Related Data
-      </button>
-    {% endbuttons %}
+    {% bootstrap_button "Delete My Account and All Related Data" button_type='submit' button_class='btn btn-danger btn-lg btn-block' %}
   </form>
 </section>
 

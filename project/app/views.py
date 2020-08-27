@@ -2,6 +2,10 @@
 import json
 import logging
 
+# Third-Party
+import requests
+from dal import autocomplete
+
 # Django
 from django.conf import settings
 from django.contrib import messages
@@ -9,23 +13,26 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login as log_in
 from django.contrib.auth import logout as log_out
 from django.contrib.auth.decorators import login_required
+from django.contrib.postgres.search import SearchVector
+from django.db.models import Case
+from django.db.models import CharField
 from django.db.models import Q
+from django.db.models import Value
+from django.db.models import When
 from django.http import HttpResponse
-from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.crypto import get_random_string
-
-# First-Party
-import requests
-from dal import autocomplete
+from django.utils.html import format_html
 
 # Local
 from .forms import AddAskForm
 from .forms import AskForm
+from .forms import BuildClassmateForm
+from .forms import ClassmateForm
 from .forms import DeleteForm
 from .forms import HomeroomForm
 from .forms import ParentForm
@@ -35,6 +42,7 @@ from .forms import StudentFormSet
 from .forms import TeacherForm
 from .forms import UserAskForm
 from .models import Ask
+from .models import Classmate
 from .models import Homeroom
 from .models import Parent
 from .models import School
@@ -194,6 +202,8 @@ def callback(request):
         log_in(request, user)
         if kind == 'ask':
             return redirect('ask-form', homeroom_id)
+        if kind == 'parent':
+            kind = 'create-parent'
         return redirect(kind)
     return HttpResponse(status=400)
 
@@ -224,6 +234,10 @@ def dashboard(request):
     students = Student.objects.filter(
         parent=parent,
     )
+    classmates = Classmate.objects.filter(
+        Q(from_student__parent=parent,) |
+        Q(to_student__parent=parent,)
+    ).order_by('from_student', 'to_student')
     homerooms = Homeroom.objects.filter(
         parent=parent,
     )
@@ -235,6 +249,7 @@ def dashboard(request):
             'parent': parent,
             'teacher': teacher,
             'students': students,
+            'classmates': classmates,
             'homerooms': homerooms,
         }
     )
@@ -255,7 +270,7 @@ def delete_user(request):
         form = DeleteForm()
     return render(
         request,
-        'app/delete.html',
+        'app/user_delete.html',
         {'form': form,},
     )
 
@@ -265,6 +280,7 @@ def delete_user(request):
 def create_student(request):
     parent = request.user.parent
     form = StudentForm(request.POST or None)
+    is_more = bool(parent.students.count())
     if form.is_valid():
         student = form.save(commit=False)
         student.parent = parent
@@ -273,12 +289,14 @@ def create_student(request):
             request,
             'Added!',
         )
-        return redirect('dashboard')
+        return redirect('create-student')
     return render(
         request,
-        'app/create_student.html',
+        'app/student_create.html',
         context={
             'form': form,
+            'parent': parent,
+            'is_more': is_more,
         }
     )
 
@@ -327,7 +345,7 @@ def delete_student(request, student_id):
         form = DeleteForm()
     return render(
         request,
-        'app/delete_student.html',
+        'app/student_delete.html',
         {'form': form,},
     )
 
@@ -366,10 +384,12 @@ def teacher(request):
 
 # Parent Onboarding
 @login_required
-def parent(request):
+def create_parent(request):
     parent = getattr(request.user, 'parent', None)
+    if parent:
+        return redirect('parent', parent.id)
     if request.method == "POST":
-        parent, _ = Parent.objects.get_or_create(
+        parent = Parent.objects.create(
             user=request.user,
         )
         form = ParentForm(
@@ -382,7 +402,7 @@ def parent(request):
                 request,
                 "Parent Preferences Saved!",
             )
-            return redirect('add-student-parent')
+            return redirect('create-student')
     else:
         form = ParentForm(
             instance=parent,
@@ -393,15 +413,17 @@ def parent(request):
         )
     return render(
         request,
-        'app/parent.html',
+        'app/parent_create.html',
         context={
             'form': form,
-        }
+        },
     )
 
 @login_required
-def parent_edit(request):
-    parent = request.user.parent
+def parent(request, parent_id):
+    parent = get_object_or_404(Parent, id=parent_id)
+    if parent.id != request.user.parent.id:
+        return HttpResponse(status=400)
     form = ParentForm(
         request.POST or None,
         instance=parent,
@@ -415,39 +437,38 @@ def parent_edit(request):
         return redirect('dashboard')
     return render(
         request,
-        'app/parent_edit.html',
+        'app/parent.html',
         context={
             'form': form,
         }
     )
 
 @login_required
-def add_student_parent(request):
+def delete_parent(request, parent_id):
     parent = request.user.parent
-    is_more = bool(parent.students.count())
-    students = parent.students.order_by('created')
-    form = StudentForm(request.POST or None)
-    if form.is_valid():
-        student = form.save(commit=False)
-        student.parent = parent
-        student.save()
-        messages.success(
-            request,
-            "Student Added!",
-        )
-        return redirect('add-student-parent')
+    parent = get_object_or_404(Parent, id=parent_id)
+    if parent != request.user.parent:
+        return HttpResponse(status=400)
+    if request.method == "POST":
+        form = DeleteForm(request.POST)
+        if form.is_valid():
+            parent.delete()
+            messages.error(
+                request,
+                "Parent Deleted!",
+            )
+            return redirect('dashboard')
+    else:
+        form = DeleteForm()
     return render(
         request,
-        'app/add_student_parent.html',
-        context={
-            'form': form,
-            'is_more': is_more,
-            'students': students,
-        }
+        'app/parent_delete.html',
+        {'form': form,},
     )
 
+
 @login_required
-def create_homerooms(request):
+def welcome(request):
     parent = request.user.parent
     students = parent.students.all()
     for student in students:
@@ -459,8 +480,18 @@ def create_homerooms(request):
         )
         student.homeroom = homeroom
         student.save()
-    return redirect('homerooms')
-
+        student.homeroom.homeroom_link = request.build_absolute_uri(
+            reverse('homeroom', args=[student.homeroom.id])
+        )
+    parent.is_welcomed = True
+    parent.save()
+    return render(
+        request,
+        'app/welcome.html',
+        context={
+            'students': students,
+        }
+    )
 
 @login_required
 def add_ask(request, homeroom_id):
@@ -483,6 +514,14 @@ def add_ask(request, homeroom_id):
             'form': form,
         }
     )
+
+@login_required
+def finalize(request):
+    return render(
+        request,
+        'app/finalize.html',
+    )
+
 
 @login_required
 def ask(request, homeroom_id, student_id):
@@ -599,7 +638,6 @@ def homeroom_search(request):
         }
     )
 
-
 # Homeroom
 def homeroom(request, homeroom_id):
     homeroom = get_object_or_404(Homeroom, pk=homeroom_id)
@@ -618,7 +656,6 @@ def homeroom(request, homeroom_id):
         reverse('homeroom', args=[homeroom_id])
     )
     students = homeroom.students.all()
-    asks = homeroom.asks.all()
     return render(
         request,
         'app/homeroom.html', {
@@ -626,7 +663,6 @@ def homeroom(request, homeroom_id):
             'homeroom': homeroom,
             'homeroom_link': homeroom_link,
             'students': students,
-            'asks': asks,
         }
     )
 
@@ -649,7 +685,7 @@ def delete_homeroom(request, homeroom_id):
         form = DeleteForm()
     return render(
         request,
-        'app/delete_homeroom.html',
+        'app/homeroom_delete.html',
         {'form': form,},
     )
 
@@ -678,9 +714,8 @@ def connect_homeroom(request, student_id):
     )
 
 @login_required
-def create_homeroom(request, student_id):
+def create_homeroom(request):
     parent = request.user.parent
-    student = Student.objects.get(id=student_id)
     initial = {
         'schedule': parent.schedule,
         'frequency': parent.frequency,
@@ -688,25 +723,99 @@ def create_homeroom(request, student_id):
     }
     form = HomeroomForm(request.POST or None, initial=initial)
     if form.is_valid():
-        homeroom = form.save(commit=False)
-        homeroom.parent = parent
-        homeroom.save()
-        student.homeroom = homeroom
-        student.save()
+        form.save()
         messages.success(
             request,
             "Homeroom Created!",
         )
-        return redirect('parent-homeroom-intro')
+        return redirect('dashboard')
     return render(
         request,
         'app/create_homeroom.html',
         context={
             'form': form,
-            'student': student,
         }
     )
 
+# Classmates
+@login_required
+def create_classmate(request):
+    parent = request.user.parent
+    form = ClassmateForm(
+        parent,
+        request.POST or None,
+    )
+    if form.is_valid():
+        from_student = form.cleaned_data['from_student']
+        to_student = form.cleaned_data['to_student']
+        message = form.cleaned_data['message']
+        Classmate.objects.create(
+            from_student=from_student,
+            to_student=to_student,
+            message=message,
+        )
+        messages.success(
+            request,
+            'Classmate Created!',
+        )
+        return redirect('dashboard')
+    return render(
+        request,
+        'app/classmate_create.html',
+        context={
+            'form': form,
+        }
+    )
+
+
+@login_required
+def build_classmate(request):
+    form = BuildClassmateForm(
+        request.POST or None,
+    )
+    if form.is_valid():
+        student_name = form.cleaned_data['student_name']
+        parent_name = form.cleaned_data['parent_name']
+        parent_email = form.cleaned_data['parent_email']
+        school = form.cleaned_data['school']
+        grade = form.cleaned_data['grade']
+        parent = Parent.objects.create(
+            name=parent_name,
+            email=parent_email,
+        )
+        student = Student.objects.create(
+            name=student_name,
+            school=school,
+            grade=grade,
+            parent=parent,
+        )
+        grades = [When(grade=k, then=Value(v)) for k, v in Student.GRADE]
+        s = Student.objects.annotate(sv=SearchVector(
+            'name',
+            'school__name',
+            Case(*grades, output_field=CharField()),
+            'parent__name',
+            'parent__email',
+        )).first()
+        s.search_vector = s.sv
+        s.save()
+        messages.success(
+            request,
+            f'Added! You can now add {student_name} by name.',
+        )
+        redirect_uri = request.build_absolute_uri(reverse('create-classmate'))
+        return HttpResponse(
+            f'<script type="text/javascript">window.close(); window.opener.parent.location.href = "{redirect_uri}";</script>'
+        )
+    else:
+        print(form.errors)
+    return render(
+        request,
+        'app/classmate_build.html',
+        context={
+            'form': form,
+        }
+    )
 
 # Schools
 def search_schools(request):
@@ -755,7 +864,33 @@ class SchoolAutocomplete(autocomplete.Select2QuerySetView):
     def get_queryset(self):
         qs = School.objects.filter(
         )
+        if self.q:
+            qs = qs.filter(search_vector=self.q)
+        return qs
 
+class HomeroomAutocomplete(autocomplete.Select2QuerySetView):
+    def get_queryset(self):
+        qs = Homeroom.objects.filter(
+            kind=Homeroom.KIND.public,
+        )
+        if self.q:
+            qs = qs.filter(search_vector=self.q)
+        return qs
+
+class StudentAutocomplete(autocomplete.Select2QuerySetView):
+    def get_result_label(self, item):
+        label = format_html("<p>{0} {1} {2} {3}</p>".format(
+            item.name,
+            item.parent.name,
+            item.school.name,
+            item.get_grade_display(),
+        ))
+        return label
+
+    def get_queryset(self):
+        qs = Student.objects.filter(
+            # kind=Homeroom.KIND.public,
+        )
         if self.q:
             qs = qs.filter(search_vector=self.q)
         return qs
