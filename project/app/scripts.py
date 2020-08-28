@@ -8,7 +8,6 @@ from django.db import IntegrityError
 from django.db.models import Q
 
 # First-Party
-from algoliasearch_django.decorators import disable_auto_indexing
 # from app.forms import ContactForm
 from app.forms import DistrictForm
 from app.forms import SchoolForm

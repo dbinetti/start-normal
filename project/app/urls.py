@@ -46,9 +46,6 @@ urlpatterns = [
     path('homeroom/<homeroom_id>', views.homeroom, name='homeroom',),
     path('homeroom/<homeroom_id>/delete', views.delete_homeroom, name='delete-homeroom',),
 
-    path('homeroom/search', views.homeroom_search, name='homeroom-search',),
-    path('homeroom/connect/<student_id>', views.connect_homeroom, name='connect-homeroom'),
-
     # Classmate
     path('classmate/create', views.create_classmate, name='create-classmate'),
     path('classmate/build', views.build_classmate, name='build-classmate'),
@@ -63,7 +60,6 @@ urlpatterns = [
 
 
     # Schools
-    path('school/search', views.search_schools, name='school-search'),
     path('school/<slug>', views.school, name='school'),
 
     # Search

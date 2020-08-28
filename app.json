@@ -73,18 +73,6 @@
         "AUTH0_CLIENT_ID": {
           "generator": "secret"
         },
-        "ALGOLIA_APPLICATION_ID": {
-          "generator": "secret"
-        },
-        "ALGOLIA_API_KEY": {
-          "generator": "secret"
-        },
-        "ALGOLIA_SECRET_KEY": {
-          "generator": "secret"
-        },
-        "ALGOLIA_SEARCH_KEY": {
-          "generator": "secret"
-        },
         "AUTH0_CLIENT_SECRET": {
           "generator": "secret"
         },

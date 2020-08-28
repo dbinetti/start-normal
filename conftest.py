@@ -3,7 +3,6 @@ from django.test.client import Client
 
 # First-Party
 import pytest
-from algoliasearch_django.decorators import disable_auto_indexing
 from app.factories import AccountFactory
 from app.factories import UserFactory
 

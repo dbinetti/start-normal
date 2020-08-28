@@ -2,10 +2,6 @@
 import json
 import logging
 
-# Third-Party
-import requests
-from dal import autocomplete
-
 # Django
 from django.conf import settings
 from django.contrib import messages
@@ -27,6 +23,10 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils.crypto import get_random_string
 from django.utils.html import format_html
+
+# First-Party
+import requests
+from dal import autocomplete
 
 # Local
 from .forms import AddAskForm
@@ -57,11 +57,6 @@ def index(request):
     return render(
         request,
         'app/index.html',
-        context={
-            'app_id': settings.ALGOLIA['APPLICATION_ID'],
-            'search_key': settings.ALGOLIA['SEARCH_KEY'],
-            'index_name': "School_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
-        }
     )
 
 def about(request):
@@ -626,18 +621,6 @@ def homerooms(request):
         }
     )
 
-@login_required
-def homeroom_search(request):
-    return render(
-        request,
-        'app/homeroom_search.html',
-        context={
-            'app_id': settings.ALGOLIA['APPLICATION_ID'],
-            'search_key': settings.ALGOLIA['SEARCH_KEY'],
-            'index_name': "Homeroom_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
-        }
-    )
-
 # Homeroom
 def homeroom(request, homeroom_id):
     homeroom = get_object_or_404(Homeroom, pk=homeroom_id)
@@ -687,30 +670,6 @@ def delete_homeroom(request, homeroom_id):
         request,
         'app/homeroom_delete.html',
         {'form': form,},
-    )
-
-@login_required
-def connect_homeroom(request, student_id):
-    student = get_object_or_404(Student, id=student_id)
-    homerooms = Homeroom.objects.filter(
-        students__school=student.school,
-        students__grade=student.grade,
-    ).distinct()
-    students = Student.objects.filter(
-        school=student.school,
-        homeroom__isnull=True,
-    ).order_by('grade')
-    return render(
-        request,
-        'app/connect_homeroom.html',
-        context={
-            'student': student,
-            'homerooms': homerooms,
-            'students': students,
-            'app_id': settings.ALGOLIA['APPLICATION_ID'],
-            'search_key': settings.ALGOLIA['SEARCH_KEY'],
-            'index_name': "Homeroom_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
-        }
     )
 
 @login_required
@@ -818,17 +777,6 @@ def build_classmate(request):
     )
 
 # Schools
-def search_schools(request):
-    return render(
-        request,
-        'app/search_schools.html',
-        context={
-            'app_id': settings.ALGOLIA['APPLICATION_ID'],
-            'search_key': settings.ALGOLIA['SEARCH_KEY'],
-            'index_name': "School_{0}".format(settings.ALGOLIA['INDEX_SUFFIX']),
-        },
-    )
-
 def school(request, slug):
     school = get_object_or_404(School, slug=slug)
     parents = User.objects.filter(
