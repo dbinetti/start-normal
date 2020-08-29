@@ -6,6 +6,7 @@ from django.dispatch import receiver
 # First-Party
 from app.models import Account
 from app.models import Parent
+from app.models import Student
 from app.models import Teacher
 from app.models import User
 from app.tasks import auth0_delete_user
@@ -45,4 +46,13 @@ def user_post_save(sender, instance, created, raw=False, **kwargs):
             return
         parent.user = instance
         parent.save()
+    return
+
+
+@receiver(post_save, sender=Student)
+def student_post_save(sender, instance, created, raw=False, **kwargs):
+    if created and not raw:
+        instance = instance._meta.default_manager.with_vector().get(pk=instance.pk)
+        instance.search_vector = instance.vector
+        instance.save()
     return

@@ -742,15 +742,12 @@ def build_classmate(request):
             name=parent_name,
             email=parent_email,
         )
-        student = Student.objects.create(
+        Student.objects.create(
             name=student_name,
             school=school,
             grade=grade,
             parent=parent,
         )
-        instance = student._meta.default_manager.with_vector().get(pk=student.pk)
-        instance.search_vector = instance.vector
-        instance.save()
         messages.success(
             request,
             f'Added! You can now add {student_name} by name.',

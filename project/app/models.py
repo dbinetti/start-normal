@@ -789,6 +789,7 @@ class Student(models.Model):
             self.name,
             self.parent.name,
         )
+
     class Meta:
         indexes = [
             GinIndex(fields=['search_vector'])
