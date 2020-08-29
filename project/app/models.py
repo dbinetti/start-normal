@@ -1,11 +1,4 @@
 # Django
-# Third-Party
-from autoslug import AutoSlugField
-from django_fsm import FSMIntegerField
-from hashid_field import HashidAutoField
-from model_utils import Choices
-from multiselectfield import MultiSelectField
-
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
@@ -13,7 +6,15 @@ from django.contrib.postgres.search import SearchVectorField
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 
+# First-Party
+from autoslug import AutoSlugField
+from django_fsm import FSMIntegerField
+from hashid_field import HashidAutoField
+from model_utils import Choices
+from multiselectfield import MultiSelectField
+
 # Local
+from .managers import StudentManager
 from .managers import UserManager
 
 
@@ -776,6 +777,8 @@ class Student(models.Model):
     search_vector = SearchVectorField(
         null=True,
     )
+
+    objects = StudentManager()
 
     @property
     def initials(self):

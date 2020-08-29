@@ -748,16 +748,9 @@ def build_classmate(request):
             grade=grade,
             parent=parent,
         )
-        grades = [When(grade=k, then=Value(v)) for k, v in Student.GRADE]
-        s = Student.objects.annotate(sv=SearchVector(
-            'name',
-            'school__name',
-            Case(*grades, output_field=CharField()),
-            'parent__name',
-            'parent__email',
-        )).first()
-        s.search_vector = s.sv
-        s.save()
+        instance = student._meta.default_manager.with_vector().get(pk=student.pk)
+        instance.search_vector = instance.vector
+        instance.save()
         messages.success(
             request,
             f'Added! You can now add {student_name} by name.',
